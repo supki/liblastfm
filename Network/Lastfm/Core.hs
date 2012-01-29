@@ -1,5 +1,5 @@
 module Network.Lastfm.Core
-  ( callAPI, tagContent
+  ( callAPI, tagContent, tagContents
   ) where
 
 import Control.Monad (join, liftM)
@@ -47,3 +47,6 @@ tagContent tag elements = strContent <$> firstTag tag elements
           where maybeHead :: [a] -> Maybe a
                 maybeHead [] = Nothing
                 maybeHead xs = Just $ head xs
+
+tagContents :: String -> [Element] -> [String]
+tagContents tag = map strContent <$> concatMap (findElements . unqual $ tag)
