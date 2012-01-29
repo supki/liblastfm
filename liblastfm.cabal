@@ -1,0 +1,19 @@
+Name:		liblastfm
+Version:	0.0.0.0
+Description:	Wrapper to Lastfm API
+License:	MIT
+License-file:	LICENSE
+Author:		Matvey Aksenov
+Maintainer:	Matvey Aksenov <matvey.aksenov@gmail.com>
+Category:	Network
+Synopsis:	Wrapper to Lastfm API
+Cabal-Version:	>= 1.6
+Build-Type:	Simple
+
+Library
+  Build-Depends:	base >= 3 && < 5, curl, xml, urlencoded
+  Exposed-Modules:	Network.Lastfm.Core, Network.Lastfm.Album, Network.Lastfm.Artist, Network.Lastfm.Auth, Network.Lastfm.Chart, Network.Lastfm.Event, Network.Lastfm.Geo, Network.Lastfm.Group, Network.Lastfm.Library, Network.Lastfm.Playlist, Network.Lastfm.Radio, Network.Lastfm.Tag, Network.Lastfm.Tasteometer, Network.Lastfm.Track, Network.Lastfm.User, Network.Lastfm.Venue
+
+source-repository head
+  type:     git
+  location: https://github.com/supki/haskell-liblastfm
