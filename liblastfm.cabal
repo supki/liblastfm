@@ -11,7 +11,7 @@ Cabal-Version:	>= 1.6
 Build-Type:	Simple
 
 Library
-  Build-Depends:	base >= 3 && < 5, curl, xml, urlencoded
+  Build-Depends:	base >= 3 && < 5, bytestring, curl, directory, filepath, pureMD5, urlencoded, xml
   Exposed-Modules:	Network.Lastfm.Core, Network.Lastfm.Album, Network.Lastfm.Artist, Network.Lastfm.Auth, Network.Lastfm.Chart, Network.Lastfm.Event, Network.Lastfm.Geo, Network.Lastfm.Group, Network.Lastfm.Library, Network.Lastfm.Playlist, Network.Lastfm.Radio, Network.Lastfm.Tag, Network.Lastfm.Tasteometer, Network.Lastfm.Track, Network.Lastfm.User, Network.Lastfm.Venue
 
 source-repository head
