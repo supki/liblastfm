@@ -4,7 +4,7 @@ module Network.Lastfm.Auth
   , getToken
   ) where
 
-import Control.Monad (liftM)
+import Control.Applicative ((<$>))
 import Network.Lastfm.Core
 
 type APIKey = String
@@ -15,4 +15,6 @@ getMobileSession = undefined
 getSession = undefined
 
 getToken :: APIKey -> IO (Maybe Token)
-getToken apiKey = liftM (tagContent "token") (callAPI [ ("method","auth.gettoken"), ("api_key", apiKey) ])
+getToken apiKey = tagContent "token" <$> callAPI [ ("method","auth.gettoken")
+                                                 , ("api_key", apiKey)
+                                                 ]

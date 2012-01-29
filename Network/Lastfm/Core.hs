@@ -4,6 +4,7 @@ module Network.Lastfm.Core
   ) where
 
 import Control.Monad (join, liftM)
+import Control.Applicative ((<$>))
 import Data.URLEncoded (urlEncode, export)
 import Network.Curl hiding (Content)
 import Text.XML.Light
@@ -32,24 +33,17 @@ data LastfmError
 callAPI :: [(String, String)] -> IO [Element]
 callAPI as = withCurlDo $ do
                handle <- initialize
-               response <- liftM (onlyElems . parseXML . respBody) (do_curl_ handle "http://ws.audioscrobbler.com/2.0/?"
-                            [ CurlPostFields . map (export . urlEncode) $ as ]
-                            :: IO CurlResponse)
-               case checkError response of
-                 Just e  -> error e
+               response <- liftM (onlyElems . parseXML . respBody)
+                            (do_curl_ handle "http://ws.audioscrobbler.com/2.0/?" [ CurlPostFields . map (export . urlEncode) $ as ] :: IO CurlResponse)
+               reset handle
+               case tagContent "error" response of
+                 Just s  -> error s
                  Nothing -> return response
 
-checkError :: [Element] -> Maybe String
-checkError elements = do element <- maybeHead . concatMap (findElements . unqual $ "lfm") $ elements
-                         attribute <- findAttr (unqual "status") element
-                         case attribute of
-                           "failed" -> tagContent "error" elements
-                           _        -> Nothing
-
 tagContent :: String -> [Element] -> Maybe String
-tagContent tag elements = do element <- maybeHead . concatMap (findElements . unqual $ tag) $ elements
-                             return $ strContent element
-
-maybeHead :: [a] -> Maybe a
-maybeHead [] = Nothing
-maybeHead xs = Just $ head xs
+tagContent tag elements = strContent <$> firstTag tag elements
+  where firstTag :: String -> [Element] -> Maybe Element
+        firstTag tag = maybeHead . concatMap (findElements . unqual $ tag)
+          where maybeHead :: [a] -> Maybe a
+                maybeHead [] = Nothing
+                maybeHead xs = Just $ head xs
