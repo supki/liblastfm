@@ -1,16 +1,18 @@
 module Network.Lastfm.Core
-  ( callAPI, callAPI_, tagContent, tagContents
+  ( withSecret
+  , tagContent, tagContents
+  , callAPI, callAPI_
   ) where
 
 import Control.Monad (join, liftM)
 import Control.Applicative ((<$>))
-import Data.Function (on)
 import Data.Digest.Pure.MD5 (md5)
+import Data.Function (on)
+import Data.IORef
 import Data.List (sortBy)
 import Data.URLEncoded (urlEncode, export)
 import Network.Curl hiding (Content)
-import System.Directory (getHomeDirectory)
-import System.FilePath ((</>))
+import System.IO.Unsafe (unsafePerformIO)
 import Text.XML.Light
 
 import qualified Data.ByteString.Lazy.Char8 as BS
@@ -20,11 +22,15 @@ type Value = String
 type Secret = String
 type Sign = String
 
+secret :: IORef Secret
+secret = unsafePerformIO $ newIORef ""
+
+withSecret :: Secret -> IO a -> IO a
+withSecret s f = writeIORef secret s >> f
+
 callAPI :: [(Key, Value)] -> IO [Element]
 callAPI as = withCurlDo $ do
-               directoru <- getHomeDirectory
-               secret <- init <$> readFile (directoru </> ".lastfm")
-               print secret
+               secret <- readIORef secret
                handle <- initialize
                response <- liftM (onlyElems . parseXML . respBody)
                             (do_curl_ handle
