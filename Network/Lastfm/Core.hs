@@ -5,6 +5,7 @@ module Network.Lastfm.Core
   , Response
   ) where
 
+import Codec.Binary.UTF8.String (decodeString)
 import Control.Monad (liftM)
 import Control.Applicative ((<$>))
 import Data.Digest.Pure.MD5 (md5)
@@ -15,7 +16,6 @@ import Data.URLEncoded (urlEncode, export)
 import Network.Curl hiding (Content)
 import System.IO.Unsafe (unsafePerformIO)
 import Text.XML.Light
-import Codec.Binary.UTF8.String (decodeString)
 
 import qualified Data.ByteString.Lazy.Char8 as BS
 

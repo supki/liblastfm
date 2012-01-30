@@ -1,23 +1,25 @@
 module Network.Lastfm.Tasteometer
   ( compare
+  , Value (..)
+  , getScore, getSimilarArtists
   ) where
 
-import Prelude hiding (compare)
 import Control.Applicative ((<$>))
 import Data.List (intercalate)
 import Data.Maybe (fromMaybe)
 import Network.Lastfm.Core
+import Prelude hiding (compare)
 
 type APIKey = String
 
 data Value = User String | Artists [String] -- ^ [Last.fm username] | [Comma-separated artist names (max. 100)]
-type Limit = Maybe Int                      -- ^ How many shared artists to display
+type Limit = Int -- ^ How many shared artists to display
 
 instance Show Value where
-  show (User user) = "user"
-  show (Artists artists) = "artists"
+  show (User _)    = "user"
+  show (Artists _) = "artists"
 
-compare :: APIKey -> Value -> Value -> Limit -> IO Response
+compare :: APIKey -> Value -> Value -> Maybe Limit -> IO Response
 compare apiKey value1 value2 limit = callAPI
   [ ("method", "tasteometer.compare")
   , ("type1", show value1), ("value1", getValue value1)
