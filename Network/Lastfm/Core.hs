@@ -41,9 +41,9 @@ callAPI as = withCurlDo $ do
         sign secret = show . md5 . BS.pack . (++ secret) . concatMap (uncurry (++)) . sortBy (compare `on` fst)
 
 tagContent :: String -> [Element] -> Maybe String
-tagContent tag elements = strContent <$> firstTag tag elements
-  where firstTag :: String -> [Element] -> Maybe Element
-        firstTag tag = maybeHead . concatMap (findElements . unqual $ tag)
+tagContent tag elements = strContent <$> firstTag elements
+  where firstTag :: [Element] -> Maybe Element
+        firstTag = maybeHead . concatMap (findElements . unqual $ tag)
           where maybeHead :: [a] -> Maybe a
                 maybeHead [] = Nothing
                 maybeHead xs = Just $ head xs
