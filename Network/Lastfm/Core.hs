@@ -14,6 +14,7 @@ import Data.URLEncoded (urlEncode, export)
 import Network.Curl hiding (Content)
 import System.IO.Unsafe (unsafePerformIO)
 import Text.XML.Light
+import Codec.Binary.UTF8.String (decodeString)
 
 import qualified Data.ByteString.Lazy.Char8 as BS
 
@@ -32,7 +33,7 @@ callAPI :: [(Key, Value)] -> IO [Element]
 callAPI as = withCurlDo $ do
                secret <- readIORef secret
                handle <- initialize
-               response <- liftM (onlyElems . parseXML . respBody)
+               response <- liftM (onlyElems . parseXML . decodeString . respBody)
                             (do_curl_ handle
                                       "http://ws.audioscrobbler.com/2.0/?"
                                       [ CurlPostFields . map (export . urlEncode) $ (("api_sig", sign secret as) : as) ]
