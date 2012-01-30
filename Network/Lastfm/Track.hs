@@ -15,8 +15,11 @@ type Album = String
 type AlbumArtist = String
 type Context = String
 type TrackNumber = String
+type Timestamp = String
+type StreamId = String
 type Mbid = String
 type Duration = String
+type ChosenByUser = String
 
 love :: Track -> Artist -> APIKey -> SessionKey -> IO ()
 love track artist apiKey sessionKey = callAPI_
@@ -60,6 +63,30 @@ updateNowPlaying track artist album albumArtist context trackNumber mbid duratio
   optional "trackNumber" trackNumber ++
   optional "mbid" mbid ++
   optional "duration" duration
+
+scrobble :: [ ( Timestamp, Maybe Album, Track, Artist, Maybe AlbumArtist
+           , Maybe Duration, Maybe StreamId, Maybe ChosenByUser
+           , Maybe Context, Maybe TrackNumber, Maybe Mbid ) ]
+         -> APIKey
+         -> SessionKey
+         -> IO ()
+scrobble xs apiKey sessionKey = mapM_ scrobbleTrack xs
+  where scrobbleTrack (timestamp, album, track, artist, albumArtist, duration, streamId, chosenByUser, context, trackNumber, mbid) = callAPI_ $
+          [ ("method","track.scrobble")
+          , ("timestamp", timestamp)
+          , ("track", track)
+          , ("artist", artist)
+          , ("api_key", apiKey)
+          , ("sk", sessionKey)
+          ] ++
+          optional "album" album ++
+          optional "albumArtist" albumArtist ++
+          optional "duration" duration ++
+          optional "streamId" streamId ++
+          optional "chosenByUser" chosenByUser ++
+          optional "context" context ++
+          optional "trackNumber" trackNumber ++
+          optional "mbid" mbid
 
 optional :: String -> Maybe a -> [(String, a)]
 optional key value = case value of
