@@ -5,7 +5,6 @@ module Network.Lastfm.Tasteometer
 
 import Prelude hiding (compare)
 import Control.Applicative ((<$>))
-import Text.XML.Light
 import Network.Lastfm.Core
 
 type Username = String
@@ -19,9 +18,7 @@ compare apiKey username1 username2 = callAPI
   , ("api_key", apiKey) ]
 
 getScore :: APIKey -> Username -> Username -> IO (Maybe String)
-getScore apiKey username1 username2 = tagContent "score" <$> compare apiKey username1 username2
+getScore apiKey username1 username2 = firstInnerTagContent "score" <$> compare apiKey username1 username2
 
 getSimilarArtists :: APIKey -> Username -> Username -> IO [String]
-getSimilarArtists apiKey username1 username2 = tagContentsInGroup "name" "artist" <$> compare apiKey username1 username2
-    where
-        tagContentsInGroup tag group = tagContents tag <$> concatMap (findElements . unqual $ group)
+getSimilarArtists apiKey username1 username2 = allInnerTagsContent "name" <$> getAllInnerTags "artist" <$> compare apiKey username1 username2

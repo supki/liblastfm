@@ -1,10 +1,10 @@
 module Network.Lastfm.Core
   ( withSecret
-  , tagContent, tagContents
+  , firstInnerTagContent, allInnerTagsContent, getAllInnerTags
   , callAPI, callAPI_
   ) where
 
-import Control.Monad (join, liftM)
+import Control.Monad (liftM)
 import Control.Applicative ((<$>))
 import Data.Digest.Pure.MD5 (md5)
 import Data.Function (on)
@@ -31,32 +31,33 @@ withSecret s f = writeIORef secret s >> f
 
 callAPI :: [(Key, Value)] -> IO [Element]
 callAPI as = withCurlDo $ do
-               secret <- readIORef secret
+               s <- readIORef secret
                handle <- initialize
                response <- liftM (onlyElems . parseXML . decodeString . respBody)
                             (do_curl_ handle
                                       "http://ws.audioscrobbler.com/2.0/?"
-                                      [ CurlPostFields . map (export . urlEncode) $ (("api_sig", sign secret as) : as) ]
+                                      [ CurlPostFields . map (export . urlEncode) $ (("api_sig", sign s) : as) ]
                                       :: IO CurlResponse)
                reset handle
-               case tagContent "error" response of
-                 Just s  -> error s
+               case firstInnerTagContent "error" response of
+                 Just m  -> error m
                  Nothing -> return response
-  where sign :: Secret -> [(Key, Value)] -> Sign
+  where sign :: Secret -> Sign
         -- ^ Each API call (a little exception for getToken) should be signed.
         -- Algorithm description can be found at http://www.lastfm.ru/api/authspec Section 8
-        sign secret = show . md5 . BS.pack . (++ secret) . concatMap (uncurry (++)) . sortBy (compare `on` fst)
+        sign s = show . md5 . BS.pack . (++ s) . concatMap (uncurry (++)) . sortBy (compare `on` fst) $ as
 
 callAPI_ :: [(Key, Value)] -> IO ()
 callAPI_ as = callAPI as >> return ()
 
-tagContent :: String -> [Element] -> Maybe String
-tagContent tag elements = strContent <$> firstTag elements
-  where firstTag :: [Element] -> Maybe Element
-        firstTag = maybeHead . concatMap (findElements . unqual $ tag)
-          where maybeHead :: [a] -> Maybe a
-                maybeHead [] = Nothing
-                maybeHead xs = Just $ head xs
+firstInnerTagContent :: String -> [Element] -> Maybe String
+firstInnerTagContent tag elements = liftM strContent (maybeHead $ getAllInnerTags tag elements)
+  where maybeHead :: [a] -> Maybe a
+        maybeHead [] = Nothing
+        maybeHead xs = Just $ head xs
 
-tagContents :: String -> [Element] -> [String]
-tagContents tag = map strContent <$> concatMap (findElements . unqual $ tag)
+allInnerTagsContent :: String -> [Element] -> [String]
+allInnerTagsContent tag = map strContent <$> getAllInnerTags tag
+
+getAllInnerTags ::  String -> [Element] -> [Element]
+getAllInnerTags tag = concatMap (findElements . unqual $ tag)

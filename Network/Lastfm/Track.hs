@@ -3,8 +3,6 @@ module Network.Lastfm.Track
   , scrobble, updateNowPlaying
   ) where
 
-import Data.Maybe (fromMaybe)
-
 import Network.Lastfm.Core
 
 type APIKey = String
