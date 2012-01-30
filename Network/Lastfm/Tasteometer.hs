@@ -6,7 +6,6 @@ module Network.Lastfm.Tasteometer
 import Prelude hiding (compare)
 import Control.Applicative ((<$>))
 import Text.XML.Light
-import Text.XML.Light
 import Network.Lastfm.Core
 
 type Username = String
