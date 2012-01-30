@@ -2,6 +2,7 @@ module Network.Lastfm.Core
   ( withSecret
   , firstInnerTagContent, allInnerTagsContent, getAllInnerTags
   , callAPI, callAPI_
+  , Response
   ) where
 
 import Control.Monad (liftM)
@@ -22,6 +23,7 @@ type Key = String
 type Value = String
 type Secret = String
 type Sign = String
+type Response = [Element]
 
 secret :: IORef Secret
 secret = unsafePerformIO $ newIORef ""
