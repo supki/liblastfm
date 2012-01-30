@@ -1,6 +1,6 @@
 module Network.Lastfm.Track
   ( love, unlove
-  , updateNowPlaying
+  , scrobble, updateNowPlaying
   ) where
 
 import Data.Maybe (fromMaybe)
