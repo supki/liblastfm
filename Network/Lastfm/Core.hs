@@ -1,5 +1,5 @@
 module Network.Lastfm.Core
-  ( callAPI, tagContent, tagContents
+  ( callAPI, callAPI_, tagContent, tagContents
   ) where
 
 import Control.Monad (join, liftM)
@@ -39,6 +39,9 @@ callAPI as = withCurlDo $ do
         -- ^ Each API call (a little exception for getToken) should be signed.
         -- Algorithm description can be found at http://www.lastfm.ru/api/authspec Section 8
         sign secret = show . md5 . BS.pack . (++ secret) . concatMap (uncurry (++)) . sortBy (compare `on` fst)
+
+callAPI_ :: [(Key, Value)] -> IO ()
+callAPI_ as = callAPI as >> return ()
 
 tagContent :: String -> [Element] -> Maybe String
 tagContent tag elements = strContent <$> firstTag elements
