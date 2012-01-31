@@ -1,5 +1,6 @@
 module Network.Lastfm.Track
-  ( love, unlove
+  ( ban, unban
+  , love, unlove
   , scrobble, updateNowPlaying
   ) where
 
@@ -18,6 +19,24 @@ type StreamId = String
 type Mbid = String
 type Duration = String
 type ChosenByUser = String
+
+ban :: Track -> Artist -> APIKey -> SessionKey -> IO ()
+ban track artist apiKey sessionKey = callAPI_
+  [ ("method","track.ban")
+  , ("track", track)
+  , ("artist", artist)
+  , ("api_key", apiKey)
+  , ("sk", sessionKey)
+  ]
+
+unban :: Track -> Artist -> APIKey -> SessionKey -> IO ()
+unban track artist apiKey sessionKey = callAPI_
+  [ ("method","track.unban")
+  , ("track", track)
+  , ("artist", artist)
+  , ("api_key", apiKey)
+  , ("sk", sessionKey)
+  ]
 
 love :: Track -> Artist -> APIKey -> SessionKey -> IO ()
 love track artist apiKey sessionKey = callAPI_
