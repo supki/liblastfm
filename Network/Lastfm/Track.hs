@@ -82,13 +82,14 @@ updateNowPlaying track artist album albumArtist context trackNumber mbid duratio
   , ("artist", artist)
   , ("api_key", apiKey)
   , ("sk", sessionKey)
-  ] ++
-  optional "album" album ++
-  optional "albumArtist" albumArtist ++
-  optional "context" context ++
-  optional "trackNumber" trackNumber ++
-  optional "mbid" mbid ++
-  optional "duration" duration
+  ] ++ optional
+    [ ("album", album)
+    , ("albumArtist", albumArtist)
+    , ("context", context)
+    , ("trackNumber", trackNumber)
+    , ("mbid", mbid)
+    , ("duration", duration)
+    ]
 
 scrobble :: [ ( Timestamp, Maybe Album, Track, Artist, Maybe AlbumArtist
            , Maybe Duration, Maybe StreamId, Maybe ChosenByUser
@@ -104,25 +105,27 @@ scrobble xs apiKey sessionKey = mapM_ scrobbleTrack xs
           , ("artist", artist)
           , ("api_key", apiKey)
           , ("sk", sessionKey)
-          ] ++
-          optional "album" album ++
-          optional "albumArtist" albumArtist ++
-          optional "duration" duration ++
-          optional "streamId" streamId ++
-          optional "chosenByUser" chosenByUser ++
-          optional "context" context ++
-          optional "trackNumber" trackNumber ++
-          optional "mbid" mbid
+          ] ++ optional
+            [ ("album", album)
+            , ("albumArtist", albumArtist)
+            , ("duration", duration)
+            , ("streamId", streamId)
+            , ("chosenByUser", chosenByUser)
+            , ("context", context)
+            , ("trackNumber", trackNumber)
+            , ("mbid", mbid)
+            ]
 
 search :: Maybe Limit -> Maybe Page -> Track -> Maybe Artist -> APIKey -> IO Response
 search limit page track artist apiKey = callAPI $
   [ ("method","track.search")
   , ("track", track)
   , ("api_key", apiKey)
-  ] ++
-  optional "limit" limit ++
-  optional "page" page ++
-  optional "artist" artist
+  ] ++ optional
+    [ ("limit", limit)
+    , ("page", page)
+    , ("artist", artist)
+    ]
 
 share :: Artist -> Track -> Maybe Public -> Maybe Message -> [Recipient] -> APIKey -> SessionKey -> IO ()
 share artist track public message recipients apiKey sessionKey = callAPI_ $
@@ -132,9 +135,10 @@ share artist track public message recipients apiKey sessionKey = callAPI_ $
   , ("recipient", intercalate "," recipients)
   , ("api_key", apiKey)
   , ("sk", sessionKey)
-  ] ++
-  optional "public" public ++
-  optional "message" message
+  ] ++ optional
+    [ ("public", public)
+    , ("message", message)
+    ]
 
 addTags :: Artist -> Track -> [Tag] -> APIKey -> SessionKey -> IO ()
 addTags artist track tags apiKey sessionKey
@@ -158,8 +162,3 @@ removeTag artist track tag apiKey sessionKey = callAPI_ $
   , ("api_key", apiKey)
   , ("sk", sessionKey)
   ]
-
-optional :: String -> Maybe a -> [(String, a)]
-optional key value = case value of
-                       Just v  -> [(key, v)]
-                       Nothing -> []

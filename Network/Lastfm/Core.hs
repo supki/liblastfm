@@ -2,16 +2,18 @@ module Network.Lastfm.Core
   ( Response
   , withSecret
   , firstInnerTagContent, allInnerTagsContent, getAllInnerTags
-  , callAPI, callAPI_
+  , callAPI, callAPI_, optional
   ) where
 
 import Codec.Binary.UTF8.String (decodeString)
-import Control.Monad (liftM)
 import Control.Applicative ((<$>))
+import Control.Arrow (second)
+import Control.Monad (liftM)
 import Data.Digest.Pure.MD5 (md5)
 import Data.Function (on)
 import Data.IORef
 import Data.List (sortBy)
+import Data.Maybe (fromJust, isJust)
 import Data.URLEncoded (urlEncode, export)
 import Network.Curl hiding (Content)
 import System.IO.Unsafe (unsafePerformIO)
@@ -52,6 +54,9 @@ callAPI as = withCurlDo $ do
 
 callAPI_ :: [(Key, Value)] -> IO ()
 callAPI_ as = callAPI as >> return ()
+
+optional :: [(Key, Maybe a)] -> [(Key, a)]
+optional = map (second fromJust) . filter (isJust . snd)
 
 firstInnerTagContent :: String -> Response -> Maybe String
 firstInnerTagContent tag response = liftM strContent (maybeHead . unwrap . getAllInnerTags tag $ response)
