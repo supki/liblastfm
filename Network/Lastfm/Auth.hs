@@ -12,16 +12,14 @@ type Token = String
 type SessionKey = String
 
 getSession :: APIKey -> Token -> IO (Maybe SessionKey)
-getSession apiKey token = firstInnerTagContent "key" <$> callAPI
-  [ ("method","auth.getSession")
-  , ("api_key", apiKey)
+getSession apiKey token = firstInnerTagContent "key" <$> callAPI "auth.getSession"
+  [ ("api_key", apiKey)
   , ("token", token)
   ]
 
 getToken :: APIKey -> IO (Maybe Token)
-getToken apiKey = firstInnerTagContent "token" <$> callAPI
-  [ ("method","auth.getToken")
-  , ("api_key", apiKey)
+getToken apiKey = firstInnerTagContent "token" <$> callAPI "auth.getToken"
+  [ ("api_key", apiKey)
   ]
 
 getAuthorizeTokenLink :: APIKey -> Token -> String

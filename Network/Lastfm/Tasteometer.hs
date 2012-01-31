@@ -21,9 +21,8 @@ instance Show Value where
   show (Group _)   = "group"
 
 compare :: APIKey -> Value -> Value -> Maybe Limit -> IO Response
-compare apiKey value1 value2 limit = callAPI
-  [ ("method", "tasteometer.compare")
-  , ("type1", show value1), ("value1", getValue value1)
+compare apiKey value1 value2 limit = callAPI "tasteometer.compare"
+  [ ("type1", show value1), ("value1", getValue value1)
   , ("type2", show value2), ("value2", getValue value2)
   , ("limit", show . fromMaybe 5 $ limit)
   , ("api_key", apiKey) ]

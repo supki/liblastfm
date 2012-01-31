@@ -25,6 +25,7 @@ type Key = String
 type Value = String
 type Secret = String
 type Sign = String
+type Method = String
 
 newtype Response = Response {unwrap :: [Element]}
 
@@ -34,26 +35,28 @@ secret = unsafePerformIO $ newIORef ""
 withSecret :: Secret -> IO a -> IO a
 withSecret s f = writeIORef secret s >> f
 
-callAPI :: [(Key, Value)] -> IO Response
-callAPI as = withCurlDo $ do
-               s <- readIORef secret
-               handle <- initialize
-               response <- liftM (Response . onlyElems . parseXML . decodeString . respBody)
-                            (do_curl_ handle
-                                      "http://ws.audioscrobbler.com/2.0/?"
-                                      [ CurlPostFields . map (export . urlEncode) $ (("api_sig", sign s) : as) ]
-                                      :: IO CurlResponse)
-               reset handle
-               case firstInnerTagContent "error" response of
-                 Just m  -> error m
-                 Nothing -> return response
-  where sign :: Secret -> Sign
+callAPI :: Method -> [(Key, Value)] -> IO Response
+callAPI m as = withCurlDo $ do
+                 s <- readIORef secret
+                 handle <- initialize
+                 response <- liftM (Response . onlyElems . parseXML . decodeString . respBody)
+                              (do_curl_ handle
+                                        ("http://ws.audioscrobbler.com/2.0/?method=" ++ m ++ "&")
+                                        [ CurlPostFields . map (export . urlEncode) $ (("api_sig", sign s) : bs) ]
+                                        :: IO CurlResponse)
+                 reset handle
+                 case firstInnerTagContent "error" response of
+                   Just m  -> error m
+                   Nothing -> return response
+  where bs :: [(Key, Value)]
+        bs = ("method", m) : as
+        sign :: Secret -> Sign
         -- ^ Each API call (a little exception for getToken) should be signed.
         -- Algorithm description can be found at http://www.lastfm.ru/api/authspec Section 8
-        sign s = show . md5 . BS.pack . (++ s) . concatMap (uncurry (++)) . sortBy (compare `on` fst) $ as
+        sign s = show . md5 . BS.pack . (++ s) . concatMap (uncurry (++)) . sortBy (compare `on` fst) $ bs
 
-callAPI_ :: [(Key, Value)] -> IO ()
-callAPI_ as = callAPI as >> return ()
+callAPI_ :: Method -> [(Key, Value)] -> IO ()
+callAPI_ m as = callAPI m as >> return ()
 
 optional :: [(Key, Maybe a)] -> [(Key, a)]
 optional = map (second fromJust) . filter (isJust . snd)
