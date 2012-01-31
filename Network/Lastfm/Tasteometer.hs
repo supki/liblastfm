@@ -1,10 +1,8 @@
 module Network.Lastfm.Tasteometer
   ( compare
-  , Value (..)
-  , getScore, getSimilarArtists
+  , Value (..), APIKey
   ) where
 
-import Control.Applicative ((<$>))
 import Data.List (intercalate)
 import Data.Maybe (fromMaybe)
 import Network.Lastfm.Core
@@ -12,12 +10,15 @@ import Prelude hiding (compare)
 
 type APIKey = String
 
-data Value = User String | Artists [String] -- ^ [Last.fm username] | [Comma-separated artist names (max. 100)]
-type Limit = Int -- ^ How many shared artists to display
+data Value = User String      -- ^ [Last.fm username]
+           | Group String     -- ^ [Last.fm group name]
+           | Artists [String] -- ^ [Artist names (max. 100)]
+type Limit = Int              -- ^ How many shared artists to display
 
 instance Show Value where
   show (User _)    = "user"
   show (Artists _) = "artists"
+  show (Group _)   = "group"
 
 compare :: APIKey -> Value -> Value -> Maybe Limit -> IO Response
 compare apiKey value1 value2 limit = callAPI
@@ -29,12 +30,7 @@ compare apiKey value1 value2 limit = callAPI
   where
     getValue :: Value -> String
     getValue (User user) = user
+    getValue (Group _) = error "cannot compare Group value"
     getValue (Artists artists) = intercalate "," artists
 
-getScore :: APIKey -> Value -> Value -> IO (Maybe String)
-getScore apiKey username1 username2 =
-  firstInnerTagContent "score" <$> compare apiKey username1 username2 (Just 10)
-
-getSimilarArtists :: APIKey -> Value -> Value -> IO [String]
-getSimilarArtists apiKey username1 username2 =
-  allInnerTagsContent "name" <$> getAllInnerTags "artist" <$> compare apiKey username1 username2 (Just 10)
+{- `compareGroup' method is deprecated currently -}
