@@ -41,7 +41,7 @@ callAPI m as = withCurlDo $ do
                  handle <- initialize
                  response <- liftM (Response . onlyElems . parseXML . decodeString . respBody)
                               (do_curl_ handle
-                                        ("http://ws.audioscrobbler.com/2.0/?method=" ++ m ++ "&")
+                                        "http://ws.audioscrobbler.com/2.0/?"
                                         [ CurlPostFields . map (export . urlEncode) $ (("api_sig", sign s) : bs) ]
                                         :: IO CurlResponse)
                  reset handle
