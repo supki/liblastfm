@@ -1,6 +1,6 @@
 module Network.Lastfm.Tasteometer
   ( compare
-  , Value (..)
+  , Value (..), APIKey
   ) where
 
 import Data.List (intercalate)
@@ -32,3 +32,5 @@ compare apiKey value1 value2 limit = callAPI
     getValue (User user) = user
     getValue (Group _) = error "cannot compare Group value"
     getValue (Artists artists) = intercalate "," artists
+
+{- `compareGroup' method is deprecated currently -}
