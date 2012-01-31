@@ -1,8 +1,8 @@
 module Network.Lastfm.Core
-  ( withSecret
+  ( Response
+  , withSecret
   , firstInnerTagContent, allInnerTagsContent, getAllInnerTags
   , callAPI, callAPI_
-  , Response
   ) where
 
 import Codec.Binary.UTF8.String (decodeString)
@@ -23,7 +23,8 @@ type Key = String
 type Value = String
 type Secret = String
 type Sign = String
-type Response = [Element]
+
+newtype Response = Response {unwrap :: [Element]}
 
 secret :: IORef Secret
 secret = unsafePerformIO $ newIORef ""
@@ -31,11 +32,11 @@ secret = unsafePerformIO $ newIORef ""
 withSecret :: Secret -> IO a -> IO a
 withSecret s f = writeIORef secret s >> f
 
-callAPI :: [(Key, Value)] -> IO [Element]
+callAPI :: [(Key, Value)] -> IO Response
 callAPI as = withCurlDo $ do
                s <- readIORef secret
                handle <- initialize
-               response <- liftM (onlyElems . parseXML . decodeString . respBody)
+               response <- liftM (Response . onlyElems . parseXML . decodeString . respBody)
                             (do_curl_ handle
                                       "http://ws.audioscrobbler.com/2.0/?"
                                       [ CurlPostFields . map (export . urlEncode) $ (("api_sig", sign s) : as) ]
@@ -52,14 +53,14 @@ callAPI as = withCurlDo $ do
 callAPI_ :: [(Key, Value)] -> IO ()
 callAPI_ as = callAPI as >> return ()
 
-firstInnerTagContent :: String -> [Element] -> Maybe String
-firstInnerTagContent tag elements = liftM strContent (maybeHead $ getAllInnerTags tag elements)
+firstInnerTagContent :: String -> Response -> Maybe String
+firstInnerTagContent tag response = liftM strContent (maybeHead . unwrap . getAllInnerTags tag $ response)
   where maybeHead :: [a] -> Maybe a
         maybeHead [] = Nothing
         maybeHead xs = Just $ head xs
 
-allInnerTagsContent :: String -> [Element] -> [String]
-allInnerTagsContent tag = map strContent <$> getAllInnerTags tag
+allInnerTagsContent :: String -> Response -> [String]
+allInnerTagsContent tag = map strContent <$> unwrap . getAllInnerTags tag
 
-getAllInnerTags ::  String -> [Element] -> [Element]
-getAllInnerTags tag = concatMap (findElements . unqual $ tag)
+getAllInnerTags ::  String -> Response -> Response
+getAllInnerTags tag = Response . concatMap (findElements . unqual $ tag) . unwrap
