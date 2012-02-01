@@ -10,12 +10,12 @@ module Network.Lastfm.Track
   , search, share,
   ) where
 
+import Network.Lastfm.Artist (Artist)
 import Network.Lastfm.Auth (APIKey, SessionKey)
 import Network.Lastfm.Core
 
 newtype Album = Album String deriving (Show, LastfmValue)
 newtype AlbumArtist = AlbumArtist String deriving (Show, LastfmValue)
-newtype Artist = Artist String deriving (Show, LastfmValue)
 newtype ChosenByUser = ChosenByUser String deriving (Show, LastfmValue)
 newtype Context = Context String deriving (Show, LastfmValue)
 newtype Duration = Duration String deriving (Show, LastfmValue)
@@ -23,7 +23,7 @@ newtype Limit = Limit Int deriving (Show, LastfmValue)
 newtype Mbid = Mbid String deriving (Show, LastfmValue)
 newtype Message = Message String deriving (Show, LastfmValue)
 newtype Page = Page String deriving (Show, LastfmValue)
-newtype Public = Public String deriving (Show, LastfmValue)
+newtype Public = Public Bool deriving (Show, LastfmValue)
 newtype Recipient = Recipient String deriving (Show, LastfmValue)
 newtype StreamId = StreamId String deriving (Show, LastfmValue)
 newtype Tag = Tag String deriving (Show, LastfmValue)

@@ -4,11 +4,11 @@ module Network.Lastfm.Playlist
   , addTrack, create
   ) where
 
+import Network.Lastfm.Artist (Artist)
 import Network.Lastfm.Auth (APIKey, SessionKey)
 import Network.Lastfm.Core
 import Network.Lastfm.Track (Track)
 
-newtype Artist = Artist String deriving (Show, LastfmValue)
 newtype Description = Description String deriving (Show, LastfmValue)
 newtype PlaylistID = PlaylistID String deriving (Show, LastfmValue)
 newtype Title = Title String deriving (Show, LastfmValue)
