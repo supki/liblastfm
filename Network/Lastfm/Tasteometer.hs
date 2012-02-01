@@ -26,15 +26,18 @@ instance LastfmValue Value where
 newtype Limit = Limit Int deriving (Show, LastfmValue)
 
 compare :: Value -> Value -> Maybe Limit -> APIKey -> Lastfm Response
-compare value1 value2 limit apiKey = callAPI "tasteometer.compare"
-  [ "type1" ?< type1
-  , "type2" ?< type2
-  , "value1" ?< value1
-  , "value2" ?< value2
-  , "limit" ?< limit
-  , "api_key" ?< apiKey
-  ]
-  where type1 = show value1
-        type2 = show value2
+compare (ValueArtists value1) (ValueArtists value2) limit apiKey
+  | null value1 || null value2 = error "Tasteometer.compare: empty artists list."
+  | length value1 > 100 || length value2 > 100 = error "Tasteometer.compare: artists list length has exceeded maximum (100)."
+  | otherwise = callAPI "artist.addTags"
+    [ "type1" ?< type1
+    , "type2" ?< type2
+    , "value1" ?< value1
+    , "value2" ?< value2
+    , "limit" ?< limit
+    , "api_key" ?< apiKey
+    ]
+    where type1 = show value1
+          type2 = show value2
 
 {- `compareGroup' method is deprecated -}
