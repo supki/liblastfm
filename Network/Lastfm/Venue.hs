@@ -14,14 +14,14 @@ newtype Limit = Limit Int deriving (Show, LastfmValue)
 newtype Country = Country String deriving (Show, LastfmValue)
 
 getEvents :: Venue -> Maybe FestivalsOnly -> APIKey -> Lastfm Response
-getEvents venue festivalsOnly apiKey = callAPI "venue.getEvents" $
+getEvents venue festivalsOnly apiKey = callAPI "venue.getEvents"
   [ "venue" ?< venue
   , "api_key" ?< apiKey
   , "festivalsonly" ?< festivalsOnly
   ]
 
 getPastEvents :: Venue -> Maybe FestivalsOnly -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getPastEvents venue festivalsOnly page limit apiKey = callAPI "venue.getPastEvents" $
+getPastEvents venue festivalsOnly page limit apiKey = callAPI "venue.getPastEvents"
   [ "venue" ?< venue
   , "api_key" ?< apiKey
   , "festivalsonly" ?< festivalsOnly
@@ -30,7 +30,7 @@ getPastEvents venue festivalsOnly page limit apiKey = callAPI "venue.getPastEven
   ]
 
 search :: Venue -> Maybe Page -> Maybe Limit -> Maybe Country -> APIKey -> Lastfm Response
-search venue page limit country apiKey = callAPI "venue.search" $
+search venue page limit country apiKey = callAPI "venue.search"
   [ "venue" ?< venue
   , "api_key" ?< apiKey
   , "page" ?< page

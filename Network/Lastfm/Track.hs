@@ -1,15 +1,11 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Network.Lastfm.Track
-  ( AlbumArtist(..), ChosenByUser(..), Context(..)
-  , Duration(..), Limit(..), Mbid(..), Message(..), Page(..), Public(..), Recipient(..)
+  ( AlbumArtist(..), ChosenByUser(..), Context(..), Duration(..)
+  , Limit(..), Mbid(..), Message(..), Page(..), Public(..), Recipient(..)
   , StreamId(..), Tag(..), Timestamp(..), Track(..), TrackNumber(..)
-  , ban, unban
-  , love, unlove
-  , scrobble, updateNowPlaying
-  , addTags, removeTag
-  , search, share
-  , getCorrection, getFingerprintMetadata
-  , getBuyLinks, getInfo, getShouts, getSimilar, getTags, getTopFans, getTopTags
+  , addTags, ban, getBuyLinks, getCorrection, getFingerprintMetadata
+  , getInfo, getShouts, getSimilar, getTags, getTopFans, getTopTags
+  , love, removeTag, scrobble, search, share, unban, unlove, updateNowPlaying
   ) where
 
 import Data.Maybe (isJust)
@@ -40,108 +36,6 @@ newtype Track = Track String deriving (Show, LastfmValue)
 newtype TrackNumber = TrackNumber String deriving (Show, LastfmValue)
 newtype Username = Username String deriving (Show, LastfmValue)
 
-ban :: Track -> Artist -> APIKey -> SessionKey -> Lastfm ()
-ban track artist apiKey sessionKey = callAPI_ "track.ban"
-  [ "track" ?< track
-  , "artist" ?< artist
-  , "api_key" ?< apiKey
-  , "sk" ?< sessionKey
-  ]
-
-unban :: Track -> Artist -> APIKey -> SessionKey -> Lastfm ()
-unban track artist apiKey sessionKey = callAPI_ "track.unban"
-  [ "track" ?< track
-  , "artist" ?< artist
-  , "api_key" ?< apiKey
-  , "sk" ?< sessionKey
-  ]
-
-love :: Track -> Artist -> APIKey -> SessionKey -> Lastfm ()
-love track artist apiKey sessionKey = callAPI_ "track.love"
-  [ "track" ?< track
-  , "artist" ?< artist
-  , "api_key" ?< apiKey
-  , "sk" ?< sessionKey
-  ]
-
-unlove :: Track -> Artist -> APIKey -> SessionKey -> Lastfm ()
-unlove track artist apiKey sessionKey = callAPI_ "track.unlove"
-  [ "track" ?< track
-  , "artist" ?< artist
-  , "api_key" ?< apiKey
-  , "sk" ?< sessionKey
-  ]
-
-updateNowPlaying :: Track
-                 -> Artist
-                 -> Maybe Album
-                 -> Maybe AlbumArtist
-                 -> Maybe Context
-                 -> Maybe TrackNumber
-                 -> Maybe Mbid
-                 -> Maybe Duration
-                 -> APIKey
-                 -> SessionKey
-                 -> Lastfm ()
-updateNowPlaying track artist album albumArtist context trackNumber mbid duration apiKey sessionKey = callAPI_ "track.updateNowPlaying" $
-  [ "track" ?< track
-  , "artist" ?< artist
-  , "api_key" ?< apiKey
-  , "sk" ?< sessionKey
-  , "album" ?< album
-  , "albumArtist" ?< albumArtist
-  , "context" ?< context
-  , "trackNumber" ?< trackNumber
-  , "mbid" ?< mbid
-  , "duration" ?< duration
-  ]
-
-scrobble :: [ ( Timestamp, Maybe Album, Track, Artist, Maybe AlbumArtist
-           , Maybe Duration, Maybe StreamId, Maybe ChosenByUser
-           , Maybe Context, Maybe TrackNumber, Maybe Mbid ) ]
-         -> APIKey
-         -> SessionKey
-         -> Lastfm ()
-scrobble xs apiKey sessionKey = mapM_ scrobbleTrack xs
-  where scrobbleTrack (timestamp, album, track, artist, albumArtist, duration, streamId, chosenByUser, context, trackNumber, mbid) = callAPI_ "track.scrobble" $
-          [ "timestamp" ?< timestamp
-          , "track" ?< track
-          , "artist" ?< artist
-          , "api_key" ?< apiKey
-          , "sk" ?< sessionKey
-          , "album" ?< album
-          , "albumArtist" ?< albumArtist
-          , "duration" ?< duration
-          , "streamId" ?< streamId
-          , "chosenByUser" ?< chosenByUser
-          , "context" ?< context
-          , "trackNumber" ?< trackNumber
-          , "mbid" ?< mbid
-          ]
-
-search :: Maybe Limit -> Maybe Page -> Track -> Maybe Artist -> APIKey -> Lastfm Response
-search limit page track artist apiKey = callAPI "track.search"
-  [ "track" ?< track
-  , "api_key" ?< apiKey
-  , "limit" ?< limit
-  , "page" ?< page
-  , "artist" ?< artist
-  ]
-
-share :: Artist -> Track -> Maybe Public -> Maybe Message -> [Recipient] -> APIKey -> SessionKey -> Lastfm ()
-share artist track public message recipients apiKey sessionKey
-  | null recipients        = error "track.share: empty recipient list."
-  | length recipients > 10 = error "track.share: recipient list length has exceeded maximum."
-  | otherwise              = callAPI_ "track.share"
-    [ "artist" ?< artist
-    , "track" ?< track
-    , "recipient" ?< recipients
-    , "api_key" ?< apiKey
-    , "sk" ?< sessionKey
-    , "public" ?< public
-    , "message" ?< message
-    ]
-
 addTags :: Artist -> Track -> [Tag] -> APIKey -> SessionKey -> Lastfm ()
 addTags artist track tags apiKey sessionKey
   | null tags        = error "Track.addTags: empty tag list."
@@ -154,14 +48,22 @@ addTags artist track tags apiKey sessionKey
     , "sk" ?< sessionKey
     ]
 
-removeTag :: Artist -> Track -> Tag -> APIKey -> SessionKey -> Lastfm ()
-removeTag artist track tag apiKey sessionKey = callAPI_ "track.removeTag"
-  [ "artist" ?< artist
-  , "track" ?< track
-  , "tag" ?< tag
+ban :: Track -> Artist -> APIKey -> SessionKey -> Lastfm ()
+ban track artist apiKey sessionKey = callAPI_ "track.ban"
+  [ "track" ?< track
+  , "artist" ?< artist
   , "api_key" ?< apiKey
   , "sk" ?< sessionKey
   ]
+
+getBuyLinks :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Country -> APIKey -> Lastfm Response
+getBuyLinks a mbid autocorrect country apiKey = callAPI method $ parameters ++
+  [ "autocorrect" ?< autocorrect
+  , "country" ?< country
+  , "api_key" ?< apiKey
+  ]
+  where method = "track.getBuyLinks"
+        parameters = either method a mbid
 
 getCorrection :: Artist -> Track -> APIKey -> Lastfm Response
 getCorrection artist track apiKey = callAPI "track.getCorrection"
@@ -175,16 +77,6 @@ getFingerprintMetadata fingerprint apiKey = callAPI "track.getFingerprintMetadat
   [ "fingerprintid" ?< fingerprint
   , "api_key" ?< apiKey
   ]
-
-getBuyLinks :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Country -> APIKey -> Lastfm Response
-getBuyLinks a mbid autocorrect country apiKey = callAPI method $ parameters ++
-  [ "autocorrect" ?< autocorrect
-  , "country" ?< country
-  , "api_key" ?< apiKey
-  ]
-  where method = "track.getBuyLinks"
-        parameters = either method a mbid
-
 
 getInfo :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Username -> APIKey -> Lastfm Response
 getInfo a mbid autocorrect username apiKey = callAPI method $ parameters ++
@@ -238,6 +130,108 @@ getTopTags a mbid autocorrect apiKey = callAPI method $ parameters ++
   ]
   where method = "track.getTopTags"
         parameters = either method a mbid
+love :: Track -> Artist -> APIKey -> SessionKey -> Lastfm ()
+love track artist apiKey sessionKey = callAPI_ "track.love"
+  [ "track" ?< track
+  , "artist" ?< artist
+  , "api_key" ?< apiKey
+  , "sk" ?< sessionKey
+  ]
+
+removeTag :: Artist -> Track -> Tag -> APIKey -> SessionKey -> Lastfm ()
+removeTag artist track tag apiKey sessionKey = callAPI_ "track.removeTag"
+  [ "artist" ?< artist
+  , "track" ?< track
+  , "tag" ?< tag
+  , "api_key" ?< apiKey
+  , "sk" ?< sessionKey
+  ]
+
+scrobble :: [ ( Timestamp, Maybe Album, Track, Artist, Maybe AlbumArtist
+           , Maybe Duration, Maybe StreamId, Maybe ChosenByUser
+           , Maybe Context, Maybe TrackNumber, Maybe Mbid ) ]
+         -> APIKey
+         -> SessionKey
+         -> Lastfm ()
+scrobble xs apiKey sessionKey = mapM_ scrobbleTrack xs
+  where scrobbleTrack (timestamp, album, track, artist, albumArtist, duration, streamId, chosenByUser, context, trackNumber, mbid) = callAPI_ "track.scrobble"
+          [ "timestamp" ?< timestamp
+          , "track" ?< track
+          , "artist" ?< artist
+          , "api_key" ?< apiKey
+          , "sk" ?< sessionKey
+          , "album" ?< album
+          , "albumArtist" ?< albumArtist
+          , "duration" ?< duration
+          , "streamId" ?< streamId
+          , "chosenByUser" ?< chosenByUser
+          , "context" ?< context
+          , "trackNumber" ?< trackNumber
+          , "mbid" ?< mbid
+          ]
+
+search :: Maybe Limit -> Maybe Page -> Track -> Maybe Artist -> APIKey -> Lastfm Response
+search limit page track artist apiKey = callAPI "track.search"
+  [ "track" ?< track
+  , "api_key" ?< apiKey
+  , "limit" ?< limit
+  , "page" ?< page
+  , "artist" ?< artist
+  ]
+
+share :: Artist -> Track -> Maybe Public -> Maybe Message -> [Recipient] -> APIKey -> SessionKey -> Lastfm ()
+share artist track public message recipients apiKey sessionKey
+  | null recipients        = error "track.share: empty recipient list."
+  | length recipients > 10 = error "track.share: recipient list length has exceeded maximum."
+  | otherwise              = callAPI_ "track.share"
+    [ "artist" ?< artist
+    , "track" ?< track
+    , "recipient" ?< recipients
+    , "api_key" ?< apiKey
+    , "sk" ?< sessionKey
+    , "public" ?< public
+    , "message" ?< message
+    ]
+
+unban :: Track -> Artist -> APIKey -> SessionKey -> Lastfm ()
+unban track artist apiKey sessionKey = callAPI_ "track.unban"
+  [ "track" ?< track
+  , "artist" ?< artist
+  , "api_key" ?< apiKey
+  , "sk" ?< sessionKey
+  ]
+
+unlove :: Track -> Artist -> APIKey -> SessionKey -> Lastfm ()
+unlove track artist apiKey sessionKey = callAPI_ "track.unlove"
+  [ "track" ?< track
+  , "artist" ?< artist
+  , "api_key" ?< apiKey
+  , "sk" ?< sessionKey
+  ]
+
+updateNowPlaying :: Track
+                 -> Artist
+                 -> Maybe Album
+                 -> Maybe AlbumArtist
+                 -> Maybe Context
+                 -> Maybe TrackNumber
+                 -> Maybe Mbid
+                 -> Maybe Duration
+                 -> APIKey
+                 -> SessionKey
+                 -> Lastfm ()
+updateNowPlaying track artist album albumArtist context trackNumber mbid duration apiKey sessionKey = callAPI_ "track.updateNowPlaying"
+  [ "track" ?< track
+  , "artist" ?< artist
+  , "api_key" ?< apiKey
+  , "sk" ?< sessionKey
+  , "album" ?< album
+  , "albumArtist" ?< albumArtist
+  , "context" ?< context
+  , "trackNumber" ?< trackNumber
+  , "mbid" ?< mbid
+  , "duration" ?< duration
+  ]
 
 either method a mbid
   | isJust mbid = [ "mbid" ?< mbid ]

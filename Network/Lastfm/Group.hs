@@ -20,7 +20,7 @@ getHype group apiKey = callAPI "group.getHype"
   ]
 
 getMembers :: Group -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getMembers group page limit apiKey = callAPI "group.getMembers" $
+getMembers group page limit apiKey = callAPI "group.getMembers"
   [ "group" ?< group
   , "api_key" ?< apiKey
   , "page" ?< page
@@ -34,7 +34,7 @@ getWeeklyChartList group apiKey = callAPI "group.getWeeklyChartList"
   ]
 
 getWeeklyAlbumChart :: Group -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
-getWeeklyAlbumChart group from to apiKey = callAPI "group.getWeeklyAlbumChart" $
+getWeeklyAlbumChart group from to apiKey = callAPI "group.getWeeklyAlbumChart"
   [ "group" ?< group
   , "api_key" ?< apiKey
   , "from" ?< from
@@ -42,7 +42,7 @@ getWeeklyAlbumChart group from to apiKey = callAPI "group.getWeeklyAlbumChart" $
   ]
 
 getWeeklyArtistChart :: Group -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
-getWeeklyArtistChart group from to apiKey = callAPI "group.getWeeklyArtistChart" $
+getWeeklyArtistChart group from to apiKey = callAPI "group.getWeeklyArtistChart"
   [ "group" ?< group
   , "api_key" ?< apiKey
   , "from" ?< from
@@ -51,7 +51,7 @@ getWeeklyArtistChart group from to apiKey = callAPI "group.getWeeklyArtistChart"
 
 
 getWeeklyTrackChart :: Group -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
-getWeeklyTrackChart group from to apiKey = callAPI "group.getWeeklyTrackChart" $
+getWeeklyTrackChart group from to apiKey = callAPI "group.getWeeklyTrackChart"
   [ "group" ?< group
   , "api_key" ?< apiKey
   , "from" ?< from

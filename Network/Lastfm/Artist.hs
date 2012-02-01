@@ -18,13 +18,13 @@ newtype Recipient = Recipient String deriving (Show, LastfmValue)
 newtype Tag = Tag String deriving (Show, LastfmValue)
 
 getCorrection :: Artist -> APIKey -> Lastfm Response
-getCorrection artist apiKey = callAPI "artist.getCorrection" $
+getCorrection artist apiKey = callAPI "artist.getCorrection"
   [ "artist" ?< artist
   , "api_key" ?< apiKey
   ]
 
 shout :: Artist -> Message -> APIKey -> SessionKey -> Lastfm ()
-shout artist message apiKey sessionKey = callAPI_ "artist.shout" $
+shout artist message apiKey sessionKey = callAPI_ "artist.shout"
   [ "artist" ?< artist
   , "message" ?< message
   , "api_key" ?< apiKey
@@ -32,7 +32,7 @@ shout artist message apiKey sessionKey = callAPI_ "artist.shout" $
   ]
 
 search :: Maybe Limit -> Maybe Page -> Artist -> APIKey -> Lastfm Response
-search limit page artist apiKey = callAPI "artist.search" $
+search limit page artist apiKey = callAPI "artist.search"
   [ "artist" ?< artist
   , "api_key" ?< apiKey
   , "limit" ?< limit
@@ -40,7 +40,7 @@ search limit page artist apiKey = callAPI "artist.search" $
   ]
 
 share :: Artist -> [Recipient] -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Lastfm ()
-share artist recipients message public apiKey sessionKey = callAPI_ "artist.share" $
+share artist recipients message public apiKey sessionKey = callAPI_ "artist.share"
   [ "artist" ?< artist
   , "recipient" ?< recipients
   , "api_key" ?< apiKey

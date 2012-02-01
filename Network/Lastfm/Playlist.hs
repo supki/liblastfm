@@ -23,7 +23,7 @@ addTrack playlist track artist apiKey sessionKey = callAPI_ "playlist.addTrack"
   ]
 
 create :: Maybe Title -> Maybe Description -> APIKey -> SessionKey -> Lastfm Response
-create title description apiKey sessionKey = callAPI "playlist.create" $
+create title description apiKey sessionKey = callAPI "playlist.create"
   [ "api_key" ?< apiKey
   , "sk" ?< sessionKey
   , "title" ?< title
