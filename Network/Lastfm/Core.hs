@@ -3,18 +3,16 @@ module Network.Lastfm.Core
   ( Response
   , withSecret
   , firstInnerTagContent, allInnerTagsContent, getAllInnerTags
-  , LastfmValue(..), (?<), (?<<), callAPI, callAPI_, optional
+  , LastfmValue(..), (?<), callAPI, callAPI_
   ) where
 
 import Codec.Binary.UTF8.String (decodeString)
 import Control.Applicative ((<$>))
-import Control.Arrow (second)
 import Control.Monad (liftM)
 import Data.Digest.Pure.MD5 (md5)
 import Data.Function (on)
 import Data.IORef
 import Data.List (intercalate, sortBy)
-import Data.Maybe (fromJust, isJust)
 import Data.URLEncoded (urlEncode, export)
 import Network.Curl hiding (Content)
 import System.IO.Unsafe (unsafePerformIO)
@@ -48,12 +46,12 @@ instance LastfmValue String where
   unpack = id
 instance LastfmValue a => LastfmValue [a] where
   unpack = intercalate "," . map unpack
+instance LastfmValue a => LastfmValue (Maybe a) where
+  unpack (Just a) = unpack a
+  unpack Nothing  = ""
 
 (?<) :: LastfmValue a => String -> a -> (String, String)
 a ?< b = (a, unpack b)
-
-(?<<) :: LastfmValue a => String -> Maybe a -> (String, Maybe String)
-a ?<< b = (a, liftM unpack b)
 
 callAPI :: Method -> [(Key, Value)] -> IO Response
 callAPI m as = withCurlDo $ do
@@ -69,7 +67,7 @@ callAPI m as = withCurlDo $ do
                    Just e  -> error e
                    Nothing -> return response
   where bs :: [(Key, Value)]
-        bs = ("method", m) : as
+        bs = filter (not . null . snd) $ ("method", m) : as
         sign :: Secret -> Sign
         -- ^ Each API call (a little exception for getToken) should be signed.
         -- Algorithm description can be found at http://www.lastfm.ru/api/authspec Section 8
@@ -77,9 +75,6 @@ callAPI m as = withCurlDo $ do
 
 callAPI_ :: Method -> [(Key, Value)] -> IO ()
 callAPI_ m as = callAPI m as >> return ()
-
-optional :: [(Key, Maybe a)] -> [(Key, a)]
-optional = map (second fromJust) . filter (isJust . snd)
 
 firstInnerTagContent :: String -> Response -> Maybe String
 firstInnerTagContent tag response = liftM strContent (maybeHead . unwrap . getAllInnerTags tag $ response)

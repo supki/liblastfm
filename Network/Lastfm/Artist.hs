@@ -35,10 +35,9 @@ search :: Maybe Limit -> Maybe Page -> Artist -> APIKey -> IO Response
 search limit page artist apiKey = callAPI "artist.search" $
   [ "artist" ?< artist
   , "api_key" ?< apiKey
-  ] ++ optional
-    [ "limit" ?<< limit
-    , "page" ?<< page
-    ]
+  , "limit" ?< limit
+  , "page" ?< page
+  ]
 
 share :: Artist -> [Recipient] -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> IO ()
 share artist recipients message public apiKey sessionKey = callAPI_ "artist.share" $
@@ -46,10 +45,9 @@ share artist recipients message public apiKey sessionKey = callAPI_ "artist.shar
   , "recipient" ?< recipients
   , "api_key" ?< apiKey
   , "sk" ?< sessionKey
-  ] ++ optional
-    [ "public" ?<< public
-    , "message" ?<< message
-    ]
+  , "public" ?< public
+  , "message" ?< message
+  ]
 
 addTags :: Artist -> [Tag] -> APIKey -> SessionKey -> IO ()
 addTags artist tags apiKey sessionKey

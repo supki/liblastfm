@@ -23,10 +23,9 @@ getMembers :: Group -> Maybe Page -> Maybe Limit -> APIKey -> IO Response
 getMembers group page limit apiKey = callAPI "group.getMembers" $
   [ "group" ?< group
   , "api_key" ?< apiKey
-  ] ++ optional
-    [ "page" ?<< page
-    , "limit" ?<< limit
-    ]
+  , "page" ?< page
+  , "limit" ?< limit
+  ]
 
 getWeeklyChartList :: Group -> APIKey -> IO Response
 getWeeklyChartList group apiKey = callAPI "group.getWeeklyChartList"
@@ -38,26 +37,23 @@ getWeeklyAlbumChart :: Group -> Maybe From -> Maybe To -> APIKey -> IO Response
 getWeeklyAlbumChart group from to apiKey = callAPI "group.getWeeklyAlbumChart" $
   [ "group" ?< group
   , "api_key" ?< apiKey
-  ] ++ optional
-    [ "from" ?<< from
-    , "to" ?<< to
-    ]
+  , "from" ?< from
+  , "to" ?< to
+  ]
 
 getWeeklyArtistChart :: Group -> Maybe From -> Maybe To -> APIKey -> IO Response
 getWeeklyArtistChart group from to apiKey = callAPI "group.getWeeklyArtistChart" $
   [ "group" ?< group
   , "api_key" ?< apiKey
-  ] ++ optional
-    [ "from" ?<< from
-    , "to" ?<< to
-    ]
+  , "from" ?< from
+  , "to" ?< to
+  ]
 
 
 getWeeklyTrackChart :: Group -> Maybe From -> Maybe To -> APIKey -> IO Response
 getWeeklyTrackChart group from to apiKey = callAPI "group.getWeeklyTrackChart" $
   [ "group" ?< group
   , "api_key" ?< apiKey
-  ] ++ optional
-    [ "from" ?<< from
-    , "to" ?<< to
-    ]
+  , "from" ?< from
+  , "to" ?< to
+  ]

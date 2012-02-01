@@ -26,7 +26,6 @@ create :: Maybe Title -> Maybe Description -> APIKey -> SessionKey -> IO Respons
 create title description apiKey sessionKey = callAPI "playlist.create" $
   [ "api_key" ?< apiKey
   , "sk" ?< sessionKey
-  ] ++ optional
-    [ "title" ?<< title
-    , "description" ?<< description
-    ]
+  , "title" ?< title
+  , "description" ?< description
+  ]

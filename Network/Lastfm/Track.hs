@@ -79,14 +79,13 @@ updateNowPlaying track artist album albumArtist context trackNumber mbid duratio
   , "artist" ?< artist
   , "api_key" ?< apiKey
   , "sk" ?< sessionKey
-  ] ++ optional
-    [ "album" ?<< album
-    , "albumArtist" ?<< albumArtist
-    , "context" ?<< context
-    , "trackNumber" ?<< trackNumber
-    , "mbid" ?<< mbid
-    , "duration" ?<< duration
-    ]
+  , "album" ?< album
+  , "albumArtist" ?< albumArtist
+  , "context" ?< context
+  , "trackNumber" ?< trackNumber
+  , "mbid" ?< mbid
+  , "duration" ?< duration
+  ]
 
 scrobble :: [ ( Timestamp, Maybe Album, Track, Artist, Maybe AlbumArtist
            , Maybe Duration, Maybe StreamId, Maybe ChosenByUser
@@ -101,26 +100,24 @@ scrobble xs apiKey sessionKey = mapM_ scrobbleTrack xs
           , "artist" ?< artist
           , "api_key" ?< apiKey
           , "sk" ?< sessionKey
-          ] ++ optional
-            [ "album" ?<< album
-            , "albumArtist" ?<< albumArtist
-            , "duration" ?<< duration
-            , "streamId" ?<< streamId
-            , "chosenByUser" ?<< chosenByUser
-            , "context" ?<< context
-            , "trackNumber" ?<< trackNumber
-            , "mbid" ?<< mbid
-            ]
+          , "album" ?< album
+          , "albumArtist" ?< albumArtist
+          , "duration" ?< duration
+          , "streamId" ?< streamId
+          , "chosenByUser" ?< chosenByUser
+          , "context" ?< context
+          , "trackNumber" ?< trackNumber
+          , "mbid" ?< mbid
+          ]
 
 search :: Maybe Limit -> Maybe Page -> Track -> Maybe Artist -> APIKey -> IO Response
 search limit page track artist apiKey = callAPI "track.search" $
   [ "track" ?< track
   , "api_key" ?< apiKey
-  ] ++ optional
-    [ "limit" ?<< limit
-    , "page" ?<< page
-    , "artist" ?<< artist
-    ]
+  , "limit" ?< limit
+  , "page" ?< page
+  , "artist" ?< artist
+  ]
 
 share :: Artist -> Track -> Maybe Public -> Maybe Message -> [Recipient] -> APIKey -> SessionKey -> IO ()
 share artist track public message recipients apiKey sessionKey = callAPI_ "track.share" $
@@ -129,10 +126,9 @@ share artist track public message recipients apiKey sessionKey = callAPI_ "track
   , "recipient" ?< recipients
   , "api_key" ?< apiKey
   , "sk" ?< sessionKey
-  ] ++ optional
-    [ "public" ?<< public
-    , "message" ?<< message
-    ]
+  , "public" ?< public
+  , "message" ?< message
+  ]
 
 addTags :: Artist -> Track -> [Tag] -> APIKey -> SessionKey -> IO ()
 addTags artist track tags apiKey sessionKey
