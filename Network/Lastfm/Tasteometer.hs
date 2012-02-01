@@ -1,35 +1,38 @@
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Network.Lastfm.Tasteometer
   ( compare
-  , Value (..), APIKey
+  , Value(..), Limit(..), User(..)
   ) where
 
 import Data.List (intercalate)
 import Data.Maybe (fromMaybe)
+import Network.Lastfm.Artist
+import Network.Lastfm.Auth (APIKey)
 import Network.Lastfm.Core
+import Network.Lastfm.User
 import Prelude hiding (compare)
 
-type APIKey = String
+data Value = ValueUser User
+           | ValueArtists [Artist]
 
-data Value = User String      -- ^ [Last.fm username]
-           | Group String     -- ^ [Last.fm group name]
-           | Artists [String] -- ^ [Artist names (max. 100)]
-type Limit = Int              -- ^ How many shared artists to display
+newtype Limit = Limit Int deriving (Show, LastfmValue)
 
 instance Show Value where
-  show (User _)    = "user"
-  show (Artists _) = "artists"
-  show (Group _)   = "group"
+  show (ValueUser _)    = "user"
+  show (ValueArtists _) = "artists"
 
-compare :: APIKey -> Value -> Value -> Maybe Limit -> IO Response
-compare apiKey value1 value2 limit = callAPI "tasteometer.compare"
-  [ ("type1", show value1), ("value1", getValue value1)
-  , ("type2", show value2), ("value2", getValue value2)
-  , ("limit", show . fromMaybe 5 $ limit)
-  , ("api_key", apiKey) ]
-  where
-    getValue :: Value -> String
-    getValue (User user) = user
-    getValue (Group _) = error "cannot compare Group value"
-    getValue (Artists artists) = intercalate "," artists
+instance LastfmValue Value where
+  unpack (ValueUser u)     = unpack u
+  unpack (ValueArtists as) = unpack as
 
-{- `compareGroup' method is deprecated currently -}
+compare :: Value -> Value -> Maybe Limit -> APIKey -> IO Response
+compare value1 value2 limit apiKey = callAPI "tasteometer.compare"
+  [ "type1" ?< (show value1)
+  , "value1" ?< value1
+  , "type2" ?< (show value2)
+  , "value2" ?< value2
+  , "limit" ?< limit
+  , "api_key" ?< apiKey
+  ]
+
+{- `compareGroup' method is deprecated -}
