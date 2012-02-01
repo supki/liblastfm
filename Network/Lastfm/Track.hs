@@ -1,14 +1,19 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Network.Lastfm.Track
-  ( Album(..), AlbumArtist(..), Artist(..), ChosenByUser(..), Context(..)
+  ( Album(..), AlbumArtist(..), ChosenByUser(..), Context(..)
   , Duration(..), Limit(..), Mbid(..), Message(..), Page(..), Public(..), Recipient(..)
   , StreamId(..), Tag(..), Timestamp(..), Track(..), TrackNumber(..)
   , ban, unban
   , love, unlove
   , scrobble, updateNowPlaying
   , addTags, removeTag
-  , search, share,
+  , search, share
+  , getCorrection, getFingerprintMetadata
+  , getBuyLinks, getInfo, getShouts, getSimilar, getTags, getTopFans, getTopTags
   ) where
+
+import Data.Maybe (isJust)
+import Prelude hiding (either)
 
 import Network.Lastfm.Artist (Artist)
 import Network.Lastfm.Auth (APIKey, SessionKey)
@@ -16,9 +21,12 @@ import Network.Lastfm.Core
 
 newtype Album = Album String deriving (Show, LastfmValue)
 newtype AlbumArtist = AlbumArtist String deriving (Show, LastfmValue)
+newtype Autocorrect = Autocorrect Bool deriving (Show, LastfmValue)
 newtype ChosenByUser = ChosenByUser String deriving (Show, LastfmValue)
 newtype Context = Context String deriving (Show, LastfmValue)
+newtype Country = Country String deriving (Show, LastfmValue)
 newtype Duration = Duration String deriving (Show, LastfmValue)
+newtype Fingerprint = Fingerprint String deriving (Show, LastfmValue)
 newtype Limit = Limit Int deriving (Show, LastfmValue)
 newtype Mbid = Mbid String deriving (Show, LastfmValue)
 newtype Message = Message String deriving (Show, LastfmValue)
@@ -30,6 +38,7 @@ newtype Tag = Tag String deriving (Show, LastfmValue)
 newtype Timestamp = Timestamp String deriving (Show, LastfmValue)
 newtype Track = Track String deriving (Show, LastfmValue)
 newtype TrackNumber = TrackNumber String deriving (Show, LastfmValue)
+newtype Username = Username String deriving (Show, LastfmValue)
 
 ban :: Track -> Artist -> APIKey -> SessionKey -> IO ()
 ban track artist apiKey sessionKey = callAPI_ "track.ban"
@@ -150,3 +159,85 @@ removeTag artist track tag apiKey sessionKey = callAPI_ "track.removeTag"
   , "api_key" ?< apiKey
   , "sk" ?< sessionKey
   ]
+
+getCorrection :: Artist -> Track -> APIKey -> IO Response
+getCorrection artist track apiKey = callAPI "track.getCorrection"
+  [ "artist" ?< artist
+  , "track" ?< track
+  , "api_key" ?< apiKey
+  ]
+
+getFingerprintMetadata :: Fingerprint -> APIKey -> IO Response
+getFingerprintMetadata fingerprint apiKey = callAPI "track.getFingerprintMetadata"
+  [ "fingerprintid" ?< fingerprint
+  , "api_key" ?< apiKey
+  ]
+
+getBuyLinks :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Country -> APIKey -> IO Response
+getBuyLinks a mbid autocorrect country apiKey = callAPI method $ parameters ++
+  [ "autocorrect" ?< autocorrect
+  , "country" ?< country
+  , "api_key" ?< apiKey
+  ]
+  where method = "track.getBuyLinks"
+        parameters = either method a mbid
+
+
+getInfo :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Username -> APIKey -> IO Response
+getInfo a mbid autocorrect username apiKey = callAPI method $ parameters ++
+  [ "autocorrect" ?< autocorrect
+  , "username" ?< username
+  , "api_key" ?< apiKey
+  ]
+  where method = "track.getInfo"
+        parameters = either method a mbid
+
+getShouts :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Limit -> Maybe Autocorrect -> Maybe Page -> APIKey -> IO Response
+getShouts a mbid limit autocorrect page apiKey = callAPI method $ parameters ++
+  [ "limit" ?< limit
+  , "autocorrect" ?< autocorrect
+  , "page" ?< page
+  , "api_key" ?< apiKey
+  ]
+  where method = "track.getShouts"
+        parameters = either method a mbid
+
+getSimilar :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Limit -> APIKey -> IO Response
+getSimilar a mbid autocorrect limit apiKey = callAPI method $ parameters ++
+  [ "autocorrect" ?< autocorrect
+  , "limit" ?< limit
+  , "api_key" ?< apiKey
+  ]
+  where method = "track.getSimilar"
+        parameters = either method a mbid
+
+getTags :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Username -> APIKey -> IO Response
+getTags a mbid autocorrect username apiKey = callAPI method $ parameters ++
+  [ "autocorrect" ?< autocorrect
+  , "user" ?< username
+  , "api_key" ?< apiKey
+  ]
+  where method = "track.getTags"
+        parameters = either method a mbid
+
+getTopFans :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> APIKey -> IO Response
+getTopFans a mbid autocorrect apiKey = callAPI method $ parameters ++
+  [ "autocorrect" ?< autocorrect
+  , "api_key" ?< apiKey
+  ]
+  where method = "track.getTopFans"
+        parameters = either method a mbid
+
+getTopTags :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> APIKey -> IO Response
+getTopTags a mbid autocorrect apiKey = callAPI method $ parameters ++
+  [ "autocorrect" ?< autocorrect
+  , "api_key" ?< apiKey
+  ]
+  where method = "track.getTopTags"
+        parameters = either method a mbid
+
+either method a mbid
+  | isJust mbid = [ "mbid" ?< mbid ]
+  | otherwise   = case a of
+                    Just (artist, track) -> [ "artist" ?< artist, "track" ?< track ]
+                    Nothing              -> error $ method ++ ": no mbid nor (artist, track) are specified."
