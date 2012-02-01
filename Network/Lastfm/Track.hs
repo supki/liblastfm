@@ -1,6 +1,6 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Network.Lastfm.Track
-  ( Album(..), AlbumArtist(..), ChosenByUser(..), Context(..)
+  ( AlbumArtist(..), ChosenByUser(..), Context(..)
   , Duration(..), Limit(..), Mbid(..), Message(..), Page(..), Public(..), Recipient(..)
   , StreamId(..), Tag(..), Timestamp(..), Track(..), TrackNumber(..)
   , ban, unban
@@ -15,11 +15,11 @@ module Network.Lastfm.Track
 import Data.Maybe (isJust)
 import Prelude hiding (either)
 
+import Network.Lastfm.Album (Album)
 import Network.Lastfm.Artist (Artist)
 import Network.Lastfm.Auth (APIKey, SessionKey)
 import Network.Lastfm.Core
 
-newtype Album = Album String deriving (Show, LastfmValue)
 newtype AlbumArtist = AlbumArtist String deriving (Show, LastfmValue)
 newtype Autocorrect = Autocorrect Bool deriving (Show, LastfmValue)
 newtype ChosenByUser = ChosenByUser String deriving (Show, LastfmValue)
@@ -120,7 +120,7 @@ scrobble xs apiKey sessionKey = mapM_ scrobbleTrack xs
           ]
 
 search :: Maybe Limit -> Maybe Page -> Track -> Maybe Artist -> APIKey -> Lastfm Response
-search limit page track artist apiKey = callAPI "track.search" $
+search limit page track artist apiKey = callAPI "track.search"
   [ "track" ?< track
   , "api_key" ?< apiKey
   , "limit" ?< limit
@@ -129,15 +129,18 @@ search limit page track artist apiKey = callAPI "track.search" $
   ]
 
 share :: Artist -> Track -> Maybe Public -> Maybe Message -> [Recipient] -> APIKey -> SessionKey -> Lastfm ()
-share artist track public message recipients apiKey sessionKey = callAPI_ "track.share" $
-  [ "artist" ?< artist
-  , "track" ?< track
-  , "recipient" ?< recipients
-  , "api_key" ?< apiKey
-  , "sk" ?< sessionKey
-  , "public" ?< public
-  , "message" ?< message
-  ]
+share artist track public message recipients apiKey sessionKey
+  | null recipients        = error "track.share: empty recipient list."
+  | length recipients > 10 = error "track.share: recipient list length has exceeded maximum."
+  | otherwise              = callAPI_ "track.share"
+    [ "artist" ?< artist
+    , "track" ?< track
+    , "recipient" ?< recipients
+    , "api_key" ?< apiKey
+    , "sk" ?< sessionKey
+    , "public" ?< public
+    , "message" ?< message
+    ]
 
 addTags :: Artist -> Track -> [Tag] -> APIKey -> SessionKey -> Lastfm ()
 addTags artist track tags apiKey sessionKey
