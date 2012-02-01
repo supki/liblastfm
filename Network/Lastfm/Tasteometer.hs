@@ -29,7 +29,7 @@ compare :: Value -> Value -> Maybe Limit -> APIKey -> Lastfm Response
 compare (ValueArtists value1) (ValueArtists value2) limit apiKey
   | null value1 || null value2 = error "Tasteometer.compare: empty artists list."
   | length value1 > 100 || length value2 > 100 = error "Tasteometer.compare: artists list length has exceeded maximum (100)."
-  | otherwise = callAPI "artist.addTags"
+  | otherwise = callAPI "tasteometer.compare"
     [ "type1" ?< type1
     , "type2" ?< type2
     , "value1" ?< value1
