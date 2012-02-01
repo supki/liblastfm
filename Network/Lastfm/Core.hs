@@ -1,8 +1,9 @@
+{-# LANGUAGE FlexibleInstances, OverlappingInstances #-}
 module Network.Lastfm.Core
   ( Response
   , withSecret
   , firstInnerTagContent, allInnerTagsContent, getAllInnerTags
-  , callAPI, callAPI_, optional
+  , LastfmValue(..), (?<), (?<<), callAPI, callAPI_, optional
   ) where
 
 import Codec.Binary.UTF8.String (decodeString)
@@ -12,7 +13,7 @@ import Control.Monad (liftM)
 import Data.Digest.Pure.MD5 (md5)
 import Data.Function (on)
 import Data.IORef
-import Data.List (sortBy)
+import Data.List (intercalate, sortBy)
 import Data.Maybe (fromJust, isJust)
 import Data.URLEncoded (urlEncode, export)
 import Network.Curl hiding (Content)
@@ -35,6 +36,22 @@ secret = unsafePerformIO $ newIORef ""
 withSecret :: Secret -> IO a -> IO a
 withSecret s f = writeIORef secret s >> f
 
+class LastfmValue a where
+  unpack :: a -> String
+
+instance LastfmValue Int where
+  unpack = show
+instance LastfmValue [Char] where
+  unpack = id
+instance LastfmValue a => LastfmValue [a] where
+  unpack = intercalate "," . map unpack
+
+(?<) :: LastfmValue a => String -> a -> (String, String)
+a ?< b = (a, unpack b)
+
+(?<<) :: LastfmValue a => String -> Maybe a -> (String, Maybe String)
+a ?<< b = (a, liftM unpack b)
+
 callAPI :: Method -> [(Key, Value)] -> IO Response
 callAPI m as = withCurlDo $ do
                  s <- readIORef secret
@@ -46,7 +63,7 @@ callAPI m as = withCurlDo $ do
                                         :: IO CurlResponse)
                  reset handle
                  case firstInnerTagContent "error" response of
-                   Just m  -> error m
+                   Just e  -> error e
                    Nothing -> return response
   where bs :: [(Key, Value)]
         bs = ("method", m) : as
