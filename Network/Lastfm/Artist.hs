@@ -17,13 +17,13 @@ newtype Public = Public Bool deriving (Show, LastfmValue)
 newtype Recipient = Recipient String deriving (Show, LastfmValue)
 newtype Tag = Tag String deriving (Show, LastfmValue)
 
-getCorrection :: Artist -> APIKey -> IO Response
+getCorrection :: Artist -> APIKey -> Lastfm Response
 getCorrection artist apiKey = callAPI "artist.getCorrection" $
   [ "artist" ?< artist
   , "api_key" ?< apiKey
   ]
 
-shout :: Artist -> Message -> APIKey -> SessionKey -> IO ()
+shout :: Artist -> Message -> APIKey -> SessionKey -> Lastfm ()
 shout artist message apiKey sessionKey = callAPI_ "artist.shout" $
   [ "artist" ?< artist
   , "message" ?< message
@@ -31,7 +31,7 @@ shout artist message apiKey sessionKey = callAPI_ "artist.shout" $
   , "sk" ?< sessionKey
   ]
 
-search :: Maybe Limit -> Maybe Page -> Artist -> APIKey -> IO Response
+search :: Maybe Limit -> Maybe Page -> Artist -> APIKey -> Lastfm Response
 search limit page artist apiKey = callAPI "artist.search" $
   [ "artist" ?< artist
   , "api_key" ?< apiKey
@@ -39,7 +39,7 @@ search limit page artist apiKey = callAPI "artist.search" $
   , "page" ?< page
   ]
 
-share :: Artist -> [Recipient] -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> IO ()
+share :: Artist -> [Recipient] -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Lastfm ()
 share artist recipients message public apiKey sessionKey = callAPI_ "artist.share" $
   [ "artist" ?< artist
   , "recipient" ?< recipients
@@ -49,7 +49,7 @@ share artist recipients message public apiKey sessionKey = callAPI_ "artist.shar
   , "message" ?< message
   ]
 
-addTags :: Artist -> [Tag] -> APIKey -> SessionKey -> IO ()
+addTags :: Artist -> [Tag] -> APIKey -> SessionKey -> Lastfm ()
 addTags artist tags apiKey sessionKey
   | null tags        = error "Artist.addTags: empty tag list."
   | length tags > 10 = error "Artist.addTags: tag list length has exceeded maximum."
@@ -60,7 +60,7 @@ addTags artist tags apiKey sessionKey
     , "sk" ?< sessionKey
     ]
 
-removeTag :: Artist -> Tag -> APIKey -> SessionKey -> IO ()
+removeTag :: Artist -> Tag -> APIKey -> SessionKey -> Lastfm ()
 removeTag artist tag apiKey sessionKey = callAPI_ "artist.removeTag"
   [ "artist" ?< artist
   , "tag" ?< tag

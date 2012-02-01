@@ -25,7 +25,7 @@ instance LastfmValue Value where
 
 newtype Limit = Limit Int deriving (Show, LastfmValue)
 
-compare :: Value -> Value -> Maybe Limit -> APIKey -> IO Response
+compare :: Value -> Value -> Maybe Limit -> APIKey -> Lastfm Response
 compare value1 value2 limit apiKey = callAPI "tasteometer.compare"
   [ "type1" ?< type1
   , "type2" ?< type2

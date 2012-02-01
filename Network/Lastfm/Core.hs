@@ -1,6 +1,6 @@
 {-# LANGUAGE FlexibleInstances, OverlappingInstances, TypeSynonymInstances #-}
 module Network.Lastfm.Core
-  ( Response
+  ( Lastfm, Response
   , withSecret
   , firstInnerTagContent, allInnerTagsContent, getAllInnerTags
   , LastfmValue(..), (?<), callAPI, callAPI_
@@ -20,6 +20,7 @@ import Text.XML.Light
 
 import qualified Data.ByteString.Lazy.Char8 as BS
 
+type Lastfm = IO
 type Key = String
 type Value = String
 type Secret = String

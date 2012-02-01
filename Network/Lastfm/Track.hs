@@ -40,7 +40,7 @@ newtype Track = Track String deriving (Show, LastfmValue)
 newtype TrackNumber = TrackNumber String deriving (Show, LastfmValue)
 newtype Username = Username String deriving (Show, LastfmValue)
 
-ban :: Track -> Artist -> APIKey -> SessionKey -> IO ()
+ban :: Track -> Artist -> APIKey -> SessionKey -> Lastfm ()
 ban track artist apiKey sessionKey = callAPI_ "track.ban"
   [ "track" ?< track
   , "artist" ?< artist
@@ -48,7 +48,7 @@ ban track artist apiKey sessionKey = callAPI_ "track.ban"
   , "sk" ?< sessionKey
   ]
 
-unban :: Track -> Artist -> APIKey -> SessionKey -> IO ()
+unban :: Track -> Artist -> APIKey -> SessionKey -> Lastfm ()
 unban track artist apiKey sessionKey = callAPI_ "track.unban"
   [ "track" ?< track
   , "artist" ?< artist
@@ -56,7 +56,7 @@ unban track artist apiKey sessionKey = callAPI_ "track.unban"
   , "sk" ?< sessionKey
   ]
 
-love :: Track -> Artist -> APIKey -> SessionKey -> IO ()
+love :: Track -> Artist -> APIKey -> SessionKey -> Lastfm ()
 love track artist apiKey sessionKey = callAPI_ "track.love"
   [ "track" ?< track
   , "artist" ?< artist
@@ -64,7 +64,7 @@ love track artist apiKey sessionKey = callAPI_ "track.love"
   , "sk" ?< sessionKey
   ]
 
-unlove :: Track -> Artist -> APIKey -> SessionKey -> IO ()
+unlove :: Track -> Artist -> APIKey -> SessionKey -> Lastfm ()
 unlove track artist apiKey sessionKey = callAPI_ "track.unlove"
   [ "track" ?< track
   , "artist" ?< artist
@@ -82,7 +82,7 @@ updateNowPlaying :: Track
                  -> Maybe Duration
                  -> APIKey
                  -> SessionKey
-                 -> IO ()
+                 -> Lastfm ()
 updateNowPlaying track artist album albumArtist context trackNumber mbid duration apiKey sessionKey = callAPI_ "track.updateNowPlaying" $
   [ "track" ?< track
   , "artist" ?< artist
@@ -101,7 +101,7 @@ scrobble :: [ ( Timestamp, Maybe Album, Track, Artist, Maybe AlbumArtist
            , Maybe Context, Maybe TrackNumber, Maybe Mbid ) ]
          -> APIKey
          -> SessionKey
-         -> IO ()
+         -> Lastfm ()
 scrobble xs apiKey sessionKey = mapM_ scrobbleTrack xs
   where scrobbleTrack (timestamp, album, track, artist, albumArtist, duration, streamId, chosenByUser, context, trackNumber, mbid) = callAPI_ "track.scrobble" $
           [ "timestamp" ?< timestamp
@@ -119,7 +119,7 @@ scrobble xs apiKey sessionKey = mapM_ scrobbleTrack xs
           , "mbid" ?< mbid
           ]
 
-search :: Maybe Limit -> Maybe Page -> Track -> Maybe Artist -> APIKey -> IO Response
+search :: Maybe Limit -> Maybe Page -> Track -> Maybe Artist -> APIKey -> Lastfm Response
 search limit page track artist apiKey = callAPI "track.search" $
   [ "track" ?< track
   , "api_key" ?< apiKey
@@ -128,7 +128,7 @@ search limit page track artist apiKey = callAPI "track.search" $
   , "artist" ?< artist
   ]
 
-share :: Artist -> Track -> Maybe Public -> Maybe Message -> [Recipient] -> APIKey -> SessionKey -> IO ()
+share :: Artist -> Track -> Maybe Public -> Maybe Message -> [Recipient] -> APIKey -> SessionKey -> Lastfm ()
 share artist track public message recipients apiKey sessionKey = callAPI_ "track.share" $
   [ "artist" ?< artist
   , "track" ?< track
@@ -139,7 +139,7 @@ share artist track public message recipients apiKey sessionKey = callAPI_ "track
   , "message" ?< message
   ]
 
-addTags :: Artist -> Track -> [Tag] -> APIKey -> SessionKey -> IO ()
+addTags :: Artist -> Track -> [Tag] -> APIKey -> SessionKey -> Lastfm ()
 addTags artist track tags apiKey sessionKey
   | null tags        = error "Track.addTags: empty tag list."
   | length tags > 10 = error "Track.addTags: tag list length has exceeded maximum."
@@ -151,7 +151,7 @@ addTags artist track tags apiKey sessionKey
     , "sk" ?< sessionKey
     ]
 
-removeTag :: Artist -> Track -> Tag -> APIKey -> SessionKey -> IO ()
+removeTag :: Artist -> Track -> Tag -> APIKey -> SessionKey -> Lastfm ()
 removeTag artist track tag apiKey sessionKey = callAPI_ "track.removeTag"
   [ "artist" ?< artist
   , "track" ?< track
@@ -160,20 +160,20 @@ removeTag artist track tag apiKey sessionKey = callAPI_ "track.removeTag"
   , "sk" ?< sessionKey
   ]
 
-getCorrection :: Artist -> Track -> APIKey -> IO Response
+getCorrection :: Artist -> Track -> APIKey -> Lastfm Response
 getCorrection artist track apiKey = callAPI "track.getCorrection"
   [ "artist" ?< artist
   , "track" ?< track
   , "api_key" ?< apiKey
   ]
 
-getFingerprintMetadata :: Fingerprint -> APIKey -> IO Response
+getFingerprintMetadata :: Fingerprint -> APIKey -> Lastfm Response
 getFingerprintMetadata fingerprint apiKey = callAPI "track.getFingerprintMetadata"
   [ "fingerprintid" ?< fingerprint
   , "api_key" ?< apiKey
   ]
 
-getBuyLinks :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Country -> APIKey -> IO Response
+getBuyLinks :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Country -> APIKey -> Lastfm Response
 getBuyLinks a mbid autocorrect country apiKey = callAPI method $ parameters ++
   [ "autocorrect" ?< autocorrect
   , "country" ?< country
@@ -183,7 +183,7 @@ getBuyLinks a mbid autocorrect country apiKey = callAPI method $ parameters ++
         parameters = either method a mbid
 
 
-getInfo :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Username -> APIKey -> IO Response
+getInfo :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Username -> APIKey -> Lastfm Response
 getInfo a mbid autocorrect username apiKey = callAPI method $ parameters ++
   [ "autocorrect" ?< autocorrect
   , "username" ?< username
@@ -192,7 +192,7 @@ getInfo a mbid autocorrect username apiKey = callAPI method $ parameters ++
   where method = "track.getInfo"
         parameters = either method a mbid
 
-getShouts :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Limit -> Maybe Autocorrect -> Maybe Page -> APIKey -> IO Response
+getShouts :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Limit -> Maybe Autocorrect -> Maybe Page -> APIKey -> Lastfm Response
 getShouts a mbid limit autocorrect page apiKey = callAPI method $ parameters ++
   [ "limit" ?< limit
   , "autocorrect" ?< autocorrect
@@ -202,7 +202,7 @@ getShouts a mbid limit autocorrect page apiKey = callAPI method $ parameters ++
   where method = "track.getShouts"
         parameters = either method a mbid
 
-getSimilar :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Limit -> APIKey -> IO Response
+getSimilar :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Limit -> APIKey -> Lastfm Response
 getSimilar a mbid autocorrect limit apiKey = callAPI method $ parameters ++
   [ "autocorrect" ?< autocorrect
   , "limit" ?< limit
@@ -211,7 +211,7 @@ getSimilar a mbid autocorrect limit apiKey = callAPI method $ parameters ++
   where method = "track.getSimilar"
         parameters = either method a mbid
 
-getTags :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Username -> APIKey -> IO Response
+getTags :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Username -> APIKey -> Lastfm Response
 getTags a mbid autocorrect username apiKey = callAPI method $ parameters ++
   [ "autocorrect" ?< autocorrect
   , "user" ?< username
@@ -220,7 +220,7 @@ getTags a mbid autocorrect username apiKey = callAPI method $ parameters ++
   where method = "track.getTags"
         parameters = either method a mbid
 
-getTopFans :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> APIKey -> IO Response
+getTopFans :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
 getTopFans a mbid autocorrect apiKey = callAPI method $ parameters ++
   [ "autocorrect" ?< autocorrect
   , "api_key" ?< apiKey
@@ -228,7 +228,7 @@ getTopFans a mbid autocorrect apiKey = callAPI method $ parameters ++
   where method = "track.getTopFans"
         parameters = either method a mbid
 
-getTopTags :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> APIKey -> IO Response
+getTopTags :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
 getTopTags a mbid autocorrect apiKey = callAPI method $ parameters ++
   [ "autocorrect" ?< autocorrect
   , "api_key" ?< apiKey

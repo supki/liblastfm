@@ -9,7 +9,7 @@ import Network.Lastfm.Core
 
 newtype User = User String deriving (Show, LastfmValue)
 
-getInfo :: Maybe User -> APIKey -> IO Response
+getInfo :: Maybe User -> APIKey -> Lastfm Response
 getInfo user apiKey = callAPI "user.getinfo" $
   [ "user" ?< user
   , "api_key" ?< apiKey
