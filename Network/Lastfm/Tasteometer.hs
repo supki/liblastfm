@@ -23,8 +23,6 @@ instance LastfmValue Value where
   unpack (ValueUser u)     = unpack u
   unpack (ValueArtists as) = unpack as
 
-newtype Limit = Limit Int deriving (Show, LastfmValue)
-
 compare :: Value -> Value -> Maybe Limit -> APIKey -> Lastfm Response
 compare (ValueArtists value1) (ValueArtists value2) limit apiKey
   | null value1 || null value2 = error "Tasteometer.compare: empty artists list."

@@ -1,6 +1,6 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Network.Lastfm.User
-  ( Artist(..), EndTimestamp(..), FestivalsOnly(..), Page(..), RecentTracks(..), StartTimestamp(..), User(..)
+  ( Artist(..), EndTimestamp(..), FestivalsOnly(..), Limit(..), Page(..), RecentTracks(..), StartTimestamp(..), User(..)
   , getArtistTracks, getBannedTracks, getEvents, getFriends, getInfo, getLovedTracks
   )where
 
