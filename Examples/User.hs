@@ -10,4 +10,7 @@ getPlayCount user apiKey =
   firstInnerTagContent "playcount" <$> getInfo (Just user) apiKey
 
 main = do
-  getPlayCount (User "smpcln") (APIKey "b25b959554ed76058ac220b7b2e0a026") >>= putStrLn . fromJust
+  let apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
+  let user = User "smpcln"
+  putStrLn "Play count:"
+  getPlayCount user apiKey >>= putStrLn . fromJust

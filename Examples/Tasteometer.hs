@@ -15,5 +15,12 @@ getSimilarArtists username1 username2 apiKey =
   allInnerTagsContent "name" <$> getAllInnerTags "artist" <$> compare username1 username2 (Just . Limit $ 10) apiKey
 
 main = do
-  getScore (ValueUser . User $ "smpcln") (ValueUser . User $ "ingolfr") (APIKey "b25b959554ed76058ac220b7b2e0a026") >>= putStrLn . fromJust
-  getSimilarArtists (ValueUser . User $ "smpcln") (ValueUser . User $ "ingolfr") (APIKey "b25b959554ed76058ac220b7b2e0a026") >>= mapM_ putStrLn
+  let apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
+  let username1 = "smpcln"
+  let user1 = ValueUser . User $ username1
+  let username2 = "ingolfr"
+  let user2 = ValueUser . User $ username2
+  putStrLn "Score: "
+  getScore user1 user2 apiKey >>= putStrLn . fromJust
+  putStrLn "Similar groups: "
+  getSimilarArtists user1 user2 apiKey >>= mapM_ putStrLn
