@@ -1,4 +1,4 @@
-{-# LANGUAGE FlexibleInstances, OverlappingInstances #-}
+{-# LANGUAGE FlexibleInstances, OverlappingInstances, TypeSynonymInstances #-}
 module Network.Lastfm.Core
   ( Response
   , withSecret
@@ -41,7 +41,7 @@ class LastfmValue a where
 
 instance LastfmValue Int where
   unpack = show
-instance LastfmValue [Char] where
+instance LastfmValue String where
   unpack = id
 instance LastfmValue a => LastfmValue [a] where
   unpack = intercalate "," . map unpack
