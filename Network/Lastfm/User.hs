@@ -5,7 +5,7 @@ module Network.Lastfm.User
   )where
 
 import Network.Lastfm.Artist (Artist(..))
-import Network.Lastfm.Auth (APIKey, SessionKey)
+import Network.Lastfm.Auth (APIKey)
 import Network.Lastfm.Core
 
 newtype EndTimestamp = EndTimestamp Int deriving (Show, LastfmValue)

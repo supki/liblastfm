@@ -1,16 +1,15 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Network.Lastfm.Tasteometer
-  ( Value(..), Limit(..), User(..)
+  ( Value(..), Limit(..)
   , compare
   ) where
 
-import Data.List (intercalate)
-import Data.Maybe (fromMaybe)
-import Network.Lastfm.Artist
+import Prelude hiding (compare)
+
+import Network.Lastfm.Artist (Artist)
 import Network.Lastfm.Auth (APIKey)
 import Network.Lastfm.Core
-import Network.Lastfm.User
-import Prelude hiding (compare)
+import Network.Lastfm.User (User)
 
 data Value = ValueUser User
            | ValueArtists [Artist]
@@ -23,10 +22,14 @@ instance LastfmValue Value where
   unpack (ValueUser u)     = unpack u
   unpack (ValueArtists as) = unpack as
 
+newtype Limit = Limit Int deriving (Show, LastfmValue)
+
 compare :: Value -> Value -> Maybe Limit -> APIKey -> Lastfm Response
-compare (ValueArtists value1) (ValueArtists value2) limit apiKey
-  | null value1 || null value2 = error "Tasteometer.compare: empty artists list."
-  | length value1 > 100 || length value2 > 100 = error "Tasteometer.compare: artists list length has exceeded maximum (100)."
+compare value1 value2 limit apiKey
+  | isNull value1 = error "Tasteometer.compare: empty first artists list."
+  | isNull value2 = error "Tasteometer.compare: empty second artists list."
+  | isExceededMaximum value1 = error "Tasteometer.compare: first artists list length has exceeded maximum (100)."
+  | isExceededMaximum value2 = error "Tasteometer.compare: second artists list length has exceeded maximum (100)."
   | otherwise = callAPI "tasteometer.compare"
     [ "type1" ?< type1
     , "type2" ?< type2
@@ -37,5 +40,13 @@ compare (ValueArtists value1) (ValueArtists value2) limit apiKey
     ]
     where type1 = show value1
           type2 = show value2
+
+          isNull :: Value -> Bool
+          isNull (ValueUser _) = False
+          isNull (ValueArtists as) = null as
+
+          isExceededMaximum :: Value -> Bool
+          isExceededMaximum (ValueUser _) = False
+          isExceededMaximum (ValueArtists as) = length as > 100
 
 {- `compareGroup' method is deprecated -}
