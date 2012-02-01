@@ -53,7 +53,7 @@ addTags :: Artist -> [Tag] -> APIKey -> SessionKey -> IO ()
 addTags artist tags apiKey sessionKey
   | null tags        = error "Artist.addTags: empty tag list."
   | length tags > 10 = error "Artist.addTags: tag list length has exceeded maximum."
-  | otherwise        = callAPI_ "arist.addTags"
+  | otherwise        = callAPI_ "artist.addTags"
     [ "artist" ?< artist
     , "tags" ?< tags
     , "api_key" ?< apiKey
