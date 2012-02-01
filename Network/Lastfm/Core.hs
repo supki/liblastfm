@@ -39,6 +39,9 @@ withSecret s f = writeIORef secret s >> f
 class LastfmValue a where
   unpack :: a -> String
 
+instance LastfmValue Bool where
+  unpack True = "1"
+  unpack False = "0"
 instance LastfmValue Int where
   unpack = show
 instance LastfmValue String where
