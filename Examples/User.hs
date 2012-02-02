@@ -1,4 +1,4 @@
-import Network.Lastfm.Core
+import Network.Lastfm.Core (allInnerTagsContent, firstInnerTagContent)
 import Network.Lastfm.Types (APIKey(..), Limit(..), User(..))
 import Network.Lastfm.API.User
 
