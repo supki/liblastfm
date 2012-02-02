@@ -22,6 +22,7 @@ newtype Limit = Limit Int deriving (Show, LastfmValue)
 newtype Mbid = Mbid String deriving (Show, LastfmValue)
 newtype Message = Message String deriving (Show, LastfmValue)
 newtype Page = Page Int deriving (Show, LastfmValue)
+data Period = Week | Quater | HalfYear | Year | Overall deriving (Show)
 newtype Playlist = Playlist String deriving (Show, LastfmValue)
 newtype Public = Public Bool deriving (Show, LastfmValue)
 newtype RecentTracks = RecentTracks Bool deriving (Show, LastfmValue)
@@ -36,6 +37,7 @@ newtype Token = Token String deriving (Show, LastfmValue)
 newtype Track = Track String deriving (Show, LastfmValue)
 newtype TrackNumber = TrackNumber String deriving (Show, LastfmValue)
 newtype User = User String deriving (Show, LastfmValue)
+newtype UseRecs = UseRecs Bool deriving (Show, LastfmValue)
 newtype Venue = Venue String deriving (Show, LastfmValue)
 
 class LastfmValue a where
@@ -53,6 +55,13 @@ instance LastfmValue a => LastfmValue [a] where
 instance LastfmValue a => LastfmValue (Maybe a) where
   unpack (Just a) = unpack a
   unpack Nothing  = ""
+
+instance LastfmValue Period where
+  unpack Week     = "7day"
+  unpack Quater   = "3month"
+  unpack HalfYear = "6month"
+  unpack Year     = "12month"
+  unpack Overall  = "overall"
 
 (?<) :: LastfmValue a => String -> a -> (String, String)
 a ?< b = (a, unpack b)
