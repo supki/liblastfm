@@ -9,7 +9,7 @@ module Network.Lastfm.User
 import Network.Lastfm.Core
 import Network.Lastfm.Types
   ( (?<), LastfmValue(..), Album, APIKey, Artist, FestivalsOnly, From, Limit, Message
-  , Page, Period, RecentTracks, SessionKey, Tag, To, Track, User, UseRecs
+  , Page, Period, RecentTracks, SessionKey, Tag, TaggingType(..), To, Track, User, UseRecs
   )
 
 getArtistTracks :: User
