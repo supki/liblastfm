@@ -100,6 +100,7 @@ share artist album public message recipients apiKey sessionKey
     , "sk" ?< sessionKey
     ]
 
+either :: String -> Maybe (Artist, Album) -> Maybe Mbid -> [(String, String)]
 either method a mbid
   | isJust mbid = [ "mbid" ?< mbid ]
   | otherwise   = case a of

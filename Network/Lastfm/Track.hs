@@ -211,6 +211,7 @@ updateNowPlaying track artist album albumArtist context trackNumber mbid duratio
   , "duration" ?< duration
   ]
 
+either :: String -> Maybe (Artist, Track) -> Maybe Mbid -> [(String, String)]
 either method a mbid
   | isJust mbid = [ "mbid" ?< mbid ]
   | otherwise   = case a of
