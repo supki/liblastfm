@@ -95,6 +95,7 @@ callAPI m as = withCurlDo $ do
                    Nothing -> return $ Response response
   where bs :: [(Key, Value)]
         bs = filter (not . null . snd) $ ("method", m) : as
+
         sign :: Secret -> Sign
         -- ^ Each API call (a little exception for getToken) should be signed.
         -- Algorithm description can be found at http://www.lastfm.ru/api/authspec Section 8
