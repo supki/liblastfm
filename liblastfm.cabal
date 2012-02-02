@@ -12,8 +12,8 @@ Build-Type:	Simple
 
 Library
   Build-Depends:	base >= 3 && < 5, bytestring, curl, pureMD5, urlencoded, xml, utf8-string
-  Exposed-Modules:	Network.Lastfm.Core, Network.Lastfm.Album, Network.Lastfm.Artist, Network.Lastfm.Auth, Network.Lastfm.Chart, Network.Lastfm.Event, Network.Lastfm.Geo, Network.Lastfm.Group, Network.Lastfm.Library, Network.Lastfm.Playlist, Network.Lastfm.Radio, Network.Lastfm.Tag, Network.Lastfm.Tasteometer, Network.Lastfm.Track, Network.Lastfm.User, Network.Lastfm.Venue
-  Extensions:		FlexibleInstances, OverlappingInstances, GeneralizedNewtypeDeriving, TypeSynonymInstances
+  Exposed-Modules:	Network.Lastfm.Core, Network.Lastfm.Types, Network.Lastfm.Album, Network.Lastfm.Artist, Network.Lastfm.Auth, Network.Lastfm.Chart, Network.Lastfm.Event, Network.Lastfm.Geo, Network.Lastfm.Group, Network.Lastfm.Library, Network.Lastfm.Playlist, Network.Lastfm.Radio, Network.Lastfm.Tag, Network.Lastfm.Tasteometer, Network.Lastfm.Track, Network.Lastfm.User, Network.Lastfm.Venue
+  Extensions:		FlexibleInstances, OverlappingInstances, GeneralizedNewtypeDeriving, ScopedTypeVariables, TypeSynonymInstances
 
 source-repository head
   type:     git
