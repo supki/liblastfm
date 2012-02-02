@@ -1,17 +1,9 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Network.Lastfm.Venue
-  ( Venue(..), FestivalsOnly(..), Page(..), Limit(..), Country(..)
-  , getEvents, getPastEvents, search
+  ( getEvents, getPastEvents, search
   ) where
 
-import Network.Lastfm.Auth (APIKey)
 import Network.Lastfm.Core
-
-newtype Venue = Venue String deriving (Show, LastfmValue)
-newtype FestivalsOnly = FestivalsOnly Bool deriving (Show, LastfmValue)
-newtype Page = Page Int deriving (Show, LastfmValue)
-newtype Limit = Limit Int deriving (Show, LastfmValue)
-newtype Country = Country String deriving (Show, LastfmValue)
+import Network.Lastfm.Types ((?<), APIKey, Country, FestivalsOnly, Limit, Page, Venue)
 
 getEvents :: Venue -> Maybe FestivalsOnly -> APIKey -> Lastfm Response
 getEvents venue festivalsOnly apiKey = dispatch $ callAPI "venue.getEvents"

@@ -1,26 +1,15 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Network.Lastfm.User
-  ( Artist(..), EndTimestamp(..), FestivalsOnly(..), Limit(..), Page(..), RecentTracks(..), StartTimestamp(..), User(..)
-  , getArtistTracks, getBannedTracks, getEvents, getFriends, getInfo, getLovedTracks
-  )where
+  ( getArtistTracks, getBannedTracks, getEvents, getFriends, getInfo, getLovedTracks
+  ) where
 
-import Network.Lastfm.Artist (Artist(..))
-import Network.Lastfm.Auth (APIKey)
 import Network.Lastfm.Core
-
-newtype EndTimestamp = EndTimestamp Int deriving (Show, LastfmValue)
-newtype FestivalsOnly = FestivalsOnly Bool deriving (Show, LastfmValue)
-newtype Limit = Limit Int deriving (Show, LastfmValue)
-newtype Page = Page Int deriving (Show, LastfmValue)
-newtype RecentTracks = RecentTracks Bool deriving (Show, LastfmValue)
-newtype StartTimestamp = StartTimestamp Int deriving (Show, LastfmValue)
-newtype User = User String deriving (Show, LastfmValue)
+import Network.Lastfm.Types ((?<), APIKey, Artist, FestivalsOnly, From, Limit, Page, RecentTracks, To, User)
 
 getArtistTracks :: User
                 -> Artist
-                -> Maybe StartTimestamp
+                -> Maybe From
                 -> Maybe Page
-                -> Maybe EndTimestamp
+                -> Maybe To
                 -> APIKey
                 -> Lastfm Response
 getArtistTracks user artist startTimestamp page endTimestamp apiKey = dispatch $ callAPI "user.getartisttracks"

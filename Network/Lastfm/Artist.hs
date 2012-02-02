@@ -1,23 +1,11 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Network.Lastfm.Artist
-  ( Artist(..)
-  , getCorrection
-  , search, share, shout
-  , addTags, removeTag
+  ( getCorrection, search, share, shout, addTags, removeTag
   ) where
 
 import Control.Exception (throw)
 
-import Network.Lastfm.Auth (APIKey, SessionKey)
 import Network.Lastfm.Core
-
-newtype Artist = Artist String deriving (Show, LastfmValue)
-newtype Limit = Limit Int deriving (Show, LastfmValue)
-newtype Message = Message String deriving (Show, LastfmValue)
-newtype Page = Page String deriving (Show, LastfmValue)
-newtype Public = Public Bool deriving (Show, LastfmValue)
-newtype Recipient = Recipient String deriving (Show, LastfmValue)
-newtype Tag = Tag String deriving (Show, LastfmValue)
+import Network.Lastfm.Types ((?<), APIKey, Artist, Limit, Message, Page, Public, Recipient, SessionKey, Tag)
 
 getCorrection :: Artist -> APIKey -> Lastfm Response
 getCorrection artist apiKey = dispatch $ callAPI "artist.getCorrection"

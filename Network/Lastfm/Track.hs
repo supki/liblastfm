@@ -1,9 +1,5 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Network.Lastfm.Track
-  ( AlbumArtist(..), ChosenByUser(..), Context(..), Duration(..)
-  , Limit(..), Mbid(..), Message(..), Page(..), Public(..), Recipient(..)
-  , StreamId(..), Tag(..), Timestamp(..), Track(..), TrackNumber(..)
-  , addTags, ban, getBuyLinks, getCorrection, getFingerprintMetadata
+  ( addTags, ban, getBuyLinks, getCorrection, getFingerprintMetadata
   , getInfo, getShouts, getSimilar, getTags, getTopFans, getTopTags
   , love, removeTag, scrobble, search, share, unban, unlove, updateNowPlaying
   ) where
@@ -12,30 +8,11 @@ import Control.Exception (throw)
 import Data.Maybe (isJust)
 import Prelude hiding (either)
 
-import Network.Lastfm.Album (Album)
-import Network.Lastfm.Artist (Artist)
-import Network.Lastfm.Auth (APIKey, SessionKey)
 import Network.Lastfm.Core
-
-newtype AlbumArtist = AlbumArtist String deriving (Show, LastfmValue)
-newtype Autocorrect = Autocorrect Bool deriving (Show, LastfmValue)
-newtype ChosenByUser = ChosenByUser String deriving (Show, LastfmValue)
-newtype Context = Context String deriving (Show, LastfmValue)
-newtype Country = Country String deriving (Show, LastfmValue)
-newtype Duration = Duration String deriving (Show, LastfmValue)
-newtype Fingerprint = Fingerprint String deriving (Show, LastfmValue)
-newtype Limit = Limit Int deriving (Show, LastfmValue)
-newtype Mbid = Mbid String deriving (Show, LastfmValue)
-newtype Message = Message String deriving (Show, LastfmValue)
-newtype Page = Page String deriving (Show, LastfmValue)
-newtype Public = Public Bool deriving (Show, LastfmValue)
-newtype Recipient = Recipient String deriving (Show, LastfmValue)
-newtype StreamId = StreamId String deriving (Show, LastfmValue)
-newtype Tag = Tag String deriving (Show, LastfmValue)
-newtype Timestamp = Timestamp String deriving (Show, LastfmValue)
-newtype Track = Track String deriving (Show, LastfmValue)
-newtype TrackNumber = TrackNumber String deriving (Show, LastfmValue)
-newtype Username = Username String deriving (Show, LastfmValue)
+import Network.Lastfm.Types ( (?<), Album, AlbumArtist, APIKey, Artist, Autocorrect, ChosenByUser, Context, Country
+                            , Duration, Fingerprint, Limit, Mbid, Message, Page, Public, Recipient, SessionKey
+                            , StreamId, Tag, Timestamp, Track, TrackNumber, User
+                            )
 
 addTags :: Artist -> Track -> [Tag] -> APIKey -> SessionKey -> Lastfm ()
 addTags artist track tags apiKey sessionKey
@@ -79,7 +56,7 @@ getFingerprintMetadata fingerprint apiKey = dispatch $ callAPI "track.getFingerp
   , "api_key" ?< apiKey
   ]
 
-getInfo :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Username -> APIKey -> Lastfm Response
+getInfo :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> Maybe User -> APIKey -> Lastfm Response
 getInfo a mbid autocorrect username apiKey = dispatch $ callAPI method $ parameters ++
   [ "autocorrect" ?< autocorrect
   , "username" ?< username
@@ -107,7 +84,7 @@ getSimilar a mbid autocorrect limit apiKey = dispatch $ callAPI method $ paramet
   where method = "track.getSimilar"
         parameters = either method a mbid
 
-getTags :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Username -> APIKey -> Lastfm Response
+getTags :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> Maybe User -> APIKey -> Lastfm Response
 getTags a mbid autocorrect username apiKey = dispatch $ callAPI method $ parameters ++
   [ "autocorrect" ?< autocorrect
   , "user" ?< username

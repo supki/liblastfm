@@ -1,17 +1,9 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Network.Lastfm.Group
-  ( Group(..), Page(..), Limit(..), From(..), To(..)
-  , getHype, getMembers, getWeeklyChartList, getWeeklyAlbumChart, getWeeklyArtistChart, getWeeklyTrackChart
-  )  where
+  ( getHype, getMembers, getWeeklyChartList, getWeeklyAlbumChart, getWeeklyArtistChart, getWeeklyTrackChart
+  ) where
 
-import Network.Lastfm.Auth (APIKey)
 import Network.Lastfm.Core
-
-newtype Group = Group String deriving (Show, LastfmValue)
-newtype Page = Page Int deriving (Show, LastfmValue)
-newtype Limit = Limit Int deriving (Show, LastfmValue)
-newtype From = From String deriving (Show, LastfmValue)
-newtype To = To String deriving (Show, LastfmValue)
+import Network.Lastfm.Types ((?<), APIKey, From, Group, Limit, Page, To)
 
 getHype :: Group -> APIKey -> Lastfm Response
 getHype group apiKey = dispatch $ callAPI "group.getHype"

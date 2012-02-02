@@ -1,16 +1,13 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Network.Lastfm.Tasteometer
-  ( Value(..), Limit(..)
+  ( Value(..)
   , compare
   ) where
 
 import Control.Exception (throw)
 import Prelude hiding (compare)
 
-import Network.Lastfm.Artist (Artist)
-import Network.Lastfm.Auth (APIKey)
 import Network.Lastfm.Core
-import Network.Lastfm.User (User)
+import Network.Lastfm.Types ((?<), LastfmValue(..), APIKey, Artist, Limit, User)
 
 data Value = ValueUser User
            | ValueArtists [Artist]
@@ -22,8 +19,6 @@ instance Show Value where
 instance LastfmValue Value where
   unpack (ValueUser u)     = unpack u
   unpack (ValueArtists as) = unpack as
-
-newtype Limit = Limit Int deriving (Show, LastfmValue)
 
 compare :: Value -> Value -> Maybe Limit -> APIKey -> Lastfm Response
 compare value1 value2 limit apiKey

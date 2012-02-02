@@ -1,19 +1,11 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Network.Lastfm.Playlist
-  ( PlaylistID(..), Artist
-  , addTrack, create
+  ( addTrack, create
   ) where
 
-import Network.Lastfm.Artist (Artist)
-import Network.Lastfm.Auth (APIKey, SessionKey)
 import Network.Lastfm.Core
-import Network.Lastfm.Track (Track)
+import Network.Lastfm.Types ((?<), APIKey, Artist, Playlist, SessionKey, Title, Description, Track)
 
-newtype Description = Description String deriving (Show, LastfmValue)
-newtype PlaylistID = PlaylistID String deriving (Show, LastfmValue)
-newtype Title = Title String deriving (Show, LastfmValue)
-
-addTrack :: PlaylistID -> Track -> Artist -> APIKey -> SessionKey -> Lastfm ()
+addTrack :: Playlist -> Track -> Artist -> APIKey -> SessionKey -> Lastfm ()
 addTrack playlist track artist apiKey sessionKey = dispatch $ callAPI_ "playlist.addTrack"
   [ "playlistID" ?< playlist
   , "track" ?< track

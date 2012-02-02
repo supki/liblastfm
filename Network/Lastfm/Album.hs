@@ -1,7 +1,5 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Network.Lastfm.Album
-  ( Album(..), Tag(..)
-  , addTags, getBuyLinks, getInfo, getShouts, getTags
+  ( addTags, getBuyLinks, getInfo, getShouts, getTags
   , getTopTags, removeTag, search, share
   ) where
 
@@ -9,22 +7,9 @@ import Control.Exception (throw)
 import Data.Maybe (isJust)
 import Prelude hiding (either)
 
-import Network.Lastfm.Artist (Artist)
-import Network.Lastfm.Auth (APIKey, SessionKey)
 import Network.Lastfm.Core
-
-newtype Album = Album String deriving (Show, LastfmValue)
-newtype Autocorrect = Autocorrect Bool deriving (Show, LastfmValue)
-newtype Country = Country String deriving (Show, LastfmValue)
-newtype Language = Language String deriving (Show, LastfmValue)
-newtype Limit = Limit Int deriving (Show, LastfmValue)
-newtype Mbid = Mbid String deriving (Show, LastfmValue)
-newtype Message = Message String deriving (Show, LastfmValue)
-newtype Page = Page Int deriving (Show, LastfmValue)
-newtype Public = Public Bool deriving (Show, LastfmValue)
-newtype Recipient = Recipient String deriving (Show, LastfmValue)
-newtype Tag = Tag String deriving (Show, LastfmValue)
-newtype Username = Username String deriving (Show, LastfmValue)
+import Network.Lastfm.Types ( (?<), Album, APIKey, Artist, Autocorrect, Country, Language, Limit
+                            , Mbid, Message, Page, Public, Recipient, SessionKey, Tag, User)
 
 addTags :: Artist -> Album -> [Tag] -> APIKey -> SessionKey -> Lastfm ()
 addTags artist album tags apiKey sessionKey
@@ -47,7 +32,7 @@ getBuyLinks a mbid autocorrect country apiKey = dispatch $ callAPI method $ para
   where method = "album.getBuyLinks"
         parameters = either method a mbid
 
-getInfo :: Maybe (Artist, Album) -> Maybe Mbid -> Maybe Language -> Maybe Autocorrect -> Maybe Username -> APIKey -> Lastfm Response
+getInfo :: Maybe (Artist, Album) -> Maybe Mbid -> Maybe Language -> Maybe Autocorrect -> Maybe User -> APIKey -> Lastfm Response
 getInfo a mbid lang autocorrect username apiKey = dispatch $ callAPI method $ parameters ++
   [ "lang" ?< lang
   , "autocorrect" ?< autocorrect
@@ -67,7 +52,7 @@ getShouts a mbid limit autocorrect page apiKey = dispatch $ callAPI method $ par
   where method = "album.getShouts"
         parameters = either method a mbid
 
-getTags :: Maybe (Artist, Album) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Username -> APIKey -> Lastfm Response
+getTags :: Maybe (Artist, Album) -> Maybe Mbid -> Maybe Autocorrect -> Maybe User -> APIKey -> Lastfm Response
 getTags a mbid autocorrect username apiKey = dispatch $ callAPI method $ parameters ++
   [ "autocorrect" ?< autocorrect
   , "user" ?< username

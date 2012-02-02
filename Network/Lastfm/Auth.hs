@@ -1,16 +1,12 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Network.Lastfm.Auth
-  ( APIKey(..), Token(..), SessionKey(..)
-  , getToken, getAuthorizeTokenLink, getSession
+  ( getToken, getAuthorizeTokenLink, getSession
   ) where
 
 import Control.Applicative ((<$>))
 import Control.Monad (liftM)
-import Network.Lastfm.Core
 
-newtype APIKey = APIKey String deriving (Show, LastfmValue)
-newtype Token = Token String deriving (Show, LastfmValue)
-newtype SessionKey = SessionKey String deriving (Show, LastfmValue)
+import Network.Lastfm.Core
+import Network.Lastfm.Types ((?<), APIKey, SessionKey(..), Token(..), unpack)
 
 getSession :: APIKey -> Token -> Lastfm (Maybe SessionKey)
 getSession apiKey token = dispatch $ liftM SessionKey <$> firstInnerTagContent "key" <$> callAPI "auth.getSession" ["api_key" ?< apiKey, "token" ?< token]

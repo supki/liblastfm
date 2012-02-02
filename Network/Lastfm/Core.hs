@@ -1,10 +1,9 @@
-{-# LANGUAGE FlexibleInstances, OverlappingInstances, TypeSynonymInstances,
- ScopedTypeVariables, DeriveDataTypeable #-}
+{-# LANGUAGE ScopedTypeVariables, DeriveDataTypeable #-}
 module Network.Lastfm.Core
   ( Lastfm, Response, LastfmError(..), dispatch
   , withSecret
+  , callAPI, callAPI_
   , firstInnerTagContent, allInnerTagsContent, getAllInnerTags
-  , LastfmValue(..), (?<), callAPI, callAPI_
   ) where
 
 import Codec.Binary.UTF8.String (decodeString)
@@ -14,12 +13,11 @@ import Control.Monad (liftM)
 import Data.Digest.Pure.MD5 (md5)
 import Data.Function (on)
 import Data.IORef
-import Data.List (intercalate, sortBy)
+import Data.List (sortBy)
 import Data.Typeable (Typeable)
 import Data.URLEncoded (urlEncode, export)
 import Network.Curl hiding (Content)
 import System.IO.Unsafe (unsafePerformIO)
-
 import Text.XML.Light
 
 import qualified Data.ByteString.Lazy.Char8 as BS
@@ -54,7 +52,7 @@ data LastfmError
   | Deprecated -- ^ This type of request is no longer supported
   | RateLimitExceeded -- ^ Your IP has made too many requests in a short period
   | WrapperCallError Method Message
-  deriving (Show, Typeable)
+    deriving (Show, Typeable)
 
 instance Exception LastfmError
 
@@ -76,25 +74,6 @@ secret = unsafePerformIO $ newIORef ""
 
 withSecret :: Secret -> IO a -> IO a
 withSecret s f = writeIORef secret s >> f
-
-class LastfmValue a where
-  unpack :: a -> String
-
-instance LastfmValue Bool where
-  unpack True = "1"
-  unpack False = "0"
-instance LastfmValue Int where
-  unpack = show
-instance LastfmValue String where
-  unpack = id
-instance LastfmValue a => LastfmValue [a] where
-  unpack = intercalate "," . map unpack
-instance LastfmValue a => LastfmValue (Maybe a) where
-  unpack (Just a) = unpack a
-  unpack Nothing  = ""
-
-(?<) :: LastfmValue a => String -> a -> (String, String)
-a ?< b = (a, unpack b)
 
 callAPI :: Method -> [(Key, Value)] -> IO Response
 callAPI m as = withCurlDo $ do
