@@ -8,8 +8,8 @@ module Network.Lastfm.API.User
 
 import Network.Lastfm.Core
 import Network.Lastfm.Types
-  ( (?<), LastfmValue(..), Album, APIKey, Artist, FestivalsOnly, From, Limit, Message
-  , Page, Period, RecentTracks, SessionKey, Tag, TaggingType, To, Track, User, UseRecs
+  ( (?<), APIKey, Artist, FestivalsOnly, From, Limit, Message
+  , Page, Period, RecentTracks, SessionKey, Tag, TaggingType, To, User, UseRecs
   )
 
 getArtistTracks :: User
