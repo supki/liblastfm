@@ -39,8 +39,32 @@ newtype TrackNumber = TrackNumber String deriving (Show, LastfmValue)
 newtype User = User String deriving (Show, LastfmValue)
 newtype Venue = Venue String deriving (Show, LastfmValue)
 
+data Order = Popularity | DateAdded deriving Show
+
+instance LastfmValue Order where
+  unpack Popularity = "popularity"
+  unpack DateAdded  = "dateadded"
+
+data Status = Yes | Maybe | No deriving Show
+
+instance LastfmValue Status where
+  unpack Yes = "0"
+  unpack Maybe = "1"
+  unpack No = "2"
+
 class LastfmValue a where
   unpack :: a -> String
+
+data Value = ValueUser User
+           | ValueArtists [Artist]
+
+instance Show Value where
+  show (ValueUser _)    = "user"
+  show (ValueArtists _) = "artists"
+
+instance LastfmValue Value where
+  unpack (ValueUser u)     = unpack u
+  unpack (ValueArtists as) = unpack as
 
 instance LastfmValue Bool where
   unpack True = "1"

@@ -1,6 +1,5 @@
 module Network.Lastfm.Artist
-  ( Order(..)
-  , addTags, getCorrection, getEvents, getImages, getInfo
+  ( addTags, getCorrection, getEvents, getImages, getInfo
   , getPastEvents, getPodcast, getShouts, getSimilar, getTags, getTopAlbums
   , getTopFans, getTopTags, getTopTracks, removeTag, search, share, shout
   ) where
@@ -10,8 +9,8 @@ import Data.Maybe (isJust)
 import Prelude hiding (either)
 
 import Network.Lastfm.Core
-import Network.Lastfm.Types ( (?<), LastfmValue(..), APIKey, Artist, Autocorrect, FestivalsOnly, Language
-                            , Limit, Mbid, Message, Page, Public, Recipient, SessionKey, Tag, User
+import Network.Lastfm.Types ( (?<), APIKey, Artist, Autocorrect, FestivalsOnly, Language, Limit
+                            , Mbid, Message, Order, Page, Public, Recipient, SessionKey, Tag, User
                             )
 
 addTags :: Artist -> [Tag] -> APIKey -> SessionKey -> Lastfm ()
@@ -41,12 +40,6 @@ getEvents artist mbid autocorrect limit page festivalsOnly apiKey = dispatch $ c
   ]
   where method = "artist.getEvents"
         parameters = either method artist mbid
-
-data Order = Popularity | DateAdded deriving Show
-
-instance LastfmValue Order where
-  unpack Popularity = "popularity"
-  unpack DateAdded  = "dateadded"
 
 getImages :: Maybe Artist -> Maybe Mbid -> Maybe Page -> Maybe Limit -> Maybe Autocorrect -> Maybe Order -> APIKey -> Lastfm Response
 getImages artist mbid page limit autocorrect order apiKey = dispatch $ callAPI method $ parameters ++

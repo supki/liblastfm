@@ -1,24 +1,12 @@
 module Network.Lastfm.Tasteometer
-  ( Value(..)
-  , compare
+  ( compare
   ) where
 
 import Control.Exception (throw)
 import Prelude hiding (compare)
 
 import Network.Lastfm.Core
-import Network.Lastfm.Types ((?<), LastfmValue(..), APIKey, Artist, Limit, User)
-
-data Value = ValueUser User
-           | ValueArtists [Artist]
-
-instance Show Value where
-  show (ValueUser _)    = "user"
-  show (ValueArtists _) = "artists"
-
-instance LastfmValue Value where
-  unpack (ValueUser u)     = unpack u
-  unpack (ValueArtists as) = unpack as
+import Network.Lastfm.Types ((?<), APIKey, Limit, Value(..))
 
 compare :: Value -> Value -> Maybe Limit -> APIKey -> Lastfm Response
 compare value1 value2 limit apiKey

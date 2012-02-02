@@ -5,16 +5,9 @@ module Network.Lastfm.Event
 import Control.Exception (throw)
 
 import Network.Lastfm.Core
-import Network.Lastfm.Types ( (?<), LastfmValue(..), APIKey, Event, Limit, Message
-                            , Page, Public, Recipient, SessionKey
+import Network.Lastfm.Types ( (?<), APIKey, Event, Limit, Message, Page
+                            , Public, Recipient, SessionKey, Status
                             )
-
-data Status = Yes | Maybe | No deriving Show
-
-instance LastfmValue Status where
-  unpack Yes = "0"
-  unpack Maybe = "1"
-  unpack No = "2"
 
 attend :: Event -> Status -> APIKey -> SessionKey -> Lastfm ()
 attend event status apiKey sessionKey = dispatch $ callAPI_ "event.attend"
