@@ -1,18 +1,24 @@
-import Network.Lastfm.Auth
-import Network.Lastfm.Core
+import Network.Lastfm.Core (allInnerTagsContent, getAllInnerTags, firstInnerTagContent)
 import Network.Lastfm.Tasteometer
+import Network.Lastfm.Types (APIKey(..), Limit(..), User(..), Value (..))
 
 import Control.Applicative ((<$>))
-import Data.Maybe
+import Data.Maybe (fromJust)
 import Prelude hiding (compare)
 
-getScore :: Value -> Value -> APIKey -> IO (Maybe String)
-getScore username1 username2 apiKey =
-  firstInnerTagContent "score" <$> compare username1 username2 (Just . Limit $ 10) apiKey
+getScore :: Value -> Value -> APIKey -> IO ()
+getScore username1 username2 apiKey = do
+  response <- compare username1 username2 (Just . Limit $ 10) apiKey
+  case response of
+    Left e -> print e
+    Right r -> putStrLn . fromJust . firstInnerTagContent "score" $ r
 
-getSimilarArtists :: Value -> Value -> APIKey -> IO [String]
-getSimilarArtists username1 username2 apiKey =
-  allInnerTagsContent "name" <$> getAllInnerTags "artist" <$> compare username1 username2 (Just . Limit $ 10) apiKey
+getSimilarArtists :: Value -> Value -> APIKey -> IO ()
+getSimilarArtists username1 username2 apiKey = do
+  response <- compare username1 username2 (Just . Limit $ 10) apiKey
+  case response of
+    Left e -> print e
+    Right r -> mapM_ putStrLn . allInnerTagsContent "name" . getAllInnerTags "artist" $ r
 
 main = do
   let apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
@@ -21,6 +27,6 @@ main = do
   let username2 = "ingolfr"
   let user2 = ValueUser . User $ username2
   putStrLn "Score: "
-  getScore user1 user2 apiKey >>= putStrLn . fromJust
+  getScore user1 user2 apiKey
   putStrLn "Similar groups: "
-  getSimilarArtists user1 user2 apiKey >>= mapM_ putStrLn
+  getSimilarArtists user1 user2 apiKey
