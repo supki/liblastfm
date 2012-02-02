@@ -42,7 +42,7 @@ getEvents artist mbid autocorrect limit page festivalsOnly apiKey = dispatch $ c
   where method = "artist.getEvents"
         parameters = either method artist mbid
 
-data Order = Popularity | DateAdded
+data Order = Popularity | DateAdded deriving Show
 
 instance LastfmValue Order where
   unpack Popularity = "popularity"
@@ -168,14 +168,18 @@ search limit page artist apiKey = dispatch $ callAPI "artist.search"
   ]
 
 share :: Artist -> [Recipient] -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Lastfm ()
-share artist recipients message public apiKey sessionKey = dispatch $ callAPI_ "artist.share"
-  [ "artist" ?< artist
-  , "recipient" ?< recipients
-  , "api_key" ?< apiKey
-  , "sk" ?< sessionKey
-  , "public" ?< public
-  , "message" ?< message
-  ]
+share artist recipients message public apiKey sessionKey
+  | null recipients        = throw $ WrapperCallError method "empty recipient list."
+  | length recipients > 10 = throw $ WrapperCallError method "recipient list length has exceeded maximum."
+  | otherwise              = dispatch $ callAPI_ method
+    [ "artist" ?< artist
+    , "recipient" ?< recipients
+    , "api_key" ?< apiKey
+    , "sk" ?< sessionKey
+    , "public" ?< public
+    , "message" ?< message
+    ]
+    where method = "artist.share"
 
 shout :: Artist -> Message -> APIKey -> SessionKey -> Lastfm ()
 shout artist message apiKey sessionKey = dispatch $ callAPI_ "artist.shout"

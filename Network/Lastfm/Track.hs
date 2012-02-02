@@ -159,9 +159,9 @@ search limit page track artist apiKey = dispatch $ callAPI "track.search"
 
 share :: Artist -> Track -> Maybe Public -> Maybe Message -> [Recipient] -> APIKey -> SessionKey -> Lastfm ()
 share artist track public message recipients apiKey sessionKey
-  | null recipients        = throw $ WrapperCallError "track.share" "empty recipient list."
-  | length recipients > 10 = throw $ WrapperCallError "track.share" "recipient list length has exceeded maximum."
-  | otherwise              = dispatch $ callAPI_ "track.share"
+  | null recipients        = throw $ WrapperCallError method "empty recipient list."
+  | length recipients > 10 = throw $ WrapperCallError method "recipient list length has exceeded maximum."
+  | otherwise              = dispatch $ callAPI_ method
     [ "artist" ?< artist
     , "track" ?< track
     , "recipient" ?< recipients
@@ -170,6 +170,7 @@ share artist track public message recipients apiKey sessionKey
     , "public" ?< public
     , "message" ?< message
     ]
+    where method = "track.share"
 
 unban :: Track -> Artist -> APIKey -> SessionKey -> Lastfm ()
 unban track artist apiKey sessionKey = dispatch $ callAPI_ "track.unban"
