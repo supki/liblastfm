@@ -1,12 +1,20 @@
 module Network.Lastfm.Auth
-  ( getToken, getAuthorizeTokenLink, getSession
+  ( getMobileSession, getSession, getToken
+  , getAuthorizeTokenLink
   ) where
 
 import Control.Applicative ((<$>))
 import Control.Monad (liftM)
 
 import Network.Lastfm.Core
-import Network.Lastfm.Types ((?<), APIKey, SessionKey(..), Token(..), unpack)
+import Network.Lastfm.Types ((?<), APIKey, AuthToken, SessionKey(..), Token(..), User, unpack)
+
+getMobileSession :: User -> APIKey -> AuthToken -> Lastfm (Maybe SessionKey)
+getMobileSession user apiKey token = dispatch $ liftM SessionKey <$> firstInnerTagContent "key" <$> callAPI "auth.getMobileSession"
+  [ "username" ?< user
+  , "authToken" ?< token
+  , "api_key" ?< apiKey
+  ]
 
 getSession :: APIKey -> Token -> Lastfm (Maybe SessionKey)
 getSession apiKey token = dispatch $ liftM SessionKey <$> firstInnerTagContent "key" <$> callAPI "auth.getSession" ["api_key" ?< apiKey, "token" ?< token]
