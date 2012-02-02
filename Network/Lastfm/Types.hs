@@ -24,7 +24,6 @@ newtype Limit = Limit Int deriving (Show, LastfmValue)
 newtype Mbid = Mbid String deriving (Show, LastfmValue)
 newtype Message = Message String deriving (Show, LastfmValue)
 newtype Page = Page Int deriving (Show, LastfmValue)
-data Period = Week | Quater | HalfYear | Year | Overall deriving (Show)
 newtype Playlist = Playlist String deriving (Show, LastfmValue)
 newtype Public = Public Bool deriving (Show, LastfmValue)
 newtype RecentTracks = RecentTracks Bool deriving (Show, LastfmValue)
@@ -69,6 +68,25 @@ instance LastfmValue Value where
   unpack (ValueUser u)     = unpack u
   unpack (ValueArtists as) = unpack as
 
+data TaggingType = TaggingTypeArtist Artist
+                 | TaggingTypeAlbum Album
+                 | TaggingTypeTrack Track
+
+instance LastfmValue TaggingType where
+  unpack (TaggingTypeArtist a) = unpack a
+  unpack (TaggingTypeAlbum a) = unpack a
+  unpack (TaggingTypeTrack t) = unpack t
+
+data Period = Week | Quater | HalfYear | Year | Overall
+              deriving (Show)
+
+instance LastfmValue Period where
+  unpack Week     = "7day"
+  unpack Quater   = "3month"
+  unpack HalfYear = "6month"
+  unpack Year     = "12month"
+  unpack Overall  = "overall"
+
 instance LastfmValue Bool where
   unpack True = "1"
   unpack False = "0"
@@ -81,13 +99,6 @@ instance LastfmValue a => LastfmValue [a] where
 instance LastfmValue a => LastfmValue (Maybe a) where
   unpack (Just a) = unpack a
   unpack Nothing  = ""
-
-instance LastfmValue Period where
-  unpack Week     = "7day"
-  unpack Quater   = "3month"
-  unpack HalfYear = "6month"
-  unpack Year     = "12month"
-  unpack Overall  = "overall"
 
 (?<) :: LastfmValue a => String -> a -> (String, String)
 a ?< b = (a, unpack b)

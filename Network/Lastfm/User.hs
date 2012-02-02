@@ -4,22 +4,13 @@ module Network.Lastfm.User
   , getRecentTracks, getRecommendedArtists, getRecommendedEvents, getShouts, getTopAlbums
   , getTopArtists, getTopTags, getTopTracks, getWeeklyAlbumChart, getWeeklyArtistChart
   , getWeeklyChartList, getWeeklyTrackChart, shout
-  )where
+  ) where
 
 import Network.Lastfm.Core
 import Network.Lastfm.Types
   ( (?<), LastfmValue(..), Album, APIKey, Artist, FestivalsOnly, From, Limit, Message
   , Page, Period, RecentTracks, SessionKey, Tag, To, Track, User, UseRecs
   )
-
-data TaggingType = TaggingTypeArtist Artist
-                 | TaggingTypeAlbum Album
-                 | TaggingTypeTrack Track
-
-instance LastfmValue TaggingType where
-  unpack (TaggingTypeArtist a) = unpack a
-  unpack (TaggingTypeAlbum a) = unpack a
-  unpack (TaggingTypeTrack t) = unpack t
 
 getArtistTracks :: User
                 -> Artist
