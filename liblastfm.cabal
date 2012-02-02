@@ -3,7 +3,7 @@ Version:	0.0.0.0
 Description:	Wrapper to Lastfm API
 License:	MIT
 License-file:	LICENSE
-Author:		Matvey Aksenov
+Author:		Matvey Aksenov, Dmitry Malikov
 Maintainer:	Matvey Aksenov <matvey.aksenov@gmail.com>
 Category:	Network
 Synopsis:	Wrapper to Lastfm API
