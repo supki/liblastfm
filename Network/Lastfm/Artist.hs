@@ -18,13 +18,13 @@ newtype Recipient = Recipient String deriving (Show, LastfmValue)
 newtype Tag = Tag String deriving (Show, LastfmValue)
 
 getCorrection :: Artist -> APIKey -> Lastfm Response
-getCorrection artist apiKey = callAPI "artist.getCorrection"
+getCorrection artist apiKey = dispatch $ callAPI "artist.getCorrection"
   [ "artist" ?< artist
   , "api_key" ?< apiKey
   ]
 
 shout :: Artist -> Message -> APIKey -> SessionKey -> Lastfm ()
-shout artist message apiKey sessionKey = callAPI_ "artist.shout"
+shout artist message apiKey sessionKey = dispatch $ callAPI_ "artist.shout"
   [ "artist" ?< artist
   , "message" ?< message
   , "api_key" ?< apiKey
@@ -32,7 +32,7 @@ shout artist message apiKey sessionKey = callAPI_ "artist.shout"
   ]
 
 search :: Maybe Limit -> Maybe Page -> Artist -> APIKey -> Lastfm Response
-search limit page artist apiKey = callAPI "artist.search"
+search limit page artist apiKey = dispatch $ callAPI "artist.search"
   [ "artist" ?< artist
   , "api_key" ?< apiKey
   , "limit" ?< limit
@@ -40,7 +40,7 @@ search limit page artist apiKey = callAPI "artist.search"
   ]
 
 share :: Artist -> [Recipient] -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Lastfm ()
-share artist recipients message public apiKey sessionKey = callAPI_ "artist.share"
+share artist recipients message public apiKey sessionKey = dispatch $ callAPI_ "artist.share"
   [ "artist" ?< artist
   , "recipient" ?< recipients
   , "api_key" ?< apiKey
@@ -53,7 +53,7 @@ addTags :: Artist -> [Tag] -> APIKey -> SessionKey -> Lastfm ()
 addTags artist tags apiKey sessionKey
   | null tags        = error "Artist.addTags: empty tag list."
   | length tags > 10 = error "Artist.addTags: tag list length has exceeded maximum."
-  | otherwise        = callAPI_ "artist.addTags"
+  | otherwise        = dispatch $ callAPI_ "artist.addTags"
     [ "artist" ?< artist
     , "tags" ?< tags
     , "api_key" ?< apiKey
@@ -61,7 +61,7 @@ addTags artist tags apiKey sessionKey
     ]
 
 removeTag :: Artist -> Tag -> APIKey -> SessionKey -> Lastfm ()
-removeTag artist tag apiKey sessionKey = callAPI_ "artist.removeTag"
+removeTag artist tag apiKey sessionKey = dispatch $ callAPI_ "artist.removeTag"
   [ "artist" ?< artist
   , "tag" ?< tag
   , "api_key" ?< apiKey

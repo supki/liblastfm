@@ -14,13 +14,13 @@ newtype From = From String deriving (Show, LastfmValue)
 newtype To = To String deriving (Show, LastfmValue)
 
 getHype :: Group -> APIKey -> Lastfm Response
-getHype group apiKey = callAPI "group.getHype"
+getHype group apiKey = dispatch $ callAPI "group.getHype"
   [ "group" ?< group
   , "api_key" ?< apiKey
   ]
 
 getMembers :: Group -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getMembers group page limit apiKey = callAPI "group.getMembers"
+getMembers group page limit apiKey = dispatch $ callAPI "group.getMembers"
   [ "group" ?< group
   , "api_key" ?< apiKey
   , "page" ?< page
@@ -28,13 +28,13 @@ getMembers group page limit apiKey = callAPI "group.getMembers"
   ]
 
 getWeeklyChartList :: Group -> APIKey -> Lastfm Response
-getWeeklyChartList group apiKey = callAPI "group.getWeeklyChartList"
+getWeeklyChartList group apiKey = dispatch $ callAPI "group.getWeeklyChartList"
   [ "group" ?< group
   , "api_key" ?< apiKey
   ]
 
 getWeeklyAlbumChart :: Group -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
-getWeeklyAlbumChart group from to apiKey = callAPI "group.getWeeklyAlbumChart"
+getWeeklyAlbumChart group from to apiKey = dispatch $ callAPI "group.getWeeklyAlbumChart"
   [ "group" ?< group
   , "api_key" ?< apiKey
   , "from" ?< from
@@ -42,7 +42,7 @@ getWeeklyAlbumChart group from to apiKey = callAPI "group.getWeeklyAlbumChart"
   ]
 
 getWeeklyArtistChart :: Group -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
-getWeeklyArtistChart group from to apiKey = callAPI "group.getWeeklyArtistChart"
+getWeeklyArtistChart group from to apiKey = dispatch $ callAPI "group.getWeeklyArtistChart"
   [ "group" ?< group
   , "api_key" ?< apiKey
   , "from" ?< from
@@ -51,7 +51,7 @@ getWeeklyArtistChart group from to apiKey = callAPI "group.getWeeklyArtistChart"
 
 
 getWeeklyTrackChart :: Group -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
-getWeeklyTrackChart group from to apiKey = callAPI "group.getWeeklyTrackChart"
+getWeeklyTrackChart group from to apiKey = dispatch $ callAPI "group.getWeeklyTrackChart"
   [ "group" ?< group
   , "api_key" ?< apiKey
   , "from" ?< from

@@ -29,7 +29,7 @@ addTags :: Artist -> Album -> [Tag] -> APIKey -> SessionKey -> Lastfm ()
 addTags artist album tags apiKey sessionKey
   | null tags        = error "album.addTags: empty tag list."
   | length tags > 10 = error "album.addTags: tag list length has exceeded maximum."
-  | otherwise        = callAPI_ "album.addTags"
+  | otherwise        = dispatch $ callAPI_ "album.addTags"
   [ "artist" ?< artist
   , "album" ?< album
   , "tags" ?< tags
@@ -38,7 +38,7 @@ addTags artist album tags apiKey sessionKey
   ]
 
 getBuyLinks :: Maybe (Artist, Album) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Country -> APIKey -> Lastfm Response
-getBuyLinks a mbid autocorrect country apiKey = callAPI method $ parameters ++
+getBuyLinks a mbid autocorrect country apiKey = dispatch $ callAPI method $ parameters ++
   [ "autocorrect" ?< autocorrect
   , "country" ?< country
   , "api_key" ?< apiKey
@@ -47,7 +47,7 @@ getBuyLinks a mbid autocorrect country apiKey = callAPI method $ parameters ++
         parameters = either method a mbid
 
 getInfo :: Maybe (Artist, Album) -> Maybe Mbid -> Maybe Language -> Maybe Autocorrect -> Maybe Username -> APIKey -> Lastfm Response
-getInfo a mbid lang autocorrect username apiKey = callAPI method $ parameters ++
+getInfo a mbid lang autocorrect username apiKey = dispatch $ callAPI method $ parameters ++
   [ "lang" ?< lang
   , "autocorrect" ?< autocorrect
   , "username" ?< username
@@ -57,7 +57,7 @@ getInfo a mbid lang autocorrect username apiKey = callAPI method $ parameters ++
         parameters = either method a mbid
 
 getShouts :: Maybe (Artist, Album) -> Maybe Mbid -> Maybe Limit -> Maybe Autocorrect -> Maybe Page -> APIKey -> Lastfm Response
-getShouts a mbid limit autocorrect page apiKey = callAPI method $ parameters ++
+getShouts a mbid limit autocorrect page apiKey = dispatch $ callAPI method $ parameters ++
   [ "limit" ?< limit
   , "autocorrect" ?< autocorrect
   , "page" ?< page
@@ -67,7 +67,7 @@ getShouts a mbid limit autocorrect page apiKey = callAPI method $ parameters ++
         parameters = either method a mbid
 
 getTags :: Maybe (Artist, Album) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Username -> APIKey -> Lastfm Response
-getTags a mbid autocorrect username apiKey = callAPI method $ parameters ++
+getTags a mbid autocorrect username apiKey = dispatch $ callAPI method $ parameters ++
   [ "autocorrect" ?< autocorrect
   , "user" ?< username
   , "api_key" ?< apiKey
@@ -76,7 +76,7 @@ getTags a mbid autocorrect username apiKey = callAPI method $ parameters ++
         parameters = either method a mbid
 
 getTopTags :: Maybe (Artist, Album) -> Maybe Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
-getTopTags a mbid autocorrect apiKey = callAPI method $ parameters ++
+getTopTags a mbid autocorrect apiKey = dispatch $ callAPI method $ parameters ++
   [ "autocorrect" ?< autocorrect
   , "api_key" ?< apiKey
   ]
@@ -84,7 +84,7 @@ getTopTags a mbid autocorrect apiKey = callAPI method $ parameters ++
         parameters = either method a mbid
 
 removeTag :: Artist -> Album -> Tag -> APIKey -> SessionKey -> Lastfm ()
-removeTag artist album tag apiKey sessionKey = callAPI_ "album.removeTag"
+removeTag artist album tag apiKey sessionKey = dispatch $ callAPI_ "album.removeTag"
   [ "artist" ?< artist
   , "album" ?< album
   , "tag" ?< tag
@@ -93,7 +93,7 @@ removeTag artist album tag apiKey sessionKey = callAPI_ "album.removeTag"
   ]
 
 search :: Maybe Limit -> Maybe Page -> Album -> APIKey -> Lastfm Response
-search limit page album apiKey = callAPI "album.search"
+search limit page album apiKey = dispatch $ callAPI "album.search"
   [ "album" ?< album
   , "api_key" ?< apiKey
   , "limit" ?< limit
@@ -104,7 +104,7 @@ share :: Artist -> Album -> Maybe Public -> Maybe Message -> [Recipient] -> APIK
 share artist album public message recipients apiKey sessionKey
   | null recipients        = error "album.share: empty recipient list."
   | length recipients > 10 = error "album.share: recipient list length has exceeded maximum."
-  | otherwise              = callAPI_ "album.share"
+  | otherwise              = dispatch $ callAPI_ "album.share"
     [ "artist" ?< artist
     , "album" ?< album
     , "public" ?< public

@@ -30,7 +30,7 @@ compare value1 value2 limit apiKey
   | isNull value2 = error "Tasteometer.compare: empty second artists list."
   | isExceededMaximum value1 = error "Tasteometer.compare: first artists list length has exceeded maximum (100)."
   | isExceededMaximum value2 = error "Tasteometer.compare: second artists list length has exceeded maximum (100)."
-  | otherwise = callAPI "tasteometer.compare"
+  | otherwise = dispatch $ callAPI "tasteometer.compare"
     [ "type1" ?< type1
     , "type2" ?< type2
     , "value1" ?< value1

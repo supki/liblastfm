@@ -14,7 +14,7 @@ newtype PlaylistID = PlaylistID String deriving (Show, LastfmValue)
 newtype Title = Title String deriving (Show, LastfmValue)
 
 addTrack :: PlaylistID -> Track -> Artist -> APIKey -> SessionKey -> Lastfm ()
-addTrack playlist track artist apiKey sessionKey = callAPI_ "playlist.addTrack"
+addTrack playlist track artist apiKey sessionKey = dispatch $ callAPI_ "playlist.addTrack"
   [ "playlistID" ?< playlist
   , "track" ?< track
   , "artist" ?< artist
@@ -23,7 +23,7 @@ addTrack playlist track artist apiKey sessionKey = callAPI_ "playlist.addTrack"
   ]
 
 create :: Maybe Title -> Maybe Description -> APIKey -> SessionKey -> Lastfm Response
-create title description apiKey sessionKey = callAPI "playlist.create"
+create title description apiKey sessionKey = dispatch $ callAPI "playlist.create"
   [ "api_key" ?< apiKey
   , "sk" ?< sessionKey
   , "title" ?< title

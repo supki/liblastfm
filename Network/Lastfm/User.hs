@@ -23,7 +23,7 @@ getArtistTracks :: User
                 -> Maybe EndTimestamp
                 -> APIKey
                 -> Lastfm Response
-getArtistTracks user artist startTimestamp page endTimestamp apiKey = callAPI "user.getartisttracks"
+getArtistTracks user artist startTimestamp page endTimestamp apiKey = dispatch $ callAPI "user.getartisttracks"
   [ "user" ?< user
   , "artist" ?< artist
   , "startTimestamp" ?< startTimestamp
@@ -33,7 +33,7 @@ getArtistTracks user artist startTimestamp page endTimestamp apiKey = callAPI "u
   ]
 
 getBannedTracks :: User -> Maybe Limit -> Maybe Page -> APIKey -> Lastfm Response
-getBannedTracks user limit page apiKey = callAPI "user.getbannedtracks"
+getBannedTracks user limit page apiKey = dispatch $ callAPI "user.getbannedtracks"
   [ "user" ?< user
   , "limit" ?< limit
   , "page" ?< page
@@ -41,7 +41,7 @@ getBannedTracks user limit page apiKey = callAPI "user.getbannedtracks"
   ]
 
 getEvents :: User -> Maybe Page -> Maybe Limit -> Maybe FestivalsOnly -> APIKey -> Lastfm Response
-getEvents user page limit festivalsOnly apiKey = callAPI "user.getevents"
+getEvents user page limit festivalsOnly apiKey = dispatch $ callAPI "user.getevents"
   [ "user" ?< user
   , "page" ?< page
   , "limit" ?< limit
@@ -50,7 +50,7 @@ getEvents user page limit festivalsOnly apiKey = callAPI "user.getevents"
   ]
 
 getFriends :: User -> Maybe RecentTracks -> Maybe Limit -> Maybe Page -> APIKey -> Lastfm Response
-getFriends user recentTracks limit page apiKey = callAPI "user.getfriends"
+getFriends user recentTracks limit page apiKey = dispatch $ callAPI "user.getfriends"
   [ "user" ?< user
   , "recenttracks" ?< recentTracks
   , "limit" ?< limit
@@ -59,13 +59,13 @@ getFriends user recentTracks limit page apiKey = callAPI "user.getfriends"
   ]
 
 getInfo :: Maybe User -> APIKey -> Lastfm Response
-getInfo user apiKey = callAPI "user.getinfo"
+getInfo user apiKey = dispatch $ callAPI "user.getinfo"
   [ "user" ?< user
   , "api_key" ?< apiKey
   ]
 
 getLovedTracks :: User -> Maybe Limit -> Maybe Page -> APIKey -> Lastfm Response
-getLovedTracks user limit page apiKey = callAPI "user.getlovedtracks"
+getLovedTracks user limit page apiKey = dispatch $ callAPI "user.getlovedtracks"
   [ "user" ?< user
   , "page" ?< page
   , "limit" ?< limit
