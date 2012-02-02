@@ -1,4 +1,4 @@
-module Network.Lastfm.Venue
+module Network.Lastfm.API.Venue
   ( getEvents, getPastEvents, search
   ) where
 

@@ -1,4 +1,4 @@
-module Network.Lastfm.Tasteometer
+module Network.Lastfm.API.Tasteometer
   ( compare
   ) where
 

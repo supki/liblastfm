@@ -1,4 +1,4 @@
-module Network.Lastfm.Album
+module Network.Lastfm.API.Album
   ( addTags, getBuyLinks, getInfo, getShouts, getTags
   , getTopTags, removeTag, search, share
   ) where

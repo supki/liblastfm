@@ -1,4 +1,4 @@
-module Network.Lastfm.Artist
+module Network.Lastfm.API.Artist
   ( addTags, getCorrection, getEvents, getImages, getInfo
   , getPastEvents, getPodcast, getShouts, getSimilar, getTags, getTopAlbums
   , getTopFans, getTopTags, getTopTracks, removeTag, search, share, shout

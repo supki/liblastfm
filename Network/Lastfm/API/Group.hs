@@ -1,4 +1,4 @@
-module Network.Lastfm.Group
+module Network.Lastfm.API.Group
   ( getHype, getMembers, getWeeklyChartList, getWeeklyAlbumChart, getWeeklyArtistChart, getWeeklyTrackChart
   ) where
 

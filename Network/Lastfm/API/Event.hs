@@ -1,4 +1,4 @@
-module Network.Lastfm.Event
+module Network.Lastfm.API.Event
   ( attend, getAttendees, getInfo, getShouts, share, shout
   ) where
 

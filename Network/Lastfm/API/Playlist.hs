@@ -1,4 +1,4 @@
-module Network.Lastfm.Playlist
+module Network.Lastfm.API.Playlist
   ( addTrack, create
   ) where
 

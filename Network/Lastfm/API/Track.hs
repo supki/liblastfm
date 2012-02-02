@@ -1,4 +1,4 @@
-module Network.Lastfm.Track
+module Network.Lastfm.API.Track
   ( addTags, ban, getBuyLinks, getCorrection, getFingerprintMetadata
   , getInfo, getShouts, getSimilar, getTags, getTopFans, getTopTags
   , love, removeTag, scrobble, search, share, unban, unlove, updateNowPlaying

@@ -1,7 +1,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-module Network.Lastfm.Tag
+module Network.Lastfm.API.Tag
   (
-  )where
+  ) where
 
 import Network.Lastfm.Core
 

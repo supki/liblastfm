@@ -1,4 +1,4 @@
-module Network.Lastfm.Auth
+module Network.Lastfm.API.Auth
   ( getMobileSession, getSession, getToken
   , getAuthorizeTokenLink
   ) where
