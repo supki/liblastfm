@@ -53,9 +53,13 @@ data LastfmError
   | SuspendedAPIKey -- ^ Access for your account has been suspended, please contact Last.fm
   | Deprecated -- ^ This type of request is no longer supported
   | RateLimitExceeded -- ^ Your IP has made too many requests in a short period
+  | WrapperCallError Method Message
   deriving (Show, Typeable)
 
 instance Exception LastfmError
+
+dispatch :: IO a -> Lastfm a
+dispatch f = handle (\(e :: LastfmError) -> return (Left e)) (liftM Right f)
 
 type Lastfm a = IO (Either LastfmError a)
 type Key = String
@@ -63,6 +67,7 @@ type Value = String
 type Secret = String
 type Sign = String
 type Method = String
+type Message = String
 
 newtype Response = Response {unwrap :: [Element]}
 
@@ -125,6 +130,3 @@ allInnerTagsContent tag = map strContent <$> unwrap . getAllInnerTags tag
 
 getAllInnerTags ::  String -> Response -> Response
 getAllInnerTags tag = Response . concatMap (findElements . unqual $ tag) . unwrap
-
-dispatch :: IO a -> Lastfm a
-dispatch f = handle (\(e :: LastfmError) -> return (Left e)) (liftM Right f)

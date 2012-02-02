@@ -4,6 +4,7 @@ module Network.Lastfm.Tasteometer
   , compare
   ) where
 
+import Control.Exception (throw)
 import Prelude hiding (compare)
 
 import Network.Lastfm.Artist (Artist)
@@ -26,10 +27,10 @@ newtype Limit = Limit Int deriving (Show, LastfmValue)
 
 compare :: Value -> Value -> Maybe Limit -> APIKey -> Lastfm Response
 compare value1 value2 limit apiKey
-  | isNull value1 = error "Tasteometer.compare: empty first artists list."
-  | isNull value2 = error "Tasteometer.compare: empty second artists list."
-  | isExceededMaximum value1 = error "Tasteometer.compare: first artists list length has exceeded maximum (100)."
-  | isExceededMaximum value2 = error "Tasteometer.compare: second artists list length has exceeded maximum (100)."
+  | isNull value1 = throw $ WrapperCallError "tasteometer.compare" "empty first artists list."
+  | isNull value2 = throw $ WrapperCallError "tasteometer.compare" "empty second artists list."
+  | isExceededMaximum value1 = throw $ WrapperCallError "tasteometer.compare" "first artists list length has exceeded maximum (100)."
+  | isExceededMaximum value2 = throw $ WrapperCallError "tasteometer.compare" "second artists list length has exceeded maximum (100)."
   | otherwise = dispatch $ callAPI "tasteometer.compare"
     [ "type1" ?< type1
     , "type2" ?< type2

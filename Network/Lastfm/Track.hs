@@ -8,6 +8,7 @@ module Network.Lastfm.Track
   , love, removeTag, scrobble, search, share, unban, unlove, updateNowPlaying
   ) where
 
+import Control.Exception (throw)
 import Data.Maybe (isJust)
 import Prelude hiding (either)
 
@@ -38,8 +39,8 @@ newtype Username = Username String deriving (Show, LastfmValue)
 
 addTags :: Artist -> Track -> [Tag] -> APIKey -> SessionKey -> Lastfm ()
 addTags artist track tags apiKey sessionKey
-  | null tags        = error "Track.addTags: empty tag list."
-  | length tags > 10 = error "Track.addTags: tag list length has exceeded maximum."
+  | null tags        = throw $ WrapperCallError "track.addTags" "empty tag list."
+  | length tags > 10 = throw $ WrapperCallError "track.addTags" "tag list length has exceeded maximum."
   | otherwise        = dispatch $ callAPI_ "track.addTags"
     [ "artist" ?< artist
     , "track" ?< track
@@ -181,8 +182,8 @@ search limit page track artist apiKey = dispatch $ callAPI "track.search"
 
 share :: Artist -> Track -> Maybe Public -> Maybe Message -> [Recipient] -> APIKey -> SessionKey -> Lastfm ()
 share artist track public message recipients apiKey sessionKey
-  | null recipients        = error "track.share: empty recipient list."
-  | length recipients > 10 = error "track.share: recipient list length has exceeded maximum."
+  | null recipients        = throw $ WrapperCallError "track.share" "empty recipient list."
+  | length recipients > 10 = throw $ WrapperCallError "track.share" "recipient list length has exceeded maximum."
   | otherwise              = dispatch $ callAPI_ "track.share"
     [ "artist" ?< artist
     , "track" ?< track
@@ -237,4 +238,4 @@ either method a mbid
   | isJust mbid = [ "mbid" ?< mbid ]
   | otherwise   = case a of
                     Just (artist, track) -> [ "artist" ?< artist, "track" ?< track ]
-                    Nothing              -> error $ method ++ ": no mbid nor (artist, track) are specified."
+                    Nothing              -> throw $ WrapperCallError method "no mbid nor (artist, track) are specified."

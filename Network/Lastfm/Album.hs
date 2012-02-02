@@ -5,6 +5,7 @@ module Network.Lastfm.Album
   , getTopTags, removeTag, search, share
   ) where
 
+import Control.Exception (throw)
 import Data.Maybe (isJust)
 import Prelude hiding (either)
 
@@ -27,8 +28,8 @@ newtype Username = Username String deriving (Show, LastfmValue)
 
 addTags :: Artist -> Album -> [Tag] -> APIKey -> SessionKey -> Lastfm ()
 addTags artist album tags apiKey sessionKey
-  | null tags        = error "album.addTags: empty tag list."
-  | length tags > 10 = error "album.addTags: tag list length has exceeded maximum."
+  | null tags        = throw $ WrapperCallError "album.addTags" "empty tag list."
+  | length tags > 10 = throw $ WrapperCallError "album.addTags" "tag list length has exceeded maximum."
   | otherwise        = dispatch $ callAPI_ "album.addTags"
   [ "artist" ?< artist
   , "album" ?< album
@@ -102,8 +103,8 @@ search limit page album apiKey = dispatch $ callAPI "album.search"
 
 share :: Artist -> Album -> Maybe Public -> Maybe Message -> [Recipient] -> APIKey -> SessionKey -> Lastfm ()
 share artist album public message recipients apiKey sessionKey
-  | null recipients        = error "album.share: empty recipient list."
-  | length recipients > 10 = error "album.share: recipient list length has exceeded maximum."
+  | null recipients        = throw $ WrapperCallError "album.share" "empty recipient list."
+  | length recipients > 10 = throw $ WrapperCallError "album.share" "recipient list length has exceeded maximum."
   | otherwise              = dispatch $ callAPI_ "album.share"
     [ "artist" ?< artist
     , "album" ?< album
@@ -118,4 +119,4 @@ either method a mbid
   | isJust mbid = [ "mbid" ?< mbid ]
   | otherwise   = case a of
                     Just (artist, album) -> [ "artist" ?< artist, "album" ?< album ]
-                    Nothing              -> error $ method ++ ": no mbid nor (artist, album) are specified."
+                    Nothing              -> throw $ WrapperCallError method "no mbid nor (artist, album) are specified."

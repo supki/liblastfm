@@ -4,7 +4,9 @@ module Network.Lastfm.Artist
   , getCorrection
   , search, share, shout
   , addTags, removeTag
-  )where
+  ) where
+
+import Control.Exception (throw)
 
 import Network.Lastfm.Auth (APIKey, SessionKey)
 import Network.Lastfm.Core
@@ -51,8 +53,8 @@ share artist recipients message public apiKey sessionKey = dispatch $ callAPI_ "
 
 addTags :: Artist -> [Tag] -> APIKey -> SessionKey -> Lastfm ()
 addTags artist tags apiKey sessionKey
-  | null tags        = error "Artist.addTags: empty tag list."
-  | length tags > 10 = error "Artist.addTags: tag list length has exceeded maximum."
+  | null tags        = throw $ WrapperCallError "artist.addTags" "empty tag list."
+  | length tags > 10 = throw $ WrapperCallError "artist.addTags" "tag list length has exceeded maximum."
   | otherwise        = dispatch $ callAPI_ "artist.addTags"
     [ "artist" ?< artist
     , "tags" ?< tags
