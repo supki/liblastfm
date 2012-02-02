@@ -22,7 +22,7 @@ import Text.XML.Light
 
 import qualified Data.ByteString.Lazy.Char8 as BS
 
-data LastfmError
+data APIError
   = DoesntExist -- ^ This error does not exist
   | InvalidService -- ^ This service does not exist
   | InvalidMethod -- ^ No method with that name in this package
@@ -51,6 +51,10 @@ data LastfmError
   | SuspendedAPIKey -- ^ Access for your account has been suspended, please contact Last.fm
   | Deprecated -- ^ This type of request is no longer supported
   | RateLimitExceeded -- ^ Your IP has made too many requests in a short period
+  deriving (Show, Enum)
+
+data LastfmError
+  = LastfmAPIError APIError
   | WrapperCallError Method Message
     deriving (Show, Typeable)
 
@@ -79,15 +83,16 @@ callAPI :: Method -> [(Key, Value)] -> IO Response
 callAPI m as = withCurlDo $ do
                  s <- readIORef secret
                  curl <- initialize
-                 response <- liftM (Response . onlyElems . parseXML . decodeString . respBody)
+                 response <- liftM (onlyElems . parseXML . decodeString . respBody)
                               (do_curl_ curl
                                         "http://ws.audioscrobbler.com/2.0/?"
                                         [ CurlPostFields . map (export . urlEncode) $ (("api_sig", sign s) : bs) ]
                                         :: IO CurlResponse)
                  reset curl
-                 case firstInnerTagContent "error" response of
-                   Just _  -> throw DoesntExist
-                   Nothing -> return response
+                 let errorNum = getErrorNum response
+                 case errorNum of
+                   Just n  -> throw $ LastfmAPIError (toEnum . pred $ n)
+                   Nothing -> return $ Response response
   where bs :: [(Key, Value)]
         bs = filter (not . null . snd) $ ("method", m) : as
         sign :: Secret -> Sign
@@ -95,17 +100,22 @@ callAPI m as = withCurlDo $ do
         -- Algorithm description can be found at http://www.lastfm.ru/api/authspec Section 8
         sign s = show . md5 . BS.pack . (++ s) . concatMap (uncurry (++)) . sortBy (compare `on` fst) $ bs
 
+        getErrorNum :: [Element] -> Maybe Int
+        getErrorNum response = do element <- maybeHead $ concatMap (findElements . unqual $ "error") response
+                                  read <$> findAttr (unqual "code") element
+
 callAPI_ :: Method -> [(Key, Value)] -> IO ()
 callAPI_ m as = callAPI m as >> return ()
 
 firstInnerTagContent :: String -> Response -> Maybe String
 firstInnerTagContent tag response = liftM strContent (maybeHead . unwrap . getAllInnerTags tag $ response)
-  where maybeHead :: [a] -> Maybe a
-        maybeHead [] = Nothing
-        maybeHead xs = Just $ head xs
 
 allInnerTagsContent :: String -> Response -> [String]
 allInnerTagsContent tag = map strContent <$> unwrap . getAllInnerTags tag
 
 getAllInnerTags ::  String -> Response -> Response
 getAllInnerTags tag = Response . concatMap (findElements . unqual $ tag) . unwrap
+
+maybeHead :: [a] -> Maybe a
+maybeHead [] = Nothing
+maybeHead xs = Just $ head xs
