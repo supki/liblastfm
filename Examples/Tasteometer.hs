@@ -1,9 +1,7 @@
+import Network.Lastfm.API.Tasteometer
 import Network.Lastfm.Core (allInnerTagsContent, getAllInnerTags, firstInnerTagContent)
-import Network.Lastfm.Tasteometer
 import Network.Lastfm.Types (APIKey(..), Limit(..), User(..), Value (..))
 
-import Control.Applicative ((<$>))
-import Data.Maybe (fromJust)
 import Prelude hiding (compare)
 
 getScore :: Value -> Value -> APIKey -> IO ()
@@ -11,7 +9,10 @@ getScore username1 username2 apiKey = do
   response <- compare username1 username2 (Just . Limit $ 10) apiKey
   case response of
     Left e -> print e
-    Right r -> putStrLn . fromJust . firstInnerTagContent "score" $ r
+    Right r -> printScore . firstInnerTagContent "score" $ r
+      where
+        printScore Nothing = putStrLn ""
+        printScore (Just s) = print s
 
 getSimilarArtists :: Value -> Value -> APIKey -> IO ()
 getSimilarArtists username1 username2 apiKey = do
