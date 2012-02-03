@@ -9,10 +9,13 @@ newtype APIKey = APIKey String deriving (Show, LastfmValue)
 newtype Artist = Artist String deriving (Show, LastfmValue)
 newtype AuthToken = AuthToken String deriving (Show, LastfmValue)
 newtype Autocorrect = Autocorrect Bool deriving (Show, LastfmValue)
+newtype Bitrate = Bitrate Int deriving (Show, LastfmValue)
+newtype BuyLinks = BuyLinks Bool deriving (Show, LastfmValue)
 newtype ChosenByUser = ChosenByUser String deriving (Show, LastfmValue)
 newtype Context = Context String deriving (Show, LastfmValue)
 newtype Country = Country String deriving (Show, LastfmValue)
 newtype Description = Description String deriving (Show, LastfmValue)
+newtype Discovery = Discovery Bool deriving (Show, LastfmValue)
 newtype Duration = Duration String deriving (Show, LastfmValue)
 newtype Event = Event String deriving (Show, LastfmValue)
 newtype FestivalsOnly = FestivalsOnly Bool deriving (Show, LastfmValue)
@@ -23,12 +26,16 @@ newtype Language = Language String deriving (Show, LastfmValue)
 newtype Limit = Limit Int deriving (Show, LastfmValue)
 newtype Mbid = Mbid String deriving (Show, LastfmValue)
 newtype Message = Message String deriving (Show, LastfmValue)
+newtype Multiplier = Multiplier Double deriving (Show, LastfmValue)
+newtype Name = Name String deriving (Show, LastfmValue)
 newtype Page = Page Int deriving (Show, LastfmValue)
 newtype Playlist = Playlist String deriving (Show, LastfmValue)
 newtype Public = Public Bool deriving (Show, LastfmValue)
 newtype RecentTracks = RecentTracks Bool deriving (Show, LastfmValue)
 newtype Recipient = Recipient String deriving (Show, LastfmValue)
+newtype RTP = RTP Bool deriving (Show, LastfmValue)
 newtype SessionKey = SessionKey String deriving (Show, LastfmValue)
+newtype Station = Station String deriving (Show, LastfmValue)
 newtype StreamId = StreamId String deriving (Show, LastfmValue)
 newtype Tag = Tag String deriving (Show, LastfmValue)
 newtype Timestamp = Timestamp String deriving (Show, LastfmValue)
@@ -91,6 +98,8 @@ instance LastfmValue Bool where
   unpack True = "1"
   unpack False = "0"
 instance LastfmValue Int where
+  unpack = show
+instance LastfmValue Double where
   unpack = show
 instance LastfmValue String where
   unpack = id
