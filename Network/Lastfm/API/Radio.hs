@@ -17,19 +17,20 @@ getPlaylist :: Maybe Discovery
             -> APIKey
             -> SessionKey
             -> Lastfm Response
-getPlaylist discovery rtp buylinks multiplier bitrate apiKey sessionKey
-  | unpack multiplier /= "1.0" && unpack multiplier /= "2.0" = throw $ WrapperCallError method "unsupported multiplier."
-  | unpack bitrate /= "64" && unpack bitrate /= "128" = throw $ WrapperCallError method "unsupported bitrate."
-  | otherwise = dispatch $ callAPI method
-    [ "discovery" ?< discovery
-    , "rtp" ?< rtp
-    , "buylinks" ?< buylinks
-    , "speed_multiplier" ?< multiplier
-    , "bitrate" ?< bitrate
-    , "api_key" ?< apiKey
-    , "sk" ?< sessionKey
-    ]
-    where method = "radio.getPlaylist"
+getPlaylist discovery rtp buylinks multiplier bitrate apiKey sessionKey = dispatch go
+  where go
+          | unpack multiplier /= "1.0" && unpack multiplier /= "2.0" = throw $ WrapperCallError method "unsupported multiplier."
+          | unpack bitrate /= "64" && unpack bitrate /= "128" = throw $ WrapperCallError method "unsupported bitrate."
+          | otherwise = callAPI method
+            [ "discovery" ?< discovery
+            , "rtp" ?< rtp
+            , "buylinks" ?< buylinks
+            , "speed_multiplier" ?< multiplier
+            , "bitrate" ?< bitrate
+            , "api_key" ?< apiKey
+            , "sk" ?< sessionKey
+            ]
+            where method = "radio.getPlaylist"
 
 search :: Name -> APIKey -> Lastfm Response
 search name apiKey = dispatch $ callAPI "radio.search"

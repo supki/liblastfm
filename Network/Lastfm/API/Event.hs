@@ -40,18 +40,19 @@ getShouts event page limit apiKey = dispatch $ callAPI "event.getShouts"
   ]
 
 share :: Event -> Maybe Public -> Maybe Message -> [Recipient] -> APIKey -> SessionKey -> Lastfm ()
-share event public message recipients apiKey sessionKey
-  | null recipients        = throw $ WrapperCallError method "empty recipient list."
-  | length recipients > 10 = throw $ WrapperCallError method "recipient list length has exceeded maximum."
-  | otherwise              = dispatch $ callAPI_ method
-    [ "event" ?< event
-    , "public" ?< public
-    , "message" ?< message
-    , "recipient" ?< recipients
-    , "api_key" ?< apiKey
-    , "sk" ?< sessionKey
-    ]
-    where method = "event.share"
+share event public message recipients apiKey sessionKey = dispatch go
+  where go
+          | null recipients        = throw $ WrapperCallError method "empty recipient list."
+          | length recipients > 10 = throw $ WrapperCallError method "recipient list length has exceeded maximum."
+          | otherwise              = callAPI_ method
+            [ "event" ?< event
+            , "public" ?< public
+            , "message" ?< message
+            , "recipient" ?< recipients
+            , "api_key" ?< apiKey
+            , "sk" ?< sessionKey
+            ]
+            where method = "event.share"
 
 shout :: Event -> Message ->APIKey -> SessionKey -> Lastfm ()
 shout event message apiKey sessionKey = dispatch $ callAPI_ "event.shout"

@@ -12,16 +12,18 @@ import Network.Lastfm.Types ( (?<), Album, APIKey, Artist, Autocorrect, Country,
                             , Mbid, Message, Page, Public, Recipient, SessionKey, Tag, User)
 
 addTags :: Artist -> Album -> [Tag] -> APIKey -> SessionKey -> Lastfm ()
-addTags artist album tags apiKey sessionKey
-  | null tags        = throw $ WrapperCallError "album.addTags" "empty tag list."
-  | length tags > 10 = throw $ WrapperCallError "album.addTags" "tag list length has exceeded maximum."
-  | otherwise        = dispatch $ callAPI_ "album.addTags"
-  [ "artist" ?< artist
-  , "album" ?< album
-  , "tags" ?< tags
-  , "api_key" ?< apiKey
-  , "sk" ?< sessionKey
-  ]
+addTags artist album tags apiKey sessionKey = dispatch go
+  where go
+          | null tags        = throw $ WrapperCallError method "empty tag list."
+          | length tags > 10 = throw $ WrapperCallError method "tag list length has exceeded maximum."
+          | otherwise        = callAPI_ method
+          [ "artist" ?< artist
+          , "album" ?< album
+          , "tags" ?< tags
+          , "api_key" ?< apiKey
+          , "sk" ?< sessionKey
+          ]
+          where method = "album.addTags"
 
 getBuyLinks :: Maybe (Artist, Album) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Country -> APIKey -> Lastfm Response
 getBuyLinks a mbid autocorrect country apiKey = dispatch $ callAPI method $ parameters ++
@@ -87,18 +89,20 @@ search limit page album apiKey = dispatch $ callAPI "album.search"
   ]
 
 share :: Artist -> Album -> Maybe Public -> Maybe Message -> [Recipient] -> APIKey -> SessionKey -> Lastfm ()
-share artist album public message recipients apiKey sessionKey
-  | null recipients        = throw $ WrapperCallError "album.share" "empty recipient list."
-  | length recipients > 10 = throw $ WrapperCallError "album.share" "recipient list length has exceeded maximum."
-  | otherwise              = dispatch $ callAPI_ "album.share"
-    [ "artist" ?< artist
-    , "album" ?< album
-    , "public" ?< public
-    , "message" ?< message
-    , "recipient" ?< recipients
-    , "api_key" ?< apiKey
-    , "sk" ?< sessionKey
-    ]
+share artist album public message recipients apiKey sessionKey = dispatch go
+  where go
+          | null recipients        = throw $ WrapperCallError method "empty recipient list."
+          | length recipients > 10 = throw $ WrapperCallError method "recipient list length has exceeded maximum."
+          | otherwise              = callAPI_ method
+            [ "artist" ?< artist
+            , "album" ?< album
+            , "public" ?< public
+            , "message" ?< message
+            , "recipient" ?< recipients
+            , "api_key" ?< apiKey
+            , "sk" ?< sessionKey
+            ]
+            where method = "album.share"
 
 either :: String -> Maybe (Artist, Album) -> Maybe Mbid -> [(String, String)]
 either method a mbid

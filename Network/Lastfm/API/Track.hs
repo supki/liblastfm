@@ -15,16 +15,18 @@ import Network.Lastfm.Types ( (?<), Album, AlbumArtist, APIKey, Artist, Autocorr
                             )
 
 addTags :: Artist -> Track -> [Tag] -> APIKey -> SessionKey -> Lastfm ()
-addTags artist track tags apiKey sessionKey
-  | null tags        = throw $ WrapperCallError "track.addTags" "empty tag list."
-  | length tags > 10 = throw $ WrapperCallError "track.addTags" "tag list length has exceeded maximum."
-  | otherwise        = dispatch $ callAPI_ "track.addTags"
-    [ "artist" ?< artist
-    , "track" ?< track
-    , "tags" ?< tags
-    , "api_key" ?< apiKey
-    , "sk" ?< sessionKey
-    ]
+addTags artist track tags apiKey sessionKey = dispatch go
+  where go
+          | null tags        = throw $ WrapperCallError method "empty tag list."
+          | length tags > 10 = throw $ WrapperCallError method "tag list length has exceeded maximum."
+          | otherwise        = callAPI_ method
+            [ "artist" ?< artist
+            , "track" ?< track
+            , "tags" ?< tags
+            , "api_key" ?< apiKey
+            , "sk" ?< sessionKey
+            ]
+            where method = "track.addTags"
 
 ban :: Track -> Artist -> APIKey -> SessionKey -> Lastfm ()
 ban track artist apiKey sessionKey = dispatch $ callAPI_ "track.ban"
@@ -158,19 +160,20 @@ search limit page track artist apiKey = dispatch $ callAPI "track.search"
   ]
 
 share :: Artist -> Track -> Maybe Public -> Maybe Message -> [Recipient] -> APIKey -> SessionKey -> Lastfm ()
-share artist track public message recipients apiKey sessionKey
-  | null recipients        = throw $ WrapperCallError method "empty recipient list."
-  | length recipients > 10 = throw $ WrapperCallError method "recipient list length has exceeded maximum."
-  | otherwise              = dispatch $ callAPI_ method
-    [ "artist" ?< artist
-    , "track" ?< track
-    , "recipient" ?< recipients
-    , "api_key" ?< apiKey
-    , "sk" ?< sessionKey
-    , "public" ?< public
-    , "message" ?< message
-    ]
-    where method = "track.share"
+share artist track public message recipients apiKey sessionKey = dispatch go
+  where go
+          | null recipients        = throw $ WrapperCallError method "empty recipient list."
+          | length recipients > 10 = throw $ WrapperCallError method "recipient list length has exceeded maximum."
+          | otherwise              = callAPI_ method
+            [ "artist" ?< artist
+            , "track" ?< track
+            , "recipient" ?< recipients
+            , "api_key" ?< apiKey
+            , "sk" ?< sessionKey
+            , "public" ?< public
+            , "message" ?< message
+            ]
+            where method = "track.share"
 
 unban :: Track -> Artist -> APIKey -> SessionKey -> Lastfm ()
 unban track artist apiKey sessionKey = dispatch $ callAPI_ "track.unban"
