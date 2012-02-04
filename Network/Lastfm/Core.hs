@@ -14,6 +14,7 @@ import Data.Digest.Pure.MD5 (md5)
 import Data.Function (on)
 import Data.IORef
 import Data.List (sortBy)
+import Data.Maybe (fromMaybe)
 import Data.Typeable (Typeable)
 import Data.URLEncoded (urlEncode, export)
 import Network.Curl hiding (Content)
@@ -92,7 +93,7 @@ callAPI m as = withCurlDo $ do
                  let errorNum = getErrorNum response
                  case errorNum of
                    Just n  -> throw $ LastfmAPIError (toEnum . pred $ n)
-                   Nothing -> (return . Response . (!! 1)) $ response
+                   Nothing -> return . Response . fromMaybe (throw $ LastfmAPIError DoesntExist) . maybeHead . concatMap (findElements (unqual "lfm")) $ response
   where bs :: [(Key, Value)]
         bs = filter (not . null . snd) $ ("method", m) : as
 
@@ -104,9 +105,10 @@ callAPI m as = withCurlDo $ do
         getErrorNum :: [Element] -> Maybe Int
         getErrorNum response = do element <- maybeHead $ concatMap (findElements . unqual $ "error") response
                                   read <$> findAttr (unqual "code") element
-          where maybeHead :: [a] -> Maybe a
-                maybeHead [] = Nothing
-                maybeHead xs = Just $ head xs
+
+        maybeHead :: [a] -> Maybe a
+        maybeHead [] = Nothing
+        maybeHead xs = Just $ head xs
 
 callAPI_ :: Method -> [(Key, Value)] -> IO ()
 callAPI_ m as = callAPI m as >> return ()
