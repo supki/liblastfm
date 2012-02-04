@@ -21,6 +21,22 @@ getBannedArtists user limit apiKey = do
     Left e -> print e
     Right r -> mapM_ putStrLn . allInnerTagsContent "name" $ r
 
+-- getEvents
+getEventsExample :: User -> Limit -> APIKey -> IO ()
+getEventsExample user limit apiKey = do
+  response <- getEvents user Nothing (Just limit) Nothing apiKey
+  case response of
+    Left e -> print e
+    Right r -> mapM_ putStrLn . map (\(title,url) -> title ++ " (" ++ url ++ ")") $ zip (allInnerTagsContent "title" r) (allInnerTagsContent "url" r)
+
+-- getFriends
+getFriendsList :: User -> Limit -> APIKey -> IO ()
+getFriendsList user limit apiKey = do
+  response <- getFriends user Nothing (Just limit) Nothing apiKey
+  case response of
+    Left e -> print e
+    Right r -> mapM_ putStrLn . allInnerTagsContent "name" $ r
+
 -- getInfo
 getPlayCount :: User -> APIKey -> IO ()
 getPlayCount user apiKey = do
@@ -42,9 +58,12 @@ getAllLovedTracks user limit apiKey = do
 
 main = do
   let apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
-  let user = User "smpcln"
+  let user1 = User "smpcln"
+  let user2 = User "mokele"
   let artist = Artist "Dvar"
-  putStrLn "\nPlay count:"; getPlayCount user apiKey
-  putStrLn "\nLast 10 loved tracks:"; getAllLovedTracks user (Limit 10) apiKey
-  putStrLn $ "\nSome " ++ show artist ++ "s tracks:"; getArtistTracksExample 10 user artist apiKey
-  putStrLn "\nBanned artists:"; getBannedArtists user (Limit 10) apiKey
+  putStrLn "\nPlay count:"; getPlayCount user1 apiKey
+  putStrLn "\nLast 10 loved tracks:"; getAllLovedTracks user1 (Limit 10) apiKey
+  putStrLn $ "\nSome " ++ show artist ++ "s tracks:"; getArtistTracksExample 10 user1 artist apiKey
+  putStrLn "\nBanned artists:"; getBannedArtists user1 (Limit 10) apiKey
+  putStrLn $ "\n" ++ show user2 ++ "'s events:"; getEventsExample user2 (Limit 5) apiKey
+  putStrLn $ "\n" ++ show user1 ++ "'s friends:"; getFriendsList user1 (Limit 5) apiKey
