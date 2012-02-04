@@ -3,7 +3,7 @@ module Network.Lastfm.Core
   ( Lastfm, Response, LastfmError(..), dispatch
   , withSecret
   , callAPI, callAPI_
-  , firstInnerTagContent, allInnerTagsContent, getAllInnerTags
+  , lookupChild, lookupChildren, getContent, getAttribute
   ) where
 
 import Codec.Binary.UTF8.String (decodeString)
@@ -51,7 +51,7 @@ data APIError
   | SuspendedAPIKey -- ^ Access for your account has been suspended, please contact Last.fm
   | Deprecated -- ^ This type of request is no longer supported
   | RateLimitExceeded -- ^ Your IP has made too many requests in a short period
-  deriving (Show, Enum)
+    deriving (Show, Enum)
 
 data LastfmError
   = LastfmAPIError APIError
@@ -71,7 +71,7 @@ type Sign = String
 type Method = String
 type Message = String
 
-newtype Response = Response {unwrap :: [Element]}
+newtype Response = Response {unwrap :: Element}
 
 secret :: IORef Secret
 secret = unsafePerformIO $ newIORef ""
@@ -92,7 +92,7 @@ callAPI m as = withCurlDo $ do
                  let errorNum = getErrorNum response
                  case errorNum of
                    Just n  -> throw $ LastfmAPIError (toEnum . pred $ n)
-                   Nothing -> return $ Response response
+                   Nothing -> (return . Response . (!! 1)) $ response
   where bs :: [(Key, Value)]
         bs = filter (not . null . snd) $ ("method", m) : as
 
@@ -104,19 +104,25 @@ callAPI m as = withCurlDo $ do
         getErrorNum :: [Element] -> Maybe Int
         getErrorNum response = do element <- maybeHead $ concatMap (findElements . unqual $ "error") response
                                   read <$> findAttr (unqual "code") element
+          where maybeHead :: [a] -> Maybe a
+                maybeHead [] = Nothing
+                maybeHead xs = Just $ head xs
 
 callAPI_ :: Method -> [(Key, Value)] -> IO ()
 callAPI_ m as = callAPI m as >> return ()
 
-firstInnerTagContent :: String -> Response -> Maybe String
-firstInnerTagContent tag response = liftM strContent (maybeHead . unwrap . getAllInnerTags tag $ response)
+-- | Gets first tag's child with given name
+lookupChild :: String -> Response -> Maybe Response
+lookupChild tag = liftM Response . findChild (unqual tag) . unwrap
 
-allInnerTagsContent :: String -> Response -> [String]
-allInnerTagsContent tag = map strContent <$> unwrap . getAllInnerTags tag
+-- | Gets all tag's children with given name
+lookupChildren :: String -> Response -> [Response]
+lookupChildren tag = map Response . findChildren (unqual tag) . unwrap
 
-getAllInnerTags ::  String -> Response -> Response
-getAllInnerTags tag = Response . concatMap (findElements . unqual $ tag) . unwrap
+-- | Gets tag content
+getContent :: Response -> String
+getContent = strContent . unwrap
 
-maybeHead :: [a] -> Maybe a
-maybeHead [] = Nothing
-maybeHead xs = Just $ head xs
+-- | Gets tag attribute content
+getAttribute :: String -> Response -> Maybe String
+getAttribute tag = findAttr (unqual tag) . unwrap
