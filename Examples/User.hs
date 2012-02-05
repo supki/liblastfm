@@ -1,69 +1,113 @@
-import Network.Lastfm.Core (allInnerTagsContent, firstInnerTagContent)
+#!/usr/bin/env runhaskell
+
+import Control.Monad ((<=<))
+
+import Network.Lastfm.Core
 import Network.Lastfm.Types
-import Network.Lastfm.API.User
+import qualified Network.Lastfm.API.User as User
 
-import Data.List (intercalate)
-import Data.List.Split (splitEvery)
+apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
+user1 = User "smpcln"
+user2 = User "mokele"
+artist = Artist "Dvar"
 
--- getArtistTracks
-getArtistTracksExample :: Int -> User -> Artist -> APIKey -> IO ()
-getArtistTracksExample n user artist apiKey = do
-  response <- getArtistTracks user artist Nothing Nothing Nothing apiKey
-  case response of
-    Left e -> print e
-    Right r -> mapM_ putStrLn . take n . allInnerTagsContent "name" $ r
+pemis s = putStr $ "\n" ++ s
 
--- getBannedTracks
-getBannedArtists :: User -> Limit -> APIKey -> IO ()
-getBannedArtists user limit apiKey = do
-  response <- getBannedTracks user (Just limit) Nothing apiKey
-  case response of
-    Left e -> print e
-    Right r -> mapM_ putStrLn . allInnerTagsContent "name" $ r
+getArtistTracks :: IO ()
+getArtistTracks = do response <- User.getArtistTracks user1 artist Nothing Nothing Nothing apiKey
+                     pemis "Artist tracks: "
+                     case response of
+                       Left e -> print e
+                       Right r -> print $ artistTracks r
+  where artistTracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "artisttracks"
 
--- getEvents
-getEventsExample :: User -> Limit -> APIKey -> IO ()
-getEventsExample user limit apiKey = do
-  response <- getEvents user Nothing (Just limit) Nothing apiKey
-  case response of
-    Left e -> print e
-    Right r -> mapM_ putStrLn . map (\(title,url) -> title ++ " (" ++ url ++ ")") $ zip (allInnerTagsContent "title" r) (allInnerTagsContent "url" r)
+getBannedTracks :: IO ()
+getBannedTracks = do response <- User.getBannedTracks user1 Nothing (Just $ Limit 10) apiKey
+                     pemis "Banned artists: "
+                     case response of
+                       Left e -> print e
+                       Right r -> print $ bannedArtists r
+  where bannedArtists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "bannedtracks"
 
--- getFriends
-getFriendsList :: User -> Limit -> APIKey -> IO ()
-getFriendsList user limit apiKey = do
-  response <- getFriends user Nothing (Just limit) Nothing apiKey
-  case response of
-    Left e -> print e
-    Right r -> mapM_ putStrLn . allInnerTagsContent "name" $ r
+getEvents :: IO ()
+getEvents = do response <- User.getEvents user2 Nothing (Just $ Limit 5) Nothing apiKey
+               pemis "Events: "
+               case response of
+                 Left e -> print e
+                 Right r -> print $ events r
+  where events = mapM (getContent <=< lookupChild "url" <=< lookupChild "venue") <=< lookupChildren "event" <=< lookupChild "events"
 
--- getInfo
-getPlayCount :: User -> APIKey -> IO ()
-getPlayCount user apiKey = do
-  response <- getInfo (Just user) apiKey
-  case response of
-    Left e -> print e
-    Right r -> printPlayCount . firstInnerTagContent "playcount" $ r
-      where
-        printPlayCount Nothing = putStrLn ""
-        printPlayCount (Just a) = putStrLn a
+getFriends :: IO ()
+getFriends = do response <- User.getFriends user1 Nothing Nothing (Just $ Limit 10) apiKey
+                pemis "Friends: "
+                case response of
+                  Left e -> print e
+                  Right r -> print $ friends r
+  where friends = mapM (getContent <=< lookupChild "name") <=< lookupChildren "user" <=< lookupChild "friends"
 
--- getLovedTracks
-getAllLovedTracks :: User -> Limit -> APIKey -> IO ()
-getAllLovedTracks user limit apiKey = do
-  response <- getLovedTracks user (Just limit) Nothing apiKey
-  case response of
-    Left e -> print e
-    Right r -> mapM_ (putStrLn . intercalate " - ") . splitEvery 2 . allInnerTagsContent "name" $ r
+getPlayCount :: IO ()
+getPlayCount = do response <- User.getInfo (Just user1) apiKey
+                  pemis "Play count: "
+                  case response of
+                    Left e -> print e
+                    Right r -> print $ playCount r
+  where playCount = getContent <=< lookupChild "playcount" <=< lookupChild "user"
+
+getLovedTracks :: IO ()
+getLovedTracks = do response <- User.getLovedTracks user1 Nothing (Just $ Limit 10) apiKey
+                    pemis "Loved tracks: "
+                    case response of
+                      Left e -> print e
+                      Right r -> print $ lovedTracks r
+  where lovedTracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "lovedtracks"
+
+getNeighbours :: IO ()
+getNeighbours = do response <- User.getNeighbours user1 (Just $ Limit 10) apiKey
+                   pemis "Neighbours: "
+                   case response of
+                     Left e -> print e
+                     Right r -> print $ neighbours r
+  where neighbours = mapM (getContent <=< lookupChild "name") <=< lookupChildren "user" <=< lookupChild "neighbours"
+
+getNewReleases :: IO ()
+getNewReleases = do response <- User.getNewReleases user1 Nothing apiKey
+                    pemis "New releases: "
+                    case response of
+                      Left e -> print e
+                      Right r -> print $ newReleases r
+  where newReleases = mapM (getContent <=< lookupChild "url") <=< lookupChildren "album" <=< lookupChild "albums"
+
+getPastEvents :: IO ()
+getPastEvents = do response <- User.getPastEvents user2 Nothing (Just $ Limit 5) apiKey
+                   pemis "Past events: "
+                   case response of
+                     Left e -> print e
+                     Right r -> print $ pastEvents r
+  where pastEvents = mapM (getContent <=< lookupChild "url") <=< lookupChildren "event" <=< lookupChild "events"
 
 main = do
-  let apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
-  let user1 = User "smpcln"
-  let user2 = User "mokele"
-  let artist = Artist "Dvar"
-  putStrLn "\nPlay count:"; getPlayCount user1 apiKey
-  putStrLn "\nLast 10 loved tracks:"; getAllLovedTracks user1 (Limit 10) apiKey
-  putStrLn $ "\nSome " ++ show artist ++ "s tracks:"; getArtistTracksExample 10 user1 artist apiKey
-  putStrLn "\nBanned artists:"; getBannedArtists user1 (Limit 10) apiKey
-  putStrLn $ "\n" ++ show user2 ++ "'s events:"; getEventsExample user2 (Limit 5) apiKey
-  putStrLn $ "\n" ++ show user1 ++ "'s friends:"; getFriendsList user1 (Limit 5) apiKey
+  getArtistTracks
+  getBannedTracks
+  getEvents
+  getFriends
+  getPlayCount
+  getLovedTracks
+  getNeighbours
+  getNewReleases
+  getPastEvents
+--  getPersonalTags
+--  getPlaylists
+--  getRecentStations
+--  getRecentTracks
+--  getRecommendedArtists
+--  getRecommendedEvents
+--  getShouts
+--  getTopAlbums
+--  getTopArtists
+--  getTopFans
+--  getTopTracks
+--  getWeeklyAlbumChart
+--  getWeeklyArtistChart
+--  getWeeklyChartList
+--  getWeeklyTrackChart
+--  shout
