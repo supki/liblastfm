@@ -13,21 +13,24 @@ getCorrectionExample = do response <- getCorrection (Artist "Meshugah") apiKey
                           putStr "Correction: "
                           case response of
                             Left e  -> print e
-                            Right r -> print . (liftM getContent . lookupChild "name" <=< lookupChild "artist" <=< lookupChild "correction" <=< lookupChild "corrections") $ r
+                            Right r -> print (correction r)
+  where correction = liftM getContent . lookupChild "name" <=< lookupChild "artist" <=< lookupChild "correction" <=< lookupChild "corrections"
 
 getEventsExample :: IO ()
 getEventsExample = do response <- getEvents (Just (Artist "Meshuggah")) Nothing Nothing (Just (Limit 3)) Nothing Nothing apiKey
-                      putStr "Event place: "
+                      putStr "First event place: "
                       case response of
                         Left e  -> print e
-                        Right r -> print . (liftM getContent . lookupChild "name" <=< lookupChild "venue" <=< lookupChild "event" <=< lookupChild "events") $ r
+                        Right r -> print (place r)
+  where place = liftM getContent . lookupChild "name" <=< lookupChild "venue" <=< lookupChild "event" <=< lookupChild "events"
 
 getImagesExample :: IO ()
 getImagesExample = do response <- getImages (Just (Artist "Meshuggah")) Nothing Nothing (Just (Limit 3)) Nothing Nothing apiKey
-                      putStrLn "Images links:"
+                      putStr "First three images links: "
                       case response of
                         Left e  -> print e
-                        Right r -> print . (mapM (liftM (getContent) . lookupChild "url") <=< lookupChildren "image" <=< lookupChild "images") $ r
+                        Right r -> print (links r)
+  where links = mapM (liftM (getContent) . lookupChild "url") <=< lookupChildren "image" <=< lookupChild "images"
 
 main :: IO ()
 main = do --addTagsExample (requires authorization)
