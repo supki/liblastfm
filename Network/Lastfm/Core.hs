@@ -118,8 +118,8 @@ lookupChild :: String -> Response -> Maybe Response
 lookupChild tag = liftM Response . findChild (unqual tag) . unwrap
 
 -- | Gets all tag's children with given name
-lookupChildren :: String -> Response -> [Response]
-lookupChildren tag = map Response . findChildren (unqual tag) . unwrap
+lookupChildren :: String -> Response -> Maybe [Response]
+lookupChildren tag = Just . map Response . findChildren (unqual tag) . unwrap
 
 -- | Gets tag content
 getContent :: Response -> String
