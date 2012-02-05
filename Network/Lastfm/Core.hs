@@ -122,8 +122,8 @@ lookupChildren :: String -> Response -> Maybe [Response]
 lookupChildren tag = Just . map Response . findChildren (unqual tag) . unwrap
 
 -- | Gets tag content
-getContent :: Response -> String
-getContent = strContent . unwrap
+getContent :: Response -> Maybe String
+getContent = Just . strContent . unwrap
 
 -- | Gets tag attribute content
 getAttribute :: String -> Response -> Maybe String

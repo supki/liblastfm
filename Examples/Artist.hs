@@ -15,7 +15,7 @@ getCorrectionExample = do response <- getCorrection (Artist "Meshugah") apiKey
                           case response of
                             Left e  -> print e
                             Right r -> print (correction r)
-  where correction = liftM getContent . lookupChild "name" <=< lookupChild "artist" <=< lookupChild "correction" <=< lookupChild "corrections"
+  where correction = getContent <=< lookupChild "name" <=< lookupChild "artist" <=< lookupChild "correction" <=< lookupChild "corrections"
 
 getEventsExample :: IO ()
 getEventsExample = do response <- getEvents (Just (Artist "Meshuggah")) Nothing Nothing (Just (Limit 3)) Nothing Nothing apiKey
@@ -23,7 +23,7 @@ getEventsExample = do response <- getEvents (Just (Artist "Meshuggah")) Nothing 
                       case response of
                         Left e  -> print e
                         Right r -> print (place r)
-  where place = liftM getContent . lookupChild "name" <=< lookupChild "venue" <=< lookupChild "event" <=< lookupChild "events"
+  where place = getContent <=< lookupChild "name" <=< lookupChild "venue" <=< lookupChild "event" <=< lookupChild "events"
 
 getImagesExample :: IO ()
 getImagesExample = do response <- getImages (Just (Artist "Meshuggah")) Nothing Nothing (Just (Limit 3)) Nothing Nothing apiKey
@@ -31,24 +31,40 @@ getImagesExample = do response <- getImages (Just (Artist "Meshuggah")) Nothing 
                       case response of
                         Left e  -> print e
                         Right r -> print (links r)
-  where links = mapM (\r -> getContent <$> lookupChild "url" r) <=< lookupChildren "image" <=< lookupChild "images"
+  where links = mapM (getContent <=< lookupChild "url") <=< lookupChildren "image" <=< lookupChild "images"
+
+getInfoExample :: IO ()
+getInfoExample = do response <- getInfo (Just (Artist "Meshuggah")) Nothing Nothing Nothing Nothing apiKey
+                    putStr "Listeners count: "
+                    case response of
+                      Left e  -> print e
+                      Right r -> print (listeners r)
+  where listeners = getContent <=< lookupChild "listeners" <=< lookupChild "stats" <=< lookupChild "artist"
+
+getPastEventsExample :: IO ()
+getPastEventsExample = do response <- getPastEvents (Just (Artist "Meshugah")) Nothing Nothing (Just (Autocorrect True)) Nothing apiKey
+                          putStr "All event artists: "
+                          case response of
+                            Left e  -> print e
+                            Right r -> print (listeners r)
+  where listeners = mapM getContent <=< lookupChildren "artist" <=< lookupChild "artists" <=< lookupChild "event" <=< lookupChild "events"
 
 main :: IO ()
-main = do --addTagsExample (requires authorization)
+main = do -- addTagsExample (requires authorization)
           getCorrectionExample
           getEventsExample
           getImagesExample
-          --getInfoExample
-          --getPastEventsExample
-          --getPodcastExample
-          --getShoutsExample
-          --getSimilarExample
-          --getTagsExample
-          --getTopAlbumsExample
-          --getTopFansExample
-          --getTopTagsExample
-          --getTopTracksExample
-          --removeTagExample
-          --searchExample
-          --shareExample
+          getInfoExample
+          getPastEventsExample
+          -- getPodcastExample
+          -- getShoutsExample
+          -- getSimilarExample
+          -- getTagsExample
+          -- getTopAlbumsExample
+          -- getTopFansExample
+          -- getTopTagsExample
+          -- getTopTracksExample
+          -- removeTagExample
+          -- searchExample
+          -- shareExample
           -- shoutExample (requires authorization)
