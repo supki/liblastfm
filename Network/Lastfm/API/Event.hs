@@ -54,7 +54,7 @@ share event public message recipients apiKey sessionKey = dispatch go
             ]
             where method = "event.share"
 
-shout :: Event -> Message ->APIKey -> SessionKey -> Lastfm ()
+shout :: Event -> Message -> APIKey -> SessionKey -> Lastfm ()
 shout event message apiKey sessionKey = dispatch $ callAPI_ "event.shout"
   [ "event" ?< event
   , "message" ?< message

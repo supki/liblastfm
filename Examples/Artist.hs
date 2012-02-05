@@ -3,14 +3,14 @@
 import Control.Applicative ((<$>))
 import Control.Monad ((<=<), liftM)
 
-import Network.Lastfm.API.Artist
 import Network.Lastfm.Core
 import Network.Lastfm.Types
+import qualified Network.Lastfm.API.Artist as Artist
 
 apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
 
 getCorrectionExample :: IO ()
-getCorrectionExample = do response <- getCorrection (Artist "Meshugah") apiKey
+getCorrectionExample = do response <- Artist.getCorrection (Artist "Meshugah") apiKey
                           putStr "Correction: "
                           case response of
                             Left e  -> print e
@@ -18,7 +18,7 @@ getCorrectionExample = do response <- getCorrection (Artist "Meshugah") apiKey
   where correction = getContent <=< lookupChild "name" <=< lookupChild "artist" <=< lookupChild "correction" <=< lookupChild "corrections"
 
 getEventsExample :: IO ()
-getEventsExample = do response <- getEvents (Just (Artist "Meshuggah")) Nothing Nothing (Just (Limit 3)) Nothing Nothing apiKey
+getEventsExample = do response <- Artist.getEvents (Just (Artist "Meshuggah")) Nothing Nothing Nothing (Just (Limit 3)) Nothing apiKey
                       putStr "First event place: "
                       case response of
                         Left e  -> print e
@@ -26,7 +26,7 @@ getEventsExample = do response <- getEvents (Just (Artist "Meshuggah")) Nothing 
   where place = getContent <=< lookupChild "name" <=< lookupChild "venue" <=< lookupChild "event" <=< lookupChild "events"
 
 getImagesExample :: IO ()
-getImagesExample = do response <- getImages (Just (Artist "Meshuggah")) Nothing Nothing (Just (Limit 3)) Nothing Nothing apiKey
+getImagesExample = do response <- Artist.getImages (Just (Artist "Meshuggah")) Nothing Nothing Nothing (Just (Limit 3)) Nothing apiKey
                       putStr "First three images links: "
                       case response of
                         Left e  -> print e
@@ -34,7 +34,7 @@ getImagesExample = do response <- getImages (Just (Artist "Meshuggah")) Nothing 
   where links = mapM (getContent <=< lookupChild "url") <=< lookupChildren "image" <=< lookupChild "images"
 
 getInfoExample :: IO ()
-getInfoExample = do response <- getInfo (Just (Artist "Meshuggah")) Nothing Nothing Nothing Nothing apiKey
+getInfoExample = do response <- Artist.getInfo (Just (Artist "Meshuggah")) Nothing Nothing Nothing Nothing apiKey
                     putStr "Listeners count: "
                     case response of
                       Left e  -> print e
@@ -42,7 +42,7 @@ getInfoExample = do response <- getInfo (Just (Artist "Meshuggah")) Nothing Noth
   where listeners = getContent <=< lookupChild "listeners" <=< lookupChild "stats" <=< lookupChild "artist"
 
 getPastEventsExample :: IO ()
-getPastEventsExample = do response <- getPastEvents (Just (Artist "Meshugah")) Nothing Nothing (Just (Autocorrect True)) Nothing apiKey
+getPastEventsExample = do response <- Artist.getPastEvents (Just (Artist "Meshugah")) Nothing (Just (Autocorrect True)) Nothing Nothing apiKey
                           putStr "All event artists: "
                           case response of
                             Left e  -> print e
@@ -50,7 +50,7 @@ getPastEventsExample = do response <- getPastEvents (Just (Artist "Meshugah")) N
   where artists = mapM getContent <=< lookupChildren "artist" <=< lookupChild "artists" <=< lookupChild "event" <=< lookupChild "events"
 
 getPodcastExample :: IO ()
-getPodcastExample = do response <- getPodcast (Just (Artist "Meshuggah")) Nothing Nothing apiKey
+getPodcastExample = do response <- Artist.getPodcast (Just (Artist "Meshuggah")) Nothing Nothing apiKey
                        putStr "First channel description: "
                        case response of
                          Left e  -> print e
@@ -58,7 +58,7 @@ getPodcastExample = do response <- getPodcast (Just (Artist "Meshuggah")) Nothin
   where description = getContent <=< lookupChild "description" <=< lookupChild "channel" <=< lookupChild "rss"
 
 getShoutsExample :: IO ()
-getShoutsExample = do response <- getShouts (Just (Artist "Meshuggah")) Nothing (Just (Limit 5)) Nothing Nothing apiKey
+getShoutsExample = do response <- Artist.getShouts (Just (Artist "Meshuggah")) Nothing Nothing Nothing (Just (Limit 5)) apiKey
                       putStr "Last 5 shouts authors: "
                       case response of
                         Left e  -> print e
@@ -66,7 +66,7 @@ getShoutsExample = do response <- getShouts (Just (Artist "Meshuggah")) Nothing 
   where authors = mapM (getContent <=< lookupChild "author") <=< lookupChildren "shout" <=< lookupChild "shouts"
 
 getSimilarExample :: IO ()
-getSimilarExample = do response <- getSimilar (Just (Artist "Meshuggah")) Nothing (Just (Limit 7)) Nothing apiKey
+getSimilarExample = do response <- Artist.getSimilar (Just (Artist "Meshuggah")) Nothing Nothing (Just (Limit 7)) apiKey
                        putStr "7 similar artists: "
                        case response of
                          Left e  -> print e
@@ -74,7 +74,7 @@ getSimilarExample = do response <- getSimilar (Just (Artist "Meshuggah")) Nothin
   where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "similarartists"
 
 getTopAlbumsExample :: IO ()
-getTopAlbumsExample = do response <- getTopAlbums (Just (Artist "Meshuggah")) Nothing Nothing Nothing (Just (Limit 3)) apiKey
+getTopAlbumsExample = do response <- Artist.getTopAlbums (Just (Artist "Meshuggah")) Nothing Nothing Nothing (Just (Limit 3)) apiKey
                          putStr "3 most popular albums: "
                          case response of
                            Left e  -> print e
@@ -82,7 +82,7 @@ getTopAlbumsExample = do response <- getTopAlbums (Just (Artist "Meshuggah")) No
   where albums = mapM (getContent <=< lookupChild "name") <=< lookupChildren "album" <=< lookupChild "topalbums"
 
 getTopFansExample :: IO ()
-getTopFansExample = do response <- getTopFans (Just (Artist "Meshuggah")) Nothing Nothing apiKey
+getTopFansExample = do response <- Artist.getTopFans (Just (Artist "Meshuggah")) Nothing Nothing apiKey
                        putStr "Top fans: "
                        case response of
                          Left e  -> print e
@@ -90,7 +90,7 @@ getTopFansExample = do response <- getTopFans (Just (Artist "Meshuggah")) Nothin
   where fans = mapM (getContent <=< lookupChild "name") <=< lookupChildren "user" <=< lookupChild "topfans"
 
 getTopTagsExample :: IO ()
-getTopTagsExample = do response <- getTopTags (Just (Artist "Meshuggah")) Nothing Nothing apiKey
+getTopTagsExample = do response <- Artist.getTopTags (Just (Artist "Meshuggah")) Nothing Nothing apiKey
                        putStr "Top tags: "
                        case response of
                          Left e  -> print e
@@ -98,7 +98,7 @@ getTopTagsExample = do response <- getTopTags (Just (Artist "Meshuggah")) Nothin
   where tags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "toptags"
 
 getTopTracksExample :: IO ()
-getTopTracksExample = do response <- getTopTracks (Just (Artist "Meshuggah")) Nothing Nothing Nothing (Just (Limit 10)) apiKey
+getTopTracksExample = do response <- Artist.getTopTracks (Just (Artist "Meshuggah")) Nothing Nothing Nothing (Just (Limit 10)) apiKey
                          putStr "10 most popular tracks: "
                          case response of
                            Left e  -> print e
@@ -106,7 +106,7 @@ getTopTracksExample = do response <- getTopTracks (Just (Artist "Meshuggah")) No
   where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "toptracks"
 
 searchExample :: IO ()
-searchExample = do response <- search (Artist "Mesh") (Just (Limit 12)) Nothing apiKey
+searchExample = do response <- Artist.search (Artist "Mesh") Nothing (Just (Limit 12)) apiKey
                    putStr "12 search results for \"Mesh\" query: "
                    case response of
                      Left e  -> print e

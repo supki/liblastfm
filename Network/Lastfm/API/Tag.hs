@@ -25,30 +25,30 @@ getSimilar tag apiKey = dispatch $ callAPI "tag.getSimilar"
   , "api_key" ?< apiKey
   ]
 
-getTopAlbums :: Tag -> Maybe Limit -> Maybe Page -> APIKey -> Lastfm Response
-getTopAlbums tag limit page apiKey = dispatch $ callAPI "tag.getTopAlbums"
+getTopAlbums :: Tag -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
+getTopAlbums tag page limit apiKey = dispatch $ callAPI "tag.getTopAlbums"
   [ "tag" ?< tag
-  , "limit" ?< limit
   , "page" ?< page
+  , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
 
-getTopArtists :: Tag -> Maybe Limit -> Maybe Page -> APIKey -> Lastfm Response
+getTopArtists :: Tag -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getTopArtists tag limit page apiKey = dispatch $ callAPI "tag.getTopArtists"
   [ "tag" ?< tag
-  , "limit" ?< limit
   , "page" ?< page
+  , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
 
 getTopTags :: APIKey -> Lastfm Response
-getTopTags apiKey = dispatch $ callAPI "tag.getTopArtists" [ "api_key" ?< apiKey ]
+getTopTags apiKey = dispatch $ callAPI "tag.getTopArtists" ["api_key" ?< apiKey]
 
-getTopTracks :: Tag -> Maybe Limit -> Maybe Page -> APIKey -> Lastfm Response
+getTopTracks :: Tag -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getTopTracks tag limit page apiKey = dispatch $ callAPI "tag.getTopTracks"
   [ "tag" ?< tag
-  , "limit" ?< limit
   , "page" ?< page
+  , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
 
@@ -67,11 +67,11 @@ getWeeklyChartList tag apiKey = dispatch $ callAPI "tag.getWeeklyChartList"
   , "api_key" ?< apiKey
   ]
 
-search :: Maybe Limit -> Maybe Page -> Tag -> APIKey -> Lastfm Response
-search limit page tag apiKey = dispatch $ callAPI "tag.search"
-  [ "limit" ?< limit
+search :: Tag -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
+search tag page limit apiKey = dispatch $ callAPI "tag.search"
+  [ "tag" ?< tag
   , "page" ?< page
-  , "tag" ?< tag
+  , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
 

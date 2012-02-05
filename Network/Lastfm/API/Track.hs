@@ -28,10 +28,10 @@ addTags artist track tags apiKey sessionKey = dispatch go
             ]
             where method = "track.addTags"
 
-ban :: Track -> Artist -> APIKey -> SessionKey -> Lastfm ()
-ban track artist apiKey sessionKey = dispatch $ callAPI_ "track.ban"
-  [ "track" ?< track
-  , "artist" ?< artist
+ban :: Artist -> Track -> APIKey -> SessionKey -> Lastfm ()
+ban artist track apiKey sessionKey = dispatch $ callAPI_ "track.ban"
+  [ "artist" ?< artist
+  , "track" ?< track
   , "api_key" ?< apiKey
   , "sk" ?< sessionKey
   ]
@@ -67,11 +67,11 @@ getInfo a mbid autocorrect username apiKey = dispatch $ callAPI method $ paramet
   where method = "track.getInfo"
         parameters = either method a mbid
 
-getShouts :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Limit -> Maybe Autocorrect -> Maybe Page -> APIKey -> Lastfm Response
-getShouts a mbid limit autocorrect page apiKey = dispatch $ callAPI method $ parameters ++
-  [ "limit" ?< limit
-  , "autocorrect" ?< autocorrect
+getShouts :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
+getShouts a mbid autocorrect page limit apiKey = dispatch $ callAPI method $ parameters ++
+  [ "autocorrect" ?< autocorrect
   , "page" ?< page
+  , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
   where method = "track.getShouts"
@@ -150,13 +150,13 @@ scrobble (timestamp, album, track, artist, albumArtist, duration, streamId, chos
   , "mbid" ?< mbid
   ]
 
-search :: Maybe Limit -> Maybe Page -> Track -> Maybe Artist -> APIKey -> Lastfm Response
+search :: Track -> Maybe Page -> Maybe Limit -> Maybe Artist -> APIKey -> Lastfm Response
 search limit page track artist apiKey = dispatch $ callAPI "track.search"
   [ "track" ?< track
-  , "api_key" ?< apiKey
-  , "limit" ?< limit
   , "page" ?< page
+  , "limit" ?< limit
   , "artist" ?< artist
+  , "api_key" ?< apiKey
   ]
 
 share :: Artist -> Track -> Maybe Public -> Maybe Message -> [Recipient] -> APIKey -> SessionKey -> Lastfm ()

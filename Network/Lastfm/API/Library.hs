@@ -29,30 +29,30 @@ addTrack artist track apiKey sessionKey = dispatch $ callAPI_ "library.addTrack"
   , "sk" ?< sessionKey
   ]
 
-getAlbums :: User -> Maybe Artist -> Maybe Limit -> Maybe Page -> APIKey -> Lastfm Response
-getAlbums user artist limit page apiKey = dispatch $ callAPI "library.getAlbums"
+getAlbums :: User -> Maybe Artist -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
+getAlbums user artist page limit apiKey = dispatch $ callAPI "library.getAlbums"
   [ "user" ?< user
   , "artist" ?< artist
-  , "limit" ?< limit
   , "page" ?< page
+  , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
 
-getArtists :: User -> Maybe Limit -> Maybe Page -> APIKey -> Lastfm Response
+getArtists :: User -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getArtists user limit page apiKey = dispatch $ callAPI "library.getArtists"
   [ "user" ?< user
-  , "limit" ?< limit
   , "page" ?< page
+  , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
 
-getTracks :: User -> Maybe Artist -> Maybe Album -> Maybe Limit -> Maybe Page -> APIKey -> Lastfm Response
-getTracks user artist album limit page apiKey = dispatch $ callAPI "library.getTracks"
+getTracks :: User -> Maybe Artist -> Maybe Album -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
+getTracks user artist album page limit apiKey = dispatch $ callAPI "library.getTracks"
   [ "user" ?< user
   , "artist" ?< artist
   , "album" ?< album
-  , "limit" ?< limit
   , "page" ?< page
+  , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
 

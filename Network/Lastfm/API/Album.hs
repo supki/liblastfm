@@ -11,8 +11,8 @@ import Network.Lastfm.Core
 import Network.Lastfm.Types ( (?<), Album, APIKey, Artist, Autocorrect, Country, Language, Limit
                             , Mbid, Message, Page, Public, Recipient, SessionKey, Tag, User)
 
-addTags :: Artist -> Album -> [Tag] -> APIKey -> SessionKey -> Lastfm ()
-addTags artist album tags apiKey sessionKey = dispatch go
+addTags :: (Artist, Album) -> [Tag] -> APIKey -> SessionKey -> Lastfm ()
+addTags (artist, album) tags apiKey sessionKey = dispatch go
   where go
           | null tags        = throw $ WrapperCallError method "empty tag list."
           | length tags > 10 = throw $ WrapperCallError method "tag list length has exceeded maximum."
@@ -34,21 +34,21 @@ getBuyLinks a mbid autocorrect country apiKey = dispatch $ callAPI method $ para
   where method = "album.getBuyLinks"
         parameters = either method a mbid
 
-getInfo :: Maybe (Artist, Album) -> Maybe Mbid -> Maybe Language -> Maybe Autocorrect -> Maybe User -> APIKey -> Lastfm Response
-getInfo a mbid lang autocorrect username apiKey = dispatch $ callAPI method $ parameters ++
-  [ "lang" ?< lang
-  , "autocorrect" ?< autocorrect
+getInfo :: Maybe (Artist, Album) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Language -> Maybe User -> APIKey -> Lastfm Response
+getInfo a mbid autocorrect lang username apiKey = dispatch $ callAPI method $ parameters ++
+  [ "autocorrect" ?< autocorrect
+  , "lang" ?< lang
   , "username" ?< username
   , "api_key" ?< apiKey
   ]
   where method = "album.getInfo"
         parameters = either method a mbid
 
-getShouts :: Maybe (Artist, Album) -> Maybe Mbid -> Maybe Limit -> Maybe Autocorrect -> Maybe Page -> APIKey -> Lastfm Response
-getShouts a mbid limit autocorrect page apiKey = dispatch $ callAPI method $ parameters ++
-  [ "limit" ?< limit
-  , "autocorrect" ?< autocorrect
+getShouts :: Maybe (Artist, Album) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
+getShouts a mbid autocorrect page limit apiKey = dispatch $ callAPI method $ parameters ++
+  [ "autocorrect" ?< autocorrect
   , "page" ?< page
+  , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
   where method = "album.getShouts"
@@ -80,12 +80,12 @@ removeTag artist album tag apiKey sessionKey = dispatch $ callAPI_ "album.remove
   , "sk" ?< sessionKey
   ]
 
-search :: Maybe Limit -> Maybe Page -> Album -> APIKey -> Lastfm Response
-search limit page album apiKey = dispatch $ callAPI "album.search"
+search :: Album -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
+search album page limit apiKey = dispatch $ callAPI "album.search"
   [ "album" ?< album
-  , "api_key" ?< apiKey
-  , "limit" ?< limit
   , "page" ?< page
+  , "limit" ?< limit
+  , "api_key" ?< apiKey
   ]
 
 share :: Artist -> Album -> Maybe Public -> Maybe Message -> [Recipient] -> APIKey -> SessionKey -> Lastfm ()

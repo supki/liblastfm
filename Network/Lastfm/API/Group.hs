@@ -14,9 +14,9 @@ getHype group apiKey = dispatch $ callAPI "group.getHype"
 getMembers :: Group -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getMembers group page limit apiKey = dispatch $ callAPI "group.getMembers"
   [ "group" ?< group
-  , "api_key" ?< apiKey
   , "page" ?< page
   , "limit" ?< limit
+  , "api_key" ?< apiKey
   ]
 
 getWeeklyChartList :: Group -> APIKey -> Lastfm Response

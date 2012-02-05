@@ -57,20 +57,20 @@ getMetros country apiKey = dispatch $ callAPI "geo.getMetros"
   , "api_key" ?< apiKey
   ]
 
-getTopArtists :: Country -> Maybe Limit -> Maybe Page -> APIKey -> Lastfm Response
-getTopArtists country limit page apiKey = dispatch $ callAPI "geo.getTopArtists"
+getTopArtists :: Country -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
+getTopArtists country page limit apiKey = dispatch $ callAPI "geo.getTopArtists"
   [ "country" ?< country
-  , "limit" ?< limit
   , "page" ?< page
+  , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
 
-getTopTracks :: Country -> Maybe Location -> Maybe Limit -> Maybe Page -> APIKey -> Lastfm Response
-getTopTracks country location limit page apiKey = dispatch $ callAPI "geo.getTopTracks"
+getTopTracks :: Country -> Maybe Location -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
+getTopTracks country location page limit apiKey = dispatch $ callAPI "geo.getTopTracks"
   [ "country" ?< country
   , "location" ?< location
-  , "limit" ?< limit
   , "page" ?< page
+  , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
 
