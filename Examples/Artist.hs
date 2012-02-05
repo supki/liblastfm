@@ -46,8 +46,32 @@ getPastEventsExample = do response <- getPastEvents (Just (Artist "Meshugah")) N
                           putStr "All event artists: "
                           case response of
                             Left e  -> print e
-                            Right r -> print (listeners r)
-  where listeners = mapM getContent <=< lookupChildren "artist" <=< lookupChild "artists" <=< lookupChild "event" <=< lookupChild "events"
+                            Right r -> print (artists r)
+  where artists = mapM getContent <=< lookupChildren "artist" <=< lookupChild "artists" <=< lookupChild "event" <=< lookupChild "events"
+
+getPodcastExample :: IO ()
+getPodcastExample = do response <- getPodcast (Just (Artist "Meshuggah")) Nothing Nothing apiKey
+                       putStr "First channel description: "
+                       case response of
+                         Left e  -> print e
+                         Right r -> print (description r)
+  where description = getContent <=< lookupChild "description" <=< lookupChild "channel" <=< lookupChild "rss"
+
+getShoutsExample :: IO ()
+getShoutsExample = do response <- getShouts (Just (Artist "Meshuggah")) Nothing (Just (Limit 5)) Nothing Nothing apiKey
+                      putStr "Last 5 shouts authors: "
+                      case response of
+                        Left e  -> print e
+                        Right r -> print (authors r)
+  where authors = mapM (getContent <=< lookupChild "author") <=< lookupChildren "shout" <=< lookupChild "shouts"
+
+getSimilarExample :: IO ()
+getSimilarExample = do response <- getSimilar (Just (Artist "Meshuggah")) Nothing (Just (Limit 7)) Nothing apiKey
+                       putStr "7 similar artists: "
+                       case response of
+                         Left e  -> print e
+                         Right r -> print (artists r)
+  where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "similarartists"
 
 main :: IO ()
 main = do -- addTagsExample (requires authorization)
@@ -56,9 +80,9 @@ main = do -- addTagsExample (requires authorization)
           getImagesExample
           getInfoExample
           getPastEventsExample
-          -- getPodcastExample
-          -- getShoutsExample
-          -- getSimilarExample
+          getPodcastExample
+          getShoutsExample
+          getSimilarExample
           -- getTagsExample
           -- getTopAlbumsExample
           -- getTopFansExample
