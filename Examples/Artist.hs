@@ -1,5 +1,6 @@
 #!/usr/bin/env runhaskell
 
+import Control.Applicative ((<$>))
 import Control.Monad ((<=<), liftM)
 
 import Network.Lastfm.API.Artist
@@ -30,7 +31,7 @@ getImagesExample = do response <- getImages (Just (Artist "Meshuggah")) Nothing 
                       case response of
                         Left e  -> print e
                         Right r -> print (links r)
-  where links = mapM (liftM (getContent) . lookupChild "url") <=< lookupChildren "image" <=< lookupChild "images"
+  where links = mapM (\r -> getContent <$> lookupChild "url" r) <=< lookupChildren "image" <=< lookupChild "images"
 
 main :: IO ()
 main = do --addTagsExample (requires authorization)
