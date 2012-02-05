@@ -1,6 +1,5 @@
 #!/usr/bin/env runhaskell
 
-import Control.Applicative ((<$>))
 import Control.Monad ((<=<), liftM)
 
 import Network.Lastfm.Core
