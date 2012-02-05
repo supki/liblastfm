@@ -2,6 +2,10 @@ module Network.Lastfm.API.Group
   ( getHype, getMembers, getWeeklyChartList, getWeeklyAlbumChart, getWeeklyArtistChart, getWeeklyTrackChart
   ) where
 
+import Control.Arrow ((&&&), (***))
+import Control.Monad ((<=<), join)
+import Data.Maybe (fromMaybe)
+
 import Network.Lastfm.Core
 import Network.Lastfm.Types ((?<), APIKey, From, Group, Limit, Page, To)
 
@@ -19,11 +23,13 @@ getMembers group page limit apiKey = dispatch $ callAPI "group.getMembers"
   , "api_key" ?< apiKey
   ]
 
-getWeeklyChartList :: Group -> APIKey -> Lastfm Response
-getWeeklyChartList group apiKey = dispatch $ callAPI "group.getWeeklyChartList"
-  [ "group" ?< group
-  , "api_key" ?< apiKey
-  ]
+getWeeklyChartList :: Group -> APIKey -> Lastfm [(Integer,Integer)]
+getWeeklyChartList group apiKey = do response <- dispatch $ callAPI "group.getWeeklyChartList" ["group" ?< group, "api_key" ?< apiKey]
+                                     case response of
+                                       Left e  -> return . Left $ e
+                                       Right r -> return . Right . toList . (lookupChildren "chart" <=< lookupChild "weeklychartlist") $ r
+   where toList :: Maybe [Response] -> [(Integer,Integer)]
+         toList = map (join (***) (read . fromMaybe "0") . (getAttribute "from" &&& getAttribute "to")) . fromMaybe []
 
 getWeeklyAlbumChart :: Group -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
 getWeeklyAlbumChart group from to apiKey = dispatch $ callAPI "group.getWeeklyAlbumChart"

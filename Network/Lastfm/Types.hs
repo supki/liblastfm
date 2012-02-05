@@ -21,7 +21,7 @@ newtype Duration = Duration String deriving (Show, LastfmValue)
 newtype Event = Event Int deriving (Show, LastfmValue)
 newtype FestivalsOnly = FestivalsOnly Bool deriving (Show, LastfmValue)
 newtype Fingerprint = Fingerprint String deriving (Show, LastfmValue)
-newtype From = From Int deriving (Show, LastfmValue)
+newtype From = From Integer deriving (Show, LastfmValue)
 newtype Group = Group String deriving (Show, LastfmValue)
 newtype Language = Language String deriving (Show, LastfmValue)
 newtype Latitude = Latitude String deriving (Show, LastfmValue)
@@ -45,7 +45,7 @@ newtype StreamId = StreamId String deriving (Show, LastfmValue)
 newtype Tag = Tag String deriving (Show, LastfmValue)
 newtype Timestamp = Timestamp String deriving (Show, LastfmValue)
 newtype Title = Title String deriving (Show, LastfmValue)
-newtype To = To Int deriving (Show, LastfmValue)
+newtype To = To Integer deriving (Show, LastfmValue)
 newtype Token = Token String deriving (Show, LastfmValue)
 newtype Track = Track String deriving (Show, LastfmValue)
 newtype TrackNumber = TrackNumber String deriving (Show, LastfmValue)
@@ -103,6 +103,8 @@ instance LastfmValue Bool where
   unpack True = "1"
   unpack False = "0"
 instance LastfmValue Int where
+  unpack = show
+instance LastfmValue Integer where
   unpack = show
 instance LastfmValue Double where
   unpack = show
