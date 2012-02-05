@@ -39,7 +39,7 @@ getAlbums user artist page limit apiKey = dispatch $ callAPI "library.getAlbums"
   ]
 
 getArtists :: User -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getArtists user limit page apiKey = dispatch $ callAPI "library.getArtists"
+getArtists user page limit apiKey = dispatch $ callAPI "library.getArtists"
   [ "user" ?< user
   , "page" ?< page
   , "limit" ?< limit
