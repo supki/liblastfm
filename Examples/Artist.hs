@@ -73,6 +73,46 @@ getSimilarExample = do response <- getSimilar (Just (Artist "Meshuggah")) Nothin
                          Right r -> print (artists r)
   where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "similarartists"
 
+getTopAlbumsExample :: IO ()
+getTopAlbumsExample = do response <- getTopAlbums (Just (Artist "Meshuggah")) Nothing Nothing Nothing (Just (Limit 3)) apiKey
+                         putStr "3 most popular albums: "
+                         case response of
+                           Left e  -> print e
+                           Right r -> print (albums r)
+  where albums = mapM (getContent <=< lookupChild "name") <=< lookupChildren "album" <=< lookupChild "topalbums"
+
+getTopFansExample :: IO ()
+getTopFansExample = do response <- getTopFans (Just (Artist "Meshuggah")) Nothing Nothing apiKey
+                       putStr "Top fans: "
+                       case response of
+                         Left e  -> print e
+                         Right r -> print (fans r)
+  where fans = mapM (getContent <=< lookupChild "name") <=< lookupChildren "user" <=< lookupChild "topfans"
+
+getTopTagsExample :: IO ()
+getTopTagsExample = do response <- getTopTags (Just (Artist "Meshuggah")) Nothing Nothing apiKey
+                       putStr "Top tags: "
+                       case response of
+                         Left e  -> print e
+                         Right r -> print (tags r)
+  where tags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "toptags"
+
+getTopTracksExample :: IO ()
+getTopTracksExample = do response <- getTopTracks (Just (Artist "Meshuggah")) Nothing Nothing Nothing (Just (Limit 10)) apiKey
+                         putStr "10 most popular tracks: "
+                         case response of
+                           Left e  -> print e
+                           Right r -> print (tracks r)
+  where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "toptracks"
+
+searchExample :: IO ()
+searchExample = do response <- search (Artist "Mesh") (Just (Limit 12)) Nothing apiKey
+                   putStr "12 search results for \"Mesh\" query: "
+                   case response of
+                     Left e  -> print e
+                     Right r -> print (artists r)
+  where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "artistmatches" <=< lookupChild "results"
+
 main :: IO ()
 main = do -- addTagsExample (requires authorization)
           getCorrectionExample
@@ -83,12 +123,12 @@ main = do -- addTagsExample (requires authorization)
           getPodcastExample
           getShoutsExample
           getSimilarExample
-          -- getTagsExample
-          -- getTopAlbumsExample
-          -- getTopFansExample
-          -- getTopTagsExample
-          -- getTopTracksExample
-          -- removeTagExample
-          -- searchExample
-          -- shareExample
+          -- getTagsExample (requires authorization)
+          getTopAlbumsExample
+          getTopFansExample
+          getTopTagsExample
+          getTopTracksExample
+          -- removeTagExample (requires authorization)
+          searchExample
+          -- shareExample (requires authorization)
           -- shoutExample (requires authorization)

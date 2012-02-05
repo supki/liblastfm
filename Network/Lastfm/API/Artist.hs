@@ -154,8 +154,8 @@ removeTag artist tag apiKey sessionKey = dispatch $ callAPI_ "artist.removeTag"
   , "sk" ?< sessionKey
   ]
 
-search :: Maybe Limit -> Maybe Page -> Artist -> APIKey -> Lastfm Response
-search limit page artist apiKey = dispatch $ callAPI "artist.search"
+search :: Artist -> Maybe Limit -> Maybe Page -> APIKey -> Lastfm Response
+search artist limit page apiKey = dispatch $ callAPI "artist.search"
   [ "artist" ?< artist
   , "api_key" ?< apiKey
   , "limit" ?< limit
