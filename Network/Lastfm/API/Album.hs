@@ -25,7 +25,7 @@ addTags (artist, album) tags apiKey sessionKey = dispatch go
           ]
           where method = "album.addTags"
 
-getBuyLinks :: Maybe (Artist, Album) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Country -> APIKey -> Lastfm Response
+getBuyLinks :: Maybe (Artist, Album) -> Maybe Mbid -> Maybe Autocorrect -> Country -> APIKey -> Lastfm Response
 getBuyLinks a mbid autocorrect country apiKey = dispatch $ callAPI method $ parameters ++
   [ "autocorrect" ?< autocorrect
   , "country" ?< country
