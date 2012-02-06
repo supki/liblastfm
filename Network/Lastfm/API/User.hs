@@ -6,6 +6,10 @@ module Network.Lastfm.API.User
   , getWeeklyChartList, getWeeklyTrackChart, shout
   ) where
 
+import Control.Arrow ((&&&), (***))
+import Control.Monad ((<=<), join)
+import Data.Maybe (fromMaybe)
+
 import Network.Lastfm.Core
 import Network.Lastfm.Types ( (?<), APIKey, Artist, FestivalsOnly, From, Limit, Message, Page
                             , Period, RecentTracks, SessionKey, Tag, TaggingType, To, User, UseRecs
@@ -204,11 +208,13 @@ getWeeklyArtistChart user from to apiKey = dispatch $ callAPI "user.getWeeklyArt
   , "api_key" ?< apiKey
   ]
 
-getWeeklyChartList :: User -> APIKey -> Lastfm Response
-getWeeklyChartList user apiKey = dispatch $ callAPI "user.getWeeklyChartList"
-  [ "user" ?< user
-  , "api_key" ?< apiKey
-  ]
+getWeeklyChartList :: User -> APIKey -> Lastfm [(Integer,Integer)]
+getWeeklyChartList user apiKey = do response <- dispatch $ callAPI "user.getWeeklyChartList" ["user" ?< user, "api_key" ?< apiKey]
+                                    case response of
+                                      Left e  -> return . Left $ e
+                                      Right r -> return . Right . toList . (lookupChildren "chart" <=< lookupChild "weeklychartlist") $ r
+   where toList :: Maybe [Response] -> [(Integer,Integer)]
+         toList = map (join (***) (read . fromMaybe "0") . (getAttribute "from" &&& getAttribute "to")) . fromMaybe []
 
 getWeeklyTrackChart :: User -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
 getWeeklyTrackChart user from to apiKey = dispatch $ callAPI "user.getWeeklyTrackChart"
