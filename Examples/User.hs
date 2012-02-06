@@ -9,6 +9,7 @@ import qualified Network.Lastfm.API.User as User
 apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
 user1 = User "smpcln"
 user2 = User "mokele"
+user3 = User "rj"
 artist = Artist "Dvar"
 
 pemis s = putStr $ "\n" ++ s
@@ -129,29 +130,95 @@ getShouts = do response <- User.getShouts user1 Nothing (Just $ Limit 1) apiKey
                  Right r -> print $ shouts r
   where shouts = mapM (getContent <=< lookupChild "body") <=< lookupChildren "shout" <=< lookupChild "shouts"
 
-main = do
-  getArtistTracks
-  getBannedTracks
-  getEvents
-  getFriends
-  getPlayCount
-  getLovedTracks
-  getNeighbours
-  getNewReleases
-  getPastEvents
-  getPersonalTags
-  getPlaylists
---  getRecentStations
-  getRecentTracks
---  getRecommendedArtists
---  getRecommendedEvents
-  getShouts
---  getTopAlbums
---  getTopArtists
---  getTopFans
---  getTopTracks
---  getWeeklyAlbumChart
---  getWeeklyArtistChart
---  getWeeklyChartList
---  getWeeklyTrackChart
---  shout
+getTopAlbums :: IO ()
+getTopAlbums = do response <- User.getTopAlbums user1 Nothing Nothing (Just $ Limit 5) apiKey
+                  pemis "Top albums: "
+                  case response of
+                    Left e -> print e
+                    Right r -> print $ topAlbums r
+  where topAlbums = mapM (getContent <=< lookupChild "name" <=< lookupChild "artist") <=< lookupChildren "album" <=< lookupChild "topalbums"
+
+getTopArtists :: IO ()
+getTopArtists = do response <- User.getTopArtists user1 Nothing Nothing (Just $ Limit 5) apiKey
+                   pemis "Top artists: "
+                   case response of
+                     Left e -> print e
+                     Right r -> print $ topArtists r
+  where topArtists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "topartists"
+
+getTopTags :: IO ()
+getTopTags = do response <- User.getTopTags user1 (Just $ Limit 10) apiKey
+                pemis "Top tags: "
+                case response of
+                  Left e -> print e
+                  Right r -> print $ topTags r
+  where topTags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "toptags"
+
+getTopTracks :: IO ()
+getTopTracks = do response <- User.getTopTracks user1 Nothing Nothing (Just $ Limit 10) apiKey
+                  pemis "Top tracks: "
+                  case response of
+                    Left e -> print e
+                    Right r -> print $ topTracks r
+  where topTracks = mapM (getContent <=< lookupChild "url") <=< lookupChildren "track" <=< lookupChild "toptracks"
+
+getWeeklyAlbumChart :: IO ()
+getWeeklyAlbumChart = do response <- User.getWeeklyAlbumChart user3 Nothing Nothing apiKey
+                         pemis "Weekly album chart: "
+                         case response of
+                           Left e -> print e
+                           Right r -> print $ weeklyAlbumChart r
+  where weeklyAlbumChart = mapM (getContent <=< lookupChild "url") <=< lookupChildren "album" <=< lookupChild "weeklyalbumchart"
+
+getWeeklyArtistChart :: IO ()
+getWeeklyArtistChart = do response <- User.getWeeklyArtistChart user3 Nothing Nothing apiKey
+                          pemis "Weekly artist chart: "
+                          case response of
+                            Left e -> print e
+                            Right r -> print $ weeklyArtistChart r
+  where weeklyArtistChart = mapM (getContent <=< lookupChild "url") <=< lookupChildren "artist" <=< lookupChild "weeklyartistchart"
+
+getWeeklyChartList :: IO ()
+getWeeklyChartList = do response <- User.getWeeklyChartList user3 apiKey
+                        pemis "Weekly chart list: "
+                        case response of
+                          Left e -> print e
+                          Right r -> print $ take 10 r
+
+getWeeklyTrackChart :: IO ()
+getWeeklyTrackChart = do response <- User.getWeeklyTrackChart user3 Nothing Nothing apiKey
+                         pemis "Weekly track chart: "
+                         case response of
+                           Left e -> print e
+                           Right r -> print $ weeklyTrackChart r
+  where weeklyTrackChart = mapM (getContent <=< lookupChild "url") <=< lookupChildren "track" <=< lookupChild "weeklytrackchart"
+
+{-- requires autorization
+shout
+ --}
+
+main = do getArtistTracks
+          getBannedTracks
+          getEvents
+          getFriends
+          getPlayCount
+          getLovedTracks
+          getNeighbours
+          getNewReleases
+          getPastEvents
+          getPersonalTags
+          getPlaylists
+--          getRecentStations
+          getRecentTracks
+--          getRecommendedArtists
+--          getRecommendedEvents
+          getShouts
+          getTopAlbums
+          getTopArtists
+          getTopTags
+          getTopTracks
+          getWeeklyAlbumChart
+          getWeeklyArtistChart
+          getWeeklyChartList
+          getWeeklyTrackChart
+--          shout
