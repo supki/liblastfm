@@ -85,6 +85,50 @@ getPastEvents = do response <- User.getPastEvents user2 Nothing (Just $ Limit 5)
                      Right r -> print $ pastEvents r
   where pastEvents = mapM (getContent <=< lookupChild "url") <=< lookupChildren "event" <=< lookupChild "events"
 
+getPersonalTags :: IO ()
+getPersonalTags = do response <- User.getPersonalTags user2 (Tag "rock") (TaggingType "artist") Nothing (Just $ Limit 10) apiKey
+                     pemis "Personal tags: "
+                     case response of
+                       Left e -> print e
+                       Right r -> print $ personalTags r
+  where personalTags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "artists" <=< lookupChild "taggings"
+
+getPlaylists :: IO ()
+getPlaylists = do response <- User.getPlaylists user2 apiKey
+                  pemis "Playlists: "
+                  case response of
+                    Left e -> print e
+                    Right r -> print $ playlists r
+  where playlists = mapM (getContent <=< lookupChild "title") <=< lookupChildren "playlist" <=< lookupChild "playlists"
+
+{-- requires autorization
+getRecentStations :: IO ()
+ --}
+
+getRecentTracks :: IO ()
+getRecentTracks = do response <- User.getRecentTracks user1 Nothing (Just $ Limit 10) Nothing Nothing apiKey
+                     pemis "Recent tracks: "
+                     case response of
+                       Left e -> print e
+                       Right r -> print $ recentTracks r
+  where recentTracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "recenttracks"
+
+{-- requires autorization
+getRecommendedArtists
+ --}
+
+{-- requires autorization
+getRecommendedEvents
+ --}
+
+getShouts :: IO ()
+getShouts = do response <- User.getShouts user1 Nothing (Just $ Limit 1) apiKey
+               pemis "Shouts: "
+               case response of
+                 Left e -> print e
+                 Right r -> print $ shouts r
+  where shouts = mapM (getContent <=< lookupChild "body") <=< lookupChildren "shout" <=< lookupChild "shouts"
+
 main = do
   getArtistTracks
   getBannedTracks
@@ -95,13 +139,13 @@ main = do
   getNeighbours
   getNewReleases
   getPastEvents
---  getPersonalTags
---  getPlaylists
+  getPersonalTags
+  getPlaylists
 --  getRecentStations
---  getRecentTracks
+  getRecentTracks
 --  getRecommendedArtists
 --  getRecommendedEvents
---  getShouts
+  getShouts
 --  getTopAlbums
 --  getTopArtists
 --  getTopFans
