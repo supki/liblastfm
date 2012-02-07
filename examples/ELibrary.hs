@@ -17,6 +17,7 @@ getAlbums = do response <- Library.getAlbums user (Just $ Artist "Burzum") Nothi
                case response of
                  Left e  -> print e
                  Right r -> print $ albums r
+               putStrLn ""
   where albums = mapM (getContent <=< lookupChild "name") <=< lookupChildren "album" <=< lookupChild "albums" <=< wrap
 
 getArtists :: IO ()
@@ -25,6 +26,7 @@ getArtists = do response <- Library.getArtists user Nothing (Just $ Limit 7) api
                 case response of
                   Left e  -> print e
                   Right r -> print $ playcounts r
+                putStrLn ""
   where playcounts = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "artists" <=< wrap
 
 getTracks :: IO ()
@@ -33,6 +35,7 @@ getTracks = do response <- Library.getTracks user (Just $ Artist "Burzum") Nothi
                case response of
                  Left e  -> print e
                  Right r -> print $ tracks r
+               putStrLn ""
   where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "tracks" <=< wrap
 
 start :: IO ()

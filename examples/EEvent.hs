@@ -17,6 +17,7 @@ getAttendees = do response <- Event.getAttendees (Event 3142549) Nothing (Just (
                   case response of
                     Left e  -> print e
                     Right r -> print (attendees r)
+                  putStrLn ""
   where attendees = mapM (getContent <=< lookupChild "name") <=< lookupChildren "user" <=< lookupChild "attendees" <=< wrap
 
 getInfo :: IO ()
@@ -25,6 +26,7 @@ getInfo = do response <- Event.getInfo (Event 3142549) apiKey
              case response of
                Left e  -> print e
                Right r -> print (city r)
+             putStrLn ""
   where city = getContent <=< lookupChild "city" <=< lookupChild "location" <=< lookupChild "venue" <=< lookupChild "event" <=< wrap
 
 getShouts :: IO ()
@@ -33,6 +35,7 @@ getShouts = do response <- Event.getShouts (Event 3142549) Nothing (Just (Limit 
                case response of
                  Left e  -> print e
                  Right r -> mapM_ (\s -> putStrLn $ "* " ++ s) . fromMaybe [] . shouts $ r
+               putStrLn ""
   where shouts = mapM (getContent <=< lookupChild "body") <=< lookupChildren "shout" <=< lookupChild "shouts" <=< wrap
 
 start :: IO ()

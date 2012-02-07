@@ -15,6 +15,7 @@ compare = do response <- Tasteometer.compare (ValueUser $ User "smpcln") (ValueU
              case response of
                Left e -> print e
                Right r -> print $ score r
+             putStrLn ""
   where score = getContent <=< lookupChild "score" <=< lookupChild "result" <=< lookupChild "comparison" <=< wrap
 
 start :: IO ()

@@ -17,6 +17,7 @@ getHype = do response <- Group.getHype group apiKey
              case response of
                Left e  -> print e
                Right r -> print (mbids r)
+             putStrLn ""
   where mbids = mapM (getContent <=< lookupChild "mbid") <=< lookupChildren "artist" <=< lookupChild "weeklyartistchart" <=< wrap
 
 getMembers :: IO ()
@@ -25,6 +26,7 @@ getMembers = do response <- Group.getMembers group Nothing (Just (Limit 10)) api
                 case response of
                   Left e  -> print e
                   Right r -> print (members r)
+                putStrLn ""
   where members = mapM (getContent <=< lookupChild "name") <=< lookupChildren "user" <=< lookupChild "members" <=< wrap
 
 getWeeklyAlbumChart :: IO ()
@@ -33,6 +35,7 @@ getWeeklyAlbumChart = do response <- Group.getWeeklyAlbumChart group Nothing Not
                          case response of
                            Left e  -> print e
                            Right r -> print (playcounts r)
+                         putStrLn ""
   where playcounts = mapM (getContent <=< lookupChild "playcount") <=< lookupChildren "album" <=< lookupChild "weeklyalbumchart" <=< wrap
 
 getWeeklyArtistChart :: IO ()
@@ -41,6 +44,7 @@ getWeeklyArtistChart = do response <- Group.getWeeklyArtistChart group Nothing N
                           case response of
                             Left e  -> print e
                             Right r -> print (artists r)
+                          putStrLn ""
   where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "weeklyartistchart" <=< wrap
 
 {-
@@ -58,6 +62,7 @@ getWeeklyTrackChart = do response <- Group.getWeeklyTrackChart group Nothing Not
                          case response of
                            Left e  -> print e
                            Right r -> print (urls r)
+                         putStrLn ""
   where urls = mapM (getContent <=< lookupChild "url") <=< lookupChildren "track" <=< lookupChild "weeklytrackchart" <=< wrap
 
 start :: IO ()

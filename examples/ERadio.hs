@@ -16,6 +16,7 @@ search = do response <- Radio.search (Name "dubstep") apiKey
             case response of
               Left e  -> print e
               Right r -> print $ stations r
+            putStrLn ""
   where stations = mapM (getContent <=< lookupChild "name") <=< lookupChildren "station" <=< lookupChild "stations" <=< wrap
 
 start :: IO ()

@@ -16,6 +16,7 @@ getEvents = do response <- Geo.getEvents Nothing Nothing (Just (Location "Moscow
                case response of
                  Left e  -> print e
                  Right r -> print (events r)
+               putStrLn ""
   where events = mapM (getContent <=< lookupChild "id") <=< lookupChildren "event" <=< lookupChild "events" <=< wrap
 
 getMetroArtistChart :: IO ()
@@ -24,6 +25,7 @@ getMetroArtistChart = do response <- Geo.getMetroArtistChart (Country "Russia") 
                          case response of
                            Left e  -> print e
                            Right r -> print (artists r)
+                         putStrLn ""
   where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "topartists" <=< wrap
 
 getMetroHypeArtistChart :: IO ()
@@ -32,6 +34,7 @@ getMetroHypeArtistChart = do response <- Geo.getMetroHypeArtistChart (Country "R
                              case response of
                                Left e  -> print e
                                Right r -> print (artists r)
+                             putStrLn ""
   where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "topartists" <=< wrap
 
 getMetroHypeTrackChart :: IO ()
@@ -40,6 +43,7 @@ getMetroHypeTrackChart = do response <- Geo.getMetroHypeTrackChart (Country "Rus
                             case response of
                               Left e  -> print e
                               Right r -> print (tracks r)
+                            putStrLn ""
   where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "toptracks" <=< wrap
 
 getMetroTrackChart :: IO ()
@@ -48,6 +52,7 @@ getMetroTrackChart = do response <- Geo.getMetroTrackChart (Country "Ukraine") (
                         case response of
                           Left e  -> print e
                           Right r -> print (tracks r)
+                        putStrLn ""
   where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "toptracks" <=< wrap
 
 getMetroUniqueArtistChart :: IO ()
@@ -56,6 +61,7 @@ getMetroUniqueArtistChart = do response <- Geo.getMetroUniqueArtistChart (Countr
                                case response of
                                  Left e  -> print e
                                  Right r -> print (artists r)
+                               putStrLn ""
   where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "topartists" <=< wrap
 
 getMetroUniqueTrackChart :: IO ()
@@ -64,6 +70,7 @@ getMetroUniqueTrackChart = do response <- Geo.getMetroUniqueTrackChart (Country 
                               case response of
                                 Left e  -> print e
                                 Right r -> print (tracks r)
+                              putStrLn ""
   where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "toptracks" <=< wrap
 
 {-
@@ -81,6 +88,7 @@ getMetros = do response <- Geo.getMetros (Just (Country "Russia")) apiKey
                case response of
                  Left e  -> print e
                  Right r -> print (metros r)
+               putStrLn ""
   where metros = mapM (getContent <=< lookupChild "name") <=< lookupChildren "metro" <=< lookupChild "metros" <=< wrap
 
 getTopArtists :: IO ()
@@ -89,6 +97,7 @@ getTopArtists = do response <- Geo.getTopArtists (Country "Belarus") Nothing (Ju
                    case response of
                      Left e  -> print e
                      Right r -> print (artists r)
+                   putStrLn ""
   where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "topartists" <=< wrap
 
 getTopTracks :: IO ()
@@ -97,6 +106,7 @@ getTopTracks = do response <- Geo.getTopTracks (Country "Ukraine") Nothing Nothi
                   case response of
                     Left e  -> print e
                     Right r -> print (tracks r)
+                  putStrLn ""
   where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "toptracks" <=< wrap
 
 start :: IO ()

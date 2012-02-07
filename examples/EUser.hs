@@ -14,94 +14,103 @@ user2 = User "mokele"
 user3 = User "rj"
 artist = Artist "Dvar"
 
-pemis s = putStr $ "\n" ++ s
-
 getArtistTracks :: IO ()
 getArtistTracks = do response <- User.getArtistTracks user1 artist Nothing Nothing Nothing apiKey
-                     pemis "Artist tracks: "
+                     putStr "Artist tracks: "
                      case response of
                        Left e -> print e
                        Right r -> print $ artistTracks r
+                     putStrLn ""
   where artistTracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "artisttracks" <=< wrap
 
 getBannedTracks :: IO ()
 getBannedTracks = do response <- User.getBannedTracks user1 Nothing (Just $ Limit 10) apiKey
-                     pemis "Banned artists: "
+                     putStr "Banned artists: "
                      case response of
                        Left e -> print e
                        Right r -> print $ bannedArtists r
+                     putStrLn ""
   where bannedArtists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "bannedtracks" <=< wrap
 
 getEvents :: IO ()
 getEvents = do response <- User.getEvents user2 Nothing (Just $ Limit 5) Nothing apiKey
-               pemis "Events: "
+               putStr "Events: "
                case response of
                  Left e -> print e
                  Right r -> print $ events r
+               putStrLn ""
   where events = mapM (getContent <=< lookupChild "url" <=< lookupChild "venue") <=< lookupChildren "event" <=< lookupChild "events" <=< wrap
 
 getFriends :: IO ()
 getFriends = do response <- User.getFriends user1 Nothing Nothing (Just $ Limit 10) apiKey
-                pemis "Friends: "
+                putStr "Friends: "
                 case response of
                   Left e -> print e
                   Right r -> print $ friends r
+                putStrLn ""
   where friends = mapM (getContent <=< lookupChild "name") <=< lookupChildren "user" <=< lookupChild "friends" <=< wrap
 
 getPlayCount :: IO ()
 getPlayCount = do response <- User.getInfo (Just user1) apiKey
-                  pemis "Play count: "
+                  putStr "Play count: "
                   case response of
                     Left e -> print e
                     Right r -> print $ playCount r
+                  putStrLn ""
   where playCount = getContent <=< lookupChild "playcount" <=< lookupChild "user" <=< wrap
 
 getLovedTracks :: IO ()
 getLovedTracks = do response <- User.getLovedTracks user1 Nothing (Just $ Limit 10) apiKey
-                    pemis "Loved tracks: "
+                    putStr "Loved tracks: "
                     case response of
                       Left e -> print e
                       Right r -> print $ lovedTracks r
+                    putStrLn ""
   where lovedTracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "lovedtracks" <=< wrap
 
 getNeighbours :: IO ()
 getNeighbours = do response <- User.getNeighbours user1 (Just $ Limit 10) apiKey
-                   pemis "Neighbours: "
+                   putStr "Neighbours: "
                    case response of
                      Left e -> print e
                      Right r -> print $ neighbours r
+                   putStrLn ""
   where neighbours = mapM (getContent <=< lookupChild "name") <=< lookupChildren "user" <=< lookupChild "neighbours" <=< wrap
 
 getNewReleases :: IO ()
 getNewReleases = do response <- User.getNewReleases user1 Nothing apiKey
-                    pemis "New releases: "
+                    putStr "New releases: "
                     case response of
                       Left e -> print e
                       Right r -> print $ newReleases r
+                    putStrLn ""
   where newReleases = mapM (getContent <=< lookupChild "url") <=< lookupChildren "album" <=< lookupChild "albums" <=< wrap
 
 getPastEvents :: IO ()
 getPastEvents = do response <- User.getPastEvents user2 Nothing (Just $ Limit 5) apiKey
-                   pemis "Past events: "
+                   putStr "Past events: "
                    case response of
                      Left e -> print e
                      Right r -> print $ pastEvents r
+                   putStrLn ""
   where pastEvents = mapM (getContent <=< lookupChild "url") <=< lookupChildren "event" <=< lookupChild "events" <=< wrap
 
 getPersonalTags :: IO ()
 getPersonalTags = do response <- User.getPersonalTags user2 (Tag "rock") (TaggingType "artist") Nothing (Just $ Limit 10) apiKey
-                     pemis "Personal tags: "
+                     putStr "Personal tags: "
                      case response of
                        Left e -> print e
                        Right r -> print $ personalTags r
+                     putStrLn ""
   where personalTags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "artists" <=< lookupChild "taggings" <=< wrap
 
 getPlaylists :: IO ()
 getPlaylists = do response <- User.getPlaylists user2 apiKey
-                  pemis "Playlists: "
+                  putStr "Playlists: "
                   case response of
                     Left e -> print e
                     Right r -> print $ playlists r
+                  putStrLn ""
   where playlists = mapM (getContent <=< lookupChild "title") <=< lookupChildren "playlist" <=< lookupChild "playlists" <=< wrap
 
 {-- requires autorization
@@ -110,10 +119,11 @@ getRecentStations :: IO ()
 
 getRecentTracks :: IO ()
 getRecentTracks = do response <- User.getRecentTracks user1 Nothing (Just $ Limit 10) Nothing Nothing apiKey
-                     pemis "Recent tracks: "
+                     putStr "Recent tracks: "
                      case response of
                        Left e -> print e
                        Right r -> print $ recentTracks r
+                     putStrLn ""
   where recentTracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "recenttracks" <=< wrap
 
 {-- requires autorization
@@ -126,64 +136,71 @@ getRecommendedEvents
 
 getShouts :: IO ()
 getShouts = do response <- User.getShouts user1 Nothing (Just $ Limit 1) apiKey
-               pemis "Shouts: "
+               putStr "Shouts: "
                case response of
                  Left e -> print e
                  Right r -> print $ shouts r
+               putStrLn ""
   where shouts = mapM (getContent <=< lookupChild "body") <=< lookupChildren "shout" <=< lookupChild "shouts" <=< wrap
 
 getTopAlbums :: IO ()
 getTopAlbums = do response <- User.getTopAlbums user1 Nothing Nothing (Just $ Limit 5) apiKey
-                  pemis "Top albums: "
+                  putStr "Top albums: "
                   case response of
                     Left e -> print e
                     Right r -> print $ topAlbums r
+                  putStrLn ""
   where topAlbums = mapM (getContent <=< lookupChild "name" <=< lookupChild "artist") <=< lookupChildren "album" <=< lookupChild "topalbums" <=< wrap
 
 getTopArtists :: IO ()
 getTopArtists = do response <- User.getTopArtists user1 Nothing Nothing (Just $ Limit 5) apiKey
-                   pemis "Top artists: "
+                   putStr "Top artists: "
                    case response of
                      Left e -> print e
                      Right r -> print $ topArtists r
+                   putStrLn ""
   where topArtists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "topartists" <=< wrap
 
 getTopTags :: IO ()
 getTopTags = do response <- User.getTopTags user1 (Just $ Limit 10) apiKey
-                pemis "Top tags: "
+                putStr "Top tags: "
                 case response of
                   Left e -> print e
                   Right r -> print $ topTags r
+                putStrLn ""
   where topTags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "toptags" <=< wrap
 
 getTopTracks :: IO ()
 getTopTracks = do response <- User.getTopTracks user1 Nothing Nothing (Just $ Limit 10) apiKey
-                  pemis "Top tracks: "
+                  putStr "Top tracks: "
                   case response of
                     Left e -> print e
                     Right r -> print $ topTracks r
+                  putStrLn ""
   where topTracks = mapM (getContent <=< lookupChild "url") <=< lookupChildren "track" <=< lookupChild "toptracks" <=< wrap
 
 getWeeklyAlbumChart :: IO ()
 getWeeklyAlbumChart = do response <- User.getWeeklyAlbumChart user3 Nothing Nothing apiKey
-                         pemis "Weekly album chart: "
+                         putStr "Weekly album chart: "
                          case response of
                            Left e -> print e
                            Right r -> print $ weeklyAlbumChart r
+                         putStrLn ""
   where weeklyAlbumChart = mapM (getContent <=< lookupChild "url") <=< lookupChildren "album" <=< lookupChild "weeklyalbumchart" <=< wrap
 
 getWeeklyArtistChart :: IO ()
 getWeeklyArtistChart = do response <- User.getWeeklyArtistChart user3 Nothing Nothing apiKey
-                          pemis "Weekly artist chart: "
+                          putStr "Weekly artist chart: "
                           case response of
                             Left e -> print e
                             Right r -> print $ weeklyArtistChart r
+                          putStrLn ""
   where weeklyArtistChart = mapM (getContent <=< lookupChild "url") <=< lookupChildren "artist" <=< lookupChild "weeklyartistchart" <=< wrap
 
 {-
 getWeeklyChartList :: IO ()
 getWeeklyChartList = do response <- User.getWeeklyChartList user3 apiKey
-                        pemis "Weekly chart list: "
+                        putStr "Weekly chart list: "
                         case response of
                           Left e -> print e
                           Right r -> print $ take 10 r
@@ -191,10 +208,11 @@ getWeeklyChartList = do response <- User.getWeeklyChartList user3 apiKey
 
 getWeeklyTrackChart :: IO ()
 getWeeklyTrackChart = do response <- User.getWeeklyTrackChart user3 Nothing Nothing apiKey
-                         pemis "Weekly track chart: "
+                         putStr "Weekly track chart: "
                          case response of
                            Left e -> print e
                            Right r -> print $ weeklyTrackChart r
+                         putStrLn ""
   where weeklyTrackChart = mapM (getContent <=< lookupChild "url") <=< lookupChildren "track" <=< lookupChild "weeklytrackchart" <=< wrap
 
 {-- requires autorization

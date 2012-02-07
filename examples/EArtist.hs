@@ -16,6 +16,7 @@ getCorrection = do response <- Artist.getCorrection (Artist "Meshugah") apiKey
                    case response of
                      Left e  -> print e
                      Right r -> print (correction r)
+                   putStrLn ""
   where correction = getContent <=< lookupChild "name" <=< lookupChild "artist" <=< lookupChild "correction" <=< lookupChild "corrections" <=< wrap
 
 getEvents :: IO ()
@@ -24,6 +25,7 @@ getEvents = do response <- Artist.getEvents (Just (Artist "Meshuggah")) Nothing 
                case response of
                  Left e  -> print e
                  Right r -> print (place r)
+               putStrLn ""
   where place = getContent <=< lookupChild "name" <=< lookupChild "venue" <=< lookupChild "event" <=< lookupChild "events" <=< wrap
 
 getImages :: IO ()
@@ -32,6 +34,7 @@ getImages = do response <- Artist.getImages (Just (Artist "Meshuggah")) Nothing 
                case response of
                  Left e  -> print e
                  Right r -> print (links r)
+               putStrLn ""
   where links = mapM (getContent <=< lookupChild "url") <=< lookupChildren "image" <=< lookupChild "images" <=< wrap
 
 getInfo :: IO ()
@@ -40,6 +43,7 @@ getInfo = do response <- Artist.getInfo (Just (Artist "Meshuggah")) Nothing Noth
              case response of
                Left e  -> print e
                Right r -> print (listeners r)
+             putStrLn ""
   where listeners = getContent <=< lookupChild "listeners" <=< lookupChild "stats" <=< lookupChild "artist" <=< wrap
 
 getPastEvents :: IO ()
@@ -48,6 +52,7 @@ getPastEvents = do response <- Artist.getPastEvents (Just (Artist "Meshugah")) N
                    case response of
                      Left e  -> print e
                      Right r -> print (artists r)
+                   putStrLn ""
   where artists = mapM getContent <=< lookupChildren "artist" <=< lookupChild "artists" <=< lookupChild "event" <=< lookupChild "events" <=< wrap
 
 getPodcast :: IO ()
@@ -56,6 +61,7 @@ getPodcast = do response <- Artist.getPodcast (Just (Artist "Meshuggah")) Nothin
                 case response of
                   Left e  -> print e
                   Right r -> print (description r)
+                putStrLn ""
   where description = getContent <=< lookupChild "description" <=< lookupChild "channel" <=< lookupChild "rss" <=< wrap
 
 getShouts :: IO ()
@@ -64,6 +70,7 @@ getShouts = do response <- Artist.getShouts (Just (Artist "Meshuggah")) Nothing 
                case response of
                  Left e  -> print e
                  Right r -> print (authors r)
+               putStrLn ""
   where authors = mapM (getContent <=< lookupChild "author") <=< lookupChildren "shout" <=< lookupChild "shouts" <=< wrap
 
 getSimilar :: IO ()
@@ -72,6 +79,7 @@ getSimilar = do response <- Artist.getSimilar (Just (Artist "Meshuggah")) Nothin
                 case response of
                   Left e  -> print e
                   Right r -> print (artists r)
+                putStrLn ""
   where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "similarartists" <=< wrap
 
 getTopAlbums :: IO ()
@@ -80,6 +88,7 @@ getTopAlbums = do response <- Artist.getTopAlbums (Just (Artist "Meshuggah")) No
                   case response of
                     Left e  -> print e
                     Right r -> print (albums r)
+                  putStrLn ""
   where albums = mapM (getContent <=< lookupChild "name") <=< lookupChildren "album" <=< lookupChild "topalbums" <=< wrap
 
 getTopFans :: IO ()
@@ -88,6 +97,7 @@ getTopFans = do response <- Artist.getTopFans (Just (Artist "Meshuggah")) Nothin
                 case response of
                   Left e  -> print e
                   Right r -> print (fans r)
+                putStrLn ""
   where fans = mapM (getContent <=< lookupChild "name") <=< lookupChildren "user" <=< lookupChild "topfans" <=< wrap
 
 getTopTags :: IO ()
@@ -96,6 +106,7 @@ getTopTags = do response <- Artist.getTopTags (Just (Artist "Meshuggah")) Nothin
                 case response of
                   Left e  -> print e
                   Right r -> print (tags r)
+                putStrLn ""
   where tags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "toptags" <=< wrap
 
 getTopTracks :: IO ()
@@ -104,6 +115,7 @@ getTopTracks = do response <- Artist.getTopTracks (Just (Artist "Meshuggah")) No
                   case response of
                     Left e  -> print e
                     Right r -> print (tracks r)
+                  putStrLn ""
   where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "toptracks" <=< wrap
 
 search :: IO ()
@@ -112,6 +124,7 @@ search = do response <- Artist.search (Artist "Mesh") Nothing (Just (Limit 12)) 
             case response of
               Left e  -> print e
               Right r -> print (artists r)
+            putStrLn ""
   where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "artistmatches" <=< lookupChild "results" <=< wrap
 
 start :: IO ()

@@ -16,6 +16,7 @@ getHypedArtists = do response <- Chart.getHypedArtists Nothing (Just (Limit 8)) 
                      case response of
                        Left e  -> print e
                        Right r -> print (artists r)
+                     putStrLn ""
   where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "artists" <=< wrap
 
 getHypedTracks :: IO ()
@@ -24,6 +25,7 @@ getHypedTracks = do response <- Chart.getHypedTracks Nothing (Just (Limit 6)) ap
                     case response of
                       Left e  -> print e
                       Right r -> print (tracks r)
+                    putStrLn ""
   where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "tracks" <=< wrap
 
 getLovedTracks :: IO ()
@@ -32,6 +34,7 @@ getLovedTracks = do response <- Chart.getLovedTracks Nothing (Just (Limit 9)) ap
                     case response of
                       Left e  -> print e
                       Right r -> print (tracks r)
+                    putStrLn ""
   where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "tracks" <=< wrap
 
 getTopArtists :: IO ()
@@ -40,6 +43,7 @@ getTopArtists = do response <- Chart.getTopArtists Nothing (Just (Limit 4)) apiK
                    case response of
                      Left e  -> print e
                      Right r -> print (artists r)
+                   putStrLn ""
   where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "artists" <=< wrap
 
 getTopTags :: IO ()
@@ -48,6 +52,7 @@ getTopTags = do response <- Chart.getTopTags Nothing (Just (Limit 6)) apiKey
                 case response of
                   Left e  -> print e
                   Right r -> print (tags r)
+                putStrLn ""
   where tags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "tags" <=< wrap
 
 getTopTracks :: IO ()
@@ -56,6 +61,7 @@ getTopTracks = do response <- Chart.getTopTracks Nothing (Just (Limit 7)) apiKey
                   case response of
                     Left e  -> print e
                     Right r -> print (tracks r)
+                  putStrLn ""
   where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "tracks" <=< wrap
 
 start :: IO ()

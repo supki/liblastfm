@@ -16,6 +16,7 @@ getBuylinks = do response <- Album.getBuyLinks (Just (Artist "Pink Floyd", Album
                  case response of
                    Left e  -> print e
                    Right r -> print (suppliers r)
+                 putStrLn ""
   where suppliers = mapM (getContent <=< lookupChild "supplierName") <=< lookupChildren "affiliation" <=< lookupChild "downloads" <=< lookupChild "affiliations" <=< wrap
 
 getInfo :: IO ()
@@ -24,6 +25,7 @@ getInfo = do response <- Album.getInfo (Just (Artist "Pink Floyd", Album "The Wa
              case response of
                Left e  -> print e
                Right r -> print (suppliers r)
+             putStrLn ""
   where suppliers = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "toptags" <=< lookupChild "album" <=< wrap
 
 getShouts :: IO ()
@@ -32,6 +34,7 @@ getShouts = do response <- Album.getShouts (Just (Artist "Pink Floyd", Album "Th
                case response of
                  Left e  -> print e
                  Right r -> print (shouts r)
+               putStrLn ""
   where shouts = mapM (getContent <=< lookupChild "body") <=< lookupChildren "shout" <=< lookupChild "shouts" <=< wrap
 
 getTopTags :: IO ()
@@ -40,6 +43,7 @@ getTopTags = do response <- Album.getTopTags (Just (Artist "Pink Floyd", Album "
                 case response of
                   Left e  -> print e
                   Right r -> print (counts r)
+                putStrLn ""
   where counts = mapM (getContent <=< lookupChild "count") <=< lookupChildren "tag" <=< lookupChild "toptags" <=< wrap
 
 search :: IO ()
@@ -48,6 +52,7 @@ search = do response <- Album.search (Album "wall") Nothing (Just (Limit 5)) api
             case response of
               Left e  -> print e
               Right r -> print (albums r)
+            putStrLn ""
   where albums = mapM (getContent <=< lookupChild "name") <=< lookupChildren "album" <=< lookupChild "albummatches" <=< lookupChild "results" <=< wrap
 
 start :: IO ()
