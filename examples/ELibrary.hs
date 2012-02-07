@@ -1,4 +1,4 @@
-#!/usr/bin/env runhaskell
+module ELibrary (start) where
 
 import Control.Monad ((<=<))
 
@@ -35,14 +35,14 @@ getTracks = do response <- Library.getTracks user (Just $ Artist "Burzum") Nothi
                  Right r -> print $ tracks r
   where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "tracks" <=< wrap
 
-main :: IO ()
-main = do -- addAlbum (requires authorization)
-          -- addArtist (requires authorization)
-          -- addTrack (requires authorization)
-          getAlbums
-          getArtists
-          getTracks
-          -- removeAlbum (requires authorization)
-          -- removeArtist (requires authorization)
-          -- removeScrobble (requires authorization)
-          -- removeTrack (requires authorization)
+start :: IO ()
+start = do -- addAlbum (requires authorization)
+           -- addArtist (requires authorization)
+           -- addTrack (requires authorization)
+           getAlbums
+           getArtists
+           getTracks
+           -- removeAlbum (requires authorization)
+           -- removeArtist (requires authorization)
+           -- removeScrobble (requires authorization)
+           -- removeTrack (requires authorization)

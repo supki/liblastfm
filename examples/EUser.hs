@@ -1,4 +1,4 @@
-#!/usr/bin/env runhaskell
+module EUser (start) where
 
 import Control.Monad ((<=<))
 
@@ -201,28 +201,29 @@ getWeeklyTrackChart = do response <- User.getWeeklyTrackChart user3 Nothing Noth
 shout
  --}
 
-main = do getArtistTracks
-          getBannedTracks
-          getEvents
-          getFriends
-          getPlayCount
-          getLovedTracks
-          getNeighbours
-          getNewReleases
-          getPastEvents
-          getPersonalTags
-          getPlaylists
---          getRecentStations
-          getRecentTracks
---          getRecommendedArtists
---          getRecommendedEvents
-          getShouts
-          getTopAlbums
-          getTopArtists
-          getTopTags
-          getTopTracks
-          getWeeklyAlbumChart
-          getWeeklyArtistChart
---          getWeeklyChartList
-          getWeeklyTrackChart
---          shout
+start :: IO ()
+start = do getArtistTracks
+           getBannedTracks
+           getEvents
+           getFriends
+           getPlayCount
+           getLovedTracks
+           getNeighbours
+           getNewReleases
+           getPastEvents
+           getPersonalTags
+           getPlaylists
+           -- getRecentStations
+           getRecentTracks
+           -- getRecommendedArtists
+           -- getRecommendedEvents
+           getShouts
+           getTopAlbums
+           getTopArtists
+           getTopTags
+           getTopTracks
+           getWeeklyAlbumChart
+           getWeeklyArtistChart
+           -- getWeeklyChartList
+           getWeeklyTrackChart
+           -- shout

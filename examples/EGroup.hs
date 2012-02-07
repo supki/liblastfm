@@ -1,4 +1,4 @@
-#!/usr/bin/env runhaskell
+module EGroup (start) where
 
 import Control.Monad ((<=<))
 
@@ -60,10 +60,10 @@ getWeeklyTrackChart = do response <- Group.getWeeklyTrackChart group Nothing Not
                            Right r -> print (urls r)
   where urls = mapM (getContent <=< lookupChild "url") <=< lookupChildren "track" <=< lookupChild "weeklytrackchart" <=< wrap
 
-main :: IO ()
-main = do getHype
-          getMembers
-          getWeeklyAlbumChart
-          getWeeklyArtistChart
-          --getWeeklyChartList
-          getWeeklyTrackChart
+start :: IO ()
+start = do getHype
+           getMembers
+           getWeeklyAlbumChart
+           getWeeklyArtistChart
+           --getWeeklyChartList
+           getWeeklyTrackChart

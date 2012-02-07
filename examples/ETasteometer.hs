@@ -1,4 +1,4 @@
-#!/usr/bin/env runhaskell
+module ETasteometer (start) where
 
 import Control.Monad ((<=<))
 import Prelude hiding (compare)
@@ -17,4 +17,5 @@ compare = do response <- Tasteometer.compare (ValueUser $ User "smpcln") (ValueU
                Right r -> print $ score r
   where score = getContent <=< lookupChild "score" <=< lookupChild "result" <=< lookupChild "comparison" <=< wrap
 
-main = compare
+start :: IO ()
+start = compare

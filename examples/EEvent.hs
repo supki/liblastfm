@@ -1,4 +1,4 @@
-#!/usr/bin/env runhaskell
+module EEvent (start) where
 
 import Control.Monad ((<=<))
 import Data.Maybe (fromMaybe)
@@ -35,10 +35,10 @@ getShouts = do response <- Event.getShouts (Event 3142549) Nothing (Just (Limit 
                  Right r -> mapM_ (\s -> putStrLn $ "* " ++ s) . fromMaybe [] . shouts $ r
   where shouts = mapM (getContent <=< lookupChild "body") <=< lookupChildren "shout" <=< lookupChild "shouts" <=< wrap
 
-main :: IO ()
-main = do -- attend (requires authorization)
-          getAttendees
-          getInfo
-          getShouts
-          -- share (requires authorization)
-          -- shout (requires authorization)
+start :: IO ()
+start = do -- attend (requires authorization)
+           getAttendees
+           getInfo
+           getShouts
+           -- share (requires authorization)
+           -- shout (requires authorization)

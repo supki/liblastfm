@@ -1,4 +1,4 @@
-#!/usr/bin/env runhaskell
+module EGeo (start) where
 
 import Control.Monad ((<=<))
 
@@ -99,15 +99,15 @@ getTopTracks = do response <- Geo.getTopTracks (Country "Ukraine") Nothing Nothi
                     Right r -> print (tracks r)
   where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "toptracks" <=< wrap
 
-main :: IO ()
-main = do getEvents
-          getMetroArtistChart
-          getMetroHypeArtistChart
-          getMetroHypeTrackChart
-          getMetroTrackChart
-          getMetroUniqueArtistChart
-          getMetroUniqueTrackChart
-          --getMetroWeeklyChartlist
-          getMetros
-          getTopArtists
-          getTopTracks
+start :: IO ()
+start = do getEvents
+           getMetroArtistChart
+           getMetroHypeArtistChart
+           getMetroHypeTrackChart
+           getMetroTrackChart
+           getMetroUniqueArtistChart
+           getMetroUniqueTrackChart
+           --getMetroWeeklyChartlist
+           getMetros
+           getTopArtists
+           getTopTracks

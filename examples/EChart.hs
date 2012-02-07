@@ -1,4 +1,4 @@
-#!/usr/bin/env runhaskell
+module EChart (start) where
 
 import Control.Monad ((<=<))
 
@@ -58,10 +58,10 @@ getTopTracks = do response <- Chart.getTopTracks Nothing (Just (Limit 7)) apiKey
                     Right r -> print (tracks r)
   where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "tracks" <=< wrap
 
-main :: IO ()
-main = do getHypedArtists
-          getHypedTracks
-          getLovedTracks
-          getTopArtists
-          getTopTags
-          getTopTracks
+start :: IO ()
+start = do getHypedArtists
+           getHypedTracks
+           getLovedTracks
+           getTopArtists
+           getTopTags
+           getTopTracks

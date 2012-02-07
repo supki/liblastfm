@@ -1,4 +1,4 @@
-#!/usr/bin/env runhaskell
+module EArtist (start) where
 
 import Control.Monad ((<=<))
 
@@ -114,22 +114,22 @@ search = do response <- Artist.search (Artist "Mesh") Nothing (Just (Limit 12)) 
               Right r -> print (artists r)
   where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "artistmatches" <=< lookupChild "results" <=< wrap
 
-main :: IO ()
-main = do -- addTags (requires authorization)
-          getCorrection
-          getEvents
-          getImages
-          getInfo
-          getPastEvents
-          getPodcast
-          getShouts
-          getSimilar
-          -- getTags (requires authorization)
-          getTopAlbums
-          getTopFans
-          getTopTags
-          getTopTracks
-          -- removeTag (requires authorization)
-          search
-          -- share (requires authorization)
-          -- shout (requires authorization)
+start :: IO ()
+start = do -- addTags (requires authorization)
+           getCorrection
+           getEvents
+           getImages
+           getInfo
+           getPastEvents
+           getPodcast
+           getShouts
+           getSimilar
+           -- getTags (requires authorization)
+           getTopAlbums
+           getTopFans
+           getTopTags
+           getTopTracks
+           -- removeTag (requires authorization)
+           search
+           -- share (requires authorization)
+           -- shout (requires authorization)

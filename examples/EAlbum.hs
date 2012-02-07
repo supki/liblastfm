@@ -1,4 +1,4 @@
-#!/usr/bin/env runhaskell
+module EAlbum (start) where
 
 import Control.Monad ((<=<))
 
@@ -50,13 +50,13 @@ search = do response <- Album.search (Album "wall") Nothing (Just (Limit 5)) api
               Right r -> print (albums r)
   where albums = mapM (getContent <=< lookupChild "name") <=< lookupChildren "album" <=< lookupChild "albummatches" <=< lookupChild "results" <=< wrap
 
-main :: IO ()
-main = do -- addTags (requires authorization)
-          getBuylinks
-          getInfo
-          getShouts
-          -- getTags (requires authorization)
-          getTopTags
-          -- removeTag (requires authorization)
-          search
-          -- share (requires authorization)
+start :: IO ()
+start = do -- addTags (requires authorization)
+           getBuylinks
+           getInfo
+           getShouts
+           -- getTags (requires authorization)
+           getTopTags
+           -- removeTag (requires authorization)
+           search
+           -- share (requires authorization)

@@ -1,4 +1,4 @@
-#!/usr/bin/env runhaskell
+module ERadio (start) where
 
 import Control.Monad ((<=<))
 
@@ -18,7 +18,7 @@ search = do response <- Radio.search (Name "dubstep") apiKey
               Right r -> print $ stations r
   where stations = mapM (getContent <=< lookupChild "name") <=< lookupChildren "station" <=< lookupChild "stations" <=< wrap
 
-main :: IO ()
-main = do -- getPlaylist (requires authorization)
-          search
-          -- tune (requires authorization)
+start :: IO ()
+start = do -- getPlaylist (requires authorization)
+           search
+           -- tune (requires authorization)
