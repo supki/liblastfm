@@ -8,12 +8,11 @@ module Network.Lastfm.Response
 import Codec.Binary.UTF8.String (decodeString)
 import Control.Applicative ((<$>))
 import Control.Exception (Exception, handle, throw)
-import Control.Monad (liftM)
+import Control.Monad ((<=<), liftM)
 import Data.Digest.Pure.MD5 (md5)
 import Data.Function (on)
 import Data.IORef
 import Data.List (sortBy)
-import Data.Maybe (fromMaybe)
 import Data.Typeable (Typeable)
 import Data.URLEncoded (urlEncode, export)
 import Network.Curl hiding (Content)
@@ -79,36 +78,28 @@ secret = unsafePerformIO $ newIORef ""
 withSecret :: Secret -> IO a -> IO a
 withSecret s f = writeIORef secret s >> f
 
+url :: String
+url = "http://ws.audioscrobbler.com/2.0/?"
+
 callAPI :: Method -> [(Key, Value)] -> IO Response
-callAPI m as = withCurlDo $ do
+callAPI m xs = withCurlDo $ do
                  s <- readIORef secret
-                 curl <- initialize
-                 response <- liftM (decodeString . respBody)
-                              (do_curl_ curl
-                                        "http://ws.audioscrobbler.com/2.0/?"
-                                        [ CurlPostFields . map (export . urlEncode) $ (("api_sig", sign s) : bs) ]
-                                        :: IO CurlResponse)
-                 reset curl
-                 let errorNum = getErrorNum . onlyElems . parseXML $ response
-                 case errorNum of
-                   Just n  -> throw $ LastfmAPIError (toEnum . pred $ n)
+                 let ys = ("method", m) : filter (not . null . snd) xs
+                 let zs = if not $ null s then ("api_sig", sign s ys) : ys else ys
+                 response <- decodeString . respBody <$> (curlGetResponse_ url
+                                                           [ CurlPostFields . map (export . urlEncode) $ zs, CurlFailOnError False ]
+                                                           :: IO CurlResponse)
+                 case isError response of
+                   Just n  -> throw $ LastfmAPIError (toEnum $ n - 1)
                    Nothing -> return response
 
-  where bs :: [(Key, Value)]
-        bs = filter (not . null . snd) $ ("method", m) : as
+  where -- | Some API calls should be signed. (http://www.lastfm.ru/api/authspec Section 8)
+        sign :: Secret -> [(Key, Value)] -> Sign
+        sign s = show . md5 . BS.pack . (++ s) . concatMap (uncurry (++)) . sortBy (compare `on` fst)
 
-        sign :: Secret -> Sign
-        -- ^ Each API call (a little exception for getToken) should be signed.
-        -- Algorithm description can be found at http://www.lastfm.ru/api/authspec Section 8
-        sign s = show . md5 . BS.pack . (++ s) . concatMap (uncurry (++)) . sortBy (compare `on` fst) $ bs
-
-        getErrorNum :: [Element] -> Maybe Int
-        getErrorNum response = do element <- maybeHead . concatMap (findElements . unqual $ "error") $ response
-                                  read <$> findAttr (unqual "code") element
-
-        maybeHead :: [a] -> Maybe a
-        maybeHead [] = Nothing
-        maybeHead xs = Just $ head xs
+        isError :: String -> Maybe Int
+        isError response = do xml <- parseXMLDoc response
+                              read <$> (findAttr (unqual "code") <=< findChild (unqual "error")) xml
 
 callAPI_ :: Method -> [(Key, Value)] -> IO ()
 callAPI_ m as = callAPI m as >> return ()
