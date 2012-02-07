@@ -4,7 +4,7 @@ module Network.Lastfm.API.Radio
 
 import Control.Exception (throw)
 
-import Network.Lastfm.Core
+import Network.Lastfm.Response
 import Network.Lastfm.Types ( (?<), APIKey, Bitrate, BuyLinks, Discovery, Language
                             , Multiplier, Name, RTP, Station, SessionKey, unpack
                             )

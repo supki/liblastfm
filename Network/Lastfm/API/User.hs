@@ -6,7 +6,7 @@ module Network.Lastfm.API.User
   , getWeeklyChartList, getWeeklyTrackChart, shout
   ) where
 
-import Network.Lastfm.Core
+import Network.Lastfm.Response
 import Network.Lastfm.Types ( (?<), APIKey, Artist, FestivalsOnly, From, Limit, Message, Page
                             , Period, RecentTracks, SessionKey, Tag, TaggingType, To, User, UseRecs
                             )

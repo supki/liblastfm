@@ -1,9 +1,8 @@
 {-# LANGUAGE ScopedTypeVariables, DeriveDataTypeable #-}
-module Network.Lastfm.Core
+module Network.Lastfm.Response
   ( Lastfm, Response, LastfmError(..), dispatch
   , withSecret
   , callAPI, callAPI_
-  , lookupChild, lookupChildren, getContent, getAttribute
   ) where
 
 import Codec.Binary.UTF8.String (decodeString)
@@ -72,7 +71,7 @@ type Sign = String
 type Method = String
 type Message = String
 
-newtype Response = Response {unwrap :: Element}
+type Response = String
 
 secret :: IORef Secret
 secret = unsafePerformIO $ newIORef ""
@@ -84,16 +83,17 @@ callAPI :: Method -> [(Key, Value)] -> IO Response
 callAPI m as = withCurlDo $ do
                  s <- readIORef secret
                  curl <- initialize
-                 response <- liftM (onlyElems . parseXML . decodeString . respBody)
+                 response <- liftM (decodeString . respBody)
                               (do_curl_ curl
                                         "http://ws.audioscrobbler.com/2.0/?"
                                         [ CurlPostFields . map (export . urlEncode) $ (("api_sig", sign s) : bs) ]
                                         :: IO CurlResponse)
                  reset curl
-                 let errorNum = getErrorNum response
+                 let errorNum = getErrorNum . onlyElems . parseXML $ response
                  case errorNum of
                    Just n  -> throw $ LastfmAPIError (toEnum . pred $ n)
-                   Nothing -> return . Response . fromMaybe (throw $ LastfmAPIError DoesntExist) . maybeHead . concatMap (findElements (unqual "lfm")) $ response
+                   Nothing -> return response
+
   where bs :: [(Key, Value)]
         bs = filter (not . null . snd) $ ("method", m) : as
 
@@ -103,7 +103,7 @@ callAPI m as = withCurlDo $ do
         sign s = show . md5 . BS.pack . (++ s) . concatMap (uncurry (++)) . sortBy (compare `on` fst) $ bs
 
         getErrorNum :: [Element] -> Maybe Int
-        getErrorNum response = do element <- maybeHead $ concatMap (findElements . unqual $ "error") response
+        getErrorNum response = do element <- maybeHead . concatMap (findElements . unqual $ "error") $ response
                                   read <$> findAttr (unqual "code") element
 
         maybeHead :: [a] -> Maybe a
@@ -112,19 +112,3 @@ callAPI m as = withCurlDo $ do
 
 callAPI_ :: Method -> [(Key, Value)] -> IO ()
 callAPI_ m as = callAPI m as >> return ()
-
--- | Gets first tag's child with given name
-lookupChild :: String -> Response -> Maybe Response
-lookupChild tag = liftM Response . findChild (unqual tag) . unwrap
-
--- | Gets all tag's children with given name
-lookupChildren :: String -> Response -> Maybe [Response]
-lookupChildren tag = Just . map Response . findChildren (unqual tag) . unwrap
-
--- | Gets tag content
-getContent :: Response -> Maybe String
-getContent = Just . strContent . unwrap
-
--- | Gets tag attribute content
-getAttribute :: String -> Response -> Maybe String
-getAttribute tag = findAttr (unqual tag) . unwrap

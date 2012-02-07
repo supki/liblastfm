@@ -7,7 +7,7 @@ import Control.Exception (throw)
 import Data.Maybe (isJust)
 import Prelude hiding (either)
 
-import Network.Lastfm.Core
+import Network.Lastfm.Response
 import Network.Lastfm.Types ( (?<), Album, APIKey, Artist, Autocorrect, Country, Language, Limit
                             , Mbid, Message, Page, Public, Recipient, SessionKey, Tag, User)
 

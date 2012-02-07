@@ -2,9 +2,11 @@
 
 import Control.Monad ((<=<))
 
-import Network.Lastfm.Core
+import Network.Lastfm.Response
 import Network.Lastfm.Types
 import qualified Network.Lastfm.API.Album as Album
+
+import Kludges
 
 apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
 
@@ -14,7 +16,7 @@ getBuylinks = do response <- Album.getBuyLinks (Just (Artist "Pink Floyd", Album
                  case response of
                    Left e  -> print e
                    Right r -> print (suppliers r)
-  where suppliers = mapM (getContent <=< lookupChild "supplierName") <=< lookupChildren "affiliation" <=< lookupChild "downloads" <=< lookupChild "affiliations"
+  where suppliers = mapM (getContent <=< lookupChild "supplierName") <=< lookupChildren "affiliation" <=< lookupChild "downloads" <=< lookupChild "affiliations" <=< wrap
 
 getInfo :: IO ()
 getInfo = do response <- Album.getInfo (Just (Artist "Pink Floyd", Album "The Wall")) Nothing Nothing Nothing Nothing apiKey
@@ -22,7 +24,7 @@ getInfo = do response <- Album.getInfo (Just (Artist "Pink Floyd", Album "The Wa
              case response of
                Left e  -> print e
                Right r -> print (suppliers r)
-  where suppliers = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "toptags" <=< lookupChild "album"
+  where suppliers = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "toptags" <=< lookupChild "album" <=< wrap
 
 getShouts :: IO ()
 getShouts = do response <- Album.getShouts (Just (Artist "Pink Floyd", Album "The Wall")) Nothing Nothing Nothing (Just (Limit 7)) apiKey
@@ -30,7 +32,7 @@ getShouts = do response <- Album.getShouts (Just (Artist "Pink Floyd", Album "Th
                case response of
                  Left e  -> print e
                  Right r -> print (shouts r)
-  where shouts = mapM (getContent <=< lookupChild "body") <=< lookupChildren "shout" <=< lookupChild "shouts"
+  where shouts = mapM (getContent <=< lookupChild "body") <=< lookupChildren "shout" <=< lookupChild "shouts" <=< wrap
 
 getTopTags :: IO ()
 getTopTags = do response <- Album.getTopTags (Just (Artist "Pink Floyd", Album "The Wall")) Nothing Nothing apiKey
@@ -38,7 +40,7 @@ getTopTags = do response <- Album.getTopTags (Just (Artist "Pink Floyd", Album "
                 case response of
                   Left e  -> print e
                   Right r -> print (counts r)
-  where counts = mapM (getContent <=< lookupChild "count") <=< lookupChildren "tag" <=< lookupChild "toptags"
+  where counts = mapM (getContent <=< lookupChild "count") <=< lookupChildren "tag" <=< lookupChild "toptags" <=< wrap
 
 search :: IO ()
 search = do response <- Album.search (Album "wall") Nothing (Just (Limit 5)) apiKey
@@ -46,7 +48,7 @@ search = do response <- Album.search (Album "wall") Nothing (Just (Limit 5)) api
             case response of
               Left e  -> print e
               Right r -> print (albums r)
-  where albums = mapM (getContent <=< lookupChild "name") <=< lookupChildren "album" <=< lookupChild "albummatches" <=< lookupChild "results"
+  where albums = mapM (getContent <=< lookupChild "name") <=< lookupChildren "album" <=< lookupChild "albummatches" <=< lookupChild "results" <=< wrap
 
 main :: IO ()
 main = do -- addTags (requires authorization)

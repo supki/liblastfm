@@ -12,7 +12,7 @@ Build-Type:	Simple
 
 Library
   Build-Depends:	base >= 3 && < 5, bytestring, curl, pureMD5, urlencoded, xml, utf8-string
-  Exposed-Modules:	Network.Lastfm.Core, Network.Lastfm.Types, Network.Lastfm.API.Album, Network.Lastfm.API.Artist, Network.Lastfm.API.Auth, Network.Lastfm.API.Chart, Network.Lastfm.API.Event, Network.Lastfm.API.Geo, Network.Lastfm.API.Group, Network.Lastfm.API.Library, Network.Lastfm.API.Playlist, Network.Lastfm.API.Radio, Network.Lastfm.API.Tag, Network.Lastfm.API.Tasteometer, Network.Lastfm.API.Track, Network.Lastfm.API.User, Network.Lastfm.API.Venue
+  Exposed-Modules:	Network.Lastfm.Response, Network.Lastfm.Types, Network.Lastfm.API.Album, Network.Lastfm.API.Artist, Network.Lastfm.API.Auth, Network.Lastfm.API.Chart, Network.Lastfm.API.Event, Network.Lastfm.API.Geo, Network.Lastfm.API.Group, Network.Lastfm.API.Library, Network.Lastfm.API.Playlist, Network.Lastfm.API.Radio, Network.Lastfm.API.Tag, Network.Lastfm.API.Tasteometer, Network.Lastfm.API.Track, Network.Lastfm.API.User, Network.Lastfm.API.Venue
   Extensions:		FlexibleInstances, OverlappingInstances, GeneralizedNewtypeDeriving, ScopedTypeVariables, TypeSynonymInstances
 
 source-repository head

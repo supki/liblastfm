@@ -3,7 +3,7 @@ module Network.Lastfm.API.Chart
   , getTopArtists, getTopTags, getTopTracks
   ) where
 
-import Network.Lastfm.Core
+import Network.Lastfm.Response
 import Network.Lastfm.Types ((?<), APIKey, Limit, Page)
 
 getHypedArtists :: Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response

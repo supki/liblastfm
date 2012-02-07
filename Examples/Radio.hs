@@ -2,9 +2,11 @@
 
 import Control.Monad ((<=<))
 
-import Network.Lastfm.Core
+import Network.Lastfm.Response
 import Network.Lastfm.Types
 import qualified Network.Lastfm.API.Radio as Radio
+
+import Kludges
 
 apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
 
@@ -14,7 +16,7 @@ search = do response <- Radio.search (Name "dubstep") apiKey
             case response of
               Left e  -> print e
               Right r -> print $ stations r
-  where stations = mapM (getContent <=< lookupChild "name") <=< lookupChildren "station" <=< lookupChild "stations"
+  where stations = mapM (getContent <=< lookupChild "name") <=< lookupChildren "station" <=< lookupChild "stations" <=< wrap
 
 main :: IO ()
 main = do -- getPlaylist (requires authorization)

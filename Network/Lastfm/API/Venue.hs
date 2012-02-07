@@ -2,7 +2,7 @@ module Network.Lastfm.API.Venue
   ( getEvents, getPastEvents, search
   ) where
 
-import Network.Lastfm.Core
+import Network.Lastfm.Response
 import Network.Lastfm.Types ((?<), APIKey, Country, FestivalsOnly, Limit, Page, Venue)
 
 getEvents :: Venue -> Maybe FestivalsOnly -> APIKey -> Lastfm Response

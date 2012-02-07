@@ -2,9 +2,11 @@
 
 import Control.Monad ((<=<))
 
-import Network.Lastfm.Core
+import Network.Lastfm.Response
 import Network.Lastfm.Types
 import qualified Network.Lastfm.API.User as User
+
+import Kludges
 
 apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
 user1 = User "smpcln"
@@ -19,7 +21,7 @@ getArtistTracks = do response <- User.getArtistTracks user1 artist Nothing Nothi
                      case response of
                        Left e -> print e
                        Right r -> print $ artistTracks r
-  where artistTracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "artisttracks"
+  where artistTracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "artisttracks" <=< wrap
 
 getBannedTracks :: IO ()
 getBannedTracks = do response <- User.getBannedTracks user1 Nothing (Just $ Limit 10) apiKey
@@ -27,7 +29,7 @@ getBannedTracks = do response <- User.getBannedTracks user1 Nothing (Just $ Limi
                      case response of
                        Left e -> print e
                        Right r -> print $ bannedArtists r
-  where bannedArtists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "bannedtracks"
+  where bannedArtists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "bannedtracks" <=< wrap
 
 getEvents :: IO ()
 getEvents = do response <- User.getEvents user2 Nothing (Just $ Limit 5) Nothing apiKey
@@ -35,7 +37,7 @@ getEvents = do response <- User.getEvents user2 Nothing (Just $ Limit 5) Nothing
                case response of
                  Left e -> print e
                  Right r -> print $ events r
-  where events = mapM (getContent <=< lookupChild "url" <=< lookupChild "venue") <=< lookupChildren "event" <=< lookupChild "events"
+  where events = mapM (getContent <=< lookupChild "url" <=< lookupChild "venue") <=< lookupChildren "event" <=< lookupChild "events" <=< wrap
 
 getFriends :: IO ()
 getFriends = do response <- User.getFriends user1 Nothing Nothing (Just $ Limit 10) apiKey
@@ -43,7 +45,7 @@ getFriends = do response <- User.getFriends user1 Nothing Nothing (Just $ Limit 
                 case response of
                   Left e -> print e
                   Right r -> print $ friends r
-  where friends = mapM (getContent <=< lookupChild "name") <=< lookupChildren "user" <=< lookupChild "friends"
+  where friends = mapM (getContent <=< lookupChild "name") <=< lookupChildren "user" <=< lookupChild "friends" <=< wrap
 
 getPlayCount :: IO ()
 getPlayCount = do response <- User.getInfo (Just user1) apiKey
@@ -51,7 +53,7 @@ getPlayCount = do response <- User.getInfo (Just user1) apiKey
                   case response of
                     Left e -> print e
                     Right r -> print $ playCount r
-  where playCount = getContent <=< lookupChild "playcount" <=< lookupChild "user"
+  where playCount = getContent <=< lookupChild "playcount" <=< lookupChild "user" <=< wrap
 
 getLovedTracks :: IO ()
 getLovedTracks = do response <- User.getLovedTracks user1 Nothing (Just $ Limit 10) apiKey
@@ -59,7 +61,7 @@ getLovedTracks = do response <- User.getLovedTracks user1 Nothing (Just $ Limit 
                     case response of
                       Left e -> print e
                       Right r -> print $ lovedTracks r
-  where lovedTracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "lovedtracks"
+  where lovedTracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "lovedtracks" <=< wrap
 
 getNeighbours :: IO ()
 getNeighbours = do response <- User.getNeighbours user1 (Just $ Limit 10) apiKey
@@ -67,7 +69,7 @@ getNeighbours = do response <- User.getNeighbours user1 (Just $ Limit 10) apiKey
                    case response of
                      Left e -> print e
                      Right r -> print $ neighbours r
-  where neighbours = mapM (getContent <=< lookupChild "name") <=< lookupChildren "user" <=< lookupChild "neighbours"
+  where neighbours = mapM (getContent <=< lookupChild "name") <=< lookupChildren "user" <=< lookupChild "neighbours" <=< wrap
 
 getNewReleases :: IO ()
 getNewReleases = do response <- User.getNewReleases user1 Nothing apiKey
@@ -75,7 +77,7 @@ getNewReleases = do response <- User.getNewReleases user1 Nothing apiKey
                     case response of
                       Left e -> print e
                       Right r -> print $ newReleases r
-  where newReleases = mapM (getContent <=< lookupChild "url") <=< lookupChildren "album" <=< lookupChild "albums"
+  where newReleases = mapM (getContent <=< lookupChild "url") <=< lookupChildren "album" <=< lookupChild "albums" <=< wrap
 
 getPastEvents :: IO ()
 getPastEvents = do response <- User.getPastEvents user2 Nothing (Just $ Limit 5) apiKey
@@ -83,7 +85,7 @@ getPastEvents = do response <- User.getPastEvents user2 Nothing (Just $ Limit 5)
                    case response of
                      Left e -> print e
                      Right r -> print $ pastEvents r
-  where pastEvents = mapM (getContent <=< lookupChild "url") <=< lookupChildren "event" <=< lookupChild "events"
+  where pastEvents = mapM (getContent <=< lookupChild "url") <=< lookupChildren "event" <=< lookupChild "events" <=< wrap
 
 main = do
   getArtistTracks

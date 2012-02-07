@@ -2,9 +2,11 @@
 
 import Control.Monad ((<=<))
 
-import Network.Lastfm.Core
+import Network.Lastfm.Response
 import Network.Lastfm.Types
 import qualified Network.Lastfm.API.Library as Library
+
+import Kludges
 
 apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
 user = User "smpcln"
@@ -15,7 +17,7 @@ getAlbums = do response <- Library.getAlbums user (Just $ Artist "Burzum") Nothi
                case response of
                  Left e  -> print e
                  Right r -> print $ albums r
-  where albums = mapM (getContent <=< lookupChild "name") <=< lookupChildren "album" <=< lookupChild "albums"
+  where albums = mapM (getContent <=< lookupChild "name") <=< lookupChildren "album" <=< lookupChild "albums" <=< wrap
 
 getArtists :: IO ()
 getArtists = do response <- Library.getArtists user Nothing (Just $ Limit 7) apiKey
@@ -23,7 +25,7 @@ getArtists = do response <- Library.getArtists user Nothing (Just $ Limit 7) api
                 case response of
                   Left e  -> print e
                   Right r -> print $ playcounts r
-  where playcounts = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "artists"
+  where playcounts = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "artists" <=< wrap
 
 getTracks :: IO ()
 getTracks = do response <- Library.getTracks user (Just $ Artist "Burzum") Nothing Nothing (Just $ Limit 4) apiKey
@@ -31,7 +33,7 @@ getTracks = do response <- Library.getTracks user (Just $ Artist "Burzum") Nothi
                case response of
                  Left e  -> print e
                  Right r -> print $ tracks r
-  where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "tracks"
+  where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "tracks" <=< wrap
 
 main :: IO ()
 main = do -- addAlbum (requires authorization)

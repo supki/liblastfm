@@ -4,11 +4,7 @@ module Network.Lastfm.API.Geo
   , getMetroWeeklyChartlist, getMetros, getTopArtists, getTopTracks
   ) where
 
-import Control.Arrow ((&&&), (***))
-import Control.Monad ((<=<), join)
-import Data.Maybe (fromMaybe)
-
-import Network.Lastfm.Core
+import Network.Lastfm.Response
 import Network.Lastfm.Types ( (?<), APIKey, Country, Distance, From, Latitude
                             , Limit, Location, Longitude, Metro, Page, To
                             )
@@ -49,13 +45,8 @@ getMetroUniqueArtistChart = getMetroChart "geo.getMetroUniqueArtistChart"
 getMetroUniqueTrackChart :: Country -> Metro -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
 getMetroUniqueTrackChart = getMetroChart "geo.getMetroUniqueTrackChart"
 
-getMetroWeeklyChartlist :: Metro -> APIKey -> Lastfm [(Integer,Integer)]
-getMetroWeeklyChartlist metro apiKey = do response <- dispatch $ callAPI "geo.getMetroWeeklyChartlist" ["metro" ?< metro, "api_key" ?< apiKey]
-                                          case response of
-                                            Left e  -> return . Left $ e
-                                            Right r -> return . Right . toList . (lookupChildren "chart" <=< lookupChild "weeklychartlist") $ r
-   where toList :: Maybe [Response] -> [(Integer,Integer)]
-         toList = map (join (***) (read . fromMaybe "0") . (getAttribute "from" &&& getAttribute "to")) . fromMaybe []
+getMetroWeeklyChartlist :: Metro -> APIKey -> Lastfm Response
+getMetroWeeklyChartlist metro apiKey = dispatch $ callAPI "geo.getMetroWeeklyChartlist" ["metro" ?< metro, "api_key" ?< apiKey]
 
 getMetros :: Maybe Country -> APIKey -> Lastfm Response
 getMetros country apiKey = dispatch $ callAPI "geo.getMetros"

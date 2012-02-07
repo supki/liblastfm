@@ -4,7 +4,7 @@ module Network.Lastfm.API.Event
 
 import Control.Exception (throw)
 
-import Network.Lastfm.Core
+import Network.Lastfm.Response
 import Network.Lastfm.Types ( (?<), APIKey, Event, Limit, Message, Page
                             , Public, Recipient, SessionKey, Status
                             )

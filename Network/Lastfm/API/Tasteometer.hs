@@ -5,7 +5,7 @@ module Network.Lastfm.API.Tasteometer
 import Control.Exception (throw)
 import Prelude hiding (compare)
 
-import Network.Lastfm.Core
+import Network.Lastfm.Response
 import Network.Lastfm.Types ((?<), APIKey, Limit, Value(..))
 
 compare :: Value -> Value -> Maybe Limit -> APIKey -> Lastfm Response

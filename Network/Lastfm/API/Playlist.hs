@@ -2,7 +2,7 @@ module Network.Lastfm.API.Playlist
   ( addTrack, create
   ) where
 
-import Network.Lastfm.Core
+import Network.Lastfm.Response
 import Network.Lastfm.Types ((?<), APIKey, Artist, Playlist, SessionKey, Title, Description, Track)
 
 addTrack :: Playlist -> Track -> Artist -> APIKey -> SessionKey -> Lastfm ()

@@ -3,7 +3,7 @@ module Network.Lastfm.API.Library
   , removeAlbum, removeArtist, removeScrobble, removeTrack
   ) where
 
-import Network.Lastfm.Core
+import Network.Lastfm.Response
 import Network.Lastfm.Types ((?<), Album, APIKey, Artist, Limit, Page, SessionKey, Timestamp, Track, User)
 
 addAlbum :: Artist -> Album -> APIKey -> SessionKey -> Lastfm ()

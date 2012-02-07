@@ -7,7 +7,7 @@ import Control.Exception (throw)
 import Data.Maybe (isJust)
 import Prelude hiding (either)
 
-import Network.Lastfm.Core
+import Network.Lastfm.Response
 import Network.Lastfm.Types ((?<), APIKey, Artist, From, Language, Limit, Mbid, Page, Tag, To)
 
 getInfo :: Maybe Artist -> Maybe Mbid -> Maybe Language -> APIKey -> Lastfm Response
