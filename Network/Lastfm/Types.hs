@@ -43,6 +43,7 @@ newtype SessionKey = SessionKey String deriving (Show, LastfmValue)
 newtype Station = Station String deriving (Show, LastfmValue)
 newtype StreamId = StreamId String deriving (Show, LastfmValue)
 newtype Tag = Tag String deriving (Show, LastfmValue)
+newtype TaggingType = TaggingType String deriving (Show, LastfmValue)
 newtype Timestamp = Timestamp String deriving (Show, LastfmValue)
 newtype Title = Title String deriving (Show, LastfmValue)
 newtype To = To Integer deriving (Show, LastfmValue)
@@ -79,15 +80,6 @@ instance Show Value where
 instance LastfmValue Value where
   unpack (ValueUser u)     = unpack u
   unpack (ValueArtists as) = unpack as
-
-data TaggingType = TaggingTypeArtist Artist
-                 | TaggingTypeAlbum Album
-                 | TaggingTypeTrack Track
-
-instance LastfmValue TaggingType where
-  unpack (TaggingTypeArtist a) = unpack a
-  unpack (TaggingTypeAlbum a) = unpack a
-  unpack (TaggingTypeTrack t) = unpack t
 
 data Period = Week | Quater | HalfYear | Year | Overall
               deriving (Show)

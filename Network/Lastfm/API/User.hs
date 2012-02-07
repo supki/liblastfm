@@ -205,10 +205,7 @@ getWeeklyArtistChart user from to apiKey = dispatch $ callAPI "user.getWeeklyArt
   ]
 
 getWeeklyChartList :: User -> APIKey -> Lastfm Response
-getWeeklyChartList user apiKey = dispatch $ callAPI "user.getWeeklyChartList"
-  [ "user" ?< user
-  , "api_key" ?< apiKey
-  ]
+getWeeklyChartList user apiKey = dispatch $ callAPI "user.getWeeklyChartList" ["user" ?< user, "api_key" ?< apiKey]
 
 getWeeklyTrackChart :: User -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
 getWeeklyTrackChart user from to apiKey = dispatch $ callAPI "user.getWeeklyTrackChart"
