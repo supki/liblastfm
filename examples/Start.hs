@@ -21,17 +21,17 @@ data Flag = Help | All | Album | Artist | Chart | Event | Geo | Group | Library 
 options :: [OptDescr Flag]
 options =
   [ Option "h" ["help"]       (NoArg Help)        "Print this help message and exit."
-  , Option "" ["all"]         (NoArg All)         "Test all modules."
-  , Option "" ["album"]       (NoArg Album)       "Test Album module."
-  , Option "" ["artist"]      (NoArg Artist)      "Test Artist module."
-  , Option "" ["chart"]       (NoArg Chart)       "Test Chart module."
-  , Option "" ["event"]       (NoArg Event)       "Test Event module."
-  , Option "" ["geo"]         (NoArg Geo)         "Test Geo module."
-  , Option "" ["group"]       (NoArg Group)       "Test Group module."
-  , Option "" ["library"]     (NoArg Library)     "Test Library module."
-  , Option "" ["radio"]       (NoArg Radio)       "Test Radio module."
-  , Option "" ["tasteometer"] (NoArg Tasteometer) "Test Tasteometer module."
-  , Option "" ["user"]        (NoArg User)        "Test User module."
+  , Option "" ["all"]         (NoArg All)         "Start all modules examples."
+  , Option "" ["album"]       (NoArg Album)       "Start Album module examples."
+  , Option "" ["artist"]      (NoArg Artist)      "Start Artist module examples."
+  , Option "" ["chart"]       (NoArg Chart)       "Start Chart module examples."
+  , Option "" ["event"]       (NoArg Event)       "Start Event module examples."
+  , Option "" ["geo"]         (NoArg Geo)         "Start Geo module examples."
+  , Option "" ["group"]       (NoArg Group)       "Start Group module examples."
+  , Option "" ["library"]     (NoArg Library)     "Start Library module examples."
+  , Option "" ["radio"]       (NoArg Radio)       "Start Radio module examples."
+  , Option "" ["tasteometer"] (NoArg Tasteometer) "Start Tasteometer module examples."
+  , Option "" ["user"]        (NoArg User)        "Start User module examples."
   ]
 
 
