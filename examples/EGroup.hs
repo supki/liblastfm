@@ -1,6 +1,8 @@
 module EGroup (start) where
 
-import Control.Monad ((<=<))
+import Control.Arrow ((***), (&&&))
+import Control.Monad ((<=<), join)
+import Data.Maybe (fromMaybe)
 
 import Network.Lastfm.Response
 import Network.Lastfm.Types
@@ -47,14 +49,13 @@ getWeeklyArtistChart = do response <- Group.getWeeklyArtistChart group Nothing N
                           putStrLn ""
   where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "weeklyartistchart" <=< wrap
 
-{-
 getWeeklyChartList :: IO ()
 getWeeklyChartList = do response <- Group.getWeeklyChartList group apiKey
                         putStr "First 10 chartlist intervals: "
                         case response of
                           Left e  -> print e
-                          Right r -> print (take 10 r)
--}
+                          Right r -> print (intervals r)
+  where intervals = take 10 . map (join (***) ((read :: String -> Integer) . fromMaybe "0") . (getAttribute "from" &&& getAttribute "to")) . fromMaybe [] . (lookupChildren "chart" <=< lookupChild "weeklychartlist" <=< wrap)
 
 getWeeklyTrackChart :: IO ()
 getWeeklyTrackChart = do response <- Group.getWeeklyTrackChart group Nothing Nothing apiKey
@@ -70,5 +71,5 @@ start = do getHype
            getMembers
            getWeeklyAlbumChart
            getWeeklyArtistChart
-           --getWeeklyChartList
+           getWeeklyChartList
            getWeeklyTrackChart
