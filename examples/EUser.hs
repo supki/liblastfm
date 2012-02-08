@@ -113,9 +113,14 @@ getPlaylists = do response <- User.getPlaylists user2 apiKey
                   putStrLn ""
   where playlists = mapM (getContent <=< lookupChild "title") <=< lookupChildren "playlist" <=< lookupChild "playlists" <=< wrap
 
-{-- requires autorization
-getRecentStations :: IO ()
- --}
+getRecentStations :: APIKey -> SessionKey -> IO ()
+getRecentStations apiKey sessionKey = do response <- User.getRecentStations (User "liblastfm") Nothing (Just $ Limit 10) apiKey sessionKey
+                                         putStr "Recent stations: "
+                                         case response of
+                                           Left e -> print e
+                                           Right r -> print $ recentStations r
+                                         putStrLn ""
+  where recentStations = mapM (getContent <=< lookupChild "name") <=< lookupChildren "station" <=< lookupChild "recentstations" <=< wrap
 
 getRecentTracks :: IO ()
 getRecentTracks = do response <- User.getRecentTracks user1 Nothing (Just $ Limit 10) Nothing Nothing apiKey
@@ -126,13 +131,23 @@ getRecentTracks = do response <- User.getRecentTracks user1 Nothing (Just $ Limi
                      putStrLn ""
   where recentTracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "recenttracks" <=< wrap
 
-{-- requires autorization
-getRecommendedArtists
- --}
+getRecommendedArtists :: APIKey -> SessionKey -> IO ()
+getRecommendedArtists apiKey sessionKey = do response <- User.getRecommendedArtists Nothing (Just $ Limit 10) apiKey sessionKey
+                                             putStr "Recommended artists: "
+                                             case response of
+                                               Left e -> print e
+                                               Right r -> print $ recommendedArtists r
+                                             putStrLn ""
+  where recommendedArtists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "recommendations" <=< wrap
 
-{-- requires autorization
-getRecommendedEvents
- --}
+getRecommendedEvents :: APIKey -> SessionKey -> IO ()
+getRecommendedEvents apiKey sessionKey = do response <- User.getRecommendedEvents Nothing (Just $ Limit 10) apiKey sessionKey
+                                            putStr "Recommended events: "
+                                            case response of
+                                              Left e -> print e
+                                              Right r -> print $ recommendedEvents r
+                                            putStrLn ""
+  where recommendedEvents = mapM (getContent <=< lookupChild "url") <=< lookupChildren "event" <=< lookupChild "events" <=< wrap
 
 getShouts :: IO ()
 getShouts = do response <- User.getShouts user1 Nothing (Just $ Limit 1) apiKey
@@ -215,9 +230,11 @@ getWeeklyTrackChart = do response <- User.getWeeklyTrackChart user3 Nothing Noth
                          putStrLn ""
   where weeklyTrackChart = mapM (getContent <=< lookupChild "url") <=< lookupChildren "track" <=< lookupChild "weeklytrackchart" <=< wrap
 
-{-- requires autorization
-shout
- --}
+shout :: APIKey -> SessionKey -> IO ()
+shout apiKey sessionKey = do response <- User.shout (User "liblastfm") (Message "test message") apiKey sessionKey
+                             case response of
+                               Left e -> print e
+                               Right () -> return ()
 
 start :: IO ()
 start = do getArtistTracks
@@ -231,10 +248,7 @@ start = do getArtistTracks
            getPastEvents
            getPersonalTags
            getPlaylists
-           -- getRecentStations
            getRecentTracks
-           -- getRecommendedArtists
-           -- getRecommendedEvents
            getShouts
            getTopAlbums
            getTopArtists
@@ -244,4 +258,8 @@ start = do getArtistTracks
            getWeeklyArtistChart
            -- getWeeklyChartList
            getWeeklyTrackChart
-           -- shout
+           (apiKey, sessionKey, secret) <- getConfig ".lastfm.conf"
+           withSecret secret $ do getRecentStations apiKey sessionKey
+                                  getRecommendedArtists apiKey sessionKey
+                                  getRecommendedEvents apiKey sessionKey
+                                  shout apiKey sessionKey
