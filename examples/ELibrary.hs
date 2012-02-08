@@ -14,6 +14,12 @@ import Kludges
 apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
 user = User "smpcln"
 
+addAlbum :: APIKey -> SessionKey -> IO ()
+addAlbum apiKey sessionKey = do response <- Library.addAlbum (Artist "Franz Ferdinand") (Album "Franz Ferdinand") apiKey sessionKey
+                                case response of
+                                  Left e  -> print e
+                                  Right () -> return ()
+
 addArtist :: APIKey -> SessionKey -> IO ()
 addArtist apiKey sessionKey = do response <- Library.addArtist (Artist "Mobthrow") apiKey sessionKey
                                  case response of
@@ -57,6 +63,12 @@ getConfig :: FilePath -> IO (APIKey, SessionKey, String)
 getConfig fp = do [apiKey, sessionKey, secret] <- map ((!! 1) . splitOn "=" . filter (not . isSpace)) . lines <$> readFile fp
                   return (APIKey apiKey, SessionKey sessionKey, secret)
 
+removeAlbum :: APIKey -> SessionKey -> IO ()
+removeAlbum apiKey sessionKey = do response <- Library.removeAlbum (Artist "Franz Ferdinand") (Album "Franz Ferdinand") apiKey sessionKey
+                                   case response of
+                                     Left e  -> print e
+                                     Right () -> return ()
+
 removeArtist :: APIKey -> SessionKey -> IO ()
 removeArtist apiKey sessionKey = do response <- Library.removeArtist (Artist "Burzum") apiKey sessionKey
                                     case response of
@@ -70,14 +82,14 @@ removeTrack apiKey sessionKey = do response <- Library.removeTrack (Artist "Emin
                                      Right () -> return ()
 
 start :: IO ()
-start = do (apiKey, sessionKey, secret) <- getConfig ".lastfm.conf"
-           -- addAlbum (requires authorization)
-           -- removeAlbum (requires authorization)
-           getAlbums
+start = do getAlbums
            getArtists
            getTracks
-           -- removeScrobble (requires track.scrobble implemented)
-           withSecret secret $ do addArtist apiKey sessionKey
+           (apiKey, sessionKey, secret) <- getConfig ".lastfm.conf"
+           withSecret secret $ do addAlbum apiKey sessionKey
+                                  addArtist apiKey sessionKey
                                   addTrack apiKey sessionKey
+                                  removeAlbum apiKey sessionKey
                                   removeArtist apiKey sessionKey
                                   removeTrack apiKey sessionKey
+           -- removeScrobble (requires track.scrobble implemented)

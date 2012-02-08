@@ -8,8 +8,8 @@ import Network.Lastfm.Types ((?<), Album, APIKey, Artist, Limit, Page, SessionKe
 
 addAlbum :: Artist -> Album -> APIKey -> SessionKey -> Lastfm ()
 addAlbum artist album apiKey sessionKey = dispatch $ callAPI_ "library.addAlbum"
-  [ "artist[1]" ?< artist
-  , "album[1]" ?< album
+  [ "artist" ?< artist
+  , "album" ?< album
   , "api_key" ?< apiKey
   , "sk" ?< sessionKey
   ]
