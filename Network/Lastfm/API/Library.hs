@@ -16,7 +16,7 @@ addAlbum artist album apiKey sessionKey = dispatch $ callAPI_ "library.addAlbum"
 
 addArtist :: Artist -> APIKey -> SessionKey -> Lastfm ()
 addArtist artist apiKey sessionKey = dispatch $ callAPI_ "library.addArtist"
-  [ "artist[1]" ?< artist
+  [ "artist" ?< artist
   , "api_key" ?< apiKey
   , "sk" ?< sessionKey
   ]

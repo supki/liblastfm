@@ -14,11 +14,11 @@ import Kludges
 apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
 user = User "smpcln"
 
-addArtist :: APIKey -> SessionKey -> String -> IO ()
-addArtist apiKey sessionKey secret = do response <- withSecret secret $ Library.addArtist (Artist "Mobthrow") apiKey sessionKey
-                                        case response of
-                                          Left e  -> print e
-                                          Right () -> return ()
+addArtist :: APIKey -> SessionKey -> IO ()
+addArtist apiKey sessionKey = do response <- Library.addArtist (Artist "Mobthrow") apiKey sessionKey
+                                 case response of
+                                   Left e  -> print e
+                                   Right () -> return ()
 
 getAlbums :: IO ()
 getAlbums = do response <- Library.getAlbums user (Just $ Artist "Burzum") Nothing (Just $ Limit 5) apiKey
@@ -51,15 +51,21 @@ getConfig :: FilePath -> IO (APIKey, SessionKey, String)
 getConfig fp = do [apiKey, sessionKey, secret] <- map ((!! 1) . splitOn "=" . filter (not . isSpace)) . lines <$> readFile fp
                   return (APIKey apiKey, SessionKey sessionKey, secret)
 
+removeArtist :: APIKey -> SessionKey -> IO ()
+removeArtist apiKey sessionKey = do response <- Library.removeArtist (Artist "Burzum") apiKey sessionKey
+                                    case response of
+                                      Left e  -> print e
+                                      Right () -> return ()
+
 start :: IO ()
 start = do (apiKey, sessionKey, secret) <- getConfig ".lastfm.conf"
            -- addAlbum (requires authorization)
-           addArtist apiKey sessionKey secret
+           withSecret secret $ addArtist apiKey sessionKey
            -- addTrack (requires authorization)
            getAlbums
            getArtists
            getTracks
            -- removeAlbum (requires authorization)
-           -- removeArtist (requires authorization)
-           -- removeScrobble (requires authorization)
+           withSecret secret $ removeArtist apiKey sessionKey
+           -- removeScrobble (requires track.scrobble implemented)
            -- removeTrack (requires authorization)
