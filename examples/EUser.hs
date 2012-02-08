@@ -9,13 +9,9 @@ import qualified Network.Lastfm.API.User as User
 import Kludges
 
 apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
-user1 = User "smpcln"
-user2 = User "mokele"
-user3 = User "rj"
-artist = Artist "Dvar"
 
 getArtistTracks :: IO ()
-getArtistTracks = do response <- User.getArtistTracks user1 artist Nothing Nothing Nothing apiKey
+getArtistTracks = do response <- User.getArtistTracks (User "smpcln") (Artist "Dvar") Nothing Nothing Nothing apiKey
                      putStr "Artist tracks: "
                      case response of
                        Left e -> print e
@@ -24,7 +20,7 @@ getArtistTracks = do response <- User.getArtistTracks user1 artist Nothing Nothi
   where artistTracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "artisttracks" <=< wrap
 
 getBannedTracks :: IO ()
-getBannedTracks = do response <- User.getBannedTracks user1 Nothing (Just $ Limit 10) apiKey
+getBannedTracks = do response <- User.getBannedTracks (User "smpcln") Nothing (Just $ Limit 10) apiKey
                      putStr "Banned artists: "
                      case response of
                        Left e -> print e
@@ -33,7 +29,7 @@ getBannedTracks = do response <- User.getBannedTracks user1 Nothing (Just $ Limi
   where bannedArtists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "bannedtracks" <=< wrap
 
 getEvents :: IO ()
-getEvents = do response <- User.getEvents user2 Nothing (Just $ Limit 5) Nothing apiKey
+getEvents = do response <- User.getEvents (User "mokele") Nothing (Just $ Limit 5) Nothing apiKey
                putStr "Events: "
                case response of
                  Left e -> print e
@@ -42,7 +38,7 @@ getEvents = do response <- User.getEvents user2 Nothing (Just $ Limit 5) Nothing
   where events = mapM (getContent <=< lookupChild "url" <=< lookupChild "venue") <=< lookupChildren "event" <=< lookupChild "events" <=< wrap
 
 getFriends :: IO ()
-getFriends = do response <- User.getFriends user1 Nothing Nothing (Just $ Limit 10) apiKey
+getFriends = do response <- User.getFriends (User "smpcln") Nothing Nothing (Just $ Limit 10) apiKey
                 putStr "Friends: "
                 case response of
                   Left e -> print e
@@ -51,7 +47,7 @@ getFriends = do response <- User.getFriends user1 Nothing Nothing (Just $ Limit 
   where friends = mapM (getContent <=< lookupChild "name") <=< lookupChildren "user" <=< lookupChild "friends" <=< wrap
 
 getPlayCount :: IO ()
-getPlayCount = do response <- User.getInfo (Just user1) apiKey
+getPlayCount = do response <- User.getInfo (Just (User "smpcln")) apiKey
                   putStr "Play count: "
                   case response of
                     Left e -> print e
@@ -60,7 +56,7 @@ getPlayCount = do response <- User.getInfo (Just user1) apiKey
   where playCount = getContent <=< lookupChild "playcount" <=< lookupChild "user" <=< wrap
 
 getLovedTracks :: IO ()
-getLovedTracks = do response <- User.getLovedTracks user1 Nothing (Just $ Limit 10) apiKey
+getLovedTracks = do response <- User.getLovedTracks (User "smpcln") Nothing (Just $ Limit 10) apiKey
                     putStr "Loved tracks: "
                     case response of
                       Left e -> print e
@@ -69,7 +65,7 @@ getLovedTracks = do response <- User.getLovedTracks user1 Nothing (Just $ Limit 
   where lovedTracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "lovedtracks" <=< wrap
 
 getNeighbours :: IO ()
-getNeighbours = do response <- User.getNeighbours user1 (Just $ Limit 10) apiKey
+getNeighbours = do response <- User.getNeighbours (User "smpcln") (Just $ Limit 10) apiKey
                    putStr "Neighbours: "
                    case response of
                      Left e -> print e
@@ -78,7 +74,7 @@ getNeighbours = do response <- User.getNeighbours user1 (Just $ Limit 10) apiKey
   where neighbours = mapM (getContent <=< lookupChild "name") <=< lookupChildren "user" <=< lookupChild "neighbours" <=< wrap
 
 getNewReleases :: IO ()
-getNewReleases = do response <- User.getNewReleases user1 Nothing apiKey
+getNewReleases = do response <- User.getNewReleases (User "smpcln") Nothing apiKey
                     putStr "New releases: "
                     case response of
                       Left e -> print e
@@ -87,7 +83,7 @@ getNewReleases = do response <- User.getNewReleases user1 Nothing apiKey
   where newReleases = mapM (getContent <=< lookupChild "url") <=< lookupChildren "album" <=< lookupChild "albums" <=< wrap
 
 getPastEvents :: IO ()
-getPastEvents = do response <- User.getPastEvents user2 Nothing (Just $ Limit 5) apiKey
+getPastEvents = do response <- User.getPastEvents (User "mokele") Nothing (Just $ Limit 5) apiKey
                    putStr "Past events: "
                    case response of
                      Left e -> print e
@@ -96,7 +92,7 @@ getPastEvents = do response <- User.getPastEvents user2 Nothing (Just $ Limit 5)
   where pastEvents = mapM (getContent <=< lookupChild "url") <=< lookupChildren "event" <=< lookupChild "events" <=< wrap
 
 getPersonalTags :: IO ()
-getPersonalTags = do response <- User.getPersonalTags user2 (Tag "rock") (TaggingType "artist") Nothing (Just $ Limit 10) apiKey
+getPersonalTags = do response <- User.getPersonalTags (User "mokele") (Tag "rock") (TaggingType "artist") Nothing (Just $ Limit 10) apiKey
                      putStr "Personal tags: "
                      case response of
                        Left e -> print e
@@ -105,7 +101,7 @@ getPersonalTags = do response <- User.getPersonalTags user2 (Tag "rock") (Taggin
   where personalTags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "artists" <=< lookupChild "taggings" <=< wrap
 
 getPlaylists :: IO ()
-getPlaylists = do response <- User.getPlaylists user2 apiKey
+getPlaylists = do response <- User.getPlaylists (User "mokele") apiKey
                   putStr "Playlists: "
                   case response of
                     Left e -> print e
@@ -123,7 +119,7 @@ getRecentStations apiKey sessionKey = do response <- User.getRecentStations (Use
   where recentStations = mapM (getContent <=< lookupChild "name") <=< lookupChildren "station" <=< lookupChild "recentstations" <=< wrap
 
 getRecentTracks :: IO ()
-getRecentTracks = do response <- User.getRecentTracks user1 Nothing (Just $ Limit 10) Nothing Nothing apiKey
+getRecentTracks = do response <- User.getRecentTracks (User "smpcln") Nothing (Just $ Limit 10) Nothing Nothing apiKey
                      putStr "Recent tracks: "
                      case response of
                        Left e -> print e
@@ -150,7 +146,7 @@ getRecommendedEvents apiKey sessionKey = do response <- User.getRecommendedEvent
   where recommendedEvents = mapM (getContent <=< lookupChild "url") <=< lookupChildren "event" <=< lookupChild "events" <=< wrap
 
 getShouts :: IO ()
-getShouts = do response <- User.getShouts user1 Nothing (Just $ Limit 1) apiKey
+getShouts = do response <- User.getShouts (User "smpcln") Nothing (Just $ Limit 1) apiKey
                putStr "Shouts: "
                case response of
                  Left e -> print e
@@ -159,7 +155,7 @@ getShouts = do response <- User.getShouts user1 Nothing (Just $ Limit 1) apiKey
   where shouts = mapM (getContent <=< lookupChild "body") <=< lookupChildren "shout" <=< lookupChild "shouts" <=< wrap
 
 getTopAlbums :: IO ()
-getTopAlbums = do response <- User.getTopAlbums user1 Nothing Nothing (Just $ Limit 5) apiKey
+getTopAlbums = do response <- User.getTopAlbums (User "smpcln") Nothing Nothing (Just $ Limit 5) apiKey
                   putStr "Top albums: "
                   case response of
                     Left e -> print e
@@ -168,7 +164,7 @@ getTopAlbums = do response <- User.getTopAlbums user1 Nothing Nothing (Just $ Li
   where topAlbums = mapM (getContent <=< lookupChild "name" <=< lookupChild "artist") <=< lookupChildren "album" <=< lookupChild "topalbums" <=< wrap
 
 getTopArtists :: IO ()
-getTopArtists = do response <- User.getTopArtists user1 Nothing Nothing (Just $ Limit 5) apiKey
+getTopArtists = do response <- User.getTopArtists (User "smpcln") Nothing Nothing (Just $ Limit 5) apiKey
                    putStr "Top artists: "
                    case response of
                      Left e -> print e
@@ -177,7 +173,7 @@ getTopArtists = do response <- User.getTopArtists user1 Nothing Nothing (Just $ 
   where topArtists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "topartists" <=< wrap
 
 getTopTags :: IO ()
-getTopTags = do response <- User.getTopTags user1 (Just $ Limit 10) apiKey
+getTopTags = do response <- User.getTopTags (User "smpcln") (Just $ Limit 10) apiKey
                 putStr "Top tags: "
                 case response of
                   Left e -> print e
@@ -186,7 +182,7 @@ getTopTags = do response <- User.getTopTags user1 (Just $ Limit 10) apiKey
   where topTags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "toptags" <=< wrap
 
 getTopTracks :: IO ()
-getTopTracks = do response <- User.getTopTracks user1 Nothing Nothing (Just $ Limit 10) apiKey
+getTopTracks = do response <- User.getTopTracks (User "smpcln") Nothing Nothing (Just $ Limit 10) apiKey
                   putStr "Top tracks: "
                   case response of
                     Left e -> print e
@@ -195,7 +191,7 @@ getTopTracks = do response <- User.getTopTracks user1 Nothing Nothing (Just $ Li
   where topTracks = mapM (getContent <=< lookupChild "url") <=< lookupChildren "track" <=< lookupChild "toptracks" <=< wrap
 
 getWeeklyAlbumChart :: IO ()
-getWeeklyAlbumChart = do response <- User.getWeeklyAlbumChart user3 Nothing Nothing apiKey
+getWeeklyAlbumChart = do response <- User.getWeeklyAlbumChart (User "rj") Nothing Nothing apiKey
                          putStr "Weekly album chart: "
                          case response of
                            Left e -> print e
@@ -204,7 +200,7 @@ getWeeklyAlbumChart = do response <- User.getWeeklyAlbumChart user3 Nothing Noth
   where weeklyAlbumChart = mapM (getContent <=< lookupChild "url") <=< lookupChildren "album" <=< lookupChild "weeklyalbumchart" <=< wrap
 
 getWeeklyArtistChart :: IO ()
-getWeeklyArtistChart = do response <- User.getWeeklyArtistChart user3 Nothing Nothing apiKey
+getWeeklyArtistChart = do response <- User.getWeeklyArtistChart (User "rj") Nothing Nothing apiKey
                           putStr "Weekly artist chart: "
                           case response of
                             Left e -> print e
@@ -212,17 +208,16 @@ getWeeklyArtistChart = do response <- User.getWeeklyArtistChart user3 Nothing No
                           putStrLn ""
   where weeklyArtistChart = mapM (getContent <=< lookupChild "url") <=< lookupChildren "artist" <=< lookupChild "weeklyartistchart" <=< wrap
 
-{-
 getWeeklyChartList :: IO ()
-getWeeklyChartList = do response <- User.getWeeklyChartList user3 apiKey
+getWeeklyChartList = do response <- User.getWeeklyChartList (User "rj") apiKey
                         putStr "Weekly chart list: "
                         case response of
                           Left e -> print e
                           Right r -> print $ take 10 r
--}
+                        putStrLn ""
 
 getWeeklyTrackChart :: IO ()
-getWeeklyTrackChart = do response <- User.getWeeklyTrackChart user3 Nothing Nothing apiKey
+getWeeklyTrackChart = do response <- User.getWeeklyTrackChart (User "rj") Nothing Nothing apiKey
                          putStr "Weekly track chart: "
                          case response of
                            Left e -> print e
@@ -256,10 +251,11 @@ start = do getArtistTracks
            getTopTracks
            getWeeklyAlbumChart
            getWeeklyArtistChart
-           -- getWeeklyChartList
+           getWeeklyChartList
            getWeeklyTrackChart
            (apiKey, sessionKey, secret) <- getConfig ".lastfm.conf"
            withSecret secret $ do getRecentStations apiKey sessionKey
                                   getRecommendedArtists apiKey sessionKey
                                   getRecommendedEvents apiKey sessionKey
                                   shout apiKey sessionKey
+
