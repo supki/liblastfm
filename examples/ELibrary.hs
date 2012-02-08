@@ -20,6 +20,12 @@ addArtist apiKey sessionKey = do response <- Library.addArtist (Artist "Mobthrow
                                    Left e  -> print e
                                    Right () -> return ()
 
+addTrack :: APIKey -> SessionKey -> IO ()
+addTrack apiKey sessionKey = do response <- Library.addTrack (Artist "Eminem") (Track "Kim") apiKey sessionKey
+                                case response of
+                                  Left e  -> print e
+                                  Right () -> return ()
+
 getAlbums :: IO ()
 getAlbums = do response <- Library.getAlbums user (Just $ Artist "Burzum") Nothing (Just $ Limit 5) apiKey
                putStr "Top 5 popular Burzum albums: "
@@ -57,15 +63,21 @@ removeArtist apiKey sessionKey = do response <- Library.removeArtist (Artist "Bu
                                       Left e  -> print e
                                       Right () -> return ()
 
+removeTrack :: APIKey -> SessionKey -> IO ()
+removeTrack apiKey sessionKey = do response <- Library.removeTrack (Artist "Eminem") (Track "Kim") apiKey sessionKey
+                                   case response of
+                                     Left e  -> print e
+                                     Right () -> return ()
+
 start :: IO ()
 start = do (apiKey, sessionKey, secret) <- getConfig ".lastfm.conf"
            -- addAlbum (requires authorization)
-           withSecret secret $ addArtist apiKey sessionKey
-           -- addTrack (requires authorization)
+           -- removeAlbum (requires authorization)
            getAlbums
            getArtists
            getTracks
-           -- removeAlbum (requires authorization)
-           withSecret secret $ removeArtist apiKey sessionKey
            -- removeScrobble (requires track.scrobble implemented)
-           -- removeTrack (requires authorization)
+           withSecret secret $ do addArtist apiKey sessionKey
+                                  addTrack apiKey sessionKey
+                                  removeArtist apiKey sessionKey
+                                  removeTrack apiKey sessionKey
