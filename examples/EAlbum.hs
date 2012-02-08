@@ -85,6 +85,12 @@ search = do response <- Album.search (Album "wall") Nothing (Just (Limit 5)) api
             putStrLn ""
   where albums = mapM (getContent <=< lookupChild "name") <=< lookupChildren "album" <=< lookupChild "albummatches" <=< lookupChild "results" <=< wrap
 
+share :: APIKey -> SessionKey -> IO ()
+share apiKey sessionKey = do response <- Album.share (Artist "Sleep") (Album "Jerusalem") [Recipient "liblastfm"] (Just $ Message "Just listen!") Nothing apiKey sessionKey
+                             case response of
+                               Left e  -> print e
+                               Right () -> return ()
+
 start :: IO ()
 start = do getBuylinks
            getInfo
@@ -96,4 +102,4 @@ start = do getBuylinks
            withSecret secret $ do addTags apiKey sessionKey
                                   getTagsAuth apiKey sessionKey
                                   removeTag apiKey sessionKey
-                                  --share apiKey sessionKey
+                                  share apiKey sessionKey
