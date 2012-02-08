@@ -1,6 +1,9 @@
 module ELibrary (start) where
 
+import Control.Applicative ((<$>))
 import Control.Monad ((<=<))
+import Data.Char (isSpace)
+import Data.List.Split (splitOn)
 
 import Network.Lastfm.Response
 import Network.Lastfm.Types
@@ -10,6 +13,12 @@ import Kludges
 
 apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
 user = User "smpcln"
+
+addArtist :: APIKey -> SessionKey -> String -> IO ()
+addArtist apiKey sessionKey secret = do response <- withSecret secret $ Library.addArtist (Artist "Mobthrow") apiKey sessionKey
+                                        case response of
+                                          Left e  -> print e
+                                          Right () -> return ()
 
 getAlbums :: IO ()
 getAlbums = do response <- Library.getAlbums user (Just $ Artist "Burzum") Nothing (Just $ Limit 5) apiKey
@@ -38,9 +47,14 @@ getTracks = do response <- Library.getTracks user (Just $ Artist "Burzum") Nothi
                putStrLn ""
   where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "tracks" <=< wrap
 
+getConfig :: FilePath -> IO (APIKey, SessionKey, String)
+getConfig fp = do [apiKey, sessionKey, secret] <- map ((!! 1) . splitOn "=" . filter (not . isSpace)) . lines <$> readFile fp
+                  return (APIKey apiKey, SessionKey sessionKey, secret)
+
 start :: IO ()
-start = do -- addAlbum (requires authorization)
-           -- addArtist (requires authorization)
+start = do (apiKey, sessionKey, secret) <- getConfig ".lastfm.conf"
+           -- addAlbum (requires authorization)
+           addArtist apiKey sessionKey secret
            -- addTrack (requires authorization)
            getAlbums
            getArtists
