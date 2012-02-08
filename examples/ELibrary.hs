@@ -1,9 +1,6 @@
 module ELibrary (start) where
 
-import Control.Applicative ((<$>))
 import Control.Monad ((<=<))
-import Data.Char (isSpace)
-import Data.List.Split (splitOn)
 
 import Network.Lastfm.Response
 import Network.Lastfm.Types
@@ -59,9 +56,6 @@ getTracks = do response <- Library.getTracks user (Just $ Artist "Burzum") Nothi
                putStrLn ""
   where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "tracks" <=< wrap
 
-getConfig :: FilePath -> IO (APIKey, SessionKey, String)
-getConfig fp = do [apiKey, sessionKey, secret] <- map ((!! 1) . splitOn "=" . filter (not . isSpace)) . lines <$> readFile fp
-                  return (APIKey apiKey, SessionKey sessionKey, secret)
 
 removeAlbum :: APIKey -> SessionKey -> IO ()
 removeAlbum apiKey sessionKey = do response <- Library.removeAlbum (Artist "Franz Ferdinand") (Album "Franz Ferdinand") apiKey sessionKey

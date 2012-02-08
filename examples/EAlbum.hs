@@ -10,6 +10,12 @@ import Kludges
 
 apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
 
+addTags :: APIKey -> SessionKey -> IO ()
+addTags apiKey sessionKey = do response <- Album.addTags (Artist "Pink Floyd", Album "The Wall") [Tag "70s", Tag "awesome"] apiKey sessionKey
+                               case response of
+                                 Left e  -> print e
+                                 Right () -> return ()
+
 getBuylinks :: IO ()
 getBuylinks = do response <- Album.getBuyLinks (Just (Artist "Pink Floyd", Album "The Wall")) Nothing Nothing (Country "United Kingdom") apiKey
                  putStr "Download suppliers: "
@@ -46,6 +52,12 @@ getTopTags = do response <- Album.getTopTags (Just (Artist "Pink Floyd", Album "
                 putStrLn ""
   where counts = mapM (getContent <=< lookupChild "count") <=< lookupChildren "tag" <=< lookupChild "toptags" <=< wrap
 
+removeTag :: APIKey -> SessionKey -> IO ()
+removeTag apiKey sessionKey = do response <- Album.removeTag (Artist "Pink Floyd") (Album "The Wall") (Tag "awesome") apiKey sessionKey
+                                 case response of
+                                   Left e  -> print e
+                                   Right () -> return ()
+
 search :: IO ()
 search = do response <- Album.search (Album "wall") Nothing (Just (Limit 5)) apiKey
             putStr "5 search results for \"wall\" query: "
@@ -56,12 +68,13 @@ search = do response <- Album.search (Album "wall") Nothing (Just (Limit 5)) api
   where albums = mapM (getContent <=< lookupChild "name") <=< lookupChildren "album" <=< lookupChild "albummatches" <=< lookupChild "results" <=< wrap
 
 start :: IO ()
-start = do -- addTags (requires authorization)
-           getBuylinks
+start = do getBuylinks
            getInfo
            getShouts
-           -- getTags (requires authorization)
            getTopTags
-           -- removeTag (requires authorization)
            search
-           -- share (requires authorization)
+           (apiKey, sessionKey, secret) <- getConfig ".lastfm.conf"
+           withSecret secret $ do addTags apiKey sessionKey
+                                  --getTags apiKey sessionKey
+                                  removeTag apiKey sessionKey
+                                  --share apiKey sessionKey

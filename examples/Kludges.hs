@@ -1,7 +1,12 @@
 module Kludges where
 
+import Control.Applicative ((<$>))
 import Control.Monad (liftM)
+import Data.Char (isSpace)
+import Data.List.Split (splitOn)
 import Text.XML.Light
+
+import Network.Lastfm.Types
 
 newtype KludgeResponse = KludgeResponse {unwrap :: Element}
 
@@ -23,3 +28,8 @@ getContent = Just . strContent . unwrap
 -- | Gets tag attribute content
 getAttribute :: String -> KludgeResponse -> Maybe String
 getAttribute tag = findAttr (unqual tag) . unwrap
+
+-- | Read config
+getConfig :: FilePath -> IO (APIKey, SessionKey, String)
+getConfig fp = do [apiKey, sessionKey, secret] <- map ((!! 1) . splitOn "=" . filter (not . isSpace)) . lines <$> readFile fp
+                  return (APIKey apiKey, SessionKey sessionKey, secret)
