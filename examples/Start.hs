@@ -12,11 +12,12 @@ import qualified EEvent as Event
 import qualified EGeo as Geo
 import qualified EGroup as Group
 import qualified ELibrary as Library
+import qualified EPlaylist as Playlist
 import qualified ERadio as Radio
 import qualified ETasteometer as Tasteometer
 import qualified EUser as User
 
-data Flag = Help | All | Album | Artist | Chart | Event | Geo | Group | Library | Radio | Tasteometer | User deriving Eq
+data Flag = Help | All | Album | Artist | Chart | Event | Geo | Group | Library | Playlist | Radio | Tasteometer | User deriving Eq
 
 options :: [OptDescr Flag]
 options =
@@ -29,6 +30,7 @@ options =
   , Option "" ["geo"]         (NoArg Geo)         "Start Geo module examples."
   , Option "" ["group"]       (NoArg Group)       "Start Group module examples."
   , Option "" ["library"]     (NoArg Library)     "Start Library module examples."
+  , Option "" ["playlist"]    (NoArg Playlist)    "Start Playlist module examples."
   , Option "" ["radio"]       (NoArg Radio)       "Start Radio module examples."
   , Option "" ["tasteometer"] (NoArg Tasteometer) "Start Tasteometer module examples."
   , Option "" ["user"]        (NoArg User)        "Start User module examples."
@@ -57,6 +59,7 @@ start Event = Event.start
 start Geo = Geo.start
 start Group = Group.start
 start Library = Library.start
+start Playlist = Playlist.start
 start Radio = Radio.start
 start Tasteometer = Tasteometer.start
 start User = User.start
