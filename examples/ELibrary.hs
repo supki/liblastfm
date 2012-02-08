@@ -14,19 +14,19 @@ user = User "smpcln"
 addAlbum :: APIKey -> SessionKey -> IO ()
 addAlbum apiKey sessionKey = do response <- Library.addAlbum (Artist "Franz Ferdinand") (Album "Franz Ferdinand") apiKey sessionKey
                                 case response of
-                                  Left e  -> print e
+                                  Left e   -> print e
                                   Right () -> return ()
 
 addArtist :: APIKey -> SessionKey -> IO ()
 addArtist apiKey sessionKey = do response <- Library.addArtist (Artist "Mobthrow") apiKey sessionKey
                                  case response of
-                                   Left e  -> print e
+                                   Left e   -> print e
                                    Right () -> return ()
 
 addTrack :: APIKey -> SessionKey -> IO ()
 addTrack apiKey sessionKey = do response <- Library.addTrack (Artist "Eminem") (Track "Kim") apiKey sessionKey
                                 case response of
-                                  Left e  -> print e
+                                  Left e   -> print e
                                   Right () -> return ()
 
 getAlbums :: IO ()
@@ -60,19 +60,19 @@ getTracks = do response <- Library.getTracks user (Just $ Artist "Burzum") Nothi
 removeAlbum :: APIKey -> SessionKey -> IO ()
 removeAlbum apiKey sessionKey = do response <- Library.removeAlbum (Artist "Franz Ferdinand") (Album "Franz Ferdinand") apiKey sessionKey
                                    case response of
-                                     Left e  -> print e
+                                     Left e   -> print e
                                      Right () -> return ()
 
 removeArtist :: APIKey -> SessionKey -> IO ()
 removeArtist apiKey sessionKey = do response <- Library.removeArtist (Artist "Burzum") apiKey sessionKey
                                     case response of
-                                      Left e  -> print e
+                                      Left e   -> print e
                                       Right () -> return ()
 
 removeTrack :: APIKey -> SessionKey -> IO ()
 removeTrack apiKey sessionKey = do response <- Library.removeTrack (Artist "Eminem") (Track "Kim") apiKey sessionKey
                                    case response of
-                                     Left e  -> print e
+                                     Left e   -> print e
                                      Right () -> return ()
 
 start :: IO ()

@@ -10,6 +10,12 @@ import Kludges
 
 apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
 
+addTags :: APIKey -> SessionKey -> IO ()
+addTags apiKey sessionKey = do response <- Artist.addTags (Artist "Burzum") [Tag "black metal", Tag "depressive"] apiKey sessionKey
+                               case response of
+                                 Left e   -> print e
+                                 Right () -> return ()
+
 getCorrection :: IO ()
 getCorrection = do response <- Artist.getCorrection (Artist "Meshugah") apiKey
                    putStr "Correction: "
@@ -118,6 +124,12 @@ getTopTracks = do response <- Artist.getTopTracks (Just (Artist "Meshuggah")) No
                   putStrLn ""
   where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "toptracks" <=< wrap
 
+removeTag :: APIKey -> SessionKey -> IO ()
+removeTag apiKey sessionKey = do response <- Artist.removeTag (Artist "Burzum") (Tag "black metal") apiKey sessionKey
+                                 case response of
+                                   Left e   -> print e
+                                   Right () -> return ()
+
 search :: IO ()
 search = do response <- Artist.search (Artist "Mesh") Nothing (Just (Limit 12)) apiKey
             putStr "12 search results for \"Mesh\" query: "
@@ -128,8 +140,7 @@ search = do response <- Artist.search (Artist "Mesh") Nothing (Just (Limit 12)) 
   where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "artistmatches" <=< lookupChild "results" <=< wrap
 
 start :: IO ()
-start = do -- addTags (requires authorization)
-           getCorrection
+start = do getCorrection
            getEvents
            getImages
            getInfo
@@ -137,12 +148,14 @@ start = do -- addTags (requires authorization)
            getPodcast
            getShouts
            getSimilar
-           -- getTags (requires authorization)
            getTopAlbums
            getTopFans
            getTopTags
            getTopTracks
-           -- removeTag (requires authorization)
            search
+           (apiKey, sessionKey, secret) <- getConfig ".lastfm.conf"
+           withSecret secret $ do addTags apiKey sessionKey
+                                  removeTag apiKey sessionKey
+           -- getTags (requires authorization)
            -- share (requires authorization)
-           -- shout (requires authorization)
+           -- shout (see User.shout example)

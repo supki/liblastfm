@@ -13,7 +13,7 @@ apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
 addTags :: APIKey -> SessionKey -> IO ()
 addTags apiKey sessionKey = do response <- Album.addTags (Artist "Pink Floyd", Album "The Wall") [Tag "70s", Tag "awesome"] apiKey sessionKey
                                case response of
-                                 Left e  -> print e
+                                 Left e   -> print e
                                  Right () -> return ()
 
 getBuylinks :: IO ()
@@ -55,7 +55,7 @@ getTopTags = do response <- Album.getTopTags (Just (Artist "Pink Floyd", Album "
 removeTag :: APIKey -> SessionKey -> IO ()
 removeTag apiKey sessionKey = do response <- Album.removeTag (Artist "Pink Floyd") (Album "The Wall") (Tag "awesome") apiKey sessionKey
                                  case response of
-                                   Left e  -> print e
+                                   Left e   -> print e
                                    Right () -> return ()
 
 search :: IO ()
