@@ -15,6 +15,7 @@ import qualified ELibrary as Library
 import qualified EPlaylist as Playlist
 import qualified ERadio as Radio
 import qualified ETasteometer as Tasteometer
+import qualified ETrack as Track
 import qualified EUser as User
 import qualified EVenue as Venue
 
@@ -31,6 +32,7 @@ data Flag
        | Playlist
        | Radio
        | Tasteometer
+       | Track
        | User
        | Venue
          deriving Eq
@@ -49,6 +51,7 @@ options =
   , Option "" ["playlist"]    (NoArg Playlist)    "Start Playlist module examples."
   , Option "" ["radio"]       (NoArg Radio)       "Start Radio module examples."
   , Option "" ["tasteometer"] (NoArg Tasteometer) "Start Tasteometer module examples."
+  , Option "" ["track"]       (NoArg Track)       "Start Track module examples."
   , Option "" ["user"]        (NoArg User)        "Start User module examples."
   , Option "" ["venue"]       (NoArg Venue)       "Start Venue module examples."
   ]
@@ -60,7 +63,7 @@ parseArgs argv = case getOpt Permute options argv of
   (_, _, es)  -> hPutStrLn stderr (concat es ++ usageInfo header options) >> exitWith (ExitFailure 1)
   where
     all :: [Flag]
-    all = [Album, Artist, Chart, Event, Geo, Group, Library, Playlist, Radio, Tasteometer, User, Venue]
+    all = [Album, Artist, Chart, Event, Geo, Group, Library, Playlist, Radio, Tasteometer, Track, User, Venue]
 
     check :: Flag -> IO Bool
     check Help    = hPutStrLn stderr (usageInfo header options) >> exitWith ExitSuccess
@@ -79,6 +82,7 @@ start Library = Library.start
 start Playlist = Playlist.start
 start Radio = Radio.start
 start Tasteometer = Tasteometer.start
+start Track = Track.start
 start User = User.start
 start Venue = Venue.start
 

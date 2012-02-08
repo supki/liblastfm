@@ -5,8 +5,6 @@ module Network.Lastfm.API.Track
   ) where
 
 import Control.Exception (throw)
-import Data.Maybe (isJust)
-import Prelude hiding (either)
 
 import Network.Lastfm.Response
 import Network.Lastfm.Types ( (?<), Album, AlbumArtist, APIKey, Artist, Autocorrect, ChosenByUser, Context, Country
@@ -36,14 +34,17 @@ ban artist track apiKey sessionKey = dispatch $ callAPI_ "track.ban"
   , "sk" ?< sessionKey
   ]
 
-getBuyLinks :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Country -> APIKey -> Lastfm Response
-getBuyLinks a mbid autocorrect country apiKey = dispatch $ callAPI method $ parameters ++
+
+getBuyLinks :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Maybe Country -> APIKey -> Lastfm Response
+getBuyLinks a autocorrect country apiKey = dispatch $ callAPI method $ target ++
   [ "autocorrect" ?< autocorrect
   , "country" ?< country
   , "api_key" ?< apiKey
   ]
   where method = "track.getBuyLinks"
-        parameters = either method a mbid
+        target = case a of
+                   Left (artist, track) -> ["artist" ?< artist, "track" ?< track]
+                   Right mbid           -> ["mbid" ?< mbid]
 
 getCorrection :: Artist -> Track -> APIKey -> Lastfm Response
 getCorrection artist track apiKey = dispatch $ callAPI "track.getCorrection"
@@ -58,63 +59,75 @@ getFingerprintMetadata fingerprint apiKey = dispatch $ callAPI "track.getFingerp
   , "api_key" ?< apiKey
   ]
 
-getInfo :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> Maybe User -> APIKey -> Lastfm Response
-getInfo a mbid autocorrect username apiKey = dispatch $ callAPI method $ parameters ++
+getInfo :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Maybe User -> APIKey -> Lastfm Response
+getInfo a autocorrect username apiKey = dispatch $ callAPI method $ target ++
   [ "autocorrect" ?< autocorrect
   , "username" ?< username
   , "api_key" ?< apiKey
   ]
   where method = "track.getInfo"
-        parameters = either method a mbid
+        target = case a of
+                   Left (artist, track) -> ["artist" ?< artist, "track" ?< track]
+                   Right mbid           -> ["mbid" ?< mbid]
 
-getShouts :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getShouts a mbid autocorrect page limit apiKey = dispatch $ callAPI method $ parameters ++
+getShouts :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
+getShouts a autocorrect page limit apiKey = dispatch $ callAPI method $ target ++
   [ "autocorrect" ?< autocorrect
   , "page" ?< page
   , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
   where method = "track.getShouts"
-        parameters = either method a mbid
+        target = case a of
+                   Left (artist, track) -> ["artist" ?< artist, "track" ?< track]
+                   Right mbid           -> ["mbid" ?< mbid]
 
-getSimilar :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> Maybe Limit -> APIKey -> Lastfm Response
-getSimilar a mbid autocorrect limit apiKey = dispatch $ callAPI method $ parameters ++
+getSimilar :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Maybe Limit -> APIKey -> Lastfm Response
+getSimilar a autocorrect limit apiKey = dispatch $ callAPI method $ target ++
   [ "autocorrect" ?< autocorrect
   , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
   where method = "track.getSimilar"
-        parameters = either method a mbid
+        target = case a of
+                   Left (artist, track) -> ["artist" ?< artist, "track" ?< track]
+                   Right mbid           -> ["mbid" ?< mbid]
 
-getTags :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> Maybe User -> APIKey -> Lastfm Response
-getTags a mbid autocorrect username apiKey = dispatch $ callAPI method $ parameters ++
+getTags :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Maybe User -> APIKey -> Lastfm Response
+getTags a autocorrect username apiKey = dispatch $ callAPI method $ target ++
   [ "autocorrect" ?< autocorrect
   , "user" ?< username
   , "api_key" ?< apiKey
   ]
   where method = "track.getTags"
-        parameters = either method a mbid
+        target = case a of
+                   Left (artist, track) -> ["artist" ?< artist, "track" ?< track]
+                   Right mbid           -> ["mbid" ?< mbid]
 
-getTopFans :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
-getTopFans a mbid autocorrect apiKey = dispatch $ callAPI method $ parameters ++
+getTopFans :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
+getTopFans a autocorrect apiKey = dispatch $ callAPI method $ target ++
   [ "autocorrect" ?< autocorrect
   , "api_key" ?< apiKey
   ]
   where method = "track.getTopFans"
-        parameters = either method a mbid
+        target = case a of
+                   Left (artist, track) -> ["artist" ?< artist, "track" ?< track]
+                   Right mbid           -> ["mbid" ?< mbid]
 
-getTopTags :: Maybe (Artist, Track) -> Maybe Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
-getTopTags a mbid autocorrect apiKey = dispatch $ callAPI method $ parameters ++
+getTopTags :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
+getTopTags a autocorrect apiKey = dispatch $ callAPI method $ target ++
   [ "autocorrect" ?< autocorrect
   , "api_key" ?< apiKey
   ]
   where method = "track.getTopTags"
-        parameters = either method a mbid
+        target = case a of
+                   Left (artist, track) -> ["artist" ?< artist, "track" ?< track]
+                   Right mbid           -> ["mbid" ?< mbid]
 
-love :: Track -> Artist -> APIKey -> SessionKey -> Lastfm ()
-love track artist apiKey sessionKey = dispatch $ callAPI_ "track.love"
-  [ "track" ?< track
-  , "artist" ?< artist
+love :: Artist -> Track -> APIKey -> SessionKey -> Lastfm ()
+love artist track apiKey sessionKey = dispatch $ callAPI_ "track.love"
+  [ "artist" ?< artist
+  , "track" ?< track
   , "api_key" ?< apiKey
   , "sk" ?< sessionKey
   ]
@@ -128,16 +141,16 @@ removeTag artist track tag apiKey sessionKey = dispatch $ callAPI_ "track.remove
   , "sk" ?< sessionKey
   ]
 
-scrobble :: ( Timestamp, Maybe Album, Track, Artist, Maybe AlbumArtist
+scrobble :: ( Timestamp, Maybe Album, Artist, Track, Maybe AlbumArtist
            , Maybe Duration, Maybe StreamId, Maybe ChosenByUser
            , Maybe Context, Maybe TrackNumber, Maybe Mbid )
          -> APIKey
          -> SessionKey
          -> Lastfm ()
-scrobble (timestamp, album, track, artist, albumArtist, duration, streamId, chosenByUser, context, trackNumber, mbid) apiKey sessionKey = dispatch $ callAPI_ "track.scrobble"
+scrobble (timestamp, album, artist, track, albumArtist, duration, streamId, chosenByUser, context, trackNumber, mbid) apiKey sessionKey = dispatch $ callAPI_ "track.scrobble"
   [ "timestamp" ?< timestamp
-  , "track" ?< track
   , "artist" ?< artist
+  , "track" ?< track
   , "api_key" ?< apiKey
   , "sk" ?< sessionKey
   , "album" ?< album
@@ -159,8 +172,8 @@ search limit page track artist apiKey = dispatch $ callAPI "track.search"
   , "api_key" ?< apiKey
   ]
 
-share :: Artist -> Track -> Maybe Public -> Maybe Message -> [Recipient] -> APIKey -> SessionKey -> Lastfm ()
-share artist track public message recipients apiKey sessionKey = dispatch go
+share :: Artist -> Track -> [Recipient] -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Lastfm ()
+share artist track recipients message public apiKey sessionKey = dispatch go
   where go
           | null recipients        = throw $ WrapperCallError method "empty recipient list."
           | length recipients > 10 = throw $ WrapperCallError method "recipient list length has exceeded maximum."
@@ -175,24 +188,24 @@ share artist track public message recipients apiKey sessionKey = dispatch go
             ]
             where method = "track.share"
 
-unban :: Track -> Artist -> APIKey -> SessionKey -> Lastfm ()
-unban track artist apiKey sessionKey = dispatch $ callAPI_ "track.unban"
-  [ "track" ?< track
-  , "artist" ?< artist
+unban :: Artist -> Track -> APIKey -> SessionKey -> Lastfm ()
+unban artist track apiKey sessionKey = dispatch $ callAPI_ "track.unban"
+  [ "artist" ?< artist
+  , "track" ?< track
   , "api_key" ?< apiKey
   , "sk" ?< sessionKey
   ]
 
-unlove :: Track -> Artist -> APIKey -> SessionKey -> Lastfm ()
-unlove track artist apiKey sessionKey = dispatch $ callAPI_ "track.unlove"
-  [ "track" ?< track
-  , "artist" ?< artist
+unlove :: Artist -> Track -> APIKey -> SessionKey -> Lastfm ()
+unlove artist track apiKey sessionKey = dispatch $ callAPI_ "track.unlove"
+  [ "artist" ?< artist
+  , "track" ?< track
   , "api_key" ?< apiKey
   , "sk" ?< sessionKey
   ]
 
-updateNowPlaying :: Track
-                 -> Artist
+updateNowPlaying :: Artist
+                 -> Track
                  -> Maybe Album
                  -> Maybe AlbumArtist
                  -> Maybe Context
@@ -202,9 +215,9 @@ updateNowPlaying :: Track
                  -> APIKey
                  -> SessionKey
                  -> Lastfm ()
-updateNowPlaying track artist album albumArtist context trackNumber mbid duration apiKey sessionKey = dispatch $ callAPI_ "track.updateNowPlaying"
-  [ "track" ?< track
-  , "artist" ?< artist
+updateNowPlaying artist track album albumArtist context trackNumber mbid duration apiKey sessionKey = dispatch $ callAPI_ "track.updateNowPlaying"
+  [ "artist" ?< artist
+  , "track" ?< track
   , "api_key" ?< apiKey
   , "sk" ?< sessionKey
   , "album" ?< album
@@ -214,10 +227,3 @@ updateNowPlaying track artist album albumArtist context trackNumber mbid duratio
   , "mbid" ?< mbid
   , "duration" ?< duration
   ]
-
-either :: String -> Maybe (Artist, Track) -> Maybe Mbid -> [(String, String)]
-either method a mbid
-  | isJust mbid = [ "mbid" ?< mbid ]
-  | otherwise   = case a of
-                    Just (artist, track) -> [ "artist" ?< artist, "track" ?< track ]
-                    Nothing              -> throw $ WrapperCallError method "no mbid nor (artist, track) are specified."
