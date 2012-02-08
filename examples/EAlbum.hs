@@ -17,7 +17,7 @@ addTags apiKey sessionKey = do response <- Album.addTags (Artist "Pink Floyd", A
                                  Right () -> return ()
 
 getBuylinks :: IO ()
-getBuylinks = do response <- Album.getBuyLinks (Just (Artist "Pink Floyd", Album "The Wall")) Nothing Nothing (Country "United Kingdom") apiKey
+getBuylinks = do response <- Album.getBuyLinks (Left (Artist "Pink Floyd", Album "The Wall")) Nothing (Country "United Kingdom") apiKey
                  putStr "Download suppliers: "
                  case response of
                    Left e  -> print e
@@ -26,7 +26,7 @@ getBuylinks = do response <- Album.getBuyLinks (Just (Artist "Pink Floyd", Album
   where suppliers = mapM (getContent <=< lookupChild "supplierName") <=< lookupChildren "affiliation" <=< lookupChild "downloads" <=< lookupChild "affiliations" <=< wrap
 
 getInfo :: IO ()
-getInfo = do response <- Album.getInfo (Just (Artist "Pink Floyd", Album "The Wall")) Nothing Nothing Nothing Nothing apiKey
+getInfo = do response <- Album.getInfo (Left (Artist "Pink Floyd", Album "The Wall")) Nothing Nothing Nothing apiKey
              putStr "Top 5 tags: "
              case response of
                Left e  -> print e
@@ -35,7 +35,7 @@ getInfo = do response <- Album.getInfo (Just (Artist "Pink Floyd", Album "The Wa
   where suppliers = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "toptags" <=< lookupChild "album" <=< wrap
 
 getShouts :: IO ()
-getShouts = do response <- Album.getShouts (Just (Artist "Pink Floyd", Album "The Wall")) Nothing Nothing Nothing (Just (Limit 7)) apiKey
+getShouts = do response <- Album.getShouts (Left (Artist "Pink Floyd", Album "The Wall")) Nothing Nothing (Just (Limit 7)) apiKey
                putStr "Last 7 shouts: "
                case response of
                  Left e  -> print e
@@ -43,8 +43,26 @@ getShouts = do response <- Album.getShouts (Just (Artist "Pink Floyd", Album "Th
                putStrLn ""
   where shouts = mapM (getContent <=< lookupChild "body") <=< lookupChildren "shout" <=< lookupChild "shouts" <=< wrap
 
+getTags :: IO ()
+getTags = do response <- Album.getTags (Left (Artist "Pink Floyd", Album "The Wall")) Nothing (Left $ User "liblastfm") apiKey
+             putStr "The Wall tags: "
+             case response of
+               Left e  -> print e
+               Right r -> print (tags r)
+             putStrLn ""
+  where tags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "tags" <=< wrap
+
+getTagsAuth :: APIKey -> SessionKey -> IO ()
+getTagsAuth apiKey sessionKey = do response <- Album.getTags (Left (Artist "Pink Floyd", Album "The Wall")) Nothing (Right sessionKey) apiKey
+                                   putStr "The Wall tags: "
+                                   case response of
+                                     Left e  -> print e
+                                     Right r -> print (tags r)
+                                   putStrLn ""
+  where tags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "tags" <=< wrap
+
 getTopTags :: IO ()
-getTopTags = do response <- Album.getTopTags (Just (Artist "Pink Floyd", Album "The Wall")) Nothing Nothing apiKey
+getTopTags = do response <- Album.getTopTags (Left (Artist "Pink Floyd", Album "The Wall")) Nothing apiKey
                 putStr "Top tags counts: "
                 case response of
                   Left e  -> print e
@@ -73,8 +91,9 @@ start = do getBuylinks
            getShouts
            getTopTags
            search
+           getTags
            (apiKey, sessionKey, secret) <- getConfig ".lastfm.conf"
            withSecret secret $ do addTags apiKey sessionKey
-                                  --getTags apiKey sessionKey
+                                  getTagsAuth apiKey sessionKey
                                   removeTag apiKey sessionKey
                                   --share apiKey sessionKey

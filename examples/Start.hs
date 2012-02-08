@@ -43,7 +43,7 @@ parseArgs argv = case getOpt Permute options argv of
   (_, _, es)  -> hPutStrLn stderr (concat es ++ usageInfo header options) >> exitWith (ExitFailure 1)
   where
     all :: [Flag]
-    all = [Album, Artist, Chart, Event, Geo, Group, Library, Radio, Tasteometer, User]
+    all = [Album, Artist, Chart, Event, Geo, Group, Library, Playlist, Radio, Tasteometer, User]
 
     check :: Flag -> IO Bool
     check Help    = hPutStrLn stderr (usageInfo header options) >> exitWith ExitSuccess
