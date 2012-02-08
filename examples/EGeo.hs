@@ -1,6 +1,8 @@
 module EGeo (start) where
 
-import Control.Monad ((<=<))
+import Control.Arrow ((***), (&&&))
+import Control.Monad ((<=<), join)
+import Data.Maybe (fromMaybe)
 
 import Network.Lastfm.Response
 import Network.Lastfm.Types
@@ -73,14 +75,13 @@ getMetroUniqueTrackChart = do response <- Geo.getMetroUniqueTrackChart (Country 
                               putStrLn ""
   where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "toptracks" <=< wrap
 
-{-
 getMetroWeeklyChartlist :: IO ()
 getMetroWeeklyChartlist = do response <- Geo.getMetroWeeklyChartlist (Metro "Moscow") apiKey
                              putStr "First 10 Moscow chartlist intervals: "
                              case response of
                                Left e  -> print e
-                               Right r -> print (take 10 r)
--}
+                               Right r -> print (intervals r)
+  where intervals = take 10 . map (join (***) ((read :: String -> Integer) . fromMaybe "0") . (getAttribute "from" &&& getAttribute "to")) . fromMaybe [] . (lookupChildren "chart" <=< lookupChild "weeklychartlist" <=< wrap)
 
 getMetros :: IO ()
 getMetros = do response <- Geo.getMetros (Just (Country "Russia")) apiKey
@@ -117,7 +118,7 @@ start = do getEvents
            getMetroTrackChart
            getMetroUniqueArtistChart
            getMetroUniqueTrackChart
-           --getMetroWeeklyChartlist
+           getMetroWeeklyChartlist
            getMetros
            getTopArtists
            getTopTracks
