@@ -5,8 +5,6 @@ module Network.Lastfm.API.Artist
   ) where
 
 import Control.Exception (throw)
-import Data.Maybe (isJust)
-import Prelude hiding (either)
 
 import Network.Lastfm.Response
 import Network.Lastfm.Types ( (?<), APIKey, Artist, Autocorrect, FestivalsOnly, Language, Limit
@@ -32,8 +30,8 @@ getCorrection artist apiKey = dispatch $ callAPI "artist.getCorrection"
   , "api_key" ?< apiKey
   ]
 
-getEvents :: Maybe Artist -> Maybe Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> Maybe FestivalsOnly -> APIKey -> Lastfm Response
-getEvents artist mbid autocorrect page limit festivalsOnly apiKey = dispatch $ callAPI method $ parameters ++
+getEvents :: Either Artist Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> Maybe FestivalsOnly -> APIKey -> Lastfm Response
+getEvents a autocorrect page limit festivalsOnly apiKey = dispatch $ callAPI method $ target ++
   [ "autocorrect" ?< autocorrect
   , "page" ?< page
   , "limit" ?< limit
@@ -41,10 +39,12 @@ getEvents artist mbid autocorrect page limit festivalsOnly apiKey = dispatch $ c
   , "api_key" ?< apiKey
   ]
   where method = "artist.getEvents"
-        parameters = either method artist mbid
+        target = case a of
+                   Left artist -> ["artist" ?< artist]
+                   Right mbid  -> ["mbid" ?< mbid]
 
-getImages :: Maybe Artist -> Maybe Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> Maybe Order -> APIKey -> Lastfm Response
-getImages artist mbid autocorrect page limit order apiKey = dispatch $ callAPI method $ parameters ++
+getImages :: Either Artist Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> Maybe Order -> APIKey -> Lastfm Response
+getImages a autocorrect page limit order apiKey = dispatch $ callAPI method $ target ++
   [ "autocorrect" ?< autocorrect
   , "page" ?< page
   , "limit" ?< limit
@@ -52,99 +52,123 @@ getImages artist mbid autocorrect page limit order apiKey = dispatch $ callAPI m
   , "api_key" ?< apiKey
   ]
   where method = "artist.getImages"
-        parameters = either method artist mbid
+        target = case a of
+                   Left artist -> ["artist" ?< artist]
+                   Right mbid  -> ["mbid" ?< mbid]
 
-getInfo :: Maybe Artist -> Maybe Mbid -> Maybe Autocorrect -> Maybe Language -> Maybe User -> APIKey -> Lastfm Response
-getInfo artist mbid autocorrect language user apiKey = dispatch $ callAPI method $ parameters ++
+getInfo :: Either Artist Mbid -> Maybe Autocorrect -> Maybe Language -> Maybe User -> APIKey -> Lastfm Response
+getInfo a autocorrect language user apiKey = dispatch $ callAPI method $ target ++
   [ "autocorrect" ?< autocorrect
   , "lang" ?< language
   , "username" ?< user
   , "api_key" ?< apiKey
   ]
   where method = "artist.getInfo"
-        parameters = either method artist mbid
+        target = case a of
+                   Left artist -> ["artist" ?< artist]
+                   Right mbid  -> ["mbid" ?< mbid]
 
-getPastEvents :: Maybe Artist -> Maybe Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getPastEvents artist mbid autocorrect page limit apiKey = dispatch $ callAPI method $ parameters ++
+getPastEvents :: Either Artist Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
+getPastEvents a autocorrect page limit apiKey = dispatch $ callAPI method $ target ++
   [ "autocorrect" ?< autocorrect
   , "page" ?< page
   , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
   where method = "artist.getPastEvents"
-        parameters = either method artist mbid
+        target = case a of
+                   Left artist -> ["artist" ?< artist]
+                   Right mbid  -> ["mbid" ?< mbid]
 
-getPodcast :: Maybe Artist -> Maybe Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
-getPodcast artist mbid autocorrect apiKey = dispatch $ callAPI method $ parameters ++
+getPodcast :: Either Artist Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
+getPodcast a autocorrect apiKey = dispatch $ callAPI method $ target ++
   [ "autocorrect" ?< autocorrect
   , "api_key" ?< apiKey
   ]
   where method = "artist.getPodcast"
-        parameters = either method artist mbid
+        target = case a of
+                   Left artist -> ["artist" ?< artist]
+                   Right mbid  -> ["mbid" ?< mbid]
 
-getShouts :: Maybe Artist -> Maybe Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getShouts artist mbid autocorrect page limit apiKey = dispatch $ callAPI method $ parameters ++
+getShouts :: Either Artist Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
+getShouts a autocorrect page limit apiKey = dispatch $ callAPI method $ target ++
   [ "autocorrect" ?< autocorrect
   , "page" ?< page
   , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
   where method = "artist.getShouts"
-        parameters = either method artist mbid
+        target = case a of
+                   Left artist -> ["artist" ?< artist]
+                   Right mbid  -> ["mbid" ?< mbid]
 
-getSimilar :: Maybe Artist -> Maybe Mbid -> Maybe Autocorrect -> Maybe Limit -> APIKey -> Lastfm Response
-getSimilar artist mbid autocorrect limit apiKey = dispatch $ callAPI method $ parameters ++
+getSimilar :: Either Artist Mbid -> Maybe Autocorrect -> Maybe Limit -> APIKey -> Lastfm Response
+getSimilar a autocorrect limit apiKey = dispatch $ callAPI method $ target ++
   [ "autocorrect" ?< autocorrect
   , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
   where method = "artist.getSimilar"
-        parameters = either method artist mbid
+        target = case a of
+                   Left artist -> ["artist" ?< artist]
+                   Right mbid  -> ["mbid" ?< mbid]
 
-getTags :: Maybe Artist -> Maybe Mbid -> Maybe Autocorrect -> Maybe User -> APIKey -> Lastfm Response
-getTags artist mbid autocorrect user apiKey = dispatch $ callAPI method $ parameters ++
+getTags :: Either Artist Mbid -> Maybe Autocorrect -> Either User SessionKey -> APIKey -> Lastfm Response
+getTags a autocorrect b apiKey = dispatch $ callAPI method $ target ++ auth ++
   [ "autocorrect" ?< autocorrect
-  , "user" ?< user
   , "api_key" ?< apiKey
   ]
   where method = "artist.getTags"
-        parameters = either method artist mbid
+        target = case a of
+                   Left artist -> ["artist" ?< artist]
+                   Right mbid  -> ["mbid" ?< mbid]
+        auth = case b of
+                 Left user        -> ["user" ?< user]
+                 Right sessionKey -> ["sk" ?< sessionKey]
 
-getTopAlbums :: Maybe Artist -> Maybe Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopAlbums artist mbid autocorrect page limit apiKey = dispatch $ callAPI method $ parameters ++
+getTopAlbums :: Either Artist Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
+getTopAlbums a autocorrect page limit apiKey = dispatch $ callAPI method $ target ++
   [ "autocorrect" ?< autocorrect
   , "page" ?< page
   , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
   where method = "artist.getTopAlbums"
-        parameters = either method artist mbid
+        target = case a of
+                   Left artist -> ["artist" ?< artist]
+                   Right mbid  -> ["mbid" ?< mbid]
 
-getTopFans :: Maybe Artist -> Maybe Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
-getTopFans artist mbid autocorrect apiKey = dispatch $ callAPI method $ parameters ++
+getTopFans :: Either Artist Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
+getTopFans a autocorrect apiKey = dispatch $ callAPI method $ target ++
   [ "autocorrect" ?< autocorrect
   , "api_key" ?< apiKey
   ]
   where method = "artist.getTopFans"
-        parameters = either method artist mbid
+        target = case a of
+                   Left artist -> ["artist" ?< artist]
+                   Right mbid  -> ["mbid" ?< mbid]
 
-getTopTags :: Maybe Artist -> Maybe Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
-getTopTags artist mbid autocorrect apiKey = dispatch $ callAPI method $ parameters ++
+getTopTags :: Either Artist Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
+getTopTags a autocorrect apiKey = dispatch $ callAPI method $ target ++
   [ "autocorrect" ?< autocorrect
   , "api_key" ?< apiKey
   ]
   where method = "artist.getTopTags"
-        parameters = either method artist mbid
+        target = case a of
+                   Left artist -> ["artist" ?< artist]
+                   Right mbid  -> ["mbid" ?< mbid]
 
-getTopTracks :: Maybe Artist -> Maybe Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopTracks artist mbid autocorrect page limit apiKey = dispatch $ callAPI method $ parameters ++
+getTopTracks :: Either Artist Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
+getTopTracks a autocorrect page limit apiKey = dispatch $ callAPI method $ target ++
   [ "autocorrect" ?< autocorrect
   , "page" ?< page
   , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
   where method = "artist.getTopTracks"
-        parameters = either method artist mbid
+        target = case a of
+                   Left artist -> ["artist" ?< artist]
+                   Right mbid  -> ["mbid" ?< mbid]
 
 removeTag :: Artist -> Tag -> APIKey -> SessionKey -> Lastfm ()
 removeTag artist tag apiKey sessionKey = dispatch $ callAPI_ "artist.removeTag"
@@ -184,10 +208,3 @@ shout artist message apiKey sessionKey = dispatch $ callAPI_ "artist.shout"
   , "api_key" ?< apiKey
   , "sk" ?< sessionKey
   ]
-
-either :: String -> Maybe Artist -> Maybe Mbid -> [(String, String)]
-either method artist mbid
-  | isJust mbid = [ "mbid" ?< mbid ]
-  | otherwise   = case artist of
-                    Just a  -> [ "artist" ?< a ]
-                    Nothing -> throw $ WrapperCallError method "no mbid nor artist are specified."

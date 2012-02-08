@@ -26,7 +26,7 @@ getCorrection = do response <- Artist.getCorrection (Artist "Meshugah") apiKey
   where correction = getContent <=< lookupChild "name" <=< lookupChild "artist" <=< lookupChild "correction" <=< lookupChild "corrections" <=< wrap
 
 getEvents :: IO ()
-getEvents = do response <- Artist.getEvents (Just (Artist "Meshuggah")) Nothing Nothing Nothing (Just (Limit 3)) Nothing apiKey
+getEvents = do response <- Artist.getEvents (Left $ Artist "Meshuggah") Nothing Nothing (Just $ Limit 3) Nothing apiKey
                putStr "First event place: "
                case response of
                  Left e  -> print e
@@ -35,7 +35,7 @@ getEvents = do response <- Artist.getEvents (Just (Artist "Meshuggah")) Nothing 
   where place = getContent <=< lookupChild "name" <=< lookupChild "venue" <=< lookupChild "event" <=< lookupChild "events" <=< wrap
 
 getImages :: IO ()
-getImages = do response <- Artist.getImages (Just (Artist "Meshuggah")) Nothing Nothing Nothing (Just (Limit 3)) Nothing apiKey
+getImages = do response <- Artist.getImages (Left $ Artist "Meshuggah") Nothing Nothing (Just $ Limit 3) Nothing apiKey
                putStr "First three images links: "
                case response of
                  Left e  -> print e
@@ -44,7 +44,7 @@ getImages = do response <- Artist.getImages (Just (Artist "Meshuggah")) Nothing 
   where links = mapM (getContent <=< lookupChild "url") <=< lookupChildren "image" <=< lookupChild "images" <=< wrap
 
 getInfo :: IO ()
-getInfo = do response <- Artist.getInfo (Just (Artist "Meshuggah")) Nothing Nothing Nothing Nothing apiKey
+getInfo = do response <- Artist.getInfo (Left $ Artist "Meshuggah") Nothing Nothing Nothing apiKey
              putStr "Listeners count: "
              case response of
                Left e  -> print e
@@ -53,7 +53,7 @@ getInfo = do response <- Artist.getInfo (Just (Artist "Meshuggah")) Nothing Noth
   where listeners = getContent <=< lookupChild "listeners" <=< lookupChild "stats" <=< lookupChild "artist" <=< wrap
 
 getPastEvents :: IO ()
-getPastEvents = do response <- Artist.getPastEvents (Just (Artist "Meshugah")) Nothing (Just (Autocorrect True)) Nothing Nothing apiKey
+getPastEvents = do response <- Artist.getPastEvents (Left $ Artist "Meshugah") (Just $ Autocorrect True) Nothing Nothing apiKey
                    putStr "All event artists: "
                    case response of
                      Left e  -> print e
@@ -62,7 +62,7 @@ getPastEvents = do response <- Artist.getPastEvents (Just (Artist "Meshugah")) N
   where artists = mapM getContent <=< lookupChildren "artist" <=< lookupChild "artists" <=< lookupChild "event" <=< lookupChild "events" <=< wrap
 
 getPodcast :: IO ()
-getPodcast = do response <- Artist.getPodcast (Just (Artist "Meshuggah")) Nothing Nothing apiKey
+getPodcast = do response <- Artist.getPodcast (Left $ Artist "Meshuggah") Nothing apiKey
                 putStr "First channel description: "
                 case response of
                   Left e  -> print e
@@ -71,7 +71,7 @@ getPodcast = do response <- Artist.getPodcast (Just (Artist "Meshuggah")) Nothin
   where description = getContent <=< lookupChild "description" <=< lookupChild "channel" <=< lookupChild "rss" <=< wrap
 
 getShouts :: IO ()
-getShouts = do response <- Artist.getShouts (Just (Artist "Meshuggah")) Nothing Nothing Nothing (Just (Limit 5)) apiKey
+getShouts = do response <- Artist.getShouts (Left $ Artist "Meshuggah") Nothing Nothing (Just $ Limit 5) apiKey
                putStr "Last 5 shouts authors: "
                case response of
                  Left e  -> print e
@@ -80,7 +80,7 @@ getShouts = do response <- Artist.getShouts (Just (Artist "Meshuggah")) Nothing 
   where authors = mapM (getContent <=< lookupChild "author") <=< lookupChildren "shout" <=< lookupChild "shouts" <=< wrap
 
 getSimilar :: IO ()
-getSimilar = do response <- Artist.getSimilar (Just (Artist "Meshuggah")) Nothing Nothing (Just (Limit 7)) apiKey
+getSimilar = do response <- Artist.getSimilar (Left $ Artist "Meshuggah") Nothing (Just $ Limit 7) apiKey
                 putStr "7 similar artists: "
                 case response of
                   Left e  -> print e
@@ -88,8 +88,26 @@ getSimilar = do response <- Artist.getSimilar (Just (Artist "Meshuggah")) Nothin
                 putStrLn ""
   where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "similarartists" <=< wrap
 
+getTags :: IO ()
+getTags = do response <- Artist.getTags (Left $ Artist "Burzum") Nothing (Left $ User "liblastfm") apiKey
+             putStr "Burzum tags: "
+             case response of
+               Left e  -> print e
+               Right r -> print (tags r)
+             putStrLn ""
+  where tags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "tags" <=< wrap
+
+getTagsAuth :: APIKey -> SessionKey -> IO ()
+getTagsAuth apiKey sessionKey = do response <- Artist.getTags (Left $ Artist "Burzum") Nothing (Right sessionKey) apiKey
+                                   putStr "Burzum tags: "
+                                   case response of
+                                     Left e  -> print e
+                                     Right r -> print (tags r)
+                                   putStrLn ""
+  where tags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "tags" <=< wrap
+
 getTopAlbums :: IO ()
-getTopAlbums = do response <- Artist.getTopAlbums (Just (Artist "Meshuggah")) Nothing Nothing Nothing (Just (Limit 3)) apiKey
+getTopAlbums = do response <- Artist.getTopAlbums (Left $ Artist "Meshuggah") Nothing Nothing (Just $ Limit 3) apiKey
                   putStr "3 most popular albums: "
                   case response of
                     Left e  -> print e
@@ -98,7 +116,7 @@ getTopAlbums = do response <- Artist.getTopAlbums (Just (Artist "Meshuggah")) No
   where albums = mapM (getContent <=< lookupChild "name") <=< lookupChildren "album" <=< lookupChild "topalbums" <=< wrap
 
 getTopFans :: IO ()
-getTopFans = do response <- Artist.getTopFans (Just (Artist "Meshuggah")) Nothing Nothing apiKey
+getTopFans = do response <- Artist.getTopFans (Left $ Artist "Meshuggah") Nothing apiKey
                 putStr "Top fans: "
                 case response of
                   Left e  -> print e
@@ -107,7 +125,7 @@ getTopFans = do response <- Artist.getTopFans (Just (Artist "Meshuggah")) Nothin
   where fans = mapM (getContent <=< lookupChild "name") <=< lookupChildren "user" <=< lookupChild "topfans" <=< wrap
 
 getTopTags :: IO ()
-getTopTags = do response <- Artist.getTopTags (Just (Artist "Meshuggah")) Nothing Nothing apiKey
+getTopTags = do response <- Artist.getTopTags (Left $ Artist "Meshuggah") Nothing apiKey
                 putStr "Top tags: "
                 case response of
                   Left e  -> print e
@@ -116,7 +134,7 @@ getTopTags = do response <- Artist.getTopTags (Just (Artist "Meshuggah")) Nothin
   where tags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "toptags" <=< wrap
 
 getTopTracks :: IO ()
-getTopTracks = do response <- Artist.getTopTracks (Just (Artist "Meshuggah")) Nothing Nothing Nothing (Just (Limit 10)) apiKey
+getTopTracks = do response <- Artist.getTopTracks (Left $ Artist "Meshuggah") Nothing Nothing (Just $ Limit 10) apiKey
                   putStr "10 most popular tracks: "
                   case response of
                     Left e  -> print e
@@ -148,6 +166,7 @@ start = do getCorrection
            getPodcast
            getShouts
            getSimilar
+           getTags
            getTopAlbums
            getTopFans
            getTopTags
@@ -155,7 +174,7 @@ start = do getCorrection
            search
            (apiKey, sessionKey, secret) <- getConfig ".lastfm.conf"
            withSecret secret $ do addTags apiKey sessionKey
+                                  getTagsAuth apiKey sessionKey
                                   removeTag apiKey sessionKey
-           -- getTags (requires authorization)
-           -- share (requires authorization)
-           -- shout (see User.shout example)
+                                  -- share (requires authorization)
+                                  -- shout (see User.shout example)
