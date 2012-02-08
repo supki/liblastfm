@@ -10,9 +10,16 @@ import qualified Network.Lastfm.API.Event as Event
 import Kludges
 
 apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
+event = Event 3142549
+
+attend :: APIKey -> SessionKey -> IO ()
+attend apiKey sessionKey = do response <- Event.attend event Maybe apiKey sessionKey
+                              case response of
+                                Left e  -> print e
+                                Right () -> return ()
 
 getAttendees :: IO ()
-getAttendees = do response <- Event.getAttendees (Event 3142549) Nothing (Just (Limit 10)) apiKey
+getAttendees = do response <- Event.getAttendees event Nothing (Just $ Limit 10) apiKey
                   putStr "First 10 attendees: "
                   case response of
                     Left e  -> print e
@@ -21,7 +28,7 @@ getAttendees = do response <- Event.getAttendees (Event 3142549) Nothing (Just (
   where attendees = mapM (getContent <=< lookupChild "name") <=< lookupChildren "user" <=< lookupChild "attendees" <=< wrap
 
 getInfo :: IO ()
-getInfo = do response <- Event.getInfo (Event 3142549) apiKey
+getInfo = do response <- Event.getInfo event apiKey
              putStr "City: "
              case response of
                Left e  -> print e
@@ -30,7 +37,7 @@ getInfo = do response <- Event.getInfo (Event 3142549) apiKey
   where city = getContent <=< lookupChild "city" <=< lookupChild "location" <=< lookupChild "venue" <=< lookupChild "event" <=< wrap
 
 getShouts :: IO ()
-getShouts = do response <- Event.getShouts (Event 3142549) Nothing (Just (Limit 8)) apiKey
+getShouts = do response <- Event.getShouts event Nothing (Just $ Limit 8) apiKey
                putStrLn "First 8 shouts:"
                case response of
                  Left e  -> print e
@@ -38,10 +45,17 @@ getShouts = do response <- Event.getShouts (Event 3142549) Nothing (Just (Limit 
                putStrLn ""
   where shouts = mapM (getContent <=< lookupChild "body") <=< lookupChildren "shout" <=< lookupChild "shouts" <=< wrap
 
+share :: APIKey -> SessionKey -> IO ()
+share apiKey sessionKey = do response <- Event.share event [Recipient "liblastfm"] (Just $ Message "Just listen!") Nothing apiKey sessionKey
+                             case response of
+                               Left e  -> print e
+                               Right () -> return ()
+
 start :: IO ()
-start = do -- attend (requires authorization)
-           getAttendees
+start = do getAttendees
            getInfo
            getShouts
-           -- share (requires authorization)
-           -- shout (requires authorization)
+           (apiKey, sessionKey, secret) <- getConfig ".lastfm.conf"
+           withSecret secret $ do attend apiKey sessionKey
+                                  share apiKey sessionKey
+                               -- shout (see User.shout example)

@@ -99,8 +99,8 @@ search album page limit apiKey = dispatch $ callAPI "album.search"
   , "api_key" ?< apiKey
   ]
 
-share :: Artist -> Album -> Maybe Public -> Maybe Message -> [Recipient] -> APIKey -> SessionKey -> Lastfm ()
-share artist album public message recipients apiKey sessionKey = dispatch go
+share :: Artist -> Album -> [Recipient] -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Lastfm ()
+share artist album recipients message public apiKey sessionKey = dispatch go
   where go
           | null recipients        = throw $ WrapperCallError method "empty recipient list."
           | length recipients > 10 = throw $ WrapperCallError method "recipient list length has exceeded maximum."

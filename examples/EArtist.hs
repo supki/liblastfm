@@ -157,6 +157,12 @@ search = do response <- Artist.search (Artist "Mesh") Nothing (Just (Limit 12)) 
             putStrLn ""
   where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "artistmatches" <=< lookupChild "results" <=< wrap
 
+share :: APIKey -> SessionKey -> IO ()
+share apiKey sessionKey = do response <- Artist.share (Artist "Sleep") [Recipient "liblastfm"] (Just $ Message "Just listen!") Nothing apiKey sessionKey
+                             case response of
+                               Left e  -> print e
+                               Right () -> return ()
+
 start :: IO ()
 start = do getCorrection
            getEvents
@@ -176,5 +182,5 @@ start = do getCorrection
            withSecret secret $ do addTags apiKey sessionKey
                                   getTagsAuth apiKey sessionKey
                                   removeTag apiKey sessionKey
-                                  -- share (requires authorization)
-                                  -- shout (see User.shout example)
+                                  share apiKey sessionKey
+                               -- shout (see User.shout example)
