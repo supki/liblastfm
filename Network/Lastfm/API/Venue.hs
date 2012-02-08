@@ -3,7 +3,7 @@ module Network.Lastfm.API.Venue
   ) where
 
 import Network.Lastfm.Response
-import Network.Lastfm.Types ((?<), APIKey, Country, FestivalsOnly, Limit, Page, Venue)
+import Network.Lastfm.Types ((?<), APIKey, Country, FestivalsOnly, Limit, Name, Page, Venue)
 
 getEvents :: Venue -> Maybe FestivalsOnly -> APIKey -> Lastfm Response
 getEvents venue festivalsOnly apiKey = dispatch $ callAPI "venue.getEvents"
@@ -21,7 +21,7 @@ getPastEvents venue festivalsOnly page limit apiKey = dispatch $ callAPI "venue.
   , "limit" ?< limit
   ]
 
-search :: Venue -> Maybe Page -> Maybe Limit -> Maybe Country -> APIKey -> Lastfm Response
+search :: Name -> Maybe Page -> Maybe Limit -> Maybe Country -> APIKey -> Lastfm Response
 search venue page limit country apiKey = dispatch $ callAPI "venue.search"
   [ "venue" ?< venue
   , "api_key" ?< apiKey

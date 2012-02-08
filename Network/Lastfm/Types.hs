@@ -52,7 +52,7 @@ newtype Track = Track String deriving (Show, LastfmValue)
 newtype TrackNumber = TrackNumber String deriving (Show, LastfmValue)
 newtype User = User String deriving (Show, LastfmValue)
 newtype UseRecs = UseRecs Bool deriving (Show, LastfmValue)
-newtype Venue = Venue String deriving (Show, LastfmValue)
+newtype Venue = Venue Int deriving (Show, LastfmValue)
 
 data Order = Popularity | DateAdded deriving Show
 
