@@ -22,6 +22,60 @@ ban apiKey sessionKey = do response <- Track.ban (Artist "Eminem") (Track "Kim")
                              Left e   -> print e
                              Right () -> return ()
 
+getBuylinks :: IO ()
+getBuylinks = do response <- Track.getBuyLinks (Left (Artist "Pink Floyd", Track "Brain Damage")) Nothing (Country "United Kingdom") apiKey
+                 putStr "Download suppliers: "
+                 case response of
+                   Left e  -> print e
+                   Right r -> print (suppliers r)
+                 putStrLn ""
+  where suppliers = mapM (getContent <=< lookupChild "supplierName") <=< lookupChildren "affiliation" <=< lookupChild "downloads" <=< lookupChild "affiliations" <=< wrap
+
+getCorrection :: IO ()
+getCorrection = do response <- Track.getCorrection (Artist "Pink Ployd") (Track "Brain Damage") apiKey
+                   putStr "Correction: "
+                   case response of
+                     Left e  -> print e
+                     Right r -> print (correction r)
+                   putStrLn ""
+  where correction = getContent <=< lookupChild "name" <=< lookupChild "artist" <=< lookupChild "track" <=< lookupChild "correction" <=< lookupChild "corrections" <=< wrap
+
+getTags :: IO ()
+getTags = do response <- Track.getTags (Left (Artist "Jefferson Airplane", Track "White Rabbit")) Nothing (Left $ User "liblastfm") apiKey
+             putStr "White Rabbit tags: "
+             case response of
+               Left e  -> print e
+               Right r -> print (tags r)
+             putStrLn ""
+  where tags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "tags" <=< wrap
+
+getTagsAuth :: APIKey -> SessionKey -> IO ()
+getTagsAuth apiKey sessionKey = do response <- Track.getTags (Left (Artist "Jefferson Airplane", Track "White Rabbit")) Nothing (Right sessionKey) apiKey
+                                   putStr "White rabbit tags: "
+                                   case response of
+                                     Left e  -> print e
+                                     Right r -> print (tags r)
+                                   putStrLn ""
+  where tags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "tags" <=< wrap
+
+getTopFans :: IO ()
+getTopFans = do response <- Track.getTopFans (Left (Artist "Pink Floyd", Track "Comfortably Numb")) Nothing apiKey
+                print response
+                case response of
+                  Left e  -> print e
+                  Right r -> print (fans r)
+                putStrLn ""
+  where fans = mapM (getContent <=< lookupChild "name") <=< lookupChildren "user" <=< lookupChild "topfans" <=< wrap
+
+getTopTags :: IO ()
+getTopTags = do response <- Track.getTopTags (Left (Artist "Pink Floyd", Track "Brain Damage")) Nothing apiKey
+                putStr "Top tags: "
+                case response of
+                  Left e  -> print e
+                  Right r -> print (tags r)
+                putStrLn ""
+  where tags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "toptags" <=< wrap
+
 love :: APIKey -> SessionKey -> IO ()
 love apiKey sessionKey = do response <- Track.love (Artist "Gojira") (Track "Ocean") apiKey sessionKey
                             case response of
@@ -53,8 +107,14 @@ unlove apiKey sessionKey = do response <- Track.unlove (Artist "Gojira") (Track 
                                 Right () -> return ()
 
 start :: IO ()
-start = do (apiKey, sessionKey, secret) <- getConfig ".lastfm.conf"
+start = do getBuylinks
+           getCorrection
+           getTags
+           getTopFans
+           getTopTags
+           (apiKey, sessionKey, secret) <- getConfig ".lastfm.conf"
            withSecret secret $ do addTags apiKey sessionKey
+                                  getTagsAuth apiKey sessionKey
                                   ban apiKey sessionKey
                                   love apiKey sessionKey
                                   removeTag apiKey sessionKey

@@ -35,7 +35,7 @@ ban artist track apiKey sessionKey = dispatch $ callAPI_ "track.ban"
   ]
 
 
-getBuyLinks :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Maybe Country -> APIKey -> Lastfm Response
+getBuyLinks :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Country -> APIKey -> Lastfm Response
 getBuyLinks a autocorrect country apiKey = dispatch $ callAPI method $ target ++
   [ "autocorrect" ?< autocorrect
   , "country" ?< country
@@ -93,16 +93,18 @@ getSimilar a autocorrect limit apiKey = dispatch $ callAPI method $ target ++
                    Left (artist, track) -> ["artist" ?< artist, "track" ?< track]
                    Right mbid           -> ["mbid" ?< mbid]
 
-getTags :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Maybe User -> APIKey -> Lastfm Response
-getTags a autocorrect username apiKey = dispatch $ callAPI method $ target ++
+getTags :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Either User SessionKey -> APIKey -> Lastfm Response
+getTags a autocorrect b apiKey = dispatch $ callAPI method $ target ++ auth ++
   [ "autocorrect" ?< autocorrect
-  , "user" ?< username
   , "api_key" ?< apiKey
   ]
   where method = "track.getTags"
         target = case a of
                    Left (artist, track) -> ["artist" ?< artist, "track" ?< track]
                    Right mbid           -> ["mbid" ?< mbid]
+        auth = case b of
+                 Left user        -> ["user" ?< user]
+                 Right sessionKey -> ["sk" ?< sessionKey]
 
 getTopFans :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
 getTopFans a autocorrect apiKey = dispatch $ callAPI method $ target ++
