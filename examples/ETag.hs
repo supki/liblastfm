@@ -11,13 +11,13 @@ import Kludges
 apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
 
 getInfo :: IO ()
-getInfo = do response <- Tag.getInfo (Just $ Artist "Burzum") Nothing Nothing apiKey
+getInfo = do response <- Tag.getInfo (Tag "depressive") Nothing apiKey
              putStr "Info: "
              case response of
                Left e  -> print e
                Right r -> print $ info r
              putStrLn ""
-  where info = getContent <=< lookupChild "url" <=< lookupChild "tag" <=< wrap
+  where info = getContent <=< lookupChild "taggings" <=< lookupChild "tag" <=< wrap
 
 getSimilar :: IO ()
 getSimilar = do response <- Tag.getSimilar (Tag "depressive") apiKey
@@ -91,7 +91,7 @@ search = do response <- Tag.search (Tag "depressive") Nothing (Just $ Limit 10) 
   where search' = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "tagmatches" <=< lookupChild "results" <=< wrap
 
 start :: IO ()
-start = do getInfo -- should be fixed
+start = do getInfo
            getSimilar
            getTopAlbums
            getTopArtists
