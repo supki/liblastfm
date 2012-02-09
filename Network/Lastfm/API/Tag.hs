@@ -53,7 +53,7 @@ getTopTracks tag limit page apiKey = dispatch $ callAPI "tag.getTopTracks"
   ]
 
 getWeeklyArtistChart :: Tag -> Maybe From -> Maybe To -> Maybe Limit -> APIKey -> Lastfm Response
-getWeeklyArtistChart tag from to limit apiKey = dispatch $ callAPI "tag.getWeeklyArtistsChart"
+getWeeklyArtistChart tag from to limit apiKey = dispatch $ callAPI "tag.getWeeklyArtistChart"
   [ "tag" ?< tag
   , "from" ?< from
   , "to" ?< to
