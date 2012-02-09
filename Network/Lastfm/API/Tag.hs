@@ -10,14 +10,12 @@ import Prelude hiding (either)
 import Network.Lastfm.Response
 import Network.Lastfm.Types ((?<), APIKey, Artist, From, Language, Limit, Mbid, Page, Tag, To)
 
-getInfo :: Maybe Artist -> Maybe Mbid -> Maybe Language -> APIKey -> Lastfm Response
-getInfo artist mbid language apiKey = dispatch $ callAPI method $ parameters ++
-  [ "artist" ?< artist
+getInfo :: Tag -> Maybe Language -> APIKey -> Lastfm Response
+getInfo tag language apiKey = dispatch $ callAPI "tag.getInfo"
+  [ "tag" ?< tag
   , "lang" ?< language
   , "api_key" ?< apiKey
   ]
-  where method = "tag.getInfo"
-        parameters = either method artist mbid
 
 getSimilar :: Tag -> APIKey -> Lastfm Response
 getSimilar tag apiKey = dispatch $ callAPI "tag.getSimilar"
@@ -53,7 +51,7 @@ getTopTracks tag limit page apiKey = dispatch $ callAPI "tag.getTopTracks"
   ]
 
 getWeeklyArtistChart :: Tag -> Maybe From -> Maybe To -> Maybe Limit -> APIKey -> Lastfm Response
-getWeeklyArtistChart tag from to limit apiKey = dispatch $ callAPI "tag.getWeeklyArtistsChart"
+getWeeklyArtistChart tag from to limit apiKey = dispatch $ callAPI "tag.getWeeklyArtistChart"
   [ "tag" ?< tag
   , "from" ?< from
   , "to" ?< to
