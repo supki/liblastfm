@@ -3,12 +3,8 @@ module Network.Lastfm.API.Tag
   , getWeeklyArtistChart, getWeeklyChartList, search
   ) where
 
-import Control.Exception (throw)
-import Data.Maybe (isJust)
-import Prelude hiding (either)
-
 import Network.Lastfm.Response
-import Network.Lastfm.Types ((?<), APIKey, Artist, From, Language, Limit, Mbid, Page, Tag, To)
+import Network.Lastfm.Types ((?<), APIKey, From, Language, Limit, Page, Tag, To)
 
 getInfo :: Tag -> Maybe Language -> APIKey -> Lastfm Response
 getInfo tag language apiKey = dispatch $ callAPI "tag.getInfo"
@@ -72,10 +68,3 @@ search tag page limit apiKey = dispatch $ callAPI "tag.search"
   , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
-
-either :: String -> Maybe Artist -> Maybe Mbid -> [(String, String)]
-either method artist mbid
-  | isJust mbid = [ "mbid" ?< mbid ]
-  | otherwise   = case artist of
-                    Just a  -> [ "artist" ?< a ]
-                    Nothing -> throw $ WrapperCallError method "no mbid nor artist are specified."
