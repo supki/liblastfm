@@ -149,7 +149,7 @@ removeTag apiKey sessionKey = do response <- Artist.removeTag (Artist "Burzum") 
                                    Right () -> return ()
 
 search :: IO ()
-search = do response <- Artist.search (Artist "Mesh") Nothing (Just (Limit 12)) apiKey
+search = do response <- Artist.search (Artist "Mesh") Nothing (Just $ Limit 12) apiKey
             putStr "12 search results for \"Mesh\" query: "
             case response of
               Left e  -> print e

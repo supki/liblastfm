@@ -114,6 +114,15 @@ removeTag apiKey sessionKey = do response <- Track.removeTag (Artist "Jefferson 
                                    Left e   -> print e
                                    Right () -> return ()
 
+search :: IO ()
+search = do response <- Track.search (Track "Believe") Nothing (Just $ Limit 12) Nothing apiKey
+            putStr "12 search results for \"Believe\" query: "
+            case response of
+              Left e  -> print e
+              Right r -> print (artists r)
+            putStrLn ""
+  where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "trackmatches" <=< lookupChild "results" <=< wrap
+
 share :: APIKey -> SessionKey -> IO ()
 share apiKey sessionKey = do response <- Track.share (Artist "Led Zeppelin") (Track "When the Levee Breaks") [Recipient "liblastfm"] (Just $ Message "Just listen!") Nothing apiKey sessionKey
                              case response of
@@ -132,6 +141,12 @@ unlove apiKey sessionKey = do response <- Track.unlove (Artist "Gojira") (Track 
                                 Left e   -> print e
                                 Right () -> return ()
 
+updateNowPlaying :: APIKey -> SessionKey -> IO ()
+updateNowPlaying apiKey sessionKey = do response <- Track.updateNowPlaying (Artist "Gojira") (Track "Ocean") Nothing Nothing Nothing Nothing Nothing Nothing apiKey sessionKey
+                                        case response of
+                                          Left e   -> print e
+                                          Right () -> return ()
+
 common :: IO ()
 common = do getBuylinks
             getCorrection
@@ -141,6 +156,7 @@ common = do getBuylinks
             getTags
             getTopFans
             getTopTags
+            search
 
 auth :: APIKey -> SessionKey -> IO ()
 auth apiKey sessionKey = do addTags apiKey sessionKey
@@ -151,3 +167,4 @@ auth apiKey sessionKey = do addTags apiKey sessionKey
                             share apiKey sessionKey
                             unban apiKey sessionKey
                             unlove apiKey sessionKey
+                            updateNowPlaying apiKey sessionKey
