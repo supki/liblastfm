@@ -141,6 +141,12 @@ unlove apiKey sessionKey = do response <- Track.unlove (Artist "Gojira") (Track 
                                 Left e   -> print e
                                 Right () -> return ()
 
+scrobble :: APIKey -> SessionKey -> IO ()
+scrobble apiKey sessionKey = do response <- Track.scrobble (Timestamp 1328905590, Nothing, Artist "Gojira", Track "Ocean", Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing) apiKey sessionKey
+                                case response of
+                                  Left e   -> print e
+                                  Right () -> return ()
+
 updateNowPlaying :: APIKey -> SessionKey -> IO ()
 updateNowPlaying apiKey sessionKey = do response <- Track.updateNowPlaying (Artist "Gojira") (Track "Ocean") Nothing Nothing Nothing Nothing Nothing Nothing apiKey sessionKey
                                         case response of
@@ -164,6 +170,7 @@ auth apiKey sessionKey = do addTags apiKey sessionKey
                             ban apiKey sessionKey
                             love apiKey sessionKey
                             removeTag apiKey sessionKey
+                            scrobble apiKey sessionKey
                             share apiKey sessionKey
                             unban apiKey sessionKey
                             unlove apiKey sessionKey

@@ -75,6 +75,12 @@ removeTrack apiKey sessionKey = do response <- Library.removeTrack (Artist "Emin
                                      Left e   -> print e
                                      Right () -> return ()
 
+removeScrobble :: APIKey -> SessionKey -> IO ()
+removeScrobble apiKey sessionKey = do response <- Library.removeScrobble (Artist "Gojira") (Track "Ocean") (Timestamp 1328905590) apiKey sessionKey
+                                      case response of
+                                        Left e   -> print e
+                                        Right () -> return ()
+
 common :: IO ()
 common = do getAlbums
             getArtists
@@ -87,4 +93,4 @@ auth apiKey sessionKey = do addAlbum apiKey sessionKey
                             removeAlbum apiKey sessionKey
                             removeArtist apiKey sessionKey
                             removeTrack apiKey sessionKey
-                         -- removeScrobble (requires track.scrobble implemented)
+                            removeScrobble apiKey sessionKey
