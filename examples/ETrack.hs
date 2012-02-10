@@ -40,6 +40,33 @@ getCorrection = do response <- Track.getCorrection (Artist "Pink Ployd") (Track 
                    putStrLn ""
   where correction = getContent <=< lookupChild "name" <=< lookupChild "artist" <=< lookupChild "track" <=< lookupChild "correction" <=< lookupChild "corrections" <=< wrap
 
+getInfo :: IO ()
+getInfo = do response <- Track.getInfo (Left (Artist "Pink Floyd", Track "Brain Damage")) Nothing (Just $ User "aswalrus") apiKey
+             putStr "Replays count: "
+             case response of
+               Left e  -> print e
+               Right r -> print (replays r)
+             putStrLn ""
+  where replays = getContent <=< lookupChild "userplaycount" <=< lookupChild "track" <=< wrap
+
+getShouts :: IO ()
+getShouts = do response <- Track.getShouts (Left (Artist "Pink Floyd", Track "Comfortably Numb")) Nothing Nothing (Just $ Limit 7) apiKey
+               putStr "Last 7 shouts authors: "
+               case response of
+                 Left e  -> print e
+                 Right r -> print (authors r)
+               putStrLn ""
+  where authors = mapM (getContent <=< lookupChild "author") <=< lookupChildren "shout" <=< lookupChild "shouts" <=< wrap
+
+getSimilar :: IO ()
+getSimilar = do response <- Track.getSimilar (Left (Artist "Pink Floyd", Track "Comfortably Numb")) Nothing (Just $ Limit 4) apiKey
+                putStr "4 similar tracks: "
+                case response of
+                  Left e  -> print e
+                  Right r -> print (artists r)
+                putStrLn ""
+  where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "similartracks" <=< wrap
+
 getTags :: IO ()
 getTags = do response <- Track.getTags (Left (Artist "Jefferson Airplane", Track "White Rabbit")) Nothing (Left $ User "liblastfm") apiKey
              putStr "White Rabbit tags: "
@@ -60,7 +87,6 @@ getTagsAuth apiKey sessionKey = do response <- Track.getTags (Left (Artist "Jeff
 
 getTopFans :: IO ()
 getTopFans = do response <- Track.getTopFans (Left (Artist "Pink Floyd", Track "Comfortably Numb")) Nothing apiKey
-                print response
                 case response of
                   Left e  -> print e
                   Right r -> print (fans r)
@@ -109,6 +135,9 @@ unlove apiKey sessionKey = do response <- Track.unlove (Artist "Gojira") (Track 
 common :: IO ()
 common = do getBuylinks
             getCorrection
+            getInfo
+            getShouts
+            getSimilar
             getTags
             getTopFans
             getTopTags
