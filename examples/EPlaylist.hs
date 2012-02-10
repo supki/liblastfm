@@ -1,4 +1,4 @@
-module EPlaylist (start) where
+module EPlaylist (common, auth) where
 
 import Control.Monad ((<=<))
 
@@ -20,7 +20,9 @@ create apiKey sessionKey = do response <- Playlist.create (Just (Title "Awesome 
                                 Left e   -> print e
                                 Right () -> return ()
 
-start :: IO ()
-start = do (apiKey, sessionKey, secret) <- getConfig ".lastfm.conf"
-           withSecret secret $ do addTrack apiKey sessionKey
-                                  create apiKey sessionKey
+common :: IO ()
+common = return ()
+
+auth :: APIKey -> SessionKey -> IO ()
+auth apiKey sessionKey = do addTrack apiKey sessionKey
+                            create apiKey sessionKey

@@ -1,4 +1,4 @@
-module ETrack (start) where
+module ETrack (common, auth) where
 
 import Control.Monad ((<=<))
 
@@ -106,18 +106,19 @@ unlove apiKey sessionKey = do response <- Track.unlove (Artist "Gojira") (Track 
                                 Left e   -> print e
                                 Right () -> return ()
 
-start :: IO ()
-start = do getBuylinks
-           getCorrection
-           getTags
-           getTopFans
-           getTopTags
-           (apiKey, sessionKey, secret) <- getConfig ".lastfm.conf"
-           withSecret secret $ do addTags apiKey sessionKey
-                                  getTagsAuth apiKey sessionKey
-                                  ban apiKey sessionKey
-                                  love apiKey sessionKey
-                                  removeTag apiKey sessionKey
-                                  share apiKey sessionKey
-                                  unban apiKey sessionKey
-                                  unlove apiKey sessionKey
+common :: IO ()
+common = do getBuylinks
+            getCorrection
+            getTags
+            getTopFans
+            getTopTags
+
+auth :: APIKey -> SessionKey -> IO ()
+auth apiKey sessionKey = do addTags apiKey sessionKey
+                            getTagsAuth apiKey sessionKey
+                            ban apiKey sessionKey
+                            love apiKey sessionKey
+                            removeTag apiKey sessionKey
+                            share apiKey sessionKey
+                            unban apiKey sessionKey
+                            unlove apiKey sessionKey

@@ -1,4 +1,4 @@
-module ELibrary (start) where
+module ELibrary (common, auth) where
 
 import Control.Monad ((<=<))
 
@@ -75,15 +75,16 @@ removeTrack apiKey sessionKey = do response <- Library.removeTrack (Artist "Emin
                                      Left e   -> print e
                                      Right () -> return ()
 
-start :: IO ()
-start = do getAlbums
-           getArtists
-           getTracks
-           (apiKey, sessionKey, secret) <- getConfig ".lastfm.conf"
-           withSecret secret $ do addAlbum apiKey sessionKey
-                                  addArtist apiKey sessionKey
-                                  addTrack apiKey sessionKey
-                                  removeAlbum apiKey sessionKey
-                                  removeArtist apiKey sessionKey
-                                  removeTrack apiKey sessionKey
-           -- removeScrobble (requires track.scrobble implemented)
+common :: IO ()
+common = do getAlbums
+            getArtists
+            getTracks
+
+auth :: APIKey -> SessionKey -> IO ()
+auth apiKey sessionKey = do addAlbum apiKey sessionKey
+                            addArtist apiKey sessionKey
+                            addTrack apiKey sessionKey
+                            removeAlbum apiKey sessionKey
+                            removeArtist apiKey sessionKey
+                            removeTrack apiKey sessionKey
+                         -- removeScrobble (requires track.scrobble implemented)

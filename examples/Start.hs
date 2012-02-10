@@ -1,6 +1,9 @@
 #!/usr/bin/env runhaskell
 
+import Control.Applicative ((<$>))
 import Control.Monad (filterM)
+import Data.Char (isSpace)
+import Data.List.Split (splitOn)
 import System (getArgs, exitWith, ExitCode(..))
 import System.Console.GetOpt (getOpt, usageInfo, ArgOrder (Permute), OptDescr (Option), ArgDescr (NoArg))
 import System.IO (hPutStrLn, stderr)
@@ -20,6 +23,9 @@ import qualified ETasteometer as Tasteometer
 import qualified ETrack as Track
 import qualified EUser as User
 import qualified EVenue as Venue
+
+import Network.Lastfm.Response (withSecret)
+import Network.Lastfm.Types (APIKey(..), SessionKey(..))
 
 data Flag
        = Help
@@ -75,21 +81,44 @@ parseArgs argv = case getOpt Permute options argv of
 
     header = "Usage: ./start [MODULE|--all]"
 
-start :: Flag -> IO ()
-start Album = Album.start
-start Artist = Artist.start
-start Chart = Chart.start
-start Event = Event.start
-start Geo = Geo.start
-start Group = Group.start
-start Library = Library.start
-start Playlist = Playlist.start
-start Radio = Radio.start
-start Tag = Tag.start
-start Tasteometer = Tasteometer.start
-start Track = Track.start
-start User = User.start
-start Venue = Venue.start
+getConfig :: FilePath -> IO (APIKey, SessionKey, String)
+getConfig fp = do [apiKey, sessionKey, secret] <- map ((!! 1) . splitOn "=" . filter (not . isSpace)) . lines <$> readFile fp
+                  return (APIKey apiKey, SessionKey sessionKey, secret)
+
+common :: Flag -> IO ()
+common Album = Album.common
+common Artist = Artist.common
+common Chart = Chart.common
+common Event = Event.common
+common Geo = Geo.common
+common Group = Group.common
+common Library = Library.common
+common Playlist = Playlist.common
+common Radio = Radio.common
+common Tag = Tag.common
+common Tasteometer = Tasteometer.common
+common Track = Track.common
+common User = User.common
+common Venue = Venue.common
+
+auth :: Flag -> APIKey -> SessionKey -> IO ()
+auth Album = Album.auth
+auth Artist = Artist.auth
+auth Chart = Chart.auth
+auth Event = Event.auth
+auth Geo = Geo.auth
+auth Group = Group.auth
+auth Library = Library.auth
+auth Playlist = Playlist.auth
+auth Radio = Radio.auth
+auth Tag = Tag.auth
+auth Tasteometer = Tasteometer.auth
+auth Track = Track.auth
+auth User = User.auth
+auth Venue = Venue.auth
 
 main :: IO ()
-main = getArgs >>= parseArgs >>= mapM_ start
+main = do args <- getArgs
+          modules <- parseArgs args
+          (a, sk, s) <- getConfig ".lastfm.conf"
+          mapM_ (\m -> common m >> withSecret s (auth m a sk)) modules

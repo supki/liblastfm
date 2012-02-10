@@ -1,4 +1,4 @@
-module EChart (start) where
+module EChart (common, auth) where
 
 import Control.Monad ((<=<))
 
@@ -64,10 +64,13 @@ getTopTracks = do response <- Chart.getTopTracks Nothing (Just (Limit 7)) apiKey
                   putStrLn ""
   where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "tracks" <=< wrap
 
-start :: IO ()
-start = do getHypedArtists
-           getHypedTracks
-           getLovedTracks
-           getTopArtists
-           getTopTags
-           getTopTracks
+common :: IO ()
+common = do getHypedArtists
+            getHypedTracks
+            getLovedTracks
+            getTopArtists
+            getTopTags
+            getTopTracks
+
+auth :: APIKey -> SessionKey -> IO ()
+auth _ _ = return ()

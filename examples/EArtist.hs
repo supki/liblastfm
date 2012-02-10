@@ -1,4 +1,4 @@
-module EArtist (start) where
+module EArtist (common, auth) where
 
 import Control.Monad ((<=<))
 
@@ -163,24 +163,25 @@ share apiKey sessionKey = do response <- Artist.share (Artist "Sleep") [Recipien
                                Left e  -> print e
                                Right () -> return ()
 
-start :: IO ()
-start = do getCorrection
-           getEvents
-           getImages
-           getInfo
-           getPastEvents
-           getPodcast
-           getShouts
-           getSimilar
-           getTags
-           getTopAlbums
-           getTopFans
-           getTopTags
-           getTopTracks
-           search
-           (apiKey, sessionKey, secret) <- getConfig ".lastfm.conf"
-           withSecret secret $ do addTags apiKey sessionKey
-                                  getTagsAuth apiKey sessionKey
-                                  removeTag apiKey sessionKey
-                                  share apiKey sessionKey
-                               -- shout (see User.shout example)
+common :: IO ()
+common = do getCorrection
+            getEvents
+            getImages
+            getInfo
+            getPastEvents
+            getPodcast
+            getShouts
+            getSimilar
+            getTags
+            getTopAlbums
+            getTopFans
+            getTopTags
+            getTopTracks
+            search
+
+auth :: APIKey -> SessionKey -> IO ()
+auth apiKey sessionKey = do addTags apiKey sessionKey
+                            getTagsAuth apiKey sessionKey
+                            removeTag apiKey sessionKey
+                            share apiKey sessionKey
+                            -- shout (see User.shout example)

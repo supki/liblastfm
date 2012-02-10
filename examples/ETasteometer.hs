@@ -1,4 +1,4 @@
-module ETasteometer (start) where
+module ETasteometer (common, auth) where
 
 import Control.Monad ((<=<))
 import Prelude hiding (compare)
@@ -18,5 +18,8 @@ compare = do response <- Tasteometer.compare (ValueUser $ User "smpcln") (ValueU
              putStrLn ""
   where score = getContent <=< lookupChild "score" <=< lookupChild "result" <=< lookupChild "comparison" <=< wrap
 
-start :: IO ()
-start = compare
+common :: IO ()
+common = compare
+
+auth :: APIKey -> SessionKey -> IO ()
+auth _ _ = return ()

@@ -1,4 +1,4 @@
-module ETag (start) where
+module ETag (common, auth) where
 
 import Control.Monad ((<=<))
 
@@ -90,13 +90,16 @@ search = do response <- Tag.search (Tag "depressive") Nothing (Just $ Limit 10) 
             putStrLn ""
   where search' = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "tagmatches" <=< lookupChild "results" <=< wrap
 
-start :: IO ()
-start = do getInfo
-           getSimilar
-           getTopAlbums
-           getTopArtists
-           getTopTags -- should be fixed
-           getTopTracks
-           getWeeklyArtistChart -- should be fixed
-           getWeeklyChartList
-           search
+common :: IO ()
+common = do getInfo
+            getSimilar
+            getTopAlbums
+            getTopArtists
+            getTopTags -- should be fixed
+            getTopTracks
+            getWeeklyArtistChart -- should be fixed
+            getWeeklyChartList
+            search
+
+auth :: APIKey -> SessionKey -> IO ()
+auth _ _ = return ()

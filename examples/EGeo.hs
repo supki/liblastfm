@@ -1,4 +1,4 @@
-module EGeo (start) where
+module EGeo (common, auth) where
 
 import Control.Arrow ((***), (&&&))
 import Control.Monad ((<=<), join)
@@ -110,15 +110,18 @@ getTopTracks = do response <- Geo.getTopTracks (Country "Ukraine") Nothing Nothi
                   putStrLn ""
   where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "toptracks" <=< wrap
 
-start :: IO ()
-start = do getEvents
-           getMetroArtistChart
-           getMetroHypeArtistChart
-           getMetroHypeTrackChart
-           getMetroTrackChart
-           getMetroUniqueArtistChart
-           getMetroUniqueTrackChart
-           getMetroWeeklyChartlist
-           getMetros
-           getTopArtists
-           getTopTracks
+common :: IO ()
+common = do getEvents
+            getMetroArtistChart
+            getMetroHypeArtistChart
+            getMetroHypeTrackChart
+            getMetroTrackChart
+            getMetroUniqueArtistChart
+            getMetroUniqueTrackChart
+            getMetroWeeklyChartlist
+            getMetros
+            getTopArtists
+            getTopTracks
+
+auth :: APIKey -> SessionKey -> IO ()
+auth _ _ = return ()

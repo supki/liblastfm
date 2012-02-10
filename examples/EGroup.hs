@@ -1,4 +1,4 @@
-module EGroup (start) where
+module EGroup (common, auth) where
 
 import Control.Arrow ((***), (&&&))
 import Control.Monad ((<=<), join)
@@ -66,10 +66,13 @@ getWeeklyTrackChart = do response <- Group.getWeeklyTrackChart group Nothing Not
                          putStrLn ""
   where urls = mapM (getContent <=< lookupChild "url") <=< lookupChildren "track" <=< lookupChild "weeklytrackchart" <=< wrap
 
-start :: IO ()
-start = do getHype
-           getMembers
-           getWeeklyAlbumChart
-           getWeeklyArtistChart
-           getWeeklyChartList
-           getWeeklyTrackChart
+common :: IO ()
+common = do getHype
+            getMembers
+            getWeeklyAlbumChart
+            getWeeklyArtistChart
+            getWeeklyChartList
+            getWeeklyTrackChart
+
+auth :: APIKey -> SessionKey -> IO ()
+auth _ _ = return ()

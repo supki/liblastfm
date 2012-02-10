@@ -1,4 +1,4 @@
-module ERadio (start) where
+module ERadio (common, auth) where
 
 import Control.Monad ((<=<))
 
@@ -10,6 +10,12 @@ import Kludges
 
 apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
 
+tune :: APIKey -> SessionKey -> IO ()
+tune = undefined
+
+getPlaylist :: APIKey -> SessionKey -> IO ()
+getPlaylist = undefined
+
 search :: IO ()
 search = do response <- Radio.search (Name "dubstep") apiKey
             putStr "Dubstep stations: "
@@ -19,7 +25,9 @@ search = do response <- Radio.search (Name "dubstep") apiKey
             putStrLn ""
   where stations = mapM (getContent <=< lookupChild "name") <=< lookupChildren "station" <=< lookupChild "stations" <=< wrap
 
-start :: IO ()
-start = do -- getPlaylist (requires authorization)
-           search
-           -- tune (requires authorization)
+common :: IO ()
+common = do search
+
+auth :: APIKey -> SessionKey -> IO ()
+auth apiKey sessionKey = do tune apiKey sessionKey
+                            getPlaylist apiKey sessionKey

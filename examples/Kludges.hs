@@ -28,8 +28,3 @@ getContent = Just . strContent . unwrap
 -- | Gets tag attribute content
 getAttribute :: String -> KludgeResponse -> Maybe String
 getAttribute tag = findAttr (unqual tag) . unwrap
-
--- | Read config
-getConfig :: FilePath -> IO (APIKey, SessionKey, String)
-getConfig fp = do [apiKey, sessionKey, secret] <- map ((!! 1) . splitOn "=" . filter (not . isSpace)) . lines <$> readFile fp
-                  return (APIKey apiKey, SessionKey sessionKey, secret)

@@ -1,4 +1,4 @@
-module EAlbum (start) where
+module EAlbum (common, auth) where
 
 import Control.Monad ((<=<))
 
@@ -91,15 +91,16 @@ share apiKey sessionKey = do response <- Album.share (Artist "Sleep") (Album "Je
                                Left e  -> print e
                                Right () -> return ()
 
-start :: IO ()
-start = do getBuylinks
-           getInfo
-           getShouts
-           getTopTags
-           search
-           getTags
-           (apiKey, sessionKey, secret) <- getConfig ".lastfm.conf"
-           withSecret secret $ do addTags apiKey sessionKey
-                                  getTagsAuth apiKey sessionKey
-                                  removeTag apiKey sessionKey
-                                  share apiKey sessionKey
+common :: IO ()
+common = do getBuylinks
+            getInfo
+            getShouts
+            getTopTags
+            search
+            getTags
+
+auth :: APIKey -> SessionKey -> IO ()
+auth apiKey sessionKey = do addTags apiKey sessionKey
+                            getTagsAuth apiKey sessionKey
+                            removeTag apiKey sessionKey
+                            share apiKey sessionKey

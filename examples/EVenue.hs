@@ -1,4 +1,4 @@
-module EVenue (start) where
+module EVenue (common, auth) where
 
 import Control.Monad ((<=<), liftM)
 
@@ -37,7 +37,10 @@ search = do response <- Venue.search (Name "Arena") Nothing Nothing Nothing apiK
             putStrLn ""
   where venues = mapM (getContent <=< lookupChild "id") <=< lookupChildren "venue" <=< lookupChild "venuematches" <=< lookupChild "results" <=< wrap
 
-start :: IO ()
-start = do getEvents
-           getPastEvents
-           search 
+common :: IO ()
+common = do getEvents
+            getPastEvents
+            search
+
+auth :: APIKey -> SessionKey -> IO ()
+auth _ _ = return ()

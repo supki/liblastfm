@@ -1,4 +1,4 @@
-module EUser (start) where
+module EUser (common, auth) where
 
 import Control.Monad ((<=<))
 
@@ -231,31 +231,32 @@ shout apiKey sessionKey = do response <- User.shout (User "liblastfm") (Message 
                                Left e   -> print e
                                Right () -> return ()
 
-start :: IO ()
-start = do getArtistTracks
-           getBannedTracks
-           getEvents
-           getFriends
-           getPlayCount
-           getLovedTracks
-           getNeighbours
-           getNewReleases
-           getPastEvents
-           getPersonalTags
-           getPlaylists
-           getRecentTracks
-           getShouts
-           getTopAlbums
-           getTopArtists
-           getTopTags
-           getTopTracks
-           getWeeklyAlbumChart
-           getWeeklyArtistChart
-           getWeeklyChartList
-           getWeeklyTrackChart
-           (apiKey, sessionKey, secret) <- getConfig ".lastfm.conf"
-           withSecret secret $ do getRecentStations apiKey sessionKey
-                                  getRecommendedArtists apiKey sessionKey
-                                  getRecommendedEvents apiKey sessionKey
-                                  shout apiKey sessionKey
+common :: IO ()
+common = do getArtistTracks
+            getBannedTracks
+            getEvents
+            getFriends
+            getPlayCount
+            getLovedTracks
+            getNeighbours
+            getNewReleases
+            getPastEvents
+            getPersonalTags
+            getPlaylists
+            getRecentTracks
+            getShouts
+            getTopAlbums
+            getTopArtists
+            getTopTags
+            getTopTracks
+            getWeeklyAlbumChart
+            getWeeklyArtistChart
+            getWeeklyChartList
+            getWeeklyTrackChart
+
+auth :: APIKey -> SessionKey -> IO ()
+auth apiKey sessionKey = do getRecentStations apiKey sessionKey
+                            getRecommendedArtists apiKey sessionKey
+                            getRecommendedEvents apiKey sessionKey
+                            shout apiKey sessionKey
 

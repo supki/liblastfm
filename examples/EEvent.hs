@@ -1,4 +1,4 @@
-module EEvent (start) where
+module EEvent (common, auth) where
 
 import Control.Monad ((<=<))
 import Data.Maybe (fromMaybe)
@@ -51,11 +51,12 @@ share apiKey sessionKey = do response <- Event.share event [Recipient "liblastfm
                                Left e  -> print e
                                Right () -> return ()
 
-start :: IO ()
-start = do getAttendees
-           getInfo
-           getShouts
-           (apiKey, sessionKey, secret) <- getConfig ".lastfm.conf"
-           withSecret secret $ do attend apiKey sessionKey
-                                  share apiKey sessionKey
-                               -- shout (see User.shout example)
+common :: IO ()
+common = do getAttendees
+            getInfo
+            getShouts
+
+auth :: APIKey -> SessionKey -> IO ()
+auth apiKey sessionKey = do attend apiKey sessionKey
+                            share apiKey sessionKey
+                         -- shout (see User.shout example)
