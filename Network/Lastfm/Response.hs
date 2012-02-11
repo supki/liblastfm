@@ -86,8 +86,8 @@ instance Show APIError where
 
 -- Various Lastfm errors.
 data LastfmError
-  = LastfmAPIError APIError
-  | WrapperCallError Method Message
+  = LastfmAPIError APIError -- ^ Internal Lastfm errors
+  | WrapperCallError Method Message -- ^ Wrapper errors
     deriving (Show, Typeable)
 
 instance Exception LastfmError
