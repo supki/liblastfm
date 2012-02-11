@@ -7,8 +7,9 @@ module Network.Lastfm.Response
   , callAPI
   ) where
 
-import Codec.Binary.UTF8.String (decodeString)
+import Codec.Binary.UTF8.String (encodeString)
 import Control.Applicative ((<$>))
+import Control.Arrow (second)
 import Control.Exception (Exception, handle, throw)
 import Control.Monad ((<=<), liftM)
 import Data.Digest.Pure.MD5 (md5)
@@ -121,14 +122,14 @@ dispatch f = handle (\(e :: LastfmError) -> return (Left e)) (liftM Right f)
 callAPI :: Method -> [(Key, Value)] -> IO Response
 callAPI m xs = withCurlDo $ do
                  s <- readIORef secret
-                 let ys = ("method", m) : filter (not . null . snd) xs
+                 let ys = ("method", m) : (map (second encodeString) . filter (not . null . snd) $ xs)
                  let zs = if not $ null s then ("api_sig", sign s ys) : ys else ys
-                 response <- decodeString . respBody <$> (curlGetResponse_ url
-                                                           [ CurlPostFields . map (export . urlEncode) $ zs
-                                                           , CurlFailOnError False
-                                                           , CurlUserAgent "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0 Iceweasel/10.0"
-                                                           ]
-                                                           :: IO CurlResponse)
+                 response <- respBody <$> (curlGetResponse_ url
+                                            [ CurlPostFields . map (export . urlEncode) $ zs
+                                            , CurlFailOnError False
+                                            , CurlUserAgent "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0 Iceweasel/10.0"
+                                            ]
+                                            :: IO CurlResponse)
                  case isError response of
                    Just n  -> throw $ LastfmAPIError (toEnum $ n - 1)
                    Nothing -> return response

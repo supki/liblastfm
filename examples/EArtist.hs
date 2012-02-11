@@ -11,7 +11,7 @@ import Kludges
 apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
 
 addTags :: APIKey -> SessionKey -> IO ()
-addTags apiKey sessionKey = do response <- Artist.addTags (Artist "Burzum") [Tag "black metal", Tag "depressive"] apiKey sessionKey
+addTags apiKey sessionKey = do response <- Artist.addTags (Artist "Егор Летов") [Tag "russian"] apiKey sessionKey
                                case response of
                                  Left e   -> print e
                                  Right () -> return ()
