@@ -91,7 +91,10 @@ callAPI m xs = withCurlDo $ do
                  let ys = ("method", m) : filter (not . null . snd) xs
                  let zs = if not $ null s then ("api_sig", sign s ys) : ys else ys
                  response <- decodeString . respBody <$> (curlGetResponse_ url
-                                                           [ CurlPostFields . map (export . urlEncode) $ zs, CurlFailOnError False ]
+                                                           [ CurlPostFields . map (export . urlEncode) $ zs
+                                                           , CurlFailOnError False
+                                                           , CurlUserAgent "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0 Iceweasel/10.0"
+                                                           ]
                                                            :: IO CurlResponse)
                  case isError response of
                    Just n  -> throw $ LastfmAPIError (toEnum $ n - 1)
