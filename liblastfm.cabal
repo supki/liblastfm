@@ -21,5 +21,5 @@ source-repository head
 
 source-repository this
   type:     git
-  location: https://github.com/supki/haskell-libnotify
+  location: https://github.com/supki/haskell-liblastfm
   tag:      v0.0.1.0
