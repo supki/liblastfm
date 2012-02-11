@@ -17,8 +17,8 @@ import Network.Lastfm.Types ( (?<), APIKey, Bitrate, BuyLinks, Discovery, Langua
 getPlaylist :: Maybe Discovery
             -> Maybe RTP
             -> Maybe BuyLinks
-            -> Maybe Multiplier
-            -> Maybe Bitrate
+            -> Multiplier
+            -> Bitrate
             -> APIKey
             -> SessionKey
             -> Lastfm Response
@@ -49,7 +49,7 @@ search name apiKey = dispatch $ callAPI "radio.search"
 -- | Tune in to a Last.fm radio station.
 --
 -- More: <http://www.lastfm.ru/api/show/radio.tune>
-tune :: Language -> Station -> APIKey -> SessionKey -> Lastfm Response
+tune :: Maybe Language -> Station -> APIKey -> SessionKey -> Lastfm Response
 tune language station apiKey sessionKey = dispatch $ callAPI "radio.tune"
   [ "lang" ?< language
   , "station" ?< station
