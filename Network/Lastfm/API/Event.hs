@@ -1,3 +1,5 @@
+-- | Event API module
+{-# OPTIONS_HADDOCK prune #-}
 module Network.Lastfm.API.Event
   ( attend, getAttendees, getInfo, getShouts, share, shout
   ) where
@@ -10,6 +12,9 @@ import Network.Lastfm.Types ( (?<), APIKey, Event, Limit, Message, Page
                             , Public, Recipient, SessionKey, Status
                             )
 
+-- | Set a user's attendance status for an event.
+--
+-- More: <http://www.lastfm.ru/api/show/event.attend>
 attend :: Event -> Status -> APIKey -> SessionKey -> Lastfm ()
 attend event status apiKey sessionKey = dispatch $ void $ callAPI "event.attend"
   [ "event" ?< event
@@ -18,6 +23,9 @@ attend event status apiKey sessionKey = dispatch $ void $ callAPI "event.attend"
   , "sk" ?< sessionKey
   ]
 
+-- | Get a list of attendees for an event.
+--
+-- More: <http://www.lastfm.ru/api/show/event.getAttendees>
 getAttendees :: Event -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getAttendees event page limit apiKey = dispatch $ callAPI "event.getAttendees"
   [ "event" ?< event
@@ -26,12 +34,18 @@ getAttendees event page limit apiKey = dispatch $ callAPI "event.getAttendees"
   , "api_key" ?< apiKey
   ]
 
+-- | Get the metadata for an event on Last.fm. Includes attendance and lineup information.
+--
+-- More: <http://www.lastfm.ru/api/show/event.getInfo>
 getInfo :: Event -> APIKey -> Lastfm Response
 getInfo event apiKey = dispatch $ callAPI "event.getInfo"
   [ "event" ?< event
   , "api_key" ?< apiKey
   ]
 
+-- | Get shouts for this event.
+--
+-- More: <http://www.lastfm.ru/api/show/event.getShouts>
 getShouts :: Event -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getShouts event page limit apiKey = dispatch $ callAPI "event.getShouts"
   [ "event" ?< event
@@ -40,6 +54,9 @@ getShouts event page limit apiKey = dispatch $ callAPI "event.getShouts"
   , "api_key" ?< apiKey
   ]
 
+-- | Share an event with one or more Last.fm users or other friends.
+--
+-- More: <http://www.lastfm.ru/api/show/event.share>
 share :: Event -> [Recipient] -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Lastfm ()
 share event recipients message public apiKey sessionKey = dispatch go
   where go
@@ -55,6 +72,9 @@ share event recipients message public apiKey sessionKey = dispatch go
             ]
             where method = "event.share"
 
+-- | Shout in this event's shoutbox.
+--
+-- More: <http://www.lastfm.ru/api/show/event.shout>
 shout :: Event -> Message -> APIKey -> SessionKey -> Lastfm ()
 shout event message apiKey sessionKey = dispatch $ void $ callAPI "event.shout"
   [ "event" ?< event
