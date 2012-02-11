@@ -1,4 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables, DeriveDataTypeable #-}
+-- | Response module
+{-# OPTIONS_HADDOCK prune #-}
 module Network.Lastfm.Response
   ( Lastfm, Response, LastfmError(..), dispatch
   , withSecret
@@ -59,10 +61,12 @@ data LastfmError
 
 instance Exception LastfmError
 
+-- | Low level function. Captures all exceptions and transform them into Either Error type.
 dispatch :: IO a -> Lastfm a
 dispatch f = handle (\(e :: LastfmError) -> return (Left e)) (liftM Right f)
 
-type Lastfm a = IO (Either LastfmError a)
+type Lastfm a = IO (Either LastfmError a) -- ^ Simply type synonym for Lastfm response or error.
+type Response = String -- ^ Simply type synonym for Lastfm response
 type Key = String
 type Value = String
 type Secret = String
@@ -70,24 +74,27 @@ type Sign = String
 type Method = String
 type Message = String
 
-type Response = String
-
 secret :: IORef Secret
 secret = unsafePerformIO $ newIORef ""
 
+-- | All authentication requiring functions should be wrapped into 'withSecret'
 withSecret :: Secret -> IO a -> IO a
 withSecret s f = writeIORef secret s >> f
 
 url :: String
 url = "http://ws.audioscrobbler.com/2.0/?"
 
+-- | Low level function. Sends POST query to Lastfm API.
 callAPI :: Method -> [(Key, Value)] -> IO Response
 callAPI m xs = withCurlDo $ do
                  s <- readIORef secret
                  let ys = ("method", m) : filter (not . null . snd) xs
                  let zs = if not $ null s then ("api_sig", sign s ys) : ys else ys
                  response <- decodeString . respBody <$> (curlGetResponse_ url
-                                                           [ CurlPostFields . map (export . urlEncode) $ zs, CurlFailOnError False ]
+                                                           [ CurlPostFields . map (export . urlEncode) $ zs
+                                                           , CurlFailOnError False
+                                                           , CurlUserAgent "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0 Iceweasel/10.0"
+                                                           ]
                                                            :: IO CurlResponse)
                  case isError response of
                    Just n  -> throw $ LastfmAPIError (toEnum $ n - 1)
