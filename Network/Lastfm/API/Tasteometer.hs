@@ -1,3 +1,5 @@
+-- | Tasteometer API module
+{-# OPTIONS_HADDOCK prune #-}
 module Network.Lastfm.API.Tasteometer
   ( compare
   ) where
@@ -8,6 +10,9 @@ import Prelude hiding (compare)
 import Network.Lastfm.Response
 import Network.Lastfm.Types ((?<), APIKey, Limit, Value(..))
 
+-- | Get a Tasteometer score from two inputs, along with a list of shared artists. If the input is a User some additional information is returned.
+--
+-- More: <http://www.lastfm.ru/api/show/tasteometer.compare>
 compare :: Value -> Value -> Maybe Limit -> APIKey -> Lastfm Response
 compare value1 value2 limit apiKey = dispatch go
   where go
@@ -35,5 +40,3 @@ compare value1 value2 limit apiKey = dispatch go
                   isExceededMaximum :: Value -> Bool
                   isExceededMaximum (ValueUser _) = False
                   isExceededMaximum (ValueArtists as) = length as > 100
-
-{- `compareGroup' method is deprecated -}
