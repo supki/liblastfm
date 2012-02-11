@@ -1,3 +1,5 @@
+-- | Radio API module
+{-# OPTIONS_HADDOCK prune #-}
 module Network.Lastfm.API.Radio
   ( getPlaylist, search, tune
   ) where
@@ -9,6 +11,9 @@ import Network.Lastfm.Types ( (?<), APIKey, Bitrate, BuyLinks, Discovery, Langua
                             , Multiplier, Name, RTP, Station, SessionKey, unpack
                             )
 
+-- | Fetch new radio content periodically in an XSPF format.
+--
+-- More: <http://www.lastfm.ru/api/show/radio.getPlaylist>
 getPlaylist :: Maybe Discovery
             -> Maybe RTP
             -> Maybe BuyLinks
@@ -32,12 +37,18 @@ getPlaylist discovery rtp buylinks multiplier bitrate apiKey sessionKey = dispat
             ]
             where method = "radio.getPlaylist"
 
+-- | Resolve the name of a resource into a station depending on which resource it is most likely to represent.
+--
+-- More: <http://www.lastfm.ru/api/show/radio.search>
 search :: Name -> APIKey -> Lastfm Response
 search name apiKey = dispatch $ callAPI "radio.search"
   [ "name" ?< name
   , "api_key" ?< apiKey
   ]
 
+-- | Tune in to a Last.fm radio station.
+--
+-- More: <http://www.lastfm.ru/api/show/radio.tune>
 tune :: Language -> Station -> APIKey -> SessionKey -> Lastfm Response
 tune language station apiKey sessionKey = dispatch $ callAPI "radio.tune"
   [ "lang" ?< language
