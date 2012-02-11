@@ -40,6 +40,16 @@ getCorrection = do response <- Track.getCorrection (Artist "Pink Ployd") (Track 
                    putStrLn ""
   where correction = getContent <=< lookupChild "name" <=< lookupChild "artist" <=< lookupChild "track" <=< lookupChild "correction" <=< lookupChild "corrections" <=< wrap
 
+getFingerprintMetadata :: IO ()
+getFingerprintMetadata = do response <- Track.getFingerprintMetadata (Fingerprint 1234) apiKey
+                            putStr "Tracks: "
+                            case response of
+                              Left e  -> print e
+                              Right r -> print (tracks r)
+                            putStrLn ""
+  where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "tracks" <=< wrap
+
+
 getInfo :: IO ()
 getInfo = do response <- Track.getInfo (Left (Artist "Pink Floyd", Track "Brain Damage")) Nothing (Just $ User "aswalrus") apiKey
              putStr "Replays count: "
@@ -156,6 +166,7 @@ updateNowPlaying apiKey sessionKey = do response <- Track.updateNowPlaying (Arti
 common :: IO ()
 common = do getBuylinks
             getCorrection
+            getFingerprintMetadata
             getInfo
             getShouts
             getSimilar
