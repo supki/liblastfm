@@ -2,7 +2,7 @@
 module Network.Lastfm.Response
   ( Lastfm, Response, LastfmError(..), dispatch
   , withSecret
-  , callAPI, callAPI_
+  , callAPI
   ) where
 
 import Codec.Binary.UTF8.String (decodeString)
@@ -89,6 +89,7 @@ callAPI m xs = withCurlDo $ do
                  response <- decodeString . respBody <$> (curlGetResponse_ url
                                                            [ CurlPostFields . map (export . urlEncode) $ zs, CurlFailOnError False ]
                                                            :: IO CurlResponse)
+                 print response
                  case isError response of
                    Just n  -> throw $ LastfmAPIError (toEnum $ n - 1)
                    Nothing -> return response
@@ -100,6 +101,3 @@ callAPI m xs = withCurlDo $ do
         isError :: String -> Maybe Int
         isError response = do xml <- parseXMLDoc response
                               read <$> (findAttr (unqual "code") <=< findChild (unqual "error")) xml
-
-callAPI_ :: Method -> [(Key, Value)] -> IO ()
-callAPI_ m as = callAPI m as >> return ()

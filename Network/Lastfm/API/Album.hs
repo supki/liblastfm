@@ -4,6 +4,7 @@ module Network.Lastfm.API.Album
   ) where
 
 import Control.Exception (throw)
+import Control.Monad (void)
 
 import Network.Lastfm.Response
 import Network.Lastfm.Types ( (?<), Album, APIKey, Artist, Autocorrect, Country, Language, Limit
@@ -16,7 +17,7 @@ addTags (artist, album) tags apiKey sessionKey = dispatch go
   where go
           | null tags        = throw $ WrapperCallError method "empty tag list."
           | length tags > 10 = throw $ WrapperCallError method "tag list length has exceeded maximum."
-          | otherwise        = callAPI_ method
+          | otherwise        = void $ callAPI method
           [ "artist" ?< artist
           , "album" ?< album
           , "tags" ?< tags
@@ -96,7 +97,7 @@ getTopTags a autocorrect apiKey = dispatch $ callAPI method $ target ++
 -- | Remove a user's tag from an album.
 -- link: http://www.lastfm.ru/api/show/album.removeTag
 removeTag :: Artist -> Album -> Tag -> APIKey -> SessionKey -> Lastfm ()
-removeTag artist album tag apiKey sessionKey = dispatch $ callAPI_ "album.removeTag"
+removeTag artist album tag apiKey sessionKey = dispatch $ void $ callAPI "album.removeTag"
   [ "artist" ?< artist
   , "album" ?< album
   , "tag" ?< tag
@@ -121,7 +122,7 @@ share artist album recipients message public apiKey sessionKey = dispatch go
   where go
           | null recipients        = throw $ WrapperCallError method "empty recipient list."
           | length recipients > 10 = throw $ WrapperCallError method "recipient list length has exceeded maximum."
-          | otherwise              = callAPI_ method
+          | otherwise              = void $ callAPI method
             [ "artist" ?< artist
             , "album" ?< album
             , "public" ?< public

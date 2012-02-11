@@ -5,6 +5,7 @@ module Network.Lastfm.API.Artist
   ) where
 
 import Control.Exception (throw)
+import Control.Monad (void)
 
 import Network.Lastfm.Response
 import Network.Lastfm.Types ( (?<), APIKey, Artist, Autocorrect, FestivalsOnly, Language, Limit
@@ -16,7 +17,7 @@ addTags artist tags apiKey sessionKey = dispatch go
   where go
           | null tags        = throw $ WrapperCallError method "empty tag list."
           | length tags > 10 = throw $ WrapperCallError method "tag list length has exceeded maximum."
-          | otherwise        = callAPI_ method
+          | otherwise        = void $ callAPI method
             [ "artist" ?< artist
             , "tags" ?< tags
             , "api_key" ?< apiKey
@@ -171,7 +172,7 @@ getTopTracks a autocorrect page limit apiKey = dispatch $ callAPI method $ targe
                    Right mbid  -> ["mbid" ?< mbid]
 
 removeTag :: Artist -> Tag -> APIKey -> SessionKey -> Lastfm ()
-removeTag artist tag apiKey sessionKey = dispatch $ callAPI_ "artist.removeTag"
+removeTag artist tag apiKey sessionKey = dispatch $ void $ callAPI "artist.removeTag"
   [ "artist" ?< artist
   , "tag" ?< tag
   , "api_key" ?< apiKey
@@ -191,7 +192,7 @@ share artist recipients message public apiKey sessionKey = dispatch go
   where go
           | null recipients        = throw $ WrapperCallError method "empty recipient list."
           | length recipients > 10 = throw $ WrapperCallError method "recipient list length has exceeded maximum."
-          | otherwise              = callAPI_ method
+          | otherwise              = void $ callAPI method
             [ "artist" ?< artist
             , "recipient" ?< recipients
             , "api_key" ?< apiKey
@@ -202,7 +203,7 @@ share artist recipients message public apiKey sessionKey = dispatch go
             where method = "artist.share"
 
 shout :: Artist -> Message -> APIKey -> SessionKey -> Lastfm ()
-shout artist message apiKey sessionKey = dispatch $ callAPI_ "artist.shout"
+shout artist message apiKey sessionKey = dispatch $ void $ callAPI "artist.shout"
   [ "artist" ?< artist
   , "message" ?< message
   , "api_key" ?< apiKey

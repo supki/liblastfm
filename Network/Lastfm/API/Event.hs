@@ -3,6 +3,7 @@ module Network.Lastfm.API.Event
   ) where
 
 import Control.Exception (throw)
+import Control.Monad (void)
 
 import Network.Lastfm.Response
 import Network.Lastfm.Types ( (?<), APIKey, Event, Limit, Message, Page
@@ -10,7 +11,7 @@ import Network.Lastfm.Types ( (?<), APIKey, Event, Limit, Message, Page
                             )
 
 attend :: Event -> Status -> APIKey -> SessionKey -> Lastfm ()
-attend event status apiKey sessionKey = dispatch $ callAPI_ "event.attend"
+attend event status apiKey sessionKey = dispatch $ void $ callAPI "event.attend"
   [ "event" ?< event
   , "status" ?< status
   , "api_key" ?< apiKey
@@ -44,7 +45,7 @@ share event recipients message public apiKey sessionKey = dispatch go
   where go
           | null recipients        = throw $ WrapperCallError method "empty recipient list."
           | length recipients > 10 = throw $ WrapperCallError method "recipient list length has exceeded maximum."
-          | otherwise              = callAPI_ method
+          | otherwise              = void $ callAPI method
             [ "event" ?< event
             , "public" ?< public
             , "message" ?< message
@@ -55,7 +56,7 @@ share event recipients message public apiKey sessionKey = dispatch go
             where method = "event.share"
 
 shout :: Event -> Message -> APIKey -> SessionKey -> Lastfm ()
-shout event message apiKey sessionKey = dispatch $ callAPI_ "event.shout"
+shout event message apiKey sessionKey = dispatch $ void $ callAPI "event.shout"
   [ "event" ?< event
   , "message" ?< message
   , "api_key" ?< apiKey

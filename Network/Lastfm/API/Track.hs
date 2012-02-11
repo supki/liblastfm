@@ -5,6 +5,7 @@ module Network.Lastfm.API.Track
   ) where
 
 import Control.Exception (throw)
+import Control.Monad (void)
 
 import Network.Lastfm.Response
 import Network.Lastfm.Types ( (?<), Album, AlbumArtist, APIKey, Artist, Autocorrect, ChosenByUser, Context, Country
@@ -17,7 +18,7 @@ addTags artist track tags apiKey sessionKey = dispatch go
   where go
           | null tags        = throw $ WrapperCallError method "empty tag list."
           | length tags > 10 = throw $ WrapperCallError method "tag list length has exceeded maximum."
-          | otherwise        = callAPI_ method
+          | otherwise        = void $ callAPI method
             [ "artist" ?< artist
             , "track" ?< track
             , "tags" ?< tags
@@ -27,7 +28,7 @@ addTags artist track tags apiKey sessionKey = dispatch go
             where method = "track.addTags"
 
 ban :: Artist -> Track -> APIKey -> SessionKey -> Lastfm ()
-ban artist track apiKey sessionKey = dispatch $ callAPI_ "track.ban"
+ban artist track apiKey sessionKey = dispatch $ void $ callAPI "track.ban"
   [ "artist" ?< artist
   , "track" ?< track
   , "api_key" ?< apiKey
@@ -127,7 +128,7 @@ getTopTags a autocorrect apiKey = dispatch $ callAPI method $ target ++
                    Right mbid           -> ["mbid" ?< mbid]
 
 love :: Artist -> Track -> APIKey -> SessionKey -> Lastfm ()
-love artist track apiKey sessionKey = dispatch $ callAPI_ "track.love"
+love artist track apiKey sessionKey = dispatch $ void $ callAPI "track.love"
   [ "artist" ?< artist
   , "track" ?< track
   , "api_key" ?< apiKey
@@ -135,7 +136,7 @@ love artist track apiKey sessionKey = dispatch $ callAPI_ "track.love"
   ]
 
 removeTag :: Artist -> Track -> Tag -> APIKey -> SessionKey -> Lastfm ()
-removeTag artist track tag apiKey sessionKey = dispatch $ callAPI_ "track.removeTag"
+removeTag artist track tag apiKey sessionKey = dispatch $ void $ callAPI "track.removeTag"
   [ "artist" ?< artist
   , "track" ?< track
   , "tag" ?< tag
@@ -149,7 +150,7 @@ scrobble :: ( Timestamp, Maybe Album, Artist, Track, Maybe AlbumArtist
          -> APIKey
          -> SessionKey
          -> Lastfm ()
-scrobble (timestamp, album, artist, track, albumArtist, duration, streamId, chosenByUser, context, trackNumber, mbid) apiKey sessionKey = dispatch $ callAPI_ "track.scrobble"
+scrobble (timestamp, album, artist, track, albumArtist, duration, streamId, chosenByUser, context, trackNumber, mbid) apiKey sessionKey = dispatch $ void $ callAPI "track.scrobble"
   [ "timestamp" ?< timestamp
   , "artist" ?< artist
   , "track" ?< track
@@ -179,7 +180,7 @@ share artist track recipients message public apiKey sessionKey = dispatch go
   where go
           | null recipients        = throw $ WrapperCallError method "empty recipient list."
           | length recipients > 10 = throw $ WrapperCallError method "recipient list length has exceeded maximum."
-          | otherwise              = callAPI_ method
+          | otherwise              = void $ callAPI method
             [ "artist" ?< artist
             , "track" ?< track
             , "recipient" ?< recipients
@@ -191,7 +192,7 @@ share artist track recipients message public apiKey sessionKey = dispatch go
             where method = "track.share"
 
 unban :: Artist -> Track -> APIKey -> SessionKey -> Lastfm ()
-unban artist track apiKey sessionKey = dispatch $ callAPI_ "track.unban"
+unban artist track apiKey sessionKey = dispatch $ void $ callAPI "track.unban"
   [ "artist" ?< artist
   , "track" ?< track
   , "api_key" ?< apiKey
@@ -199,7 +200,7 @@ unban artist track apiKey sessionKey = dispatch $ callAPI_ "track.unban"
   ]
 
 unlove :: Artist -> Track -> APIKey -> SessionKey -> Lastfm ()
-unlove artist track apiKey sessionKey = dispatch $ callAPI_ "track.unlove"
+unlove artist track apiKey sessionKey = dispatch $ void $ callAPI "track.unlove"
   [ "artist" ?< artist
   , "track" ?< track
   , "api_key" ?< apiKey
@@ -217,7 +218,7 @@ updateNowPlaying :: Artist
                  -> APIKey
                  -> SessionKey
                  -> Lastfm ()
-updateNowPlaying artist track album albumArtist context trackNumber mbid duration apiKey sessionKey = dispatch $ callAPI_ "track.updateNowPlaying"
+updateNowPlaying artist track album albumArtist context trackNumber mbid duration apiKey sessionKey = dispatch $ void $ callAPI "track.updateNowPlaying"
   [ "artist" ?< artist
   , "track" ?< track
   , "api_key" ?< apiKey

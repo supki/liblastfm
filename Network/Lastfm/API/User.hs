@@ -6,6 +6,8 @@ module Network.Lastfm.API.User
   , getWeeklyChartList, getWeeklyTrackChart, shout
   ) where
 
+import Control.Monad (void)
+
 import Network.Lastfm.Response
 import Network.Lastfm.Types ( (?<), APIKey, Artist, FestivalsOnly, From, Limit, Message, Page
                             , Period, RecentTracks, SessionKey, Tag, TaggingType, To, User, UseRecs
@@ -216,7 +218,7 @@ getWeeklyTrackChart user from to apiKey = dispatch $ callAPI "user.getWeeklyTrac
   ]
 
 shout :: User -> Message -> APIKey -> SessionKey -> Lastfm ()
-shout user message apiKey sessionKey = dispatch $ callAPI_ "user.shout"
+shout user message apiKey sessionKey = dispatch $ void $ callAPI "user.shout"
   [ "user" ?< user
   , "message" ?< message
   , "api_key" ?< apiKey
