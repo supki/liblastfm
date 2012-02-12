@@ -13,6 +13,10 @@ newtype KludgeResponse = KludgeResponse {unwrap :: Element}
 wrap :: String -> Maybe KludgeResponse
 wrap = Just . KludgeResponse . (!! 1) . onlyElems . parseXML
 
+tag = lookupChild
+tags = lookupChildren
+content = getContent
+
 -- | Gets first tag's child with given name
 lookupChild :: String -> KludgeResponse -> Maybe KludgeResponse
 lookupChild tag = liftM KludgeResponse . findChild (unqual tag) . unwrap
