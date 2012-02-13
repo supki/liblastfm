@@ -1,7 +1,7 @@
 module EUser (common, auth) where
 
-import Control.Arrow ((|||))
-import Control.Monad ((<=<))
+import Control.Arrow ((|||), (&&&))
+import Control.Monad ((<=<), liftM2)
 
 import Network.Lastfm.Response
 import Network.Lastfm.Types
@@ -124,7 +124,9 @@ getWeeklyArtistChart = parse r f "Weekly artist chart"
 getWeeklyChartList :: IO ()
 getWeeklyChartList = parse r f "Weekly chart list"
   where r = User.getWeeklyChartList (User "rj") apiKey
-        f = fmap return . getAttribute "user" <=< tag "weeklychartlist"
+        f = mapM (printful . getFromToAttributes) <=< fmap (take 10) . tags "chart" <=< tag "weeklychartlist"
+        printful = uncurry $ liftM2 $ curry $ \(a,b) -> "(" ++ a ++ "," ++ b ++ ")"
+        getFromToAttributes = getAttribute "from" &&& getAttribute "to"
 
 getWeeklyTrackChart :: IO ()
 getWeeklyTrackChart = parse r f "Weekly track chart"
