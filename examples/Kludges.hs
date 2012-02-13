@@ -1,11 +1,13 @@
 module Kludges where
 
 import Control.Applicative ((<$>))
-import Control.Monad (liftM)
+import Control.Arrow ((|||))
+import Control.Monad (liftM, (<=<))
 import Data.Char (isSpace)
 import Data.List.Split (splitOn)
 import Text.XML.Light
 
+import Network.Lastfm.Response
 import Network.Lastfm.Types
 
 newtype KludgeResponse = KludgeResponse {unwrap :: Element}
@@ -32,3 +34,7 @@ getContent = Just . strContent . unwrap
 -- | Gets tag attribute content
 getAttribute :: String -> KludgeResponse -> Maybe String
 getAttribute tag = findAttr (unqual tag) . unwrap
+
+-- | ...
+parse :: Lastfm Response -> (KludgeResponse -> Maybe [String]) -> String -> IO ()
+parse r f m = (show ||| show . (f <=< wrap)) <$> r >>= \rs -> putStrLn $ m ++ ": " ++ rs ++ "\n"
