@@ -72,13 +72,13 @@ getMetroUniqueTrackChart = getMetroChart "geo.getMetroUniqueTrackChart"
 --
 -- More: <http://www.lastfm.ru/api/show/geo.getMetroWeeklyChartlist>
 getMetroWeeklyChartlist :: Metro -> APIKey -> Lastfm Response
-getMetroWeeklyChartlist metro apiKey = dispatch $ callAPI "geo.getMetroWeeklyChartlist" ["metro" ?< metro, "api_key" ?< apiKey]
+getMetroWeeklyChartlist metro apiKey = dispatch . callAPI "geo.getMetroWeeklyChartlist" $ ["metro" ?< metro, "api_key" ?< apiKey]
 
 -- | Get a list of valid countries and metros for use in the other webservices.
 --
 -- More: <http://www.lastfm.ru/api/show/geo.getMetros>
 getMetros :: Maybe Country -> APIKey -> Lastfm Response
-getMetros country apiKey = dispatch $ callAPI "geo.getMetros"
+getMetros country apiKey = dispatch . callAPI "geo.getMetros" $
   [ "country" ?< country
   , "api_key" ?< apiKey
   ]
@@ -87,7 +87,7 @@ getMetros country apiKey = dispatch $ callAPI "geo.getMetros"
 --
 -- More: <http://www.lastfm.ru/api/show/geo.getTopArtists>
 getTopArtists :: Country -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopArtists country page limit apiKey = dispatch $ callAPI "geo.getTopArtists"
+getTopArtists country page limit apiKey = dispatch . callAPI "geo.getTopArtists" $
   [ "country" ?< country
   , "page" ?< page
   , "limit" ?< limit
@@ -98,7 +98,7 @@ getTopArtists country page limit apiKey = dispatch $ callAPI "geo.getTopArtists"
 --
 -- More: <http://www.lastfm.ru/api/show/geo.getTopTracks>
 getTopTracks :: Country -> Maybe Location -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopTracks country location page limit apiKey = dispatch $ callAPI "geo.getTopTracks"
+getTopTracks country location page limit apiKey = dispatch . callAPI "geo.getTopTracks" $
   [ "country" ?< country
   , "location" ?< location
   , "page" ?< page
@@ -107,7 +107,7 @@ getTopTracks country location page limit apiKey = dispatch $ callAPI "geo.getTop
   ]
 
 getMetroChart :: String -> Country -> Metro -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
-getMetroChart method country metro from to apiKey = dispatch $ callAPI method
+getMetroChart method country metro from to apiKey = dispatch . callAPI method $
   [ "country" ?< country
   , "metro" ?< metro
   , "start" ?< from
