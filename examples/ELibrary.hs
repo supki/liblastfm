@@ -1,8 +1,8 @@
 module ELibrary (common, auth) where
 
+import Control.Arrow ((|||))
 import Control.Monad ((<=<))
 
-import Network.Lastfm.Response
 import Network.Lastfm.Types
 import qualified Network.Lastfm.API.Library as Library
 
@@ -12,74 +12,40 @@ apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
 user = User "smpcln"
 
 addAlbum :: APIKey -> SessionKey -> IO ()
-addAlbum apiKey sessionKey = do response <- Library.addAlbum (Artist "Franz Ferdinand") (Album "Franz Ferdinand") apiKey sessionKey
-                                case response of
-                                  Left e   -> print e
-                                  Right () -> return ()
+addAlbum ak sk = Library.addAlbum (Artist "Franz Ferdinand") (Album "Franz Ferdinand") ak sk >>= print ||| const (return ())
 
 addArtist :: APIKey -> SessionKey -> IO ()
-addArtist apiKey sessionKey = do response <- Library.addArtist (Artist "Mobthrow") apiKey sessionKey
-                                 case response of
-                                   Left e   -> print e
-                                   Right () -> return ()
+addArtist ak sk = Library.addArtist (Artist "Mobthrow") ak sk >>= print ||| const (return ())
 
 addTrack :: APIKey -> SessionKey -> IO ()
-addTrack apiKey sessionKey = do response <- Library.addTrack (Artist "Eminem") (Track "Kim") apiKey sessionKey
-                                case response of
-                                  Left e   -> print e
-                                  Right () -> return ()
+addTrack ak sk = Library.addTrack (Artist "Eminem") (Track "Kim") ak sk >>= print ||| const (return ())
 
 getAlbums :: IO ()
-getAlbums = do response <- Library.getAlbums user (Just $ Artist "Burzum") Nothing (Just $ Limit 5) apiKey
-               putStr "Top 5 popular Burzum albums: "
-               case response of
-                 Left e  -> print e
-                 Right r -> print $ albums r
-               putStrLn ""
-  where albums = mapM (getContent <=< lookupChild "name") <=< lookupChildren "album" <=< lookupChild "albums" <=< wrap
+getAlbums = parse r f "Top 5 popular Burzum albums"
+  where r = Library.getAlbums user (Just $ Artist "Burzum") Nothing (Just $ Limit 5) apiKey
+        f = mapM (content <=< tag "name") <=< tags "album" <=< tag "albums"
 
 getArtists :: IO ()
-getArtists = do response <- Library.getArtists user Nothing (Just $ Limit 7) apiKey
-                putStr "Top 7 popular artists playcounts: "
-                case response of
-                  Left e  -> print e
-                  Right r -> print $ playcounts r
-                putStrLn ""
-  where playcounts = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "artists" <=< wrap
+getArtists = parse r f "Top 7 popular artists playcounts"
+  where r = Library.getArtists user Nothing (Just $ Limit 7) apiKey
+        f = mapM (content <=< tag "name") <=< tags "artist" <=< tag "artists"
 
 getTracks :: IO ()
-getTracks = do response <- Library.getTracks user (Just $ Artist "Burzum") Nothing Nothing (Just $ Limit 4) apiKey
-               putStr "First 4 Burzum tracks: "
-               case response of
-                 Left e  -> print e
-                 Right r -> print $ tracks r
-               putStrLn ""
-  where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "tracks" <=< wrap
-
+getTracks = parse r f "First 4 Burzum tracks"
+  where r = Library.getTracks user (Just $ Artist "Burzum") Nothing Nothing (Just $ Limit 4) apiKey
+        f = mapM (content <=< tag "name") <=< tags "track" <=< tag "tracks"
 
 removeAlbum :: APIKey -> SessionKey -> IO ()
-removeAlbum apiKey sessionKey = do response <- Library.removeAlbum (Artist "Franz Ferdinand") (Album "Franz Ferdinand") apiKey sessionKey
-                                   case response of
-                                     Left e   -> print e
-                                     Right () -> return ()
+removeAlbum ak sk = Library.removeAlbum (Artist "Franz Ferdinand") (Album "Franz Ferdinand") ak sk >>= print ||| const (return ())
 
 removeArtist :: APIKey -> SessionKey -> IO ()
-removeArtist apiKey sessionKey = do response <- Library.removeArtist (Artist "Burzum") apiKey sessionKey
-                                    case response of
-                                      Left e   -> print e
-                                      Right () -> return ()
+removeArtist ak sk = Library.removeArtist (Artist "Burzum") ak sk >>= print ||| const (return ())
 
 removeTrack :: APIKey -> SessionKey -> IO ()
-removeTrack apiKey sessionKey = do response <- Library.removeTrack (Artist "Eminem") (Track "Kim") apiKey sessionKey
-                                   case response of
-                                     Left e   -> print e
-                                     Right () -> return ()
+removeTrack ak sk = Library.removeTrack (Artist "Eminem") (Track "Kim") ak sk >>= print ||| const (return ())
 
 removeScrobble :: APIKey -> SessionKey -> IO ()
-removeScrobble apiKey sessionKey = do response <- Library.removeScrobble (Artist "Gojira") (Track "Ocean") (Timestamp 1328905590) apiKey sessionKey
-                                      case response of
-                                        Left e   -> print e
-                                        Right () -> return ()
+removeScrobble ak sk = Library.removeScrobble (Artist "Gojira") (Track "Ocean") (Timestamp 1328905590) ak sk >>= print ||| const (return ())
 
 common :: IO ()
 common = do getAlbums
@@ -87,10 +53,10 @@ common = do getAlbums
             getTracks
 
 auth :: APIKey -> SessionKey -> IO ()
-auth apiKey sessionKey = do addAlbum apiKey sessionKey
-                            addArtist apiKey sessionKey
-                            addTrack apiKey sessionKey
-                            removeAlbum apiKey sessionKey
-                            removeArtist apiKey sessionKey
-                            removeTrack apiKey sessionKey
-                            removeScrobble apiKey sessionKey
+auth ak sk = do addAlbum ak sk
+                addArtist ak sk
+                addTrack ak sk
+                removeAlbum ak sk
+                removeArtist ak sk
+                removeTrack ak sk
+                removeScrobble ak sk

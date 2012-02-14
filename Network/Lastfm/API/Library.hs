@@ -14,7 +14,7 @@ import Network.Lastfm.Types ((?<), Album, APIKey, Artist, Limit, Page, SessionKe
 --
 -- More: <http://www.lastfm.ru/api/show/library.addAlbum>
 addAlbum :: Artist -> Album -> APIKey -> SessionKey -> Lastfm ()
-addAlbum artist album apiKey sessionKey = dispatch $ void $ callAPI "library.addAlbum"
+addAlbum artist album apiKey sessionKey = dispatch . void . callAPI "library.addAlbum" $
   [ "artist" ?< artist
   , "album" ?< album
   , "api_key" ?< apiKey
@@ -25,7 +25,7 @@ addAlbum artist album apiKey sessionKey = dispatch $ void $ callAPI "library.add
 --
 -- More: <http://www.lastfm.ru/api/show/library.addArtist>
 addArtist :: Artist -> APIKey -> SessionKey -> Lastfm ()
-addArtist artist apiKey sessionKey = dispatch $ void $ callAPI "library.addArtist"
+addArtist artist apiKey sessionKey = dispatch . void . callAPI "library.addArtist" $
   [ "artist" ?< artist
   , "api_key" ?< apiKey
   , "sk" ?< sessionKey
@@ -35,7 +35,7 @@ addArtist artist apiKey sessionKey = dispatch $ void $ callAPI "library.addArtis
 --
 -- More: <http://www.lastfm.ru/api/show/library.addTrack>
 addTrack :: Artist -> Track -> APIKey -> SessionKey -> Lastfm ()
-addTrack artist track apiKey sessionKey = dispatch $ void $ callAPI "library.addTrack"
+addTrack artist track apiKey sessionKey = dispatch . void . callAPI "library.addTrack" $
   [ "artist" ?< artist
   , "track" ?< track
   , "api_key" ?< apiKey
@@ -46,7 +46,7 @@ addTrack artist track apiKey sessionKey = dispatch $ void $ callAPI "library.add
 --
 -- More: <http://www.lastfm.ru/api/show/library.getAlbums>
 getAlbums :: User -> Maybe Artist -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getAlbums user artist page limit apiKey = dispatch $ callAPI "library.getAlbums"
+getAlbums user artist page limit apiKey = dispatch . callAPI "library.getAlbums" $
   [ "user" ?< user
   , "artist" ?< artist
   , "page" ?< page
@@ -58,7 +58,7 @@ getAlbums user artist page limit apiKey = dispatch $ callAPI "library.getAlbums"
 --
 -- More: <http://www.lastfm.ru/api/show/library.getArtists>
 getArtists :: User -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getArtists user page limit apiKey = dispatch $ callAPI "library.getArtists"
+getArtists user page limit apiKey = dispatch . callAPI "library.getArtists" $
   [ "user" ?< user
   , "page" ?< page
   , "limit" ?< limit
@@ -69,7 +69,7 @@ getArtists user page limit apiKey = dispatch $ callAPI "library.getArtists"
 --
 -- More: <http://www.lastfm.ru/api/show/library.getTracks>
 getTracks :: User -> Maybe Artist -> Maybe Album -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTracks user artist album page limit apiKey = dispatch $ callAPI "library.getTracks"
+getTracks user artist album page limit apiKey = dispatch . callAPI "library.getTracks" $
   [ "user" ?< user
   , "artist" ?< artist
   , "album" ?< album
@@ -82,7 +82,7 @@ getTracks user artist album page limit apiKey = dispatch $ callAPI "library.getT
 --
 -- More: <http://www.lastfm.ru/api/show/library.removeAlbum>
 removeAlbum :: Artist -> Album -> APIKey -> SessionKey -> Lastfm ()
-removeAlbum artist album apiKey sessionKey = dispatch $ void $ callAPI "library.removeAlbum"
+removeAlbum artist album apiKey sessionKey = dispatch . void . callAPI "library.removeAlbum" $
   [ "artist" ?< artist
   , "album" ?< album
   , "api_key" ?< apiKey
@@ -93,7 +93,7 @@ removeAlbum artist album apiKey sessionKey = dispatch $ void $ callAPI "library.
 --
 -- More: <http://www.lastfm.ru/api/show/library.removeArtist>
 removeArtist :: Artist -> APIKey -> SessionKey -> Lastfm ()
-removeArtist artist apiKey sessionKey = dispatch $ void $ callAPI "library.removeArtist"
+removeArtist artist apiKey sessionKey = dispatch . void . callAPI "library.removeArtist" $
   [ "artist" ?< artist
   , "api_key" ?< apiKey
   , "sk" ?< sessionKey
@@ -103,7 +103,7 @@ removeArtist artist apiKey sessionKey = dispatch $ void $ callAPI "library.remov
 --
 -- More: <http://www.lastfm.ru/api/show/library.removeScrobble>
 removeScrobble :: Artist -> Track -> Timestamp -> APIKey -> SessionKey -> Lastfm ()
-removeScrobble artist track timestamp apiKey sessionKey = dispatch $ void $ callAPI "library.removeScrobble"
+removeScrobble artist track timestamp apiKey sessionKey = dispatch . void . callAPI "library.removeScrobble" $
   [ "artist" ?< artist
   , "track" ?< track
   , "timestamp" ?< timestamp
@@ -115,7 +115,7 @@ removeScrobble artist track timestamp apiKey sessionKey = dispatch $ void $ call
 --
 -- More: <http://www.lastfm.ru/api/show/library.removeTrack>
 removeTrack :: Artist -> Track -> APIKey -> SessionKey -> Lastfm ()
-removeTrack artist track apiKey sessionKey = dispatch $ void $ callAPI "library.removeTrack"
+removeTrack artist track apiKey sessionKey = dispatch . void . callAPI "library.removeTrack" $
   [ "artist" ?< artist
   , "track" ?< track
   , "api_key" ?< apiKey
