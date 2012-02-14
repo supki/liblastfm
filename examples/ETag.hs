@@ -1,8 +1,8 @@
 module ETag (common, auth) where
 
-import Control.Monad ((<=<))
+import Control.Arrow ((&&&))
+import Control.Monad ((<=<), liftM2)
 
-import Network.Lastfm.Response ()
 import Network.Lastfm.Types
 import qualified Network.Lastfm.API.Tag as Tag
 
@@ -11,84 +11,51 @@ import Kludges
 apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
 
 getInfo :: IO ()
-getInfo = do response <- Tag.getInfo (Tag "depressive") Nothing apiKey
-             putStr "Info: "
-             case response of
-               Left e  -> print e
-               Right r -> print $ info r
-             putStrLn ""
-  where info = getContent <=< lookupChild "taggings" <=< lookupChild "tag" <=< wrap
+getInfo = parse r f "Info"
+  where r = Tag.getInfo (Tag "depressive") Nothing apiKey
+        f = fmap return . content <=< tag "taggings" <=< tag "tag"
 
 getSimilar :: IO ()
-getSimilar = do response <- Tag.getSimilar (Tag "depressive") apiKey
-                putStr "Similar: "
-                case response of
-                  Left e  -> print e
-                  Right r -> print $ similar r
-                putStrLn ""
-  where similar = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "similartags" <=< wrap
+getSimilar = parse r f "Similar"
+  where r = Tag.getSimilar (Tag "depressive") apiKey
+        f = mapM (content <=< tag "name") <=< tags "tag" <=< tag "similartags"
 
 getTopAlbums :: IO ()
-getTopAlbums = do response <- Tag.getTopAlbums (Tag "depressive") Nothing (Just $ Limit 10) apiKey
-                  putStr "Top albums: "
-                  case response of
-                    Left e  -> print e
-                    Right r -> print $ topAlbums r
-                  putStrLn ""
-  where topAlbums = mapM (getContent <=< lookupChild "url") <=< lookupChildren "album" <=< lookupChild "topalbums" <=< wrap
+getTopAlbums = parse r f "Top albums"
+  where r = Tag.getTopAlbums (Tag "depressive") Nothing (Just $ Limit 10) apiKey
+        f = mapM (content <=< tag "url") <=< tags "album" <=< tag "topalbums"
 
 getTopArtists :: IO ()
-getTopArtists = do response <- Tag.getTopArtists (Tag "depressive") Nothing (Just $ Limit 10) apiKey
-                   putStr "Top artists: "
-                   case response of
-                     Left e  -> print e
-                     Right r -> print $ topArtists r
-                   putStrLn ""
-  where topArtists = mapM (getContent <=< lookupChild "url") <=< lookupChildren "artist" <=< lookupChild "topartists" <=< wrap
+getTopArtists = parse r f "Top artists"
+  where r = Tag.getTopArtists (Tag "depressive") Nothing (Just $ Limit 10) apiKey
+        f = mapM (content <=< tag "url") <=< tags "artist" <=< tag "topartists"
 
 getTopTags :: IO ()
-getTopTags = do response <- Tag.getTopTags apiKey
-                putStr "Top tags: "
-                case response of
-                  Left e  -> print e
-                  Right r -> print $ topTags r
-                putStrLn ""
-  where topTags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "toptags" <=< wrap
+getTopTags = parse r f "Top tags"
+  where r = Tag.getTopTags apiKey
+        f = mapM (content <=< tag "name") <=< tags "tag" <=< tag "toptags"
 
 getTopTracks :: IO ()
-getTopTracks = do response <- Tag.getTopTracks (Tag "depressive") Nothing (Just $ Limit 10) apiKey
-                  putStr "Top tracks: "
-                  case response of
-                    Left e  -> print e
-                    Right r -> print $ topTracks r
-                  putStrLn ""
-  where topTracks = mapM (getContent <=< lookupChild "url") <=< lookupChildren "track" <=< lookupChild "toptracks" <=< wrap
+getTopTracks = parse r f "Top tracks"
+  where r = Tag.getTopTracks (Tag "depressive") Nothing (Just $ Limit 10) apiKey
+        f = mapM (content <=< tag "url") <=< tags "track" <=< tag "toptracks"
 
 getWeeklyArtistChart :: IO ()
-getWeeklyArtistChart = do response <- Tag.getWeeklyArtistChart (Tag "depressive") Nothing Nothing (Just $ Limit 10) apiKey
-                          putStr "Weekly artist chart: "
-                          case response of
-                            Left e  -> print e
-                            Right r -> print $ weeklyArtistChart r
-                          putStrLn ""
-  where weeklyArtistChart = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "weeklyartistchart" <=< wrap
+getWeeklyArtistChart = parse r f "Weekly artist chart"
+  where r = Tag.getWeeklyArtistChart (Tag "depressive") Nothing Nothing (Just $ Limit 10) apiKey
+        f = mapM (content <=< tag "name") <=< tags "artist" <=< tag "weeklyartistchart"
 
 getWeeklyChartList :: IO ()
-getWeeklyChartList = do response <- Tag.getWeeklyChartList (Tag "depressive") apiKey
-                        putStr "Weekly chart list: "
-                        case response of
-                          Left e  -> print e
-                          Right r -> print $ take 10 r
-                        putStrLn ""
+getWeeklyChartList = parse r f "Weekly chart list"
+  where r = Tag.getWeeklyChartList (Tag "depressive") apiKey
+        f = mapM (pretty . getFromToAttributes) <=< fmap (take 10) . tags "chart" <=< tag "weeklychartlist"
+        pretty = uncurry $ liftM2 $ \from to -> "(" ++ from ++ "," ++ to ++ ")"
+        getFromToAttributes = getAttribute "from" &&& getAttribute "to"
 
 search :: IO ()
-search = do response <- Tag.search (Tag "depressive") Nothing (Just $ Limit 10) apiKey
-            putStr "search: "
-            case response of
-              Left e  -> print e
-              Right r -> print $ search' r
-            putStrLn ""
-  where search' = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "tagmatches" <=< lookupChild "results" <=< wrap
+search = parse r f "Search"
+  where r = Tag.search (Tag "depressive") Nothing (Just $ Limit 10) apiKey
+        f = mapM (content <=< tag "name") <=< tags "tag" <=< tag "tagmatches" <=< tag "results"
 
 common :: IO ()
 common = do getInfo
@@ -97,7 +64,7 @@ common = do getInfo
             getTopArtists
             getTopTags -- should be fixed
             getTopTracks
-            getWeeklyArtistChart -- should be fixed
+            getWeeklyArtistChart
             getWeeklyChartList
             search
 
