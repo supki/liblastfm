@@ -124,8 +124,8 @@ getWeeklyArtistChart = parse r f "Weekly artist chart"
 getWeeklyChartList :: IO ()
 getWeeklyChartList = parse r f "Weekly chart list"
   where r = User.getWeeklyChartList (User "rj") apiKey
-        f = mapM (printful . getFromToAttributes) <=< fmap (take 10) . tags "chart" <=< tag "weeklychartlist"
-        printful = uncurry $ liftM2 $ curry $ \(a,b) -> "(" ++ a ++ "," ++ b ++ ")"
+        f = mapM (pretty . getFromToAttributes) <=< fmap (take 10) . tags "chart" <=< tag "weeklychartlist"
+        pretty = uncurry $ liftM2 $ \from to -> "(" ++ from ++ "," ++ to ++ ")"
         getFromToAttributes = getAttribute "from" &&& getAttribute "to"
 
 getWeeklyTrackChart :: IO ()
