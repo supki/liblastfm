@@ -1,8 +1,8 @@
 module EArtist (common, auth) where
 
+import Control.Arrow ((|||))
 import Control.Monad ((<=<))
 
-import Network.Lastfm.Response
 import Network.Lastfm.Types
 import qualified Network.Lastfm.API.Artist as Artist
 
@@ -11,157 +11,88 @@ import Kludges
 apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
 
 addTags :: APIKey -> SessionKey -> IO ()
-addTags apiKey sessionKey = do response <- Artist.addTags (Artist "Егор Летов") [Tag "russian"] apiKey sessionKey
-                               case response of
-                                 Left e   -> print e
-                                 Right () -> return ()
+addTags ak sk = Artist.addTags (Artist "Егор Летов") [Tag "russian"] ak sk >>= print ||| const (return ())
 
 getCorrection :: IO ()
-getCorrection = do response <- Artist.getCorrection (Artist "Meshugah") apiKey
-                   putStr "Correction: "
-                   case response of
-                     Left e  -> print e
-                     Right r -> print (correction r)
-                   putStrLn ""
-  where correction = getContent <=< lookupChild "name" <=< lookupChild "artist" <=< lookupChild "correction" <=< lookupChild "corrections" <=< wrap
+getCorrection = parse r f "Correction"
+  where r = Artist.getCorrection (Artist "Meshugah") apiKey
+        f = fmap return . content <=< tag "name" <=< tag "artist" <=< tag "correction" <=< tag "corrections"
 
 getEvents :: IO ()
-getEvents = do response <- Artist.getEvents (Left $ Artist "Meshuggah") Nothing Nothing (Just $ Limit 3) Nothing apiKey
-               putStr "First event place: "
-               case response of
-                 Left e  -> print e
-                 Right r -> print (place r)
-               putStrLn ""
-  where place = getContent <=< lookupChild "name" <=< lookupChild "venue" <=< lookupChild "event" <=< lookupChild "events" <=< wrap
+getEvents = parse r f "First event place"
+  where r = Artist.getEvents (Left $ Artist "Meshuggah") Nothing Nothing (Just $ Limit 3) Nothing apiKey
+        f = fmap return . content <=< tag "name" <=< tag "venue" <=< tag "event" <=< tag "events"
 
 getImages :: IO ()
-getImages = do response <- Artist.getImages (Left $ Artist "Meshuggah") Nothing Nothing (Just $ Limit 3) Nothing apiKey
-               putStr "First three images links: "
-               case response of
-                 Left e  -> print e
-                 Right r -> print (links r)
-               putStrLn ""
-  where links = mapM (getContent <=< lookupChild "url") <=< lookupChildren "image" <=< lookupChild "images" <=< wrap
+getImages = parse r f "First 3 images links"
+  where r = Artist.getImages (Left $ Artist "Meshuggah") Nothing Nothing (Just $ Limit 3) Nothing apiKey
+        f = mapM (content <=< tag "url") <=< tags "image" <=< tag "images"
 
 getInfo :: IO ()
-getInfo = do response <- Artist.getInfo (Left $ Artist "Meshuggah") Nothing Nothing Nothing apiKey
-             putStr "Listeners count: "
-             case response of
-               Left e  -> print e
-               Right r -> print (listeners r)
-             putStrLn ""
-  where listeners = getContent <=< lookupChild "listeners" <=< lookupChild "stats" <=< lookupChild "artist" <=< wrap
+getInfo = parse r f "Listeners count"
+  where r = Artist.getInfo (Left $ Artist "Meshuggah") Nothing Nothing Nothing apiKey
+        f = fmap return . content <=< tag "listeners" <=< tag "stats" <=< tag "artist"
 
 getPastEvents :: IO ()
-getPastEvents = do response <- Artist.getPastEvents (Left $ Artist "Meshugah") (Just $ Autocorrect True) Nothing Nothing apiKey
-                   putStr "All event artists: "
-                   case response of
-                     Left e  -> print e
-                     Right r -> print (artists r)
-                   putStrLn ""
-  where artists = mapM getContent <=< lookupChildren "artist" <=< lookupChild "artists" <=< lookupChild "event" <=< lookupChild "events" <=< wrap
+getPastEvents = parse r f "All event artists"
+  where r = Artist.getPastEvents (Left $ Artist "Meshugah") (Just $ Autocorrect True) Nothing Nothing apiKey
+        f = mapM content <=< tags "artist" <=< tag "artists" <=< tag "event" <=< tag "events"
 
 getPodcast :: IO ()
-getPodcast = do response <- Artist.getPodcast (Left $ Artist "Meshuggah") Nothing apiKey
-                putStr "First channel description: "
-                case response of
-                  Left e  -> print e
-                  Right r -> print (description r)
-                putStrLn ""
-  where description = getContent <=< lookupChild "description" <=< lookupChild "channel" <=< lookupChild "rss" <=< wrap
+getPodcast = parse r f "First channel description"
+  where r = Artist.getPodcast (Left $ Artist "Meshuggah") Nothing apiKey
+        f = fmap return . content <=< tag "description" <=< tag "channel" <=< tag "rss"
 
 getShouts :: IO ()
-getShouts = do response <- Artist.getShouts (Left $ Artist "Meshuggah") Nothing Nothing (Just $ Limit 5) apiKey
-               putStr "Last 5 shouts authors: "
-               case response of
-                 Left e  -> print e
-                 Right r -> print (authors r)
-               putStrLn ""
-  where authors = mapM (getContent <=< lookupChild "author") <=< lookupChildren "shout" <=< lookupChild "shouts" <=< wrap
+getShouts = parse r f "Last 5 shouts authors"
+  where r = Artist.getShouts (Left $ Artist "Meshuggah") Nothing Nothing (Just $ Limit 5) apiKey
+        f = mapM (content <=< tag "author") <=< tags "shout" <=< tag "shouts"
 
 getSimilar :: IO ()
-getSimilar = do response <- Artist.getSimilar (Left $ Artist "Meshuggah") Nothing (Just $ Limit 7) apiKey
-                putStr "7 similar artists: "
-                case response of
-                  Left e  -> print e
-                  Right r -> print (artists r)
-                putStrLn ""
-  where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "similarartists" <=< wrap
+getSimilar = parse r f "7 similar artists"
+  where r = Artist.getSimilar (Left $ Artist "Meshuggah") Nothing (Just $ Limit 7) apiKey
+        f = mapM (content <=< tag "name") <=< tags "artist" <=< tag "similarartists"
 
 getTags :: IO ()
-getTags = do response <- Artist.getTags (Left $ Artist "Burzum") Nothing (Left $ User "liblastfm") apiKey
-             putStr "Burzum tags: "
-             case response of
-               Left e  -> print e
-               Right r -> print (tags r)
-             putStrLn ""
-  where tags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "tags" <=< wrap
+getTags = parse r f "Burzum tags"
+  where r = Artist.getTags (Left $ Artist "Burzum") Nothing (Left $ User "liblastfm") apiKey
+        f = mapM (content <=< tag "name") <=< tags "tag" <=< tag "tags"
 
 getTagsAuth :: APIKey -> SessionKey -> IO ()
-getTagsAuth apiKey sessionKey = do response <- Artist.getTags (Left $ Artist "Burzum") Nothing (Right sessionKey) apiKey
-                                   putStr "Burzum tags: "
-                                   case response of
-                                     Left e  -> print e
-                                     Right r -> print (tags r)
-                                   putStrLn ""
-  where tags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "tags" <=< wrap
+getTagsAuth ak sk = parse r f "Burzum tags"
+  where r = Artist.getTags (Left $ Artist "Burzum") Nothing (Right sk) ak
+        f = mapM (content <=< tag "name") <=< tags "tag" <=< tag "tags"
 
 getTopAlbums :: IO ()
-getTopAlbums = do response <- Artist.getTopAlbums (Left $ Artist "Meshuggah") Nothing Nothing (Just $ Limit 3) apiKey
-                  putStr "3 most popular albums: "
-                  case response of
-                    Left e  -> print e
-                    Right r -> print (albums r)
-                  putStrLn ""
-  where albums = mapM (getContent <=< lookupChild "name") <=< lookupChildren "album" <=< lookupChild "topalbums" <=< wrap
+getTopAlbums = parse r f "3 most popular albums"
+  where r = Artist.getTopAlbums (Left $ Artist "Meshuggah") Nothing Nothing (Just $ Limit 3) apiKey
+        f = mapM (content <=< tag "name") <=< tags "album" <=< tag "topalbums"
 
 getTopFans :: IO ()
-getTopFans = do response <- Artist.getTopFans (Left $ Artist "Meshuggah") Nothing apiKey
-                putStr "Top fans: "
-                case response of
-                  Left e  -> print e
-                  Right r -> print (fans r)
-                putStrLn ""
-  where fans = mapM (getContent <=< lookupChild "name") <=< lookupChildren "user" <=< lookupChild "topfans" <=< wrap
+getTopFans = parse r f "Top fans"
+  where r = Artist.getTopFans (Left $ Artist "Meshuggah") Nothing apiKey
+        f = mapM (content <=< tag "name") <=< tags "user" <=< tag "topfans"
 
 getTopTags :: IO ()
-getTopTags = do response <- Artist.getTopTags (Left $ Artist "Meshuggah") Nothing apiKey
-                putStr "Top tags: "
-                case response of
-                  Left e  -> print e
-                  Right r -> print (tags r)
-                putStrLn ""
-  where tags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "toptags" <=< wrap
+getTopTags = parse r f "Top tags"
+  where r = Artist.getTopTags (Left $ Artist "Meshuggah") Nothing apiKey
+        f = mapM (content <=< tag "name") <=< tags "tag" <=< tag "toptags"
 
 getTopTracks :: IO ()
-getTopTracks = do response <- Artist.getTopTracks (Left $ Artist "Meshuggah") Nothing Nothing (Just $ Limit 10) apiKey
-                  putStr "10 most popular tracks: "
-                  case response of
-                    Left e  -> print e
-                    Right r -> print (tracks r)
-                  putStrLn ""
-  where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "toptracks" <=< wrap
+getTopTracks = parse r f "10 most popular tracks"
+  where r = Artist.getTopTracks (Left $ Artist "Meshuggah") Nothing Nothing (Just $ Limit 10) apiKey
+        f = mapM (content <=< tag "name") <=< tags "track" <=< tag "toptracks"
 
 removeTag :: APIKey -> SessionKey -> IO ()
-removeTag apiKey sessionKey = do response <- Artist.removeTag (Artist "Burzum") (Tag "black metal") apiKey sessionKey
-                                 case response of
-                                   Left e   -> print e
-                                   Right () -> return ()
+removeTag ak sk = Artist.removeTag (Artist "Burzum") (Tag "black metal") ak sk >>= print ||| const (return ())
 
 search :: IO ()
-search = do response <- Artist.search (Artist "Mesh") Nothing (Just $ Limit 12) apiKey
-            putStr "12 search results for \"Mesh\" query: "
-            case response of
-              Left e  -> print e
-              Right r -> print (artists r)
-            putStrLn ""
-  where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "artistmatches" <=< lookupChild "results" <=< wrap
+search = parse r f "12 search results for \"Mesh\" query"
+  where r = Artist.search (Artist "Mesh") Nothing (Just $ Limit 12) apiKey
+        f = mapM (content <=< tag "name") <=< tags "artist" <=< tag "artistmatches" <=< tag "results"
 
 share :: APIKey -> SessionKey -> IO ()
-share apiKey sessionKey = do response <- Artist.share (Artist "Sleep") [Recipient "liblastfm"] (Just $ Message "Just listen!") Nothing apiKey sessionKey
-                             case response of
-                               Left e  -> print e
-                               Right () -> return ()
+share ak sk = Artist.share (Artist "Sleep") [Recipient "liblastfm"] (Just $ Message "Just listen!") Nothing ak sk >>= print ||| const (return ())
 
 common :: IO ()
 common = do getCorrection
@@ -180,8 +111,8 @@ common = do getCorrection
             search
 
 auth :: APIKey -> SessionKey -> IO ()
-auth apiKey sessionKey = do addTags apiKey sessionKey
-                            getTagsAuth apiKey sessionKey
-                            removeTag apiKey sessionKey
-                            share apiKey sessionKey
-                            -- shout (see User.shout example)
+auth ak sk = do addTags ak sk
+                getTagsAuth ak sk
+                removeTag ak sk
+                share ak sk
+                -- shout (see User.shout example)

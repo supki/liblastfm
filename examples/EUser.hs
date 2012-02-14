@@ -3,7 +3,6 @@ module EUser (common, auth) where
 import Control.Arrow ((|||), (&&&))
 import Control.Monad ((<=<), liftM2)
 
-import Network.Lastfm.Response
 import Network.Lastfm.Types
 import qualified Network.Lastfm.API.User as User
 
@@ -160,8 +159,8 @@ common = do getArtistTracks
             getWeeklyTrackChart
 
 auth :: APIKey -> SessionKey -> IO ()
-auth apiKey sessionKey = do getRecentStations apiKey sessionKey
-                            getRecommendedArtists apiKey sessionKey
-                            getRecommendedEvents apiKey sessionKey
-                            shout apiKey sessionKey
+auth ak sk = do getRecentStations ak sk
+                getRecommendedArtists ak sk
+                getRecommendedEvents ak sk
+                shout ak sk
 
