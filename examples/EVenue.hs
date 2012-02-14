@@ -2,7 +2,6 @@ module EVenue (common, auth) where
 
 import Control.Monad ((<=<), liftM)
 
-import Network.Lastfm.Response
 import Network.Lastfm.Types
 import qualified Network.Lastfm.API.Venue as Venue
 
@@ -11,31 +10,19 @@ import Kludges
 apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
 
 getEvents :: IO ()
-getEvents = do response <- Venue.getEvents (Venue 9163107) Nothing apiKey
-               putStr "Venue name: "
-               case response of
-                 Left e  -> print e
-                 Right r -> print $ venue r
-               putStrLn ""
-  where venue = getContent <=< lookupChild "name" <=< lookupChild "venue" <=< lookupChild "event" <=< lookupChild "events" <=< wrap
+getEvents = parse r f "Venue name"
+  where r = Venue.getEvents (Venue 9163107) Nothing apiKey
+        f = fmap return . content <=< tag "name" <=< tag "venue" <=< tag "event" <=< tag "events"
 
 getPastEvents :: IO ()
-getPastEvents = do response <- Venue.getPastEvents (Venue 9163107) Nothing Nothing (Just $ Limit 10) apiKey
-                   putStr "Artists from 10 last events: "
-                   case response of
-                     Left e  -> print e
-                     Right r -> print $ venue r
-                   putStrLn ""
-  where venue = liftM concat . mapM (mapM getContent <=< lookupChildren "artist" <=< lookupChild "artists") <=< lookupChildren "event" <=< lookupChild "events" <=< wrap
+getPastEvents = parse r f "Artists from 10 last events"
+  where r = Venue.getPastEvents (Venue 9163107) Nothing Nothing (Just $ Limit 10) apiKey
+        f = liftM concat . mapM (mapM content <=< tags "artist" <=< tag "artists") <=< tags "event" <=< tag "events"
 
 search :: IO ()
-search = do response <- Venue.search (Name "Arena") Nothing Nothing Nothing apiKey
-            putStr "venue ids: "
-            case response of
-              Left e  -> print e
-              Right r -> print $ venues r
-            putStrLn ""
-  where venues = mapM (getContent <=< lookupChild "id") <=< lookupChildren "venue" <=< lookupChild "venuematches" <=< lookupChild "results" <=< wrap
+search = parse r f "Venue ids"
+  where r = Venue.search (Name "Arena") Nothing Nothing Nothing apiKey
+        f = mapM (content <=< tag "id") <=< tags "venue" <=< tag "venuematches" <=< tag "results"
 
 common :: IO ()
 common = do getEvents
