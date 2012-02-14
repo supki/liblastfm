@@ -13,7 +13,7 @@ import Network.Lastfm.Types ((?<), APIKey, Artist, Playlist, SessionKey, Title, 
 --
 -- More: <http://www.lastfm.ru/api/show/playlist.addTrack>
 addTrack :: Playlist -> Artist -> Track -> APIKey -> SessionKey -> Lastfm ()
-addTrack playlist artist track apiKey sessionKey = dispatch $ void $ callAPI "playlist.addTrack"
+addTrack playlist artist track apiKey sessionKey = dispatch . void . callAPI "playlist.addTrack" $
   [ "playlistID" ?< playlist
   , "artist" ?< artist
   , "track" ?< track
@@ -25,7 +25,7 @@ addTrack playlist artist track apiKey sessionKey = dispatch $ void $ callAPI "pl
 --
 -- More: <http://www.lastfm.ru/api/show/playlist.create>
 create :: Maybe Title -> Maybe Description -> APIKey -> SessionKey -> Lastfm ()
-create title description apiKey sessionKey = dispatch $ void $ callAPI "playlist.create"
+create title description apiKey sessionKey = dispatch . void . callAPI "playlist.create" $
   [ "api_key" ?< apiKey
   , "sk" ?< sessionKey
   , "title" ?< title
