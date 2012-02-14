@@ -2,7 +2,6 @@ module EChart (common, auth) where
 
 import Control.Monad ((<=<))
 
-import Network.Lastfm.Response
 import Network.Lastfm.Types
 import qualified Network.Lastfm.API.Chart as Chart
 
@@ -11,58 +10,34 @@ import Kludges
 apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
 
 getHypedArtists :: IO ()
-getHypedArtists = do response <- Chart.getHypedArtists Nothing (Just (Limit 8)) apiKey
-                     putStr "Top 8 hyped artists: "
-                     case response of
-                       Left e  -> print e
-                       Right r -> print (artists r)
-                     putStrLn ""
-  where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "artists" <=< wrap
+getHypedArtists = parse r f "Top 8 hyped artists"
+  where r = Chart.getHypedArtists Nothing (Just (Limit 8)) apiKey
+        f = mapM (content <=< tag "name") <=< tags "artist" <=< tag "artists"
 
 getHypedTracks :: IO ()
-getHypedTracks = do response <- Chart.getHypedTracks Nothing (Just (Limit 6)) apiKey
-                    putStr "Top 6 hyped tracks: "
-                    case response of
-                      Left e  -> print e
-                      Right r -> print (tracks r)
-                    putStrLn ""
-  where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "tracks" <=< wrap
+getHypedTracks = parse r f "Top 6 hyped artists"
+  where r = Chart.getHypedTracks Nothing (Just (Limit 6)) apiKey
+        f = mapM (content <=< tag "name") <=< tags "track" <=< tag "tracks"
 
 getLovedTracks :: IO ()
-getLovedTracks = do response <- Chart.getLovedTracks Nothing (Just (Limit 9)) apiKey
-                    putStr "Top 9 most loved tracks: "
-                    case response of
-                      Left e  -> print e
-                      Right r -> print (tracks r)
-                    putStrLn ""
-  where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "tracks" <=< wrap
+getLovedTracks = parse r f "Top 9 most loved tracks"
+  where r = Chart.getLovedTracks Nothing (Just (Limit 9)) apiKey
+        f = mapM (content <=< tag "name") <=< tags "track" <=< tag "tracks"
 
 getTopArtists :: IO ()
-getTopArtists = do response <- Chart.getTopArtists Nothing (Just (Limit 4)) apiKey
-                   putStr "Top 4 artists: "
-                   case response of
-                     Left e  -> print e
-                     Right r -> print (artists r)
-                   putStrLn ""
-  where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "artists" <=< wrap
+getTopArtists = parse r f "Top 4 artists"
+  where r = Chart.getTopArtists Nothing (Just (Limit 4)) apiKey
+        f = mapM (content <=< tag "name") <=< tags "artist" <=< tag "artists"
 
 getTopTags :: IO ()
-getTopTags = do response <- Chart.getTopTags Nothing (Just (Limit 6)) apiKey
-                putStr "Top 6 tags: "
-                case response of
-                  Left e  -> print e
-                  Right r -> print (tags r)
-                putStrLn ""
-  where tags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "tags" <=< wrap
+getTopTags = parse r f "Top 6 tags"
+  where r = Chart.getTopTags Nothing (Just (Limit 6)) apiKey
+        f = mapM (content <=< tag "name") <=< tags "tag" <=< tag "tags"
 
 getTopTracks :: IO ()
-getTopTracks = do response <- Chart.getTopTracks Nothing (Just (Limit 7)) apiKey
-                  putStr "Top 7 tracks: "
-                  case response of
-                    Left e  -> print e
-                    Right r -> print (tracks r)
-                  putStrLn ""
-  where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "tracks" <=< wrap
+getTopTracks = parse r f "Top 7 tracks"
+  where r = Chart.getTopTracks Nothing (Just (Limit 7)) apiKey
+        f = mapM (content <=< tag "name") <=< tags "track" <=< tag "tracks"
 
 common :: IO ()
 common = do getHypedArtists

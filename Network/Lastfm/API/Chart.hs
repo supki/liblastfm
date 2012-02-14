@@ -45,7 +45,7 @@ getTopTracks :: Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getTopTracks = get "getTopTracks"
 
 get :: String -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-get method page limit apiKey = dispatch $ callAPI ("chart." ++ method)
+get method page limit apiKey = dispatch . callAPI ("chart." ++ method) $
   [ "page" ?< page
   , "limit" ?< limit
   , "api_key" ?< apiKey
