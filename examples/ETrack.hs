@@ -1,8 +1,8 @@
 module ETrack (common, auth) where
 
+import Control.Arrow ((|||))
 import Control.Monad ((<=<))
 
-import Network.Lastfm.Response
 import Network.Lastfm.Types
 import qualified Network.Lastfm.API.Track as Track
 
@@ -11,157 +11,86 @@ import Kludges
 apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
 
 addTags :: APIKey -> SessionKey -> IO ()
-addTags apiKey sessionKey = do response <- Track.addTags (Artist "Jefferson Airplane") (Track "White rabbit") [Tag "60s", Tag "awesome"] apiKey sessionKey
-                               case response of
-                                 Left e   -> print e
-                                 Right () -> return ()
+addTags ak sk = Track.addTags (Artist "Jefferson Airplane") (Track "White rabbit") [Tag "60s", Tag "awesome"] ak sk >>= print ||| const (return ())
 
 ban :: APIKey -> SessionKey -> IO ()
-ban apiKey sessionKey = do response <- Track.ban (Artist "Eminem") (Track "Kim") apiKey sessionKey
-                           case response of
-                             Left e   -> print e
-                             Right () -> return ()
+ban ak sk = Track.ban (Artist "Eminem") (Track "Kim") ak sk >>= print ||| const (return ())
 
 getBuylinks :: IO ()
-getBuylinks = do response <- Track.getBuyLinks (Left (Artist "Pink Floyd", Track "Brain Damage")) Nothing (Country "United Kingdom") apiKey
-                 putStr "Download suppliers: "
-                 case response of
-                   Left e  -> print e
-                   Right r -> print (suppliers r)
-                 putStrLn ""
-  where suppliers = mapM (getContent <=< lookupChild "supplierName") <=< lookupChildren "affiliation" <=< lookupChild "downloads" <=< lookupChild "affiliations" <=< wrap
+getBuylinks = parse r f "Download suppliers"
+  where r = Track.getBuyLinks (Left (Artist "Pink Floyd", Track "Brain Damage")) Nothing (Country "United Kingdom") apiKey
+        f = mapM (content <=< tag "supplierName") <=< tags "affiliation" <=< tag "downloads" <=< tag "affiliations"
 
 getCorrection :: IO ()
-getCorrection = do response <- Track.getCorrection (Artist "Pink Ployd") (Track "Brain Damage") apiKey
-                   putStr "Correction: "
-                   case response of
-                     Left e  -> print e
-                     Right r -> print (correction r)
-                   putStrLn ""
-  where correction = getContent <=< lookupChild "name" <=< lookupChild "artist" <=< lookupChild "track" <=< lookupChild "correction" <=< lookupChild "corrections" <=< wrap
+getCorrection = parse r f "Correction"
+  where r = Track.getCorrection (Artist "Pink Ployd") (Track "Brain Damage") apiKey
+        f = fmap return . content <=< tag "name" <=< tag "artist" <=< tag "track" <=< tag "correction" <=< tag "corrections"
 
 getFingerprintMetadata :: IO ()
-getFingerprintMetadata = do response <- Track.getFingerprintMetadata (Fingerprint 1234) apiKey
-                            putStr "Tracks: "
-                            case response of
-                              Left e  -> print e
-                              Right r -> print (tracks r)
-                            putStrLn ""
-  where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "tracks" <=< wrap
-
+getFingerprintMetadata = parse r f "Tracks"
+  where r = Track.getFingerprintMetadata (Fingerprint 1234) apiKey
+        f = mapM (content <=< tag "name") <=< tags "track" <=< tag "tracks"
 
 getInfo :: IO ()
-getInfo = do response <- Track.getInfo (Left (Artist "Pink Floyd", Track "Brain Damage")) Nothing (Just $ User "aswalrus") apiKey
-             putStr "Replays count: "
-             case response of
-               Left e  -> print e
-               Right r -> print (replays r)
-             putStrLn ""
-  where replays = getContent <=< lookupChild "userplaycount" <=< lookupChild "track" <=< wrap
+getInfo = parse r f "Replays count"
+  where r = Track.getInfo (Left (Artist "Pink Floyd", Track "Brain Damage")) Nothing (Just $ User "aswalrus") apiKey
+        f = fmap return . content <=< tag "userplaycount" <=< tag "track"
 
 getShouts :: IO ()
-getShouts = do response <- Track.getShouts (Left (Artist "Pink Floyd", Track "Comfortably Numb")) Nothing Nothing (Just $ Limit 7) apiKey
-               putStr "Last 7 shouts authors: "
-               case response of
-                 Left e  -> print e
-                 Right r -> print (authors r)
-               putStrLn ""
-  where authors = mapM (getContent <=< lookupChild "author") <=< lookupChildren "shout" <=< lookupChild "shouts" <=< wrap
+getShouts = parse r f "Last 7 shouts authors"
+  where r = Track.getShouts (Left (Artist "Pink Floyd", Track "Comfortably Numb")) Nothing Nothing (Just $ Limit 7) apiKey
+        f = mapM (content <=< tag "author") <=< tags "shout" <=< tag "shouts"
 
 getSimilar :: IO ()
-getSimilar = do response <- Track.getSimilar (Left (Artist "Pink Floyd", Track "Comfortably Numb")) Nothing (Just $ Limit 4) apiKey
-                putStr "4 similar tracks: "
-                case response of
-                  Left e  -> print e
-                  Right r -> print (artists r)
-                putStrLn ""
-  where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "similartracks" <=< wrap
+getSimilar = parse r f "4 similar tracks"
+  where r = Track.getSimilar (Left (Artist "Pink Floyd", Track "Comfortably Numb")) Nothing (Just $ Limit 4) apiKey
+        f = mapM (content <=< tag "name") <=< tags "track" <=< tag "similartracks"
 
 getTags :: IO ()
-getTags = do response <- Track.getTags (Left (Artist "Jefferson Airplane", Track "White Rabbit")) Nothing (Left $ User "liblastfm") apiKey
-             putStr "White Rabbit tags: "
-             case response of
-               Left e  -> print e
-               Right r -> print (tags r)
-             putStrLn ""
-  where tags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "tags" <=< wrap
+getTags = parse r f "White Rabbit tags"
+  where r = Track.getTags (Left (Artist "Jefferson Airplane", Track "White Rabbit")) Nothing (Left $ User "liblastfm") apiKey
+        f = mapM (content <=< tag "name") <=< tags "tag" <=< tag "tags"
 
 getTagsAuth :: APIKey -> SessionKey -> IO ()
-getTagsAuth apiKey sessionKey = do response <- Track.getTags (Left (Artist "Jefferson Airplane", Track "White Rabbit")) Nothing (Right sessionKey) apiKey
-                                   putStr "White rabbit tags: "
-                                   case response of
-                                     Left e  -> print e
-                                     Right r -> print (tags r)
-                                   putStrLn ""
-  where tags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "tags" <=< wrap
+getTagsAuth ak sk = parse r f "White Rabbit tags"
+  where r = Track.getTags (Left (Artist "Jefferson Airplane", Track "White Rabbit")) Nothing (Right sk) ak
+        f = mapM (content <=< tag "name") <=< tags "tag" <=< tag "tags"
 
 getTopFans :: IO ()
-getTopFans = do response <- Track.getTopFans (Left (Artist "Pink Floyd", Track "Comfortably Numb")) Nothing apiKey
-                case response of
-                  Left e  -> print e
-                  Right r -> print (fans r)
-                putStrLn ""
-  where fans = mapM (getContent <=< lookupChild "name") <=< lookupChildren "user" <=< lookupChild "topfans" <=< wrap
+getTopFans = parse r f "Top fans"
+  where r = Track.getTopFans (Left (Artist "Pink Floyd", Track "Comfortably Numb")) Nothing apiKey
+        f = mapM (content <=< tag "name") <=< tags "user" <=< tag "topfans"
 
 getTopTags :: IO ()
-getTopTags = do response <- Track.getTopTags (Left (Artist "Pink Floyd", Track "Brain Damage")) Nothing apiKey
-                putStr "Top tags: "
-                case response of
-                  Left e  -> print e
-                  Right r -> print (tags r)
-                putStrLn ""
-  where tags = mapM (getContent <=< lookupChild "name") <=< lookupChildren "tag" <=< lookupChild "toptags" <=< wrap
+getTopTags = parse r f "Top tags"
+  where r = Track.getTopTags (Left (Artist "Pink Floyd", Track "Brain Damage")) Nothing apiKey
+        f = mapM (content <=< tag "name") <=< tags "tag" <=< tag "toptags"
 
 love :: APIKey -> SessionKey -> IO ()
-love apiKey sessionKey = do response <- Track.love (Artist "Gojira") (Track "Ocean") apiKey sessionKey
-                            case response of
-                              Left e   -> print e
-                              Right () -> return ()
+love ak sk = Track.love (Artist "Gojira") (Track "Ocean") ak sk >>= print ||| const (return ())
 
 removeTag :: APIKey -> SessionKey -> IO ()
-removeTag apiKey sessionKey = do response <- Track.removeTag (Artist "Jefferson Airplane") (Track "White rabbit") (Tag "awesome") apiKey sessionKey
-                                 case response of
-                                   Left e   -> print e
-                                   Right () -> return ()
+removeTag ak sk = Track.removeTag (Artist "Jefferson Airplane") (Track "White rabbit") (Tag "awesome") ak sk >>= print ||| const (return ())
 
 search :: IO ()
-search = do response <- Track.search (Track "Believe") Nothing (Just $ Limit 12) Nothing apiKey
-            putStr "12 search results for \"Believe\" query: "
-            case response of
-              Left e  -> print e
-              Right r -> print (artists r)
-            putStrLn ""
-  where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "trackmatches" <=< lookupChild "results" <=< wrap
+search = parse r f "12 search results for \"Believe\" query"
+  where r = Track.search (Track "Believe") Nothing (Just $ Limit 12) Nothing apiKey
+        f = mapM (content <=< tag "name") <=< tags "track" <=< tag "trackmatches" <=< tag "results"
 
 share :: APIKey -> SessionKey -> IO ()
-share apiKey sessionKey = do response <- Track.share (Artist "Led Zeppelin") (Track "When the Levee Breaks") [Recipient "liblastfm"] (Just $ Message "Just listen!") Nothing apiKey sessionKey
-                             case response of
-                               Left e  -> print e
-                               Right () -> return ()
+share ak sk = Track.share (Artist "Led Zeppelin") (Track "When the Levee Breaks") [Recipient "liblastfm"] (Just $ Message "Just listen!") Nothing ak sk >>= print ||| const (return ())
 
 unban :: APIKey -> SessionKey -> IO ()
-unban apiKey sessionKey = do response <- Track.unban (Artist "Eminem") (Track "Kim") apiKey sessionKey
-                             case response of
-                               Left e   -> print e
-                               Right () -> return ()
+unban ak sk = Track.unban (Artist "Eminem") (Track "Kim") ak sk >>= print ||| const (return ())
 
 unlove :: APIKey -> SessionKey -> IO ()
-unlove apiKey sessionKey = do response <- Track.unlove (Artist "Gojira") (Track "Ocean") apiKey sessionKey
-                              case response of
-                                Left e   -> print e
-                                Right () -> return ()
+unlove ak sk = Track.unlove (Artist "Gojira") (Track "Ocean") ak sk >>= print ||| const (return ())
 
 scrobble :: APIKey -> SessionKey -> IO ()
-scrobble apiKey sessionKey = do response <- Track.scrobble (Timestamp 1328905590, Nothing, Artist "Gojira", Track "Ocean", Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing) apiKey sessionKey
-                                case response of
-                                  Left e   -> print e
-                                  Right () -> return ()
+scrobble ak sk = Track.scrobble (Timestamp 1328905590, Nothing, Artist "Gojira", Track "Ocean", Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing) ak sk >>= print ||| const (return ())
 
 updateNowPlaying :: APIKey -> SessionKey -> IO ()
-updateNowPlaying apiKey sessionKey = do response <- Track.updateNowPlaying (Artist "Gojira") (Track "Ocean") Nothing Nothing Nothing Nothing Nothing Nothing apiKey sessionKey
-                                        case response of
-                                          Left e   -> print e
-                                          Right () -> return ()
+updateNowPlaying ak sk = Track.updateNowPlaying (Artist "Gojira") (Track "Ocean") Nothing Nothing Nothing Nothing Nothing Nothing ak sk >>= print ||| const (return ())
 
 common :: IO ()
 common = do getBuylinks
@@ -176,13 +105,13 @@ common = do getBuylinks
             search
 
 auth :: APIKey -> SessionKey -> IO ()
-auth apiKey sessionKey = do addTags apiKey sessionKey
-                            getTagsAuth apiKey sessionKey
-                            ban apiKey sessionKey
-                            love apiKey sessionKey
-                            removeTag apiKey sessionKey
-                            scrobble apiKey sessionKey
-                            share apiKey sessionKey
-                            unban apiKey sessionKey
-                            unlove apiKey sessionKey
-                            updateNowPlaying apiKey sessionKey
+auth ak sk = do addTags ak sk
+                getTagsAuth ak sk
+                ban ak sk
+                love ak sk
+                removeTag ak sk
+                scrobble ak sk
+                share ak sk
+                unban ak sk
+                unlove ak sk
+                updateNowPlaying ak sk
