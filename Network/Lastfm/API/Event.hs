@@ -16,7 +16,7 @@ import Network.Lastfm.Types ( (?<), APIKey, Event, Limit, Message, Page
 --
 -- More: <http://www.lastfm.ru/api/show/event.attend>
 attend :: Event -> Status -> APIKey -> SessionKey -> Lastfm ()
-attend event status apiKey sessionKey = dispatch $ void $ callAPI "event.attend"
+attend event status apiKey sessionKey = dispatch . void . callAPI "event.attend" $
   [ "event" ?< event
   , "status" ?< status
   , "api_key" ?< apiKey
@@ -27,7 +27,7 @@ attend event status apiKey sessionKey = dispatch $ void $ callAPI "event.attend"
 --
 -- More: <http://www.lastfm.ru/api/show/event.getAttendees>
 getAttendees :: Event -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getAttendees event page limit apiKey = dispatch $ callAPI "event.getAttendees"
+getAttendees event page limit apiKey = dispatch . callAPI "event.getAttendees" $
   [ "event" ?< event
   , "page" ?< page
   , "limit" ?< limit
@@ -38,7 +38,7 @@ getAttendees event page limit apiKey = dispatch $ callAPI "event.getAttendees"
 --
 -- More: <http://www.lastfm.ru/api/show/event.getInfo>
 getInfo :: Event -> APIKey -> Lastfm Response
-getInfo event apiKey = dispatch $ callAPI "event.getInfo"
+getInfo event apiKey = dispatch . callAPI "event.getInfo" $
   [ "event" ?< event
   , "api_key" ?< apiKey
   ]
@@ -47,7 +47,7 @@ getInfo event apiKey = dispatch $ callAPI "event.getInfo"
 --
 -- More: <http://www.lastfm.ru/api/show/event.getShouts>
 getShouts :: Event -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getShouts event page limit apiKey = dispatch $ callAPI "event.getShouts"
+getShouts event page limit apiKey = dispatch . callAPI "event.getShouts" $
   [ "event" ?< event
   , "page" ?< page
   , "limit" ?< limit
@@ -76,7 +76,7 @@ share event recipients message public apiKey sessionKey = dispatch go
 --
 -- More: <http://www.lastfm.ru/api/show/event.shout>
 shout :: Event -> Message -> APIKey -> SessionKey -> Lastfm ()
-shout event message apiKey sessionKey = dispatch $ void $ callAPI "event.shout"
+shout event message apiKey sessionKey = dispatch . void . callAPI "event.shout" $
   [ "event" ?< event
   , "message" ?< message
   , "api_key" ?< apiKey
