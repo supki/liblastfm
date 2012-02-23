@@ -1,10 +1,11 @@
 {-# LANGUAGE ScopedTypeVariables, DeriveDataTypeable #-}
 -- | Response module
 {-# OPTIONS_HADDOCK prune #-}
-module Network.Lastfm.Response
+module Network.Lastfm
   ( Lastfm, Response, LastfmError(WrapperCallError), dispatch
   , withSecret
   , callAPI
+  , module Network.Lastfm.Types
   ) where
 
 import Codec.Binary.UTF8.String (encodeString)
@@ -19,6 +20,7 @@ import Data.List (sortBy)
 import Data.Typeable (Typeable)
 import Data.URLEncoded (urlEncode, export)
 import Network.Curl hiding (Content)
+import Network.Lastfm.Types
 import System.IO.Unsafe (unsafePerformIO)
 import Text.XML.Light
 
@@ -88,7 +90,7 @@ instance Show APIError where
 -- Various Lastfm errors.
 data LastfmError
   = LastfmAPIError APIError -- ^ Internal Lastfm errors
-  | WrapperCallError Method Message -- ^ Wrapper errors
+  | WrapperCallError String String -- ^ Wrapper errors
     deriving (Show, Typeable)
 
 instance Exception LastfmError
@@ -97,18 +99,12 @@ instance Exception LastfmError
 type Lastfm a = IO (Either LastfmError a)
 -- | Type synonym for Lastfm response
 type Response = String
-type Key = String
-type Value = String
-type Secret = String
-type Sign = String
-type Method = String
-type Message = String
 
-secret :: IORef Secret
+secret :: IORef String
 secret = unsafePerformIO $ newIORef ""
 
 -- | All authentication requiring functions should be wrapped into 'withSecret'
-withSecret :: Secret -> IO a -> IO a
+withSecret :: String -> IO a -> IO a
 withSecret s f = writeIORef secret s >> f
 
 url :: String
@@ -119,7 +115,7 @@ dispatch :: IO a -> Lastfm a
 dispatch f = handle (\(e :: LastfmError) -> return (Left e)) (liftM Right f)
 
 -- | Low level function. Sends POST query to Lastfm API.
-callAPI :: Method -> [(Key, Value)] -> IO Response
+callAPI :: String -> [(String, String)] -> IO Response
 callAPI m xs = withCurlDo $ do
                  s <- readIORef secret
                  let ys = ("method", m) : (map (second encodeString) . filter (not . null . snd) $ xs)
@@ -135,7 +131,7 @@ callAPI m xs = withCurlDo $ do
                    Nothing -> return response
 
   where -- | Some API calls should be signed. (http://www.lastfm.ru/api/authspec Section 8)
-        sign :: Secret -> [(Key, Value)] -> Sign
+        sign :: String -> [(String, String)] -> String
         sign s = show . md5 . BS.pack . (++ s) . concatMap (uncurry (++)) . sortBy (compare `on` fst)
 
         isError :: String -> Maybe Int

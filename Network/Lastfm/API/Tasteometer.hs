@@ -7,8 +7,9 @@ module Network.Lastfm.API.Tasteometer
 import Control.Exception (throw)
 import Prelude hiding (compare)
 
-import Network.Lastfm.Response
-import Network.Lastfm.Types ((?<), APIKey, Limit, Value(..))
+import Network.Lastfm ( Lastfm, Response, LastfmError (WrapperCallError), callAPI, dispatch
+                      , (?<), APIKey, Limit, Value(..)
+                      )
 
 -- | Get a Tasteometer score from two inputs, along with a list of shared artists. If the input is a User some additional information is returned.
 --

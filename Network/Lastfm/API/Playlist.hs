@@ -6,8 +6,9 @@ module Network.Lastfm.API.Playlist
 
 import Control.Monad (void)
 
-import Network.Lastfm.Response
-import Network.Lastfm.Types ((?<), APIKey, Artist, Playlist, SessionKey, Title, Description, Track)
+import Network.Lastfm ( Lastfm, callAPI, dispatch
+                      , (?<), APIKey, Artist, Playlist, SessionKey, Title, Description, Track
+                      )
 
 -- | Add a track to a Last.fm user's playlist.
 --

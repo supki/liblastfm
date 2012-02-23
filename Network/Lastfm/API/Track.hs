@@ -9,11 +9,11 @@ module Network.Lastfm.API.Track
 import Control.Exception (throw)
 import Control.Monad (void)
 
-import Network.Lastfm.Response
-import Network.Lastfm.Types ( (?<), Album, AlbumArtist, APIKey, Artist, Autocorrect, ChosenByUser, Context, Country
-                            , Duration, Fingerprint, Limit, Mbid, Message, Page, Public, Recipient, SessionKey
-                            , StreamId, Tag, Timestamp, Track, TrackNumber, User
-                            )
+import Network.Lastfm ( Lastfm, Response, LastfmError (WrapperCallError), callAPI, dispatch
+                      , (?<), Album, AlbumArtist, APIKey, Artist, Autocorrect, ChosenByUser, Context, Country
+                      , Duration, Fingerprint, Limit, Mbid, Message, Page, Public, Recipient, SessionKey
+                      , StreamId, Tag, Timestamp, Track, TrackNumber, User
+                      )
 
 -- | Tag a track using a list of user supplied tags.
 --

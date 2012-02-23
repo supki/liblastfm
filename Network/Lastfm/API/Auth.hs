@@ -5,11 +5,9 @@ module Network.Lastfm.API.Auth
   , getAuthorizeTokenLink
   ) where
 
-import Control.Applicative ((<$>))
-import Control.Monad ((<=<), liftM)
-
-import Network.Lastfm.Response
-import Network.Lastfm.Types ((?<), APIKey, AuthToken, SessionKey(..), Token(..), User, unpack)
+import Network.Lastfm ( Lastfm, Response, callAPI, dispatch
+                      , (?<), APIKey, AuthToken, Token(..), User, unpack
+                      )
 
 -- | Create a web service session for a user. Used for authenticating a user when the password can be inputted by the user. Only suitable for standalone mobile devices.
 --

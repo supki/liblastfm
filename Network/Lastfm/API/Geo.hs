@@ -6,10 +6,10 @@ module Network.Lastfm.API.Geo
   , getMetroWeeklyChartlist, getMetros, getTopArtists, getTopTracks
   ) where
 
-import Network.Lastfm.Response
-import Network.Lastfm.Types ( (?<), APIKey, Country, Distance, From, Latitude
-                            , Limit, Location, Longitude, Metro, Page, To
-                            )
+import Network.Lastfm ( Lastfm, Response, callAPI, dispatch
+                      , (?<), APIKey, Country, Distance, From, Latitude
+                      , Limit, Location, Longitude, Metro, Page, To
+                      )
 
 -- | Get all events in a specific location by country or city name.
 --

@@ -4,8 +4,9 @@ module Network.Lastfm.API.Venue
   ( getEvents, getPastEvents, search
   ) where
 
-import Network.Lastfm.Response
-import Network.Lastfm.Types ((?<), APIKey, Country, FestivalsOnly, Limit, Name, Page, Venue)
+import Network.Lastfm ( Lastfm, Response, callAPI, dispatch
+                      , (?<), APIKey, Country, FestivalsOnly, Limit, Name, Page, Venue
+                      )
 
 -- | Get a list of upcoming events at this venue.
 --

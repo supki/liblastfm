@@ -4,8 +4,9 @@ module Network.Lastfm.API.Group
   ( getHype, getMembers, getWeeklyChartList, getWeeklyAlbumChart, getWeeklyArtistChart, getWeeklyTrackChart
   ) where
 
-import Network.Lastfm.Response
-import Network.Lastfm.Types ((?<), APIKey, From, Group, Limit, Page, To)
+import Network.Lastfm ( Lastfm, Response, callAPI, dispatch
+                      , (?<), APIKey, From, Group, Limit, Page, To
+                      )
 
 -- | Get the hype list for a group.
 --

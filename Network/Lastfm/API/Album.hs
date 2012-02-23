@@ -9,9 +9,9 @@ import Control.Arrow ((|||))
 import Control.Exception (throw)
 import Control.Monad (void)
 
-import Network.Lastfm.Response
-import Network.Lastfm.Types ( (?<), Album, APIKey, Artist, Autocorrect, Country, Language, Limit
-                            , Mbid, Message, Page, Public, Recipient, SessionKey, Tag, User)
+import Network.Lastfm ( Lastfm, Response, LastfmError (WrapperCallError), callAPI, dispatch
+                      , (?<), Album, APIKey, Artist, Autocorrect, Country, Language, Limit
+                      , Mbid, Message, Page, Public, Recipient, SessionKey, Tag, User)
 
 -- | Tag an album using a list of user supplied tags.
 --

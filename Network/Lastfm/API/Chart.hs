@@ -5,8 +5,9 @@ module Network.Lastfm.API.Chart
   , getTopArtists, getTopTags, getTopTracks
   ) where
 
-import Network.Lastfm.Response
-import Network.Lastfm.Types ((?<), APIKey, Limit, Page)
+import Network.Lastfm ( Lastfm, Response, callAPI, dispatch
+                      , (?<), APIKey, Limit, Page
+                      )
 
 -- | Get the hyped artists chart.
 --

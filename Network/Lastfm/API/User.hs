@@ -10,10 +10,10 @@ module Network.Lastfm.API.User
 
 import Control.Monad (void)
 
-import Network.Lastfm.Response
-import Network.Lastfm.Types ( (?<), APIKey, Artist, FestivalsOnly, From, Limit, Message, Page
-                            , Period, RecentTracks, SessionKey, Tag, TaggingType, To, User, UseRecs
-                            )
+import Network.Lastfm ( Lastfm, Response, callAPI, dispatch
+                      , (?<), APIKey, Artist, FestivalsOnly, From, Limit, Message, Page
+                      , Period, RecentTracks, SessionKey, Tag, TaggingType, To, User, UseRecs
+                      )
 
 -- | Get a list of tracks by a given artist scrobbled by this user, including scrobble time. Can be limited to specific timeranges, defaults to all time.
 --

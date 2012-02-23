@@ -7,10 +7,10 @@ module Network.Lastfm.API.Event
 import Control.Exception (throw)
 import Control.Monad (void)
 
-import Network.Lastfm.Response
-import Network.Lastfm.Types ( (?<), APIKey, Event, Limit, Message, Page
-                            , Public, Recipient, SessionKey, Status
-                            )
+import Network.Lastfm ( Lastfm, Response, LastfmError (WrapperCallError), callAPI, dispatch
+                      , (?<), APIKey, Event, Limit, Message, Page
+                      , Public, Recipient, SessionKey, Status
+                      )
 
 -- | Set a user's attendance status for an event.
 --

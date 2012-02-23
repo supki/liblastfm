@@ -9,10 +9,10 @@ module Network.Lastfm.API.Artist
 import Control.Exception (throw)
 import Control.Monad (void)
 
-import Network.Lastfm.Response
-import Network.Lastfm.Types ( (?<), APIKey, Artist, Autocorrect, FestivalsOnly, Language, Limit
-                            , Mbid, Message, Order, Page, Public, Recipient, SessionKey, Tag, User
-                            )
+import Network.Lastfm ( Lastfm, Response, LastfmError (WrapperCallError), callAPI, dispatch
+                      , (?<), APIKey, Artist, Autocorrect, FestivalsOnly, Language, Limit
+                      , Mbid, Message, Order, Page, Public, Recipient, SessionKey, Tag, User
+                      )
 
 -- | Tag an album using a list of user supplied tags.
 --

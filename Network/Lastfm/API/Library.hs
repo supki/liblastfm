@@ -7,8 +7,9 @@ module Network.Lastfm.API.Library
 
 import Control.Monad (void)
 
-import Network.Lastfm.Response
-import Network.Lastfm.Types ((?<), Album, APIKey, Artist, Limit, Page, SessionKey, Timestamp, Track, User)
+import Network.Lastfm ( Lastfm, Response, callAPI, dispatch
+                      , (?<), Album, APIKey, Artist, Limit, Page, SessionKey, Timestamp, Track, User
+                      )
 
 -- | Add an album or collection of albums to a user's Last.fm library.
 --

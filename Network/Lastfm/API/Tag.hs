@@ -5,8 +5,9 @@ module Network.Lastfm.API.Tag
   , getWeeklyArtistChart, getWeeklyChartList, search
   ) where
 
-import Network.Lastfm.Response
-import Network.Lastfm.Types ((?<), APIKey, From, Language, Limit, Page, Tag, To)
+import Network.Lastfm ( Lastfm, Response, callAPI, dispatch
+                      , (?<), APIKey, From, Language, Limit, Page, Tag, To
+                      )
 
 -- | Get the metadata for a tag.
 --
