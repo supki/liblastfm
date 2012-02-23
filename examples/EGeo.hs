@@ -1,10 +1,8 @@
 module EGeo (common, auth) where
 
-import Control.Arrow ((***), (&&&))
-import Control.Monad ((<=<), join)
-import Data.Maybe (fromMaybe)
+import Control.Arrow ((&&&))
+import Control.Monad ((<=<), liftM2)
 
-import Network.Lastfm.Response
 import Network.Lastfm.Types
 import qualified Network.Lastfm.API.Geo as Geo
 
@@ -13,102 +11,61 @@ import Kludges
 apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
 
 getEvents :: IO ()
-getEvents = do response <- Geo.getEvents Nothing Nothing (Just (Location "Moscow")) Nothing Nothing (Just (Limit 5)) apiKey
-               putStr "First 5 Moscow events: "
-               case response of
-                 Left e  -> print e
-                 Right r -> print (events r)
-               putStrLn ""
-  where events = mapM (getContent <=< lookupChild "id") <=< lookupChildren "event" <=< lookupChild "events" <=< wrap
+getEvents = parse r f "First 5 Moscow events"
+  where r = Geo.getEvents Nothing Nothing (Just (Location "Moscow")) Nothing Nothing (Just (Limit 5)) apiKey
+        f = mapM (content <=< tag "id") <=< tags "event" <=< tag "events"
 
 getMetroArtistChart :: IO ()
-getMetroArtistChart = do response <- Geo.getMetroArtistChart (Country "Russia") (Metro "Saint Petersburg") Nothing Nothing apiKey
-                         putStr "Top Saint Petersburg artists: "
-                         case response of
-                           Left e  -> print e
-                           Right r -> print (artists r)
-                         putStrLn ""
-  where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "topartists" <=< wrap
+getMetroArtistChart = parse r f "Top Sain Petesburg artists"
+  where r = Geo.getMetroArtistChart (Country "Russia") (Metro "Saint Petersburg") Nothing Nothing apiKey
+        f = mapM (content <=< tag "name") <=< tags "artist" <=< tag "topartists"
 
 getMetroHypeArtistChart :: IO ()
-getMetroHypeArtistChart = do response <- Geo.getMetroHypeArtistChart (Country "Russia") (Metro "Moscow") Nothing Nothing apiKey
-                             putStr "Top Moscow Hype artists: "
-                             case response of
-                               Left e  -> print e
-                               Right r -> print (artists r)
-                             putStrLn ""
-  where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "topartists" <=< wrap
+getMetroHypeArtistChart = parse r f "Top Moscow Hype artists"
+  where r = Geo.getMetroHypeArtistChart (Country "Russia") (Metro "Moscow") Nothing Nothing apiKey
+        f = mapM (content <=< tag "name") <=< tags "artist" <=< tag "topartists"
 
 getMetroHypeTrackChart :: IO ()
-getMetroHypeTrackChart = do response <- Geo.getMetroHypeTrackChart (Country "Russia") (Metro "Ufa") Nothing Nothing apiKey
-                            putStr "Top Ufa Hype tracks: "
-                            case response of
-                              Left e  -> print e
-                              Right r -> print (tracks r)
-                            putStrLn ""
-  where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "toptracks" <=< wrap
+getMetroHypeTrackChart = parse r f "Top Ufa Hype tracks"
+  where r = Geo.getMetroHypeTrackChart (Country "Russia") (Metro "Ufa") Nothing Nothing apiKey
+        f = mapM (content <=< tag "name") <=< tags "track" <=< tag "toptracks"
 
 getMetroTrackChart :: IO ()
-getMetroTrackChart = do response <- Geo.getMetroTrackChart (Country "Ukraine") (Metro "Kyiv") Nothing Nothing apiKey
-                        putStr "Top Kiyv tracks: "
-                        case response of
-                          Left e  -> print e
-                          Right r -> print (tracks r)
-                        putStrLn ""
-  where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "toptracks" <=< wrap
+getMetroTrackChart = parse r f "Top Kiyv tracks"
+  where r = Geo.getMetroTrackChart (Country "Ukraine") (Metro "Kyiv") Nothing Nothing apiKey
+        f = mapM (content <=< tag "name") <=< tags "track" <=< tag "toptracks"
 
 getMetroUniqueArtistChart :: IO ()
-getMetroUniqueArtistChart = do response <- Geo.getMetroUniqueArtistChart (Country "Belarus") (Metro "Minsk") Nothing Nothing apiKey
-                               putStr "Top unique Minsk artists: "
-                               case response of
-                                 Left e  -> print e
-                                 Right r -> print (artists r)
-                               putStrLn ""
-  where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "topartists" <=< wrap
+getMetroUniqueArtistChart = parse r f "Top unique Minsk artists"
+  where r = Geo.getMetroUniqueArtistChart (Country "Belarus") (Metro "Minsk") Nothing Nothing apiKey
+        f = mapM (content <=< tag "name") <=< tags "artist" <=< tag "topartists"
 
 getMetroUniqueTrackChart :: IO ()
-getMetroUniqueTrackChart = do response <- Geo.getMetroUniqueTrackChart (Country "Ukraine") (Metro "Odesa") Nothing Nothing apiKey
-                              putStr "Top unique Odesa tracks: "
-                              case response of
-                                Left e  -> print e
-                                Right r -> print (tracks r)
-                              putStrLn ""
-  where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "toptracks" <=< wrap
+getMetroUniqueTrackChart = parse r f "Top unique Odesa tracks"
+  where r = Geo.getMetroUniqueTrackChart (Country "Ukraine") (Metro "Odesa") Nothing Nothing apiKey
+        f = mapM (content <=< tag "name") <=< tags "track" <=< tag "toptracks"
 
 getMetroWeeklyChartlist :: IO ()
-getMetroWeeklyChartlist = do response <- Geo.getMetroWeeklyChartlist (Metro "Moscow") apiKey
-                             putStr "First 10 Moscow chartlist intervals: "
-                             case response of
-                               Left e  -> print e
-                               Right r -> print (intervals r)
-  where intervals = take 10 . map (join (***) ((read :: String -> Integer) . fromMaybe "0") . (getAttribute "from" &&& getAttribute "to")) . fromMaybe [] . (lookupChildren "chart" <=< lookupChild "weeklychartlist" <=< wrap)
+getMetroWeeklyChartlist = parse r f "First 10 Moscow chartlist intervals"
+  where r = Geo.getMetroWeeklyChartlist (Metro "Moscow") apiKey
+        f = mapM (pretty . getFromToAttributes) <=< fmap (take 10) . tags "chart" <=< tag "weeklychartlist"
+        pretty = uncurry $ liftM2 $ \from to -> "(" ++ from ++ "," ++ to ++ ")"
+        getFromToAttributes = getAttribute "from" &&& getAttribute "to"
 
 getMetros :: IO ()
-getMetros = do response <- Geo.getMetros (Just (Country "Russia")) apiKey
-               putStr "All Russia metros: "
-               case response of
-                 Left e  -> print e
-                 Right r -> print (metros r)
-               putStrLn ""
-  where metros = mapM (getContent <=< lookupChild "name") <=< lookupChildren "metro" <=< lookupChild "metros" <=< wrap
+getMetros = parse r f "All Russia metros"
+  where r = Geo.getMetros (Just (Country "Russia")) apiKey
+        f = mapM (content <=< tag "name") <=< tags "metro" <=< tag "metros"
 
 getTopArtists :: IO ()
-getTopArtists = do response <- Geo.getTopArtists (Country "Belarus") Nothing (Just (Limit 10)) apiKey
-                   putStr "Top 10 Belarus artists: "
-                   case response of
-                     Left e  -> print e
-                     Right r -> print (artists r)
-                   putStrLn ""
-  where artists = mapM (getContent <=< lookupChild "name") <=< lookupChildren "artist" <=< lookupChild "topartists" <=< wrap
+getTopArtists = parse r f "Top 10 Belarus artists"
+  where r = Geo.getTopArtists (Country "Belarus") Nothing (Just (Limit 10)) apiKey
+        f = mapM (content <=< tag "name") <=< tags "artist" <=< tag "topartists"
 
 getTopTracks :: IO ()
-getTopTracks = do response <- Geo.getTopTracks (Country "Ukraine") Nothing Nothing (Just (Limit 10)) apiKey
-                  putStr "Top 10 Ukraine tracks: "
-                  case response of
-                    Left e  -> print e
-                    Right r -> print (tracks r)
-                  putStrLn ""
-  where tracks = mapM (getContent <=< lookupChild "name") <=< lookupChildren "track" <=< lookupChild "toptracks" <=< wrap
+getTopTracks = parse r f "Top 10 Ukraine tracks"
+  where r = Geo.getTopTracks (Country "Ukraine") Nothing Nothing (Just (Limit 10)) apiKey
+        f = mapM (content <=< tag "name") <=< tags "track" <=< tag "toptracks"
 
 common :: IO ()
 common = do getEvents

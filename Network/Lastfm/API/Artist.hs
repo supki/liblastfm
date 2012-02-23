@@ -6,6 +6,7 @@ module Network.Lastfm.API.Artist
   , getTopFans, getTopTags, getTopTracks, removeTag, search, share, shout
   ) where
 
+import Control.Arrow ((|||))
 import Control.Exception (throw)
 import Control.Monad (void)
 
@@ -34,7 +35,7 @@ addTags artist tags apiKey sessionKey = dispatch go
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getCorrection>
 getCorrection :: Artist -> APIKey -> Lastfm Response
-getCorrection artist apiKey = dispatch $ callAPI "artist.getCorrection"
+getCorrection artist apiKey = dispatch . callAPI "artist.getCorrection" $
   [ "artist" ?< artist
   , "api_key" ?< apiKey
   ]
@@ -43,183 +44,146 @@ getCorrection artist apiKey = dispatch $ callAPI "artist.getCorrection"
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getEvents>
 getEvents :: Either Artist Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> Maybe FestivalsOnly -> APIKey -> Lastfm Response
-getEvents a autocorrect page limit festivalsOnly apiKey = dispatch $ callAPI method $ target ++
+getEvents a autocorrect page limit festivalsOnly apiKey = dispatch . callAPI "artist.getEvents" $
+  target a ++
   [ "autocorrect" ?< autocorrect
   , "page" ?< page
   , "limit" ?< limit
   , "festivalsonly" ?< festivalsOnly
   , "api_key" ?< apiKey
   ]
-  where method = "artist.getEvents"
-        target = case a of
-                   Left artist -> ["artist" ?< artist]
-                   Right mbid  -> ["mbid" ?< mbid]
 
 -- | Get Images for this artist in a variety of sizes.
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getImages>
 getImages :: Either Artist Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> Maybe Order -> APIKey -> Lastfm Response
-getImages a autocorrect page limit order apiKey = dispatch $ callAPI method $ target ++
+getImages a autocorrect page limit order apiKey = dispatch . callAPI "artist.getImages" $
+  target a ++
   [ "autocorrect" ?< autocorrect
   , "page" ?< page
   , "limit" ?< limit
   , "order" ?< order
   , "api_key" ?< apiKey
   ]
-  where method = "artist.getImages"
-        target = case a of
-                   Left artist -> ["artist" ?< artist]
-                   Right mbid  -> ["mbid" ?< mbid]
 
 -- | Get the metadata for an artist. Includes biography.
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getInfo>
 getInfo :: Either Artist Mbid -> Maybe Autocorrect -> Maybe Language -> Maybe User -> APIKey -> Lastfm Response
-getInfo a autocorrect language user apiKey = dispatch $ callAPI method $ target ++
+getInfo a autocorrect language user apiKey = dispatch . callAPI "artist.getInfo" $
+  target a ++
   [ "autocorrect" ?< autocorrect
   , "lang" ?< language
   , "username" ?< user
   , "api_key" ?< apiKey
   ]
-  where method = "artist.getInfo"
-        target = case a of
-                   Left artist -> ["artist" ?< artist]
-                   Right mbid  -> ["mbid" ?< mbid]
 
 -- | Get a paginated list of all the events this artist has played at in the past.
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getPastEvents>
 getPastEvents :: Either Artist Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getPastEvents a autocorrect page limit apiKey = dispatch $ callAPI method $ target ++
+getPastEvents a autocorrect page limit apiKey = dispatch . callAPI "artist.getPastEvents" $
+  target a ++
   [ "autocorrect" ?< autocorrect
   , "page" ?< page
   , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
-  where method = "artist.getPastEvents"
-        target = case a of
-                   Left artist -> ["artist" ?< artist]
-                   Right mbid  -> ["mbid" ?< mbid]
 
 -- | Get a podcast of free mp3s based on an artist.
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getPodcast>
 getPodcast :: Either Artist Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
-getPodcast a autocorrect apiKey = dispatch $ callAPI method $ target ++
+getPodcast a autocorrect apiKey = dispatch . callAPI "artist.getPodcast" $
+  target a ++
   [ "autocorrect" ?< autocorrect
   , "api_key" ?< apiKey
   ]
-  where method = "artist.getPodcast"
-        target = case a of
-                   Left artist -> ["artist" ?< artist]
-                   Right mbid  -> ["mbid" ?< mbid]
 
 -- | Get shouts for this artist. Also available as an rss feed.
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getShouts>
 getShouts :: Either Artist Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getShouts a autocorrect page limit apiKey = dispatch $ callAPI method $ target ++
+getShouts a autocorrect page limit apiKey = dispatch . callAPI "artist.getShouts" $
+  target a ++
   [ "autocorrect" ?< autocorrect
   , "page" ?< page
   , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
-  where method = "artist.getShouts"
-        target = case a of
-                   Left artist -> ["artist" ?< artist]
-                   Right mbid  -> ["mbid" ?< mbid]
 
 -- | Get all the artists similar to this artist.
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getSimilar>
 getSimilar :: Either Artist Mbid -> Maybe Autocorrect -> Maybe Limit -> APIKey -> Lastfm Response
-getSimilar a autocorrect limit apiKey = dispatch $ callAPI method $ target ++
+getSimilar a autocorrect limit apiKey = dispatch . callAPI "artist.getSimilar" $
+  target a ++
   [ "autocorrect" ?< autocorrect
   , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
-  where method = "artist.getSimilar"
-        target = case a of
-                   Left artist -> ["artist" ?< artist]
-                   Right mbid  -> ["mbid" ?< mbid]
 
 -- | Get the tags applied by an individual user to an artist on Last.fm. If accessed as an authenticated service /and/ you don't supply a user parameter then this service will return tags for the authenticated user.
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getTags>
 getTags :: Either Artist Mbid -> Maybe Autocorrect -> Either User SessionKey -> APIKey -> Lastfm Response
-getTags a autocorrect b apiKey = dispatch $ callAPI method $ target ++ auth ++
+getTags a autocorrect b apiKey = dispatch . callAPI "artist.getTags" $
+  target a ++
+  auth b ++
   [ "autocorrect" ?< autocorrect
   , "api_key" ?< apiKey
   ]
-  where method = "artist.getTags"
-        target = case a of
-                   Left artist -> ["artist" ?< artist]
-                   Right mbid  -> ["mbid" ?< mbid]
-        auth = case b of
-                 Left user        -> ["user" ?< user]
-                 Right sessionKey -> ["sk" ?< sessionKey]
+  where auth = return . ("user" ?<) ||| return . ("sk" ?<)
 
 -- | Get the top albums for an artist on Last.fm, ordered by popularity.
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getTopAlbums>
 getTopAlbums :: Either Artist Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopAlbums a autocorrect page limit apiKey = dispatch $ callAPI method $ target ++
+getTopAlbums a autocorrect page limit apiKey = dispatch . callAPI "artist.getTopAlbums" $
+  target a ++
   [ "autocorrect" ?< autocorrect
   , "page" ?< page
   , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
-  where method = "artist.getTopAlbums"
-        target = case a of
-                   Left artist -> ["artist" ?< artist]
-                   Right mbid  -> ["mbid" ?< mbid]
 
 -- | Get the top fans for an artist on Last.fm, based on listening data.
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getTopFans>
 getTopFans :: Either Artist Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
-getTopFans a autocorrect apiKey = dispatch $ callAPI method $ target ++
+getTopFans a autocorrect apiKey = dispatch . callAPI "artist.getTopFans" $
+  target a ++
   [ "autocorrect" ?< autocorrect
   , "api_key" ?< apiKey
   ]
-  where method = "artist.getTopFans"
-        target = case a of
-                   Left artist -> ["artist" ?< artist]
-                   Right mbid  -> ["mbid" ?< mbid]
 
 -- | Get the top tags for an artist on Last.fm, ordered by popularity.
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getTopTags>
 getTopTags :: Either Artist Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
-getTopTags a autocorrect apiKey = dispatch $ callAPI method $ target ++
+getTopTags a autocorrect apiKey = dispatch . callAPI "artist.getTopTags" $
+  target a ++
   [ "autocorrect" ?< autocorrect
   , "api_key" ?< apiKey
   ]
-  where method = "artist.getTopTags"
-        target = case a of
-                   Left artist -> ["artist" ?< artist]
-                   Right mbid  -> ["mbid" ?< mbid]
 
 -- | Get the top tracks by an artist on Last.fm, ordered by popularity.
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getTopTracks>
 getTopTracks :: Either Artist Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopTracks a autocorrect page limit apiKey = dispatch $ callAPI method $ target ++
+getTopTracks a autocorrect page limit apiKey = dispatch . callAPI "artist.getTopTracks" $
+  target a ++
   [ "autocorrect" ?< autocorrect
   , "page" ?< page
   , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
-  where method = "artist.getTopTracks"
-        target = case a of
-                   Left artist -> ["artist" ?< artist]
-                   Right mbid  -> ["mbid" ?< mbid]
 
 -- | Remove a user's tag from an artist.
 --
 -- More: <http://www.lastfm.ru/api/show/artist.removeTag>
 removeTag :: Artist -> Tag -> APIKey -> SessionKey -> Lastfm ()
-removeTag artist tag apiKey sessionKey = dispatch $ void $ callAPI "artist.removeTag"
+removeTag artist tag apiKey sessionKey = dispatch . void . callAPI "artist.removeTag" $
   [ "artist" ?< artist
   , "tag" ?< tag
   , "api_key" ?< apiKey
@@ -230,7 +194,7 @@ removeTag artist tag apiKey sessionKey = dispatch $ void $ callAPI "artist.remov
 --
 -- More: <http://www.lastfm.ru/api/show/artist.search>
 search :: Artist -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-search artist page limit apiKey = dispatch $ callAPI "artist.search"
+search artist page limit apiKey = dispatch . callAPI "artist.search" $
   [ "artist" ?< artist
   , "api_key" ?< apiKey
   , "page" ?< page
@@ -259,9 +223,12 @@ share artist recipients message public apiKey sessionKey = dispatch go
 --
 -- More: <http://www.lastfm.ru/api/show/artist.shout>
 shout :: Artist -> Message -> APIKey -> SessionKey -> Lastfm ()
-shout artist message apiKey sessionKey = dispatch $ void $ callAPI "artist.shout"
+shout artist message apiKey sessionKey = dispatch . void . callAPI "artist.shout" $
   [ "artist" ?< artist
   , "message" ?< message
   , "api_key" ?< apiKey
   , "sk" ?< sessionKey
   ]
+
+target :: Either Artist Mbid -> [(String, String)]
+target = return . ("artist" ?<) ||| return . ("mbid" ?<)

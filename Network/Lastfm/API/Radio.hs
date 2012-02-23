@@ -41,7 +41,7 @@ getPlaylist discovery rtp buylinks multiplier bitrate apiKey sessionKey = dispat
 --
 -- More: <http://www.lastfm.ru/api/show/radio.search>
 search :: Name -> APIKey -> Lastfm Response
-search name apiKey = dispatch $ callAPI "radio.search"
+search name apiKey = dispatch . callAPI "radio.search"$
   [ "name" ?< name
   , "api_key" ?< apiKey
   ]
@@ -50,7 +50,7 @@ search name apiKey = dispatch $ callAPI "radio.search"
 --
 -- More: <http://www.lastfm.ru/api/show/radio.tune>
 tune :: Maybe Language -> Station -> APIKey -> SessionKey -> Lastfm Response
-tune language station apiKey sessionKey = dispatch $ callAPI "radio.tune"
+tune language station apiKey sessionKey = dispatch . callAPI "radio.tune" $
   [ "lang" ?< language
   , "station" ?< station
   , "api_key" ?< apiKey

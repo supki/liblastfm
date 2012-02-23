@@ -1,6 +1,5 @@
 module EAlbum (common, auth) where
 
-import Control.Applicative ((<$>))
 import Control.Arrow ((|||))
 import Control.Monad ((<=<))
 
@@ -55,9 +54,6 @@ search = parse r f "5 search results for \"wall\" query"
 
 share :: APIKey -> SessionKey -> IO ()
 share ak sk = Album.share (Artist "Sleep") (Album "Jerusalem") [Recipient "liblastfm"] (Just $ Message "Just listen!") Nothing ak sk >>= print ||| const (return ())
-
-parse :: Lastfm Response -> (KludgeResponse -> Maybe [String]) -> String -> IO ()
-parse r f m = (show ||| show . (f <=< wrap)) <$> r >>= \rs -> putStrLn $ m ++ ": " ++ rs ++ "\n"
 
 common :: IO ()
 common = do getBuylinks

@@ -13,7 +13,7 @@ import Network.Lastfm ( Lastfm, Response, callAPI, dispatch
 --
 -- More: <http://www.lastfm.ru/api/show/tag.getInfo>
 getInfo :: Tag -> Maybe Language -> APIKey -> Lastfm Response
-getInfo tag language apiKey = dispatch $ callAPI "tag.getInfo"
+getInfo tag language apiKey = dispatch . callAPI "tag.getInfo" $
   [ "tag" ?< tag
   , "lang" ?< language
   , "api_key" ?< apiKey
@@ -23,7 +23,7 @@ getInfo tag language apiKey = dispatch $ callAPI "tag.getInfo"
 --
 -- More: <http://www.lastfm.ru/api/show/tag.getSimilar>
 getSimilar :: Tag -> APIKey -> Lastfm Response
-getSimilar tag apiKey = dispatch $ callAPI "tag.getSimilar"
+getSimilar tag apiKey = dispatch . callAPI "tag.getSimilar" $
   [ "tag" ?< tag
   , "api_key" ?< apiKey
   ]
@@ -32,7 +32,7 @@ getSimilar tag apiKey = dispatch $ callAPI "tag.getSimilar"
 --
 -- More: <http://www.lastfm.ru/api/show/tag.getTopAlbums>
 getTopAlbums :: Tag -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopAlbums tag page limit apiKey = dispatch $ callAPI "tag.getTopAlbums"
+getTopAlbums tag page limit apiKey = dispatch . callAPI "tag.getTopAlbums" $
   [ "tag" ?< tag
   , "page" ?< page
   , "limit" ?< limit
@@ -43,7 +43,7 @@ getTopAlbums tag page limit apiKey = dispatch $ callAPI "tag.getTopAlbums"
 --
 -- More: <http://www.lastfm.ru/api/show/tag.getTopArtists>
 getTopArtists :: Tag -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopArtists tag limit page apiKey = dispatch $ callAPI "tag.getTopArtists"
+getTopArtists tag limit page apiKey = dispatch . callAPI "tag.getTopArtists" $
   [ "tag" ?< tag
   , "page" ?< page
   , "limit" ?< limit
@@ -54,13 +54,13 @@ getTopArtists tag limit page apiKey = dispatch $ callAPI "tag.getTopArtists"
 --
 -- More: <http://www.lastfm.ru/api/show/tag.getTopTags>
 getTopTags :: APIKey -> Lastfm Response
-getTopTags apiKey = dispatch $ callAPI "tag.getTopArtists" ["api_key" ?< apiKey]
+getTopTags apiKey = dispatch . callAPI "tag.getTopArtists" $ ["api_key" ?< apiKey]
 
 -- | Get the top tracks tagged by this tag, ordered by tag count.
 --
 -- More: <http://www.lastfm.ru/api/show/tag.getTopTracks>
 getTopTracks :: Tag -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopTracks tag limit page apiKey = dispatch $ callAPI "tag.getTopTracks"
+getTopTracks tag limit page apiKey = dispatch . callAPI "tag.getTopTracks" $
   [ "tag" ?< tag
   , "page" ?< page
   , "limit" ?< limit
@@ -71,7 +71,7 @@ getTopTracks tag limit page apiKey = dispatch $ callAPI "tag.getTopTracks"
 --
 -- More: <http://www.lastfm.ru/api/show/tag.getWeeklyArtistChart>
 getWeeklyArtistChart :: Tag -> Maybe From -> Maybe To -> Maybe Limit -> APIKey -> Lastfm Response
-getWeeklyArtistChart tag from to limit apiKey = dispatch $ callAPI "tag.getWeeklyArtistChart"
+getWeeklyArtistChart tag from to limit apiKey = dispatch . callAPI "tag.getWeeklyArtistChart" $
   [ "tag" ?< tag
   , "from" ?< from
   , "to" ?< to
@@ -83,7 +83,7 @@ getWeeklyArtistChart tag from to limit apiKey = dispatch $ callAPI "tag.getWeekl
 --
 -- More: <http://www.lastfm.ru/api/show/tag.getWeeklyChartList>
 getWeeklyChartList :: Tag -> APIKey -> Lastfm Response
-getWeeklyChartList tag apiKey = dispatch $ callAPI "tag.getWeeklyChartList"
+getWeeklyChartList tag apiKey = dispatch . callAPI "tag.getWeeklyChartList" $
   [ "tag" ?< tag
   , "api_key" ?< apiKey
   ]
@@ -92,7 +92,7 @@ getWeeklyChartList tag apiKey = dispatch $ callAPI "tag.getWeeklyChartList"
 --
 -- More: <http://www.lastfm.ru/api/show/tag.search>
 search :: Tag -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-search tag page limit apiKey = dispatch $ callAPI "tag.search"
+search tag page limit apiKey = dispatch . callAPI "tag.search" $
   [ "tag" ?< tag
   , "page" ?< page
   , "limit" ?< limit
