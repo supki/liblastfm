@@ -5,7 +5,7 @@ import Control.Arrow ((|||))
 import Control.Monad (liftM, (<=<))
 import Text.XML.Light
 
-import Network.Lastfm.Response
+import Network.Lastfm
 
 newtype KludgeResponse = KludgeResponse {unwrap :: Element}
 

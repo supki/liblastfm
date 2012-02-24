@@ -3,7 +3,6 @@ module EAlbum (common, auth) where
 import Control.Arrow ((|||))
 import Control.Monad ((<=<))
 
-import Network.Lastfm.Response
 import Network.Lastfm.Types
 import qualified Network.Lastfm.API.Album as Album
 
@@ -64,7 +63,7 @@ common = do getBuylinks
             getTags
 
 auth :: APIKey -> SessionKey -> IO ()
-auth apiKey sessionKey = do addTags apiKey sessionKey
-                            getTagsAuth apiKey sessionKey
-                            removeTag apiKey sessionKey
-                            share apiKey sessionKey
+auth ak sk = do addTags ak sk
+                getTagsAuth ak sk
+                removeTag ak sk
+                share ak sk

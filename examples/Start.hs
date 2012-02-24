@@ -25,7 +25,7 @@ import qualified ETrack as Track
 import qualified EUser as User
 import qualified EVenue as Venue
 
-import Network.Lastfm.Response (withSecret)
+import Network.Lastfm (withSecret)
 import Network.Lastfm.Types (APIKey(..), SessionKey(..))
 
 data Flag
