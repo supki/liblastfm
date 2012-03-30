@@ -13,10 +13,10 @@ import Network.Lastfm
 -- More: <http://www.lastfm.ru/api/show/tag.getInfo>
 getInfo :: Tag -> Maybe Language -> APIKey -> Lastfm Response
 getInfo tag language apiKey = runErrorT . callAPI $
-  [ "method" ?< "tag.getInfo"
-  , "tag" ?< tag
-  , "lang" ?< language
-  , "api_key" ?< apiKey
+  [ (#) (Method "tag.getInfo")
+  , (#) tag
+  , (#) language
+  , (#) apiKey
   ]
 
 -- | Search for tags similar to this one. Returns tags ranked by similarity, based on listening data.
@@ -24,9 +24,9 @@ getInfo tag language apiKey = runErrorT . callAPI $
 -- More: <http://www.lastfm.ru/api/show/tag.getSimilar>
 getSimilar :: Tag -> APIKey -> Lastfm Response
 getSimilar tag apiKey = runErrorT . callAPI $
-  [ "method" ?< "tag.getSimilar"
-  , "tag" ?< tag
-  , "api_key" ?< apiKey
+  [ (#) (Method "tag.getSimilar")
+  , (#) tag
+  , (#) apiKey
   ]
 
 -- | Get the top albums tagged by this tag, ordered by tag count.
@@ -34,11 +34,11 @@ getSimilar tag apiKey = runErrorT . callAPI $
 -- More: <http://www.lastfm.ru/api/show/tag.getTopAlbums>
 getTopAlbums :: Tag -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getTopAlbums tag page limit apiKey = runErrorT . callAPI $
-  [ "method" ?< "tag.getTopAlbums"
-  , "tag" ?< tag
-  , "page" ?< page
-  , "limit" ?< limit
-  , "api_key" ?< apiKey
+  [ (#) (Method "tag.getTopAlbums")
+  , (#) tag
+  , (#) page
+  , (#) limit
+  , (#) apiKey
   ]
 
 -- | Get the top artists tagged by this tag, ordered by tag count.
@@ -46,11 +46,11 @@ getTopAlbums tag page limit apiKey = runErrorT . callAPI $
 -- More: <http://www.lastfm.ru/api/show/tag.getTopArtists>
 getTopArtists :: Tag -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getTopArtists tag limit page apiKey = runErrorT . callAPI $
-  [ "method" ?< "tag.getTopArtists"
-  , "tag" ?< tag
-  , "page" ?< page
-  , "limit" ?< limit
-  , "api_key" ?< apiKey
+  [ (#) (Method "tag.getTopArtists")
+  , (#) tag
+  , (#) page
+  , (#) limit
+  , (#) apiKey
   ]
 
 -- | Fetches the top global tags on Last.fm, sorted by popularity (number of times used).
@@ -58,8 +58,8 @@ getTopArtists tag limit page apiKey = runErrorT . callAPI $
 -- More: <http://www.lastfm.ru/api/show/tag.getTopTags>
 getTopTags :: APIKey -> Lastfm Response
 getTopTags apiKey = runErrorT . callAPI $
-  [ "method" ?< "tag.getTopArtists"
-  , "api_key" ?< apiKey
+  [ (#) (Method "tag.getTopArtists")
+  , (#) apiKey
   ]
 
 -- | Get the top tracks tagged by this tag, ordered by tag count.
@@ -67,11 +67,11 @@ getTopTags apiKey = runErrorT . callAPI $
 -- More: <http://www.lastfm.ru/api/show/tag.getTopTracks>
 getTopTracks :: Tag -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getTopTracks tag limit page apiKey = runErrorT . callAPI $
-  [ "method" ?< "tag.getTopTracks"
-  , "tag" ?< tag
-  , "page" ?< page
-  , "limit" ?< limit
-  , "api_key" ?< apiKey
+  [ (#) (Method "tag.getTopTracks")
+  , (#) tag
+  , (#) page
+  , (#) limit
+  , (#) apiKey
   ]
 
 -- | Get an artist chart for a tag, for a given date range. If no date range is supplied, it will return the most recent artist chart for this tag.
@@ -79,12 +79,12 @@ getTopTracks tag limit page apiKey = runErrorT . callAPI $
 -- More: <http://www.lastfm.ru/api/show/tag.getWeeklyArtistChart>
 getWeeklyArtistChart :: Tag -> Maybe From -> Maybe To -> Maybe Limit -> APIKey -> Lastfm Response
 getWeeklyArtistChart tag from to limit apiKey = runErrorT . callAPI $
-  [ "method" ?< "tag.getWeeklyArtistChart"
-  , "tag" ?< tag
-  , "from" ?< from
-  , "to" ?< to
-  , "limit" ?< limit
-  , "api_key" ?< apiKey
+  [ (#) (Method "tag.getWeeklyArtistChart")
+  , (#) tag
+  , (#) from
+  , (#) to
+  , (#) limit
+  , (#) apiKey
   ]
 
 -- | Get a list of available charts for this tag, expressed as date ranges which can be sent to the chart services.
@@ -92,9 +92,9 @@ getWeeklyArtistChart tag from to limit apiKey = runErrorT . callAPI $
 -- More: <http://www.lastfm.ru/api/show/tag.getWeeklyChartList>
 getWeeklyChartList :: Tag -> APIKey -> Lastfm Response
 getWeeklyChartList tag apiKey = runErrorT . callAPI $
-  [ "method" ?< "tag.getWeeklyChartList"
-  , "tag" ?< tag
-  , "api_key" ?< apiKey
+  [ (#) (Method "tag.getWeeklyChartList")
+  , (#) tag
+  , (#) apiKey
   ]
 
 -- | Search for a tag by name. Returns matches sorted by relevance.
@@ -102,9 +102,9 @@ getWeeklyChartList tag apiKey = runErrorT . callAPI $
 -- More: <http://www.lastfm.ru/api/show/tag.search>
 search :: Tag -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 search tag page limit apiKey = runErrorT . callAPI $
-  [ "method" ?< "tag.search"
-  , "tag" ?< tag
-  , "page" ?< page
-  , "limit" ?< limit
-  , "api_key" ?< apiKey
+  [ (#) (Method "tag.search")
+  , (#) tag
+  , (#) page
+  , (#) limit
+  , (#) apiKey
   ]

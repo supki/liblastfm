@@ -21,14 +21,14 @@ getEvents :: Maybe Latitude
           -> APIKey
           -> Lastfm Response
 getEvents latitude longitude location distance page limit apiKey = runErrorT . callAPI $
-  [ "method" ?< "geo.getEvents"
+  [ (#) (Method "geo.getEvents")
   , "lat" ?< latitude
   , "long" ?< longitude
   , "location" ?< location
   , "distance" ?< distance
-  , "page" ?< page
-  , "limit" ?< limit
-  , "api_key" ?< apiKey
+  , (#) page
+  , (#) limit
+  , (#) apiKey
   ]
 
 -- | Get a chart of artists for a metro.
@@ -72,9 +72,9 @@ getMetroUniqueTrackChart = getMetroChart "geo.getMetroUniqueTrackChart"
 -- More: <http://www.lastfm.ru/api/show/geo.getMetroWeeklyChartlist>
 getMetroWeeklyChartlist :: Metro -> APIKey -> Lastfm Response
 getMetroWeeklyChartlist metro apiKey = runErrorT . callAPI $
-  [ "method" ?< "geo.getMetroWeeklyChartlist"
+  [ (#) (Method "geo.getMetroWeeklyChartlist")
   , "metro" ?< metro
-  , "api_key" ?< apiKey
+  , (#) apiKey
   ]
 
 -- | Get a list of valid countries and metros for use in the other webservices.
@@ -82,9 +82,9 @@ getMetroWeeklyChartlist metro apiKey = runErrorT . callAPI $
 -- More: <http://www.lastfm.ru/api/show/geo.getMetros>
 getMetros :: Maybe Country -> APIKey -> Lastfm Response
 getMetros country apiKey = runErrorT . callAPI $
-  [ "method" ?< "geo.getMetros"
+  [ (#) (Method "geo.getMetros")
   , "country" ?< country
-  , "api_key" ?< apiKey
+  , (#) apiKey
   ]
 
 -- | Get the most popular artists on Last.fm by country.
@@ -92,11 +92,11 @@ getMetros country apiKey = runErrorT . callAPI $
 -- More: <http://www.lastfm.ru/api/show/geo.getTopArtists>
 getTopArtists :: Country -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getTopArtists country page limit apiKey = runErrorT . callAPI $
-  [ "method" ?< "geo.getTopArtists"
+  [ (#) (Method "geo.getTopArtists")
   , "country" ?< country
-  , "page" ?< page
-  , "limit" ?< limit
-  , "api_key" ?< apiKey
+  , (#) page
+  , (#) limit
+  , (#) apiKey
   ]
 
 -- | Get the most popular tracks on Last.fm last week by country.
@@ -104,20 +104,20 @@ getTopArtists country page limit apiKey = runErrorT . callAPI $
 -- More: <http://www.lastfm.ru/api/show/geo.getTopTracks>
 getTopTracks :: Country -> Maybe Location -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getTopTracks country location page limit apiKey = runErrorT . callAPI $
-  [ "method" ?< "geo.getTopTracks"
+  [ (#) (Method "geo.getTopTracks")
   , "country" ?< country
   , "location" ?< location
-  , "page" ?< page
-  , "limit" ?< limit
-  , "api_key" ?< apiKey
+  , (#) page
+  , (#) limit
+  , (#) apiKey
   ]
 
 getMetroChart :: String -> Country -> Metro -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
 getMetroChart method country metro from to apiKey = runErrorT . callAPI $
-  [ "method" ?< method
+  [ (#) (Method method)
   , "country" ?< country
   , "metro" ?< metro
   , "start" ?< from
   , "end" ?< to
-  , "api_key" ?< apiKey
+  , (#) apiKey
   ]

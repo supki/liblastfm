@@ -13,12 +13,12 @@ import Network.Lastfm
 -- More: <http://www.lastfm.ru/api/show/playlist.addTrack>
 addTrack :: Playlist -> Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm ()
 addTrack playlist artist track apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
-  [ "method" ?< "playlist.addTrack"
+  [ (#) (Method "playlist.addTrack")
   , "playlistID" ?< playlist
   , "artist" ?< artist
   , "track" ?< track
-  , "api_key" ?< apiKey
-  , "sk" ?< sessionKey
+  , (#) apiKey
+  , (#) sessionKey
   ]
 
 -- | Create a Last.fm playlist on behalf of a user.
@@ -26,9 +26,9 @@ addTrack playlist artist track apiKey sessionKey secret = runErrorT . void . cal
 -- More: <http://www.lastfm.ru/api/show/playlist.create>
 create :: Maybe Title -> Maybe Description -> APIKey -> SessionKey -> Secret -> Lastfm ()
 create title description apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
-  [ "method" ?< "playlist.create"
-  , "api_key" ?< apiKey
-  , "sk" ?< sessionKey
+  [ (#) (Method "playlist.create")
   , "title" ?< title
   , "description" ?< description
+  , (#) apiKey
+  , (#) sessionKey
   ]

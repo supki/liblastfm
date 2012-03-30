@@ -29,8 +29,7 @@ type Response = String
 
 -- | Low level function. Sends POST query to Lastfm API.
 callAPI :: [(String, String)] -> ErrorT LastfmError IO Response
-callAPI xs = query ys
-  where ys = map (second encodeString) . filter (not . null . snd) $ xs
+callAPI = query . map (second encodeString)
 
 callAPIsigned :: Secret -> [(String, String)] -> ErrorT LastfmError IO Response
 callAPIsigned (Secret s) xs = query zs
@@ -48,7 +47,7 @@ query xs = do
                              , CurlUserAgent "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0 Iceweasel/10.0"
                              ]
                              :: IO CurlResponse)
-  maybe (return response) (\n -> throwError $ LastfmAPIError (toEnum $ n - 1)) (isError response)
-  where isError :: String -> Maybe Int
-        isError response = do xml <- parseXMLDoc response
-                              read <$> (findAttr (unqual "code") <=< findChild (unqual "error")) xml
+  maybe (return response) (throwError . LastfmAPIError . toEnum . (subtract 1)) (getError response)
+  where getError :: String -> Maybe Int
+        getError response = do xml <- parseXMLDoc response
+                               read <$> (findAttr (unqual "code") <=< findChild (unqual "error")) xml

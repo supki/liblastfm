@@ -19,12 +19,12 @@ addTags (artist, album) tags apiKey sessionKey secret = runErrorT go
           | null tags        = throwError $ WrapperCallError method "empty tag list."
           | length tags > 10 = throwError $ WrapperCallError method "tag list length has exceeded maximum."
           | otherwise        = void $ callAPIsigned secret
-          [ "method" ?< method
+          [ (#) (Method method)
           , "artist" ?< artist
           , "album" ?< album
           , "tags" ?< tags
-          , "api_key" ?< apiKey
-          , "sk" ?< sessionKey
+          , (#) apiKey
+          , (#) sessionKey
           ]
           where method = "album.addTags"
 
@@ -34,10 +34,10 @@ addTags (artist, album) tags apiKey sessionKey secret = runErrorT go
 getBuyLinks :: Either (Artist, Album) Mbid -> Maybe Autocorrect -> Country -> APIKey -> Lastfm Response
 getBuyLinks a autocorrect country apiKey = runErrorT . callAPI $
   target a ++
-  [ "method" ?< "album.getBuyLinks"
-  , "autocorrect" ?< autocorrect
+  [ (#) (Method "album.getBuyLinks")
+  , (#) autocorrect
   , "country" ?< country
-  , "api_key" ?< apiKey
+  , (#) apiKey
   ]
 
 -- | Get the metadata for an album on Last.fm using the album name or a musicbrainz id. See playlist.fetch on how to get the album playlist.
@@ -46,11 +46,11 @@ getBuyLinks a autocorrect country apiKey = runErrorT . callAPI $
 getInfo :: Either (Artist, Album) Mbid -> Maybe Autocorrect -> Maybe Language -> Maybe User -> APIKey -> Lastfm Response
 getInfo a autocorrect lang username apiKey = runErrorT . callAPI $
   target a ++
-  [ "method" ?< "album.getInfo"
-  , "autocorrect" ?< autocorrect
-  , "lang" ?< lang
+  [ (#) (Method "album.getInfo")
+  , (#) autocorrect
+  , (#) lang
   , "username" ?< username
-  , "api_key" ?< apiKey
+  , (#) apiKey
   ]
 
 -- | Get shouts for this album.
@@ -59,11 +59,11 @@ getInfo a autocorrect lang username apiKey = runErrorT . callAPI $
 getShouts :: Either (Artist, Album) Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getShouts a autocorrect page limit apiKey = runErrorT . callAPI $
   target a ++
-  [ "method" ?< "album.getShouts"
-  , "autocorrect" ?< autocorrect
-  , "page" ?< page
-  , "limit" ?< limit
-  , "api_key" ?< apiKey
+  [ (#) (Method "album.getShouts")
+  , (#) autocorrect
+  , (#) page
+  , (#) limit
+  , (#) apiKey
   ]
 
 -- | Get the tags applied by an individual user to an album on Last.fm.
@@ -74,9 +74,9 @@ getTags a autocorrect b apiKey = runErrorT $ case b of
   Left user -> callAPI $ target a ++ ["user" ?< user] ++ args
   Right (sessionKey, secret) -> callAPIsigned secret $ target a ++ ["sk" ?< sessionKey] ++ args
   where args =
-          [ "method" ?< "album.getTags"
-          , "autocorrect" ?< autocorrect
-          , "api_key" ?< apiKey
+          [ (#) (Method "album.getTags")
+          , (#) autocorrect
+          , (#) apiKey
           ]
 
 -- | Get the top tags for an album on Last.fm, ordered by popularity.
@@ -85,9 +85,9 @@ getTags a autocorrect b apiKey = runErrorT $ case b of
 getTopTags :: Either (Artist, Album) Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
 getTopTags a autocorrect apiKey = runErrorT . callAPI $
   target a ++
-  [ "method" ?< "album.getTopTags"
-  , "autocorrect" ?< autocorrect
-  , "api_key" ?< apiKey
+  [ (#) (Method "album.getTopTags")
+  , (#) autocorrect
+  , (#) apiKey
   ]
 
 -- | Remove a user's tag from an album.
@@ -95,12 +95,12 @@ getTopTags a autocorrect apiKey = runErrorT . callAPI $
 -- More: <http://www.lastfm.ru/api/show/album.removeTag>
 removeTag :: Artist -> Album -> Tag -> APIKey -> SessionKey -> Secret -> Lastfm ()
 removeTag artist album tag apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
-  [ "method" ?< "album.removeTag"
+  [ (#) (Method "album.removeTag")
   , "artist" ?< artist
   , "album" ?< album
-  , "tag" ?< tag
-  , "api_key" ?< apiKey
-  , "sk" ?< sessionKey
+  , (#) tag
+  , (#) apiKey
+  , (#) sessionKey
   ]
 
 -- | Search for an album by name. Returns album matches sorted by relevance.
@@ -108,11 +108,11 @@ removeTag artist album tag apiKey sessionKey secret = runErrorT . void . callAPI
 -- More: <http://www.lastfm.ru/api/show/album.search>
 search :: Album -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 search album page limit apiKey = runErrorT . callAPI $
-  [ "method" ?< "album.search"
+  [ (#) (Method "album.search")
   , "album" ?< album
-  , "page" ?< page
-  , "limit" ?< limit
-  , "api_key" ?< apiKey
+  , (#) page
+  , (#) limit
+  , (#) apiKey
   ]
 
 -- | Share an album with one or more Last.fm users or other friends.
@@ -124,14 +124,14 @@ share artist album recipients message public apiKey sessionKey secret = runError
           | null recipients        = throwError $ WrapperCallError method "empty recipient list."
           | length recipients > 10 = throwError $ WrapperCallError method "recipient list length has exceeded maximum."
           | otherwise              = void $ callAPIsigned secret
-            [ "method" ?< method
+            [ (#) (Method method)
             , "artist" ?< artist
             , "album" ?< album
             , "public" ?< public
             , "message" ?< message
             , "recipient" ?< recipients
-            , "api_key" ?< apiKey
-            , "sk" ?< sessionKey
+            , (#) apiKey
+            , (#) sessionKey
             ]
             where method = "album.share"
 

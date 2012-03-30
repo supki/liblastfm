@@ -12,10 +12,10 @@ import Network.Lastfm
 -- More: <http://www.lastfm.ru/api/show/venue.getEvents>
 getEvents :: Venue -> Maybe FestivalsOnly -> APIKey -> Lastfm Response
 getEvents venue festivalsOnly apiKey = runErrorT . callAPI $
-  [ "method" ?< "venue.getEvents"
+  [ (#) (Method "venue.getEvents")
   , "venue" ?< venue
-  , "api_key" ?< apiKey
   , "festivalsonly" ?< festivalsOnly
+  , (#) apiKey
   ]
 
 -- | Get a paginated list of all the events held at this venue in the past.
@@ -23,12 +23,12 @@ getEvents venue festivalsOnly apiKey = runErrorT . callAPI $
 -- More: <http://www.lastfm.ru/api/show/venue.getPastEvents>
 getPastEvents :: Venue -> Maybe FestivalsOnly -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getPastEvents venue festivalsOnly page limit apiKey = runErrorT . callAPI $
-  [ "method" ?< "venue.getPastEvents"
+  [ (#) (Method "venue.getPastEvents")
   , "venue" ?< venue
-  , "api_key" ?< apiKey
   , "festivalsonly" ?< festivalsOnly
-  , "page" ?< page
-  , "limit" ?< limit
+  , (#) page
+  , (#) limit
+  , (#) apiKey
   ]
 
 -- | Search for a venue by venue name.
@@ -36,10 +36,10 @@ getPastEvents venue festivalsOnly page limit apiKey = runErrorT . callAPI $
 -- More: <http://www.lastfm.ru/api/show/venue.search>
 search :: Name -> Maybe Page -> Maybe Limit -> Maybe Country -> APIKey -> Lastfm Response
 search venue page limit country apiKey = runErrorT . callAPI $
-  [ "method" ?< "venue.search"
+  [ (#) (Method "venue.search")
   , "venue" ?< venue
-  , "api_key" ?< apiKey
-  , "page" ?< page
-  , "limit" ?< limit
+  , (#) page
+  , (#) limit
   , "country" ?< country
+  , (#) apiKey
   ]

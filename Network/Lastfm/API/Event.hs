@@ -13,11 +13,11 @@ import Network.Lastfm
 -- More: <http://www.lastfm.ru/api/show/event.attend>
 attend :: Event -> Status -> APIKey -> SessionKey -> Secret -> Lastfm ()
 attend event status apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
-  [ "method" ?< "event.attend"
+  [ (#) (Method "event.attend")
   , "event" ?< event
   , "status" ?< status
-  , "api_key" ?< apiKey
-  , "sk" ?< sessionKey
+  , (#) apiKey
+  , (#) sessionKey
   ]
 
 -- | Get a list of attendees for an event.
@@ -25,11 +25,11 @@ attend event status apiKey sessionKey secret = runErrorT . void . callAPIsigned 
 -- More: <http://www.lastfm.ru/api/show/event.getAttendees>
 getAttendees :: Event -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getAttendees event page limit apiKey = runErrorT . callAPI $
-  [ "method" ?< "event.getAttendees"
+  [ (#) (Method "event.getAttendees")
   , "event" ?< event
-  , "page" ?< page
-  , "limit" ?< limit
-  , "api_key" ?< apiKey
+  , (#) page
+  , (#) limit
+  , (#) apiKey
   ]
 
 -- | Get the metadata for an event on Last.fm. Includes attendance and lineup information.
@@ -37,9 +37,9 @@ getAttendees event page limit apiKey = runErrorT . callAPI $
 -- More: <http://www.lastfm.ru/api/show/event.getInfo>
 getInfo :: Event -> APIKey -> Lastfm Response
 getInfo event apiKey = runErrorT . callAPI $
-  [ "method" ?< "event.getInfo"
+  [ (#) (Method "event.getInfo")
   , "event" ?< event
-  , "api_key" ?< apiKey
+  , (#) apiKey
   ]
 
 -- | Get shouts for this event.
@@ -47,11 +47,11 @@ getInfo event apiKey = runErrorT . callAPI $
 -- More: <http://www.lastfm.ru/api/show/event.getShouts>
 getShouts :: Event -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getShouts event page limit apiKey = runErrorT . callAPI $
-  [ "method" ?< "event.getShouts"
+  [ (#) (Method "event.getShouts")
   , "event" ?< event
-  , "page" ?< page
-  , "limit" ?< limit
-  , "api_key" ?< apiKey
+  , (#) page
+  , (#) limit
+  , (#) apiKey
   ]
 
 -- | Share an event with one or more Last.fm users or other friends.
@@ -63,13 +63,13 @@ share event recipients message public apiKey sessionKey secret = runErrorT go
           | null recipients        = throwError $ WrapperCallError method "empty recipient list."
           | length recipients > 10 = throwError $ WrapperCallError method "recipient list length has exceeded maximum."
           | otherwise              = void $ callAPIsigned secret
-            [ "method" ?< method
+            [ (#) (Method method)
             , "event" ?< event
             , "public" ?< public
             , "message" ?< message
             , "recipient" ?< recipients
-            , "api_key" ?< apiKey
-            , "sk" ?< sessionKey
+            , (#) apiKey
+            , (#) sessionKey
             ]
             where method = "event.share"
 
@@ -78,9 +78,9 @@ share event recipients message public apiKey sessionKey secret = runErrorT go
 -- More: <http://www.lastfm.ru/api/show/event.shout>
 shout :: Event -> Message -> APIKey -> SessionKey -> Secret -> Lastfm ()
 shout event message apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
-  [ "method" ?< "event.shout"
+  [ (#) (Method "event.shout")
   , "event" ?< event
   , "message" ?< message
-  , "api_key" ?< apiKey
-  , "sk" ?< sessionKey
+  , (#) apiKey
+  , (#) sessionKey
   ]

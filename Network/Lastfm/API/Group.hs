@@ -12,9 +12,9 @@ import Network.Lastfm
 -- More: <http://www.lastfm.ru/api/show/group.getHype>
 getHype :: Group -> APIKey -> Lastfm Response
 getHype group apiKey = runErrorT . callAPI $
-  [ "method" ?< "group.getHype"
-  , "group" ?< group
-  , "api_key" ?< apiKey
+  [ (#) (Method "group.getHype")
+  , (#) group
+  , (#) apiKey
   ]
 
 -- | Get a list of members for this group.
@@ -22,11 +22,11 @@ getHype group apiKey = runErrorT . callAPI $
 -- More: <http://www.lastfm.ru/api/show/group.getMembers>
 getMembers :: Group -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getMembers group page limit apiKey = runErrorT . callAPI $
-  [ "method" ?< "group.getMembers"
-  , "group" ?< group
-  , "page" ?< page
-  , "limit" ?< limit
-  , "api_key" ?< apiKey
+  [ (#) (Method "group.getMembers")
+  , (#) group
+  , (#) page
+  , (#) limit
+  , (#) apiKey
   ]
 
 -- | Get an album chart for a group, for a given date range. If no date range is supplied, it will return the most recent album chart for this group.
@@ -34,9 +34,9 @@ getMembers group page limit apiKey = runErrorT . callAPI $
 -- More: <http://www.lastfm.ru/api/show/group.getWeeklyAlbumChart>
 getWeeklyChartList :: Group -> APIKey -> Lastfm Response
 getWeeklyChartList group apiKey = runErrorT . callAPI $
-  [ "method" ?< "group.getWeeklyChartList"
-  , "group" ?< group
-  , "api_key" ?< apiKey
+  [ (#) (Method "group.getWeeklyChartList")
+  , (#) group
+  , (#) apiKey
   ]
 
 -- | Get an artist chart for a group, for a given date range. If no date range is supplied, it will return the most recent artist chart for this group.
@@ -44,11 +44,11 @@ getWeeklyChartList group apiKey = runErrorT . callAPI $
 -- More: <http://www.lastfm.ru/api/show/group.getWeeklyArtistChart>
 getWeeklyAlbumChart :: Group -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
 getWeeklyAlbumChart group from to apiKey = runErrorT . callAPI $
-  [ "method" ?< "group.getWeeklyAlbumChart"
-  , "group" ?< group
-  , "api_key" ?< apiKey
-  , "from" ?< from
-  , "to" ?< to
+  [ (#) (Method "group.getWeeklyAlbumChart")
+  , (#) group
+  , (#) from
+  , (#) to
+  , (#) apiKey
   ]
 
 -- | Get a list of available charts for this group, expressed as date ranges which can be sent to the chart services.
@@ -56,11 +56,11 @@ getWeeklyAlbumChart group from to apiKey = runErrorT . callAPI $
 -- More: <http://www.lastfm.ru/api/show/group.getWeeklyChartList>
 getWeeklyArtistChart :: Group -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
 getWeeklyArtistChart group from to apiKey = runErrorT . callAPI $
-  [ "method" ?< "group.getWeeklyArtistChart"
-  , "group" ?< group
-  , "api_key" ?< apiKey
-  , "from" ?< from
-  , "to" ?< to
+  [ (#) (Method "group.getWeeklyArtistChart")
+  , (#) group
+  , (#) from
+  , (#) to
+  , (#) apiKey
   ]
 
 
@@ -69,9 +69,9 @@ getWeeklyArtistChart group from to apiKey = runErrorT . callAPI $
 -- More: <http://www.lastfm.ru/api/show/group.getWeeklyTrackChart>
 getWeeklyTrackChart :: Group -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
 getWeeklyTrackChart group from to apiKey = runErrorT . callAPI $
-  [ "method" ?< "group.getWeeklyTrackChart"
-  , "group" ?< group
-  , "api_key" ?< apiKey
-  , "from" ?< from
-  , "to" ?< to
+  [ (#) (Method "group.getWeeklyTrackChart")
+  , (#) group
+  , (#) from
+  , (#) to
+  , (#) apiKey
   ]

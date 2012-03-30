@@ -19,13 +19,13 @@ compare value1 value2 limit apiKey = runErrorT go
           | isExceededMaximum value1 = throwError $ WrapperCallError method "first artists list length has exceeded maximum (100)."
           | isExceededMaximum value2 = throwError $ WrapperCallError method "second artists list length has exceeded maximum (100)."
           | otherwise = callAPI
-            [ "method" ?< method
+            [ (#) (Method method)
             , "type1" ?< type1
             , "type2" ?< type2
             , "value1" ?< value1
             , "value2" ?< value2
-            , "limit" ?< limit
-            , "api_key" ?< apiKey
+            , (#) limit
+            , (#) apiKey
             ]
             where method = "tasteometer.compare"
 

@@ -13,10 +13,10 @@ import Network.Lastfm
 -- More: <http://www.lastfm.ru/api/show/auth.getMobileSession>
 getMobileSession :: User -> APIKey -> AuthToken -> Lastfm Response
 getMobileSession user apiKey token = runErrorT . callAPI $
-  [ "method" ?< "auth.getMobileSession"
+  [ (#) (Method "auth.getMobileSession")
   , "username" ?< user
   , "authToken" ?< token
-  , "api_key" ?< apiKey
+  , (#) apiKey
   ]
 
 -- | Fetch a session key for a user.
@@ -24,8 +24,8 @@ getMobileSession user apiKey token = runErrorT . callAPI $
 -- More: <http://www.lastfm.ru/api/show/auth.getSession>
 getSession :: APIKey -> Token -> Lastfm Response
 getSession apiKey token = runErrorT . callAPI $
-  [ "method" ?< "auth.getSession"
-  , "api_key" ?< apiKey
+  [ (#) (Method "auth.getSession")
+  , (#) apiKey
   , "token" ?< token
   ]
 
@@ -34,10 +34,10 @@ getSession apiKey token = runErrorT . callAPI $
 -- More: <http://www.lastfm.ru/api/show/auth.getToken>
 getToken :: APIKey -> Lastfm Response
 getToken apiKey = runErrorT . callAPI $
-  [ "method" ?< "auth.getToken"
-  , "api_key" ?< apiKey
+  [ (#) (Method "auth.getToken")
+  , (#) apiKey
   ]
 
 -- | Construct the link to authorize token.
 getAuthorizeTokenLink :: APIKey -> Token -> String
-getAuthorizeTokenLink apiKey token = "http://www.last.fm/api/auth/?api_key=" ++ unpack apiKey ++ "&token=" ++ unpack token
+getAuthorizeTokenLink apiKey token = "http://www.last.fm/api/auth/?api_key=" ++ value apiKey ++ "&token=" ++ value token
