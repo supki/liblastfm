@@ -10,11 +10,11 @@ import Kludges
 
 apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
 
-addTags :: APIKey -> SessionKey -> IO ()
-addTags ak sk = Track.addTags (Artist "Jefferson Airplane") (Track "White rabbit") [Tag "60s", Tag "awesome"] ak sk >>= print ||| const (return ())
+addTags :: APIKey -> SessionKey -> Secret -> IO ()
+addTags ak sk s = Track.addTags (Artist "Jefferson Airplane") (Track "White rabbit") [Tag "60s", Tag "awesome"] ak sk s >>= print ||| const (return ())
 
-ban :: APIKey -> SessionKey -> IO ()
-ban ak sk = Track.ban (Artist "Eminem") (Track "Kim") ak sk >>= print ||| const (return ())
+ban :: APIKey -> SessionKey -> Secret -> IO ()
+ban ak sk s = Track.ban (Artist "Eminem") (Track "Kim") ak sk s >>= print ||| const (return ())
 
 getBuylinks :: IO ()
 getBuylinks = parse r f "Download suppliers"
@@ -51,9 +51,9 @@ getTags = parse r f "White Rabbit tags"
   where r = Track.getTags (Left (Artist "Jefferson Airplane", Track "White Rabbit")) Nothing (Left $ User "liblastfm") apiKey
         f = mapM (content <=< tag "name") <=< tags "tag" <=< tag "tags"
 
-getTagsAuth :: APIKey -> SessionKey -> IO ()
-getTagsAuth ak sk = parse r f "White Rabbit tags"
-  where r = Track.getTags (Left (Artist "Jefferson Airplane", Track "White Rabbit")) Nothing (Right sk) ak
+getTagsAuth :: APIKey -> SessionKey -> Secret -> IO ()
+getTagsAuth ak sk s = parse r f "White Rabbit tags"
+  where r = Track.getTags (Left (Artist "Jefferson Airplane", Track "White Rabbit")) Nothing (Right (sk, s)) ak
         f = mapM (content <=< tag "name") <=< tags "tag" <=< tag "tags"
 
 getTopFans :: IO ()
@@ -66,31 +66,31 @@ getTopTags = parse r f "Top tags"
   where r = Track.getTopTags (Left (Artist "Pink Floyd", Track "Brain Damage")) Nothing apiKey
         f = mapM (content <=< tag "name") <=< tags "tag" <=< tag "toptags"
 
-love :: APIKey -> SessionKey -> IO ()
-love ak sk = Track.love (Artist "Gojira") (Track "Ocean") ak sk >>= print ||| const (return ())
+love :: APIKey -> SessionKey -> Secret -> IO ()
+love ak sk s = Track.love (Artist "Gojira") (Track "Ocean") ak sk s >>= print ||| const (return ())
 
-removeTag :: APIKey -> SessionKey -> IO ()
-removeTag ak sk = Track.removeTag (Artist "Jefferson Airplane") (Track "White rabbit") (Tag "awesome") ak sk >>= print ||| const (return ())
+removeTag :: APIKey -> SessionKey -> Secret -> IO ()
+removeTag ak sk s = Track.removeTag (Artist "Jefferson Airplane") (Track "White rabbit") (Tag "awesome") ak sk s >>= print ||| const (return ())
 
 search :: IO ()
 search = parse r f "12 search results for \"Believe\" query"
   where r = Track.search (Track "Believe") Nothing (Just $ Limit 12) Nothing apiKey
         f = mapM (content <=< tag "name") <=< tags "track" <=< tag "trackmatches" <=< tag "results"
 
-share :: APIKey -> SessionKey -> IO ()
-share ak sk = Track.share (Artist "Led Zeppelin") (Track "When the Levee Breaks") [Recipient "liblastfm"] (Just $ Message "Just listen!") Nothing ak sk >>= print ||| const (return ())
+share :: APIKey -> SessionKey -> Secret -> IO ()
+share ak sk s = Track.share (Artist "Led Zeppelin") (Track "When the Levee Breaks") [Recipient "liblastfm"] (Just $ Message "Just listen!") Nothing ak sk s >>= print ||| const (return ())
 
-unban :: APIKey -> SessionKey -> IO ()
-unban ak sk = Track.unban (Artist "Eminem") (Track "Kim") ak sk >>= print ||| const (return ())
+unban :: APIKey -> SessionKey -> Secret -> IO ()
+unban ak sk s = Track.unban (Artist "Eminem") (Track "Kim") ak sk s >>= print ||| const (return ())
 
-unlove :: APIKey -> SessionKey -> IO ()
-unlove ak sk = Track.unlove (Artist "Gojira") (Track "Ocean") ak sk >>= print ||| const (return ())
+unlove :: APIKey -> SessionKey -> Secret -> IO ()
+unlove ak sk s = Track.unlove (Artist "Gojira") (Track "Ocean") ak sk s >>= print ||| const (return ())
 
-scrobble :: APIKey -> SessionKey -> IO ()
-scrobble ak sk = Track.scrobble (Timestamp 1328905590, Nothing, Artist "Gojira", Track "Ocean", Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing) ak sk >>= print ||| const (return ())
+scrobble :: APIKey -> SessionKey -> Secret -> IO ()
+scrobble ak sk s = Track.scrobble (Timestamp 1328905590, Nothing, Artist "Gojira", Track "Ocean", Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing) ak sk s >>= print ||| const (return ())
 
-updateNowPlaying :: APIKey -> SessionKey -> IO ()
-updateNowPlaying ak sk = Track.updateNowPlaying (Artist "Gojira") (Track "Ocean") Nothing Nothing Nothing Nothing Nothing Nothing ak sk >>= print ||| const (return ())
+updateNowPlaying :: APIKey -> SessionKey -> Secret -> IO ()
+updateNowPlaying ak sk s = Track.updateNowPlaying (Artist "Gojira") (Track "Ocean") Nothing Nothing Nothing Nothing Nothing Nothing ak sk s >>= print ||| const (return ())
 
 common :: IO ()
 common = do getBuylinks
@@ -104,14 +104,14 @@ common = do getBuylinks
             getTopTags
             search
 
-auth :: APIKey -> SessionKey -> IO ()
-auth ak sk = do addTags ak sk
-                getTagsAuth ak sk
-                ban ak sk
-                love ak sk
-                removeTag ak sk
-                scrobble ak sk
-                share ak sk
-                unban ak sk
-                unlove ak sk
-                updateNowPlaying ak sk
+auth :: APIKey -> SessionKey -> Secret -> IO ()
+auth ak sk s = do addTags ak sk s
+                  getTagsAuth ak sk s
+                  ban ak sk s
+                  love ak sk s
+                  removeTag ak sk s
+                  scrobble ak sk s
+                  share ak sk s
+                  unban ak sk s
+                  unlove ak sk s
+                  updateNowPlaying ak sk s

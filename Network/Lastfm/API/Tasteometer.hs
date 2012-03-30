@@ -7,9 +7,7 @@ module Network.Lastfm.API.Tasteometer
 import Control.Exception (throw)
 import Prelude hiding (compare)
 
-import Network.Lastfm ( Lastfm, Response, LastfmError (WrapperCallError), callAPI, dispatch
-                      , (?<), APIKey, Limit, Value(..)
-                      )
+import Network.Lastfm
 
 -- | Get a Tasteometer score from two inputs, along with a list of shared artists. If the input is a User some additional information is returned.
 --
@@ -21,8 +19,9 @@ compare value1 value2 limit apiKey = dispatch go
           | isNull value2 = throw $ WrapperCallError method "empty second artists list."
           | isExceededMaximum value1 = throw $ WrapperCallError method "first artists list length has exceeded maximum (100)."
           | isExceededMaximum value2 = throw $ WrapperCallError method "second artists list length has exceeded maximum (100)."
-          | otherwise = callAPI method
-            [ "type1" ?< type1
+          | otherwise = callAPI
+            [ "method" ?< method
+            , "type1" ?< type1
             , "type2" ?< type2
             , "value1" ?< value1
             , "value2" ?< value2

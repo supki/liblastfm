@@ -4,16 +4,15 @@ module Network.Lastfm.API.Venue
   ( getEvents, getPastEvents, search
   ) where
 
-import Network.Lastfm ( Lastfm, Response, callAPI, dispatch
-                      , (?<), APIKey, Country, FestivalsOnly, Limit, Name, Page, Venue
-                      )
+import Network.Lastfm
 
 -- | Get a list of upcoming events at this venue.
 --
 -- More: <http://www.lastfm.ru/api/show/venue.getEvents>
 getEvents :: Venue -> Maybe FestivalsOnly -> APIKey -> Lastfm Response
-getEvents venue festivalsOnly apiKey = dispatch . callAPI "venue.getEvents" $
-  [ "venue" ?< venue
+getEvents venue festivalsOnly apiKey = dispatch . callAPI $
+  [ "method" ?< "venue.getEvents"
+  , "venue" ?< venue
   , "api_key" ?< apiKey
   , "festivalsonly" ?< festivalsOnly
   ]
@@ -22,8 +21,9 @@ getEvents venue festivalsOnly apiKey = dispatch . callAPI "venue.getEvents" $
 --
 -- More: <http://www.lastfm.ru/api/show/venue.getPastEvents>
 getPastEvents :: Venue -> Maybe FestivalsOnly -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getPastEvents venue festivalsOnly page limit apiKey = dispatch . callAPI "venue.getPastEvents" $
-  [ "venue" ?< venue
+getPastEvents venue festivalsOnly page limit apiKey = dispatch . callAPI $
+  [ "method" ?< "venue.getPastEvents"
+  , "venue" ?< venue
   , "api_key" ?< apiKey
   , "festivalsonly" ?< festivalsOnly
   , "page" ?< page
@@ -34,8 +34,9 @@ getPastEvents venue festivalsOnly page limit apiKey = dispatch . callAPI "venue.
 --
 -- More: <http://www.lastfm.ru/api/show/venue.search>
 search :: Name -> Maybe Page -> Maybe Limit -> Maybe Country -> APIKey -> Lastfm Response
-search venue page limit country apiKey = dispatch . callAPI "venue.search" $
-  [ "venue" ?< venue
+search venue page limit country apiKey = dispatch . callAPI $
+  [ "method" ?< "venue.search"
+  , "venue" ?< venue
   , "api_key" ?< apiKey
   , "page" ?< page
   , "limit" ?< limit

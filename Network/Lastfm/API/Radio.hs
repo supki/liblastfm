@@ -6,10 +6,7 @@ module Network.Lastfm.API.Radio
 
 import Control.Exception (throw)
 
-import Network.Lastfm ( Lastfm, Response, LastfmError (WrapperCallError), callAPI, dispatch
-                      , (?<), APIKey, Bitrate, BuyLinks, Discovery, Language
-                      , Multiplier, Name, RTP, Station, SessionKey, unpack
-                      )
+import Network.Lastfm
 
 -- | Fetch new radio content periodically in an XSPF format.
 --
@@ -21,13 +18,15 @@ getPlaylist :: Maybe Discovery
             -> Bitrate
             -> APIKey
             -> SessionKey
+            -> Secret
             -> Lastfm Response
-getPlaylist discovery rtp buylinks multiplier bitrate apiKey sessionKey = dispatch go
+getPlaylist discovery rtp buylinks multiplier bitrate apiKey sessionKey secret = dispatch go
   where go
           | unpack multiplier /= "1.0" && unpack multiplier /= "2.0" = throw $ WrapperCallError method "unsupported multiplier."
           | unpack bitrate /= "64" && unpack bitrate /= "128" = throw $ WrapperCallError method "unsupported bitrate."
-          | otherwise = callAPI method
-            [ "discovery" ?< discovery
+          | otherwise = callAPIsigned secret
+            [ "method" ?< method
+            , "discovery" ?< discovery
             , "rtp" ?< rtp
             , "buylinks" ?< buylinks
             , "speed_multiplier" ?< multiplier
@@ -41,17 +40,19 @@ getPlaylist discovery rtp buylinks multiplier bitrate apiKey sessionKey = dispat
 --
 -- More: <http://www.lastfm.ru/api/show/radio.search>
 search :: Name -> APIKey -> Lastfm Response
-search name apiKey = dispatch . callAPI "radio.search"$
-  [ "name" ?< name
+search name apiKey = dispatch . callAPI $
+  [ "method" ?< "radio.search"
+  , "name" ?< name
   , "api_key" ?< apiKey
   ]
 
 -- | Tune in to a Last.fm radio station.
 --
 -- More: <http://www.lastfm.ru/api/show/radio.tune>
-tune :: Maybe Language -> Station -> APIKey -> SessionKey -> Lastfm Response
-tune language station apiKey sessionKey = dispatch . callAPI "radio.tune" $
-  [ "lang" ?< language
+tune :: Maybe Language -> Station -> APIKey -> SessionKey -> Secret -> Lastfm Response
+tune language station apiKey sessionKey secret = dispatch . callAPIsigned secret $
+  [ "method" ?< "radio.tune"
+  , "lang" ?< language
   , "station" ?< station
   , "api_key" ?< apiKey
   , "sk" ?< sessionKey

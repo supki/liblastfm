@@ -10,8 +10,8 @@ import Kludges
 
 apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
 
-addTags :: APIKey -> SessionKey -> IO ()
-addTags ak sk = Artist.addTags (Artist "Егор Летов") [Tag "russian"] ak sk >>= print ||| const (return ())
+addTags :: APIKey -> SessionKey -> Secret -> IO ()
+addTags ak sk s = Artist.addTags (Artist "Егор Летов") [Tag "russian"] ak sk s >>= print ||| const (return ())
 
 getCorrection :: IO ()
 getCorrection = parse r f "Correction"
@@ -58,9 +58,9 @@ getTags = parse r f "Burzum tags"
   where r = Artist.getTags (Left $ Artist "Burzum") Nothing (Left $ User "liblastfm") apiKey
         f = mapM (content <=< tag "name") <=< tags "tag" <=< tag "tags"
 
-getTagsAuth :: APIKey -> SessionKey -> IO ()
-getTagsAuth ak sk = parse r f "Burzum tags"
-  where r = Artist.getTags (Left $ Artist "Burzum") Nothing (Right sk) ak
+getTagsAuth :: APIKey -> SessionKey -> Secret -> IO ()
+getTagsAuth ak sk s = parse r f "Burzum tags"
+  where r = Artist.getTags (Left $ Artist "Burzum") Nothing (Right (sk, s)) ak
         f = mapM (content <=< tag "name") <=< tags "tag" <=< tag "tags"
 
 getTopAlbums :: IO ()
@@ -83,16 +83,16 @@ getTopTracks = parse r f "10 most popular tracks"
   where r = Artist.getTopTracks (Left $ Artist "Meshuggah") Nothing Nothing (Just $ Limit 10) apiKey
         f = mapM (content <=< tag "name") <=< tags "track" <=< tag "toptracks"
 
-removeTag :: APIKey -> SessionKey -> IO ()
-removeTag ak sk = Artist.removeTag (Artist "Burzum") (Tag "black metal") ak sk >>= print ||| const (return ())
+removeTag :: APIKey -> SessionKey -> Secret -> IO ()
+removeTag ak sk s = Artist.removeTag (Artist "Burzum") (Tag "black metal") ak sk s >>= print ||| const (return ())
 
 search :: IO ()
 search = parse r f "12 search results for \"Mesh\" query"
   where r = Artist.search (Artist "Mesh") Nothing (Just $ Limit 12) apiKey
         f = mapM (content <=< tag "name") <=< tags "artist" <=< tag "artistmatches" <=< tag "results"
 
-share :: APIKey -> SessionKey -> IO ()
-share ak sk = Artist.share (Artist "Sleep") [Recipient "liblastfm"] (Just $ Message "Just listen!") Nothing ak sk >>= print ||| const (return ())
+share :: APIKey -> SessionKey -> Secret -> IO ()
+share ak sk s = Artist.share (Artist "Sleep") [Recipient "liblastfm"] (Just $ Message "Just listen!") Nothing ak sk s >>= print ||| const (return ())
 
 common :: IO ()
 common = do getCorrection
@@ -110,9 +110,9 @@ common = do getCorrection
             getTopTracks
             search
 
-auth :: APIKey -> SessionKey -> IO ()
-auth ak sk = do addTags ak sk
-                getTagsAuth ak sk
-                removeTag ak sk
-                share ak sk
-                -- shout (see User.shout example)
+auth :: APIKey -> SessionKey -> Secret -> IO ()
+auth ak sk s = do addTags ak sk s
+                  getTagsAuth ak sk s
+                  removeTag ak sk s
+                  share ak sk s
+                  -- shout (see User.shout example)

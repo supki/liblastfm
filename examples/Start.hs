@@ -25,8 +25,7 @@ import qualified ETrack as Track
 import qualified EUser as User
 import qualified EVenue as Venue
 
-import Network.Lastfm (withSecret)
-import Network.Lastfm.Types (APIKey(..), SessionKey(..))
+import Network.Lastfm.Types (APIKey(..), SessionKey(..), Secret(..))
 
 data Flag
        = Help
@@ -82,9 +81,9 @@ parseArgs argv = case getOpt Permute options argv of
 
     header = "Usage: ./start [MODULE|--all]"
 
-getConfig :: FilePath -> IO (APIKey, SessionKey, String)
+getConfig :: FilePath -> IO (APIKey, SessionKey, Secret)
 getConfig fp = do [apiKey, sessionKey, secret] <- map ((!! 1) . splitOn "=" . filter (not . isSpace)) . lines <$> readFile fp
-                  return (APIKey apiKey, SessionKey sessionKey, secret)
+                  return (APIKey apiKey, SessionKey sessionKey, Secret secret)
 
 common :: Flag -> IO ()
 common Album = Album.common
@@ -102,7 +101,7 @@ common Track = Track.common
 common User = User.common
 common Venue = Venue.common
 
-auth :: Flag -> APIKey -> SessionKey -> IO ()
+auth :: Flag -> APIKey -> SessionKey -> Secret -> IO ()
 auth Album = Album.auth
 auth Artist = Artist.auth
 auth Chart = Chart.auth
@@ -122,4 +121,4 @@ main :: IO ()
 main = do args <- getArgs
           modules <- parseArgs args
           (a, sk, s) <- getConfig ".lastfm.conf"
-          mapM_ (\m -> common m >> withSecret s (auth m a sk)) modules
+          mapM_ (\m -> common m >> auth m a sk s) modules

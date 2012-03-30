@@ -51,5 +51,5 @@ common = do getHype
             getWeeklyChartList
             getWeeklyTrackChart
 
-auth :: APIKey -> SessionKey -> IO ()
-auth _ _ = return ()
+auth :: APIKey -> SessionKey -> Secret -> IO ()
+auth _ _ _ = return ()

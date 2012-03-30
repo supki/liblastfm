@@ -65,9 +65,9 @@ getPlaylists = parse r f "Playlists"
   where r = User.getPlaylists (User "mokele") apiKey
         f = mapM (content <=< tag "title") <=< tags "playlist" <=< tag "playlists"
 
-getRecentStations :: APIKey -> SessionKey -> IO ()
-getRecentStations ak sk = parse r f "Recent stations"
-  where r = User.getRecentStations (User "liblastfm") Nothing (Just $ Limit 10) ak sk
+getRecentStations :: APIKey -> SessionKey -> Secret -> IO ()
+getRecentStations ak sk s = parse r f "Recent stations"
+  where r = User.getRecentStations (User "liblastfm") Nothing (Just $ Limit 10) ak sk s
         f = mapM (content <=< tag "name") <=< tags "station" <=< tag "recentstations"
 
 getRecentTracks :: IO ()
@@ -75,14 +75,14 @@ getRecentTracks = parse r f "Recent tracks"
   where r = User.getRecentTracks (User "smpcln") Nothing (Just $ Limit 10) Nothing Nothing apiKey
         f = mapM (content <=< tag "name") <=< tags "track" <=< tag "recenttracks"
 
-getRecommendedArtists :: APIKey -> SessionKey -> IO ()
-getRecommendedArtists ak sk = parse r f "Recommended artists"
-  where r = User.getRecommendedArtists Nothing (Just $ Limit 10) ak sk
+getRecommendedArtists :: APIKey -> SessionKey -> Secret -> IO ()
+getRecommendedArtists ak sk s = parse r f "Recommended artists"
+  where r = User.getRecommendedArtists Nothing (Just $ Limit 10) ak sk s
         f = mapM (content <=< tag "name") <=< tags "artist" <=< tag "recommendations"
 
-getRecommendedEvents :: APIKey -> SessionKey -> IO ()
-getRecommendedEvents ak sk = parse r f "Recommended events"
-  where r = User.getRecommendedEvents Nothing (Just $ Limit 10) ak sk
+getRecommendedEvents :: APIKey -> SessionKey -> Secret -> IO ()
+getRecommendedEvents ak sk s = parse r f "Recommended events"
+  where r = User.getRecommendedEvents Nothing (Just $ Limit 10) ak sk s
         f = mapM (content <=< tag "url") <=< tags "event" <=< tag "events"
 
 getShouts :: IO ()
@@ -132,8 +132,8 @@ getWeeklyTrackChart = parse r f "Weekly track chart"
   where r = User.getWeeklyTrackChart (User "rj") Nothing Nothing apiKey
         f = mapM (content <=< tag "url") <=< tags "track" <=< tag "weeklytrackchart"
 
-shout :: APIKey -> SessionKey -> IO ()
-shout ak sk = User.shout (User "liblastfm") (Message "test message") ak sk >>= print ||| const (return ())
+shout :: APIKey -> SessionKey -> Secret -> IO ()
+shout ak sk s = User.shout (User "liblastfm") (Message "test message") ak sk s >>= print ||| const (return ())
 
 common :: IO ()
 common = do getArtistTracks
@@ -158,9 +158,9 @@ common = do getArtistTracks
             getWeeklyChartList
             getWeeklyTrackChart
 
-auth :: APIKey -> SessionKey -> IO ()
-auth ak sk = do getRecentStations ak sk
-                getRecommendedArtists ak sk
-                getRecommendedEvents ak sk
-                shout ak sk
+auth :: APIKey -> SessionKey -> Secret -> IO ()
+auth ak sk s = do getRecentStations ak sk s
+                  getRecommendedArtists ak sk s
+                  getRecommendedEvents ak sk s
+                  shout ak sk s
 

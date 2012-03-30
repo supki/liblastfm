@@ -4,16 +4,15 @@ module Network.Lastfm.API.Group
   ( getHype, getMembers, getWeeklyChartList, getWeeklyAlbumChart, getWeeklyArtistChart, getWeeklyTrackChart
   ) where
 
-import Network.Lastfm ( Lastfm, Response, callAPI, dispatch
-                      , (?<), APIKey, From, Group, Limit, Page, To
-                      )
+import Network.Lastfm
 
 -- | Get the hype list for a group.
 --
 -- More: <http://www.lastfm.ru/api/show/group.getHype>
 getHype :: Group -> APIKey -> Lastfm Response
-getHype group apiKey = dispatch . callAPI "group.getHype" $
-  [ "group" ?< group
+getHype group apiKey = dispatch . callAPI $
+  [ "method" ?< "group.getHype"
+  , "group" ?< group
   , "api_key" ?< apiKey
   ]
 
@@ -21,8 +20,9 @@ getHype group apiKey = dispatch . callAPI "group.getHype" $
 --
 -- More: <http://www.lastfm.ru/api/show/group.getMembers>
 getMembers :: Group -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getMembers group page limit apiKey = dispatch . callAPI "group.getMembers" $
-  [ "group" ?< group
+getMembers group page limit apiKey = dispatch . callAPI $
+  [ "method" ?< "group.getMembers"
+  , "group" ?< group
   , "page" ?< page
   , "limit" ?< limit
   , "api_key" ?< apiKey
@@ -32,8 +32,9 @@ getMembers group page limit apiKey = dispatch . callAPI "group.getMembers" $
 --
 -- More: <http://www.lastfm.ru/api/show/group.getWeeklyAlbumChart>
 getWeeklyChartList :: Group -> APIKey -> Lastfm Response
-getWeeklyChartList group apiKey = dispatch . callAPI "group.getWeeklyChartList" $
-  [ "group" ?< group
+getWeeklyChartList group apiKey = dispatch . callAPI $
+  [ "method" ?< "group.getWeeklyChartList"
+  , "group" ?< group
   , "api_key" ?< apiKey
   ]
 
@@ -41,8 +42,9 @@ getWeeklyChartList group apiKey = dispatch . callAPI "group.getWeeklyChartList" 
 --
 -- More: <http://www.lastfm.ru/api/show/group.getWeeklyArtistChart>
 getWeeklyAlbumChart :: Group -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
-getWeeklyAlbumChart group from to apiKey = dispatch . callAPI "group.getWeeklyAlbumChart" $
-  [ "group" ?< group
+getWeeklyAlbumChart group from to apiKey = dispatch . callAPI $
+  [ "method" ?< "group.getWeeklyAlbumChart"
+  , "group" ?< group
   , "api_key" ?< apiKey
   , "from" ?< from
   , "to" ?< to
@@ -52,8 +54,9 @@ getWeeklyAlbumChart group from to apiKey = dispatch . callAPI "group.getWeeklyAl
 --
 -- More: <http://www.lastfm.ru/api/show/group.getWeeklyChartList>
 getWeeklyArtistChart :: Group -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
-getWeeklyArtistChart group from to apiKey = dispatch . callAPI "group.getWeeklyArtistChart" $
-  [ "group" ?< group
+getWeeklyArtistChart group from to apiKey = dispatch . callAPI $
+  [ "method" ?< "group.getWeeklyArtistChart"
+  , "group" ?< group
   , "api_key" ?< apiKey
   , "from" ?< from
   , "to" ?< to
@@ -64,8 +67,9 @@ getWeeklyArtistChart group from to apiKey = dispatch . callAPI "group.getWeeklyA
 --
 -- More: <http://www.lastfm.ru/api/show/group.getWeeklyTrackChart>
 getWeeklyTrackChart :: Group -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
-getWeeklyTrackChart group from to apiKey = dispatch . callAPI "group.getWeeklyTrackChart" $
-  [ "group" ?< group
+getWeeklyTrackChart group from to apiKey = dispatch . callAPI $
+  [ "method" ?< "group.getWeeklyTrackChart"
+  , "group" ?< group
   , "api_key" ?< apiKey
   , "from" ?< from
   , "to" ?< to

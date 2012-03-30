@@ -9,14 +9,14 @@ import Kludges
 
 apiKey = APIKey "b25b959554ed76058ac220b7b2e0a026"
 
-tune :: APIKey -> SessionKey -> IO ()
-tune ak sk = parse r f "Tune"
-  where r = Radio.tune Nothing (Station "lastfm://artist/Merzbow/similarartists") ak sk
+tune :: APIKey -> SessionKey -> Secret -> IO ()
+tune ak sk s = parse r f "Tune"
+  where r = Radio.tune Nothing (Station "lastfm://artist/Merzbow/similarartists") ak sk s
         f = fmap return . content <=< tag "url" <=< tag "station"
 
-getPlaylist :: APIKey -> SessionKey -> IO ()
-getPlaylist ak sk = parse r f "Playlist"
-  where r = Radio.getPlaylist Nothing Nothing Nothing (Multiplier 2.0) (Bitrate 64) ak sk
+getPlaylist :: APIKey -> SessionKey -> Secret -> IO ()
+getPlaylist ak sk s = parse r f "Playlist"
+  where r = Radio.getPlaylist Nothing Nothing Nothing (Multiplier 2.0) (Bitrate 64) ak sk s
         f = mapM (content <=< tag "title") <=< tags "track" <=< tag "trackList" <=< tag "playlist"
 
 search :: IO ()
@@ -27,6 +27,6 @@ search = parse r f "Dubstep stations"
 common :: IO ()
 common = do search
 
-auth :: APIKey -> SessionKey -> IO ()
-auth ak sk = do tune ak sk
-                getPlaylist ak sk
+auth :: APIKey -> SessionKey -> Secret -> IO ()
+auth ak sk s = do tune ak sk s
+                  getPlaylist ak sk s

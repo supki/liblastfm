@@ -3,8 +3,7 @@
 {-# OPTIONS_HADDOCK prune #-}
 module Network.Lastfm
   ( Lastfm, Response, LastfmError(WrapperCallError), dispatch
-  , withSecret
-  , callAPI
+  , callAPI, callAPIsigned
   , module Network.Lastfm.Types
   ) where
 
@@ -12,16 +11,14 @@ import Codec.Binary.UTF8.String (encodeString)
 import Control.Applicative ((<$>))
 import Control.Arrow (second)
 import Control.Exception (Exception, handle, throw)
-import Control.Monad ((<=<), liftM)
+import Control.Monad ((<=<))
 import Data.Digest.Pure.MD5 (md5)
 import Data.Function (on)
-import Data.IORef
 import Data.List (sortBy)
 import Data.Typeable (Typeable)
 import Data.URLEncoded (urlEncode, export)
 import Network.Curl hiding (Content)
 import Network.Lastfm.Types
-import System.IO.Unsafe (unsafePerformIO)
 import Text.XML.Light
 
 import qualified Data.ByteString.Lazy.Char8 as BS
@@ -100,40 +97,32 @@ type Lastfm a = IO (Either LastfmError a)
 -- | Type synonym for Lastfm response
 type Response = String
 
-secret :: IORef String
-secret = unsafePerformIO $ newIORef ""
-
--- | All authentication requiring functions should be wrapped into 'withSecret'
-withSecret :: String -> IO a -> IO a
-withSecret s f = writeIORef secret s >> f
-
-url :: String
-url = "http://ws.audioscrobbler.com/2.0/?"
-
 -- | Low level function. Captures all exceptions and transform them into Either Error type.
 dispatch :: IO a -> Lastfm a
-dispatch f = handle (\(e :: LastfmError) -> return (Left e)) (liftM Right f)
+dispatch f = handle (\(e :: LastfmError) -> return (Left e)) (Right <$> f)
 
 -- | Low level function. Sends POST query to Lastfm API.
-callAPI :: String -> [(String, String)] -> IO Response
-callAPI m xs = withCurlDo $ do
-                 s <- readIORef secret
-                 let ys = ("method", m) : (map (second encodeString) . filter (not . null . snd) $ xs)
-                 let zs = if not $ null s then ("api_sig", sign s ys) : ys else ys
-                 response <- respBody <$> (curlGetResponse_ url
-                                            [ CurlPostFields . map (export . urlEncode) $ zs
-                                            , CurlFailOnError False
-                                            , CurlUserAgent "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0 Iceweasel/10.0"
-                                            ]
-                                            :: IO CurlResponse)
-                 case isError response of
-                   Just n  -> throw $ LastfmAPIError (toEnum $ n - 1)
-                   Nothing -> return response
+callAPI :: [(String, String)] -> IO Response
+callAPI xs = query ys
+  where ys = map (second encodeString) . filter (not . null . snd) $ xs
 
-  where -- | Some API calls should be signed. (http://www.lastfm.ru/api/authspec Section 8)
-        sign :: String -> [(String, String)] -> String
-        sign s = show . md5 . BS.pack . (++ s) . concatMap (uncurry (++)) . sortBy (compare `on` fst)
+callAPIsigned :: Secret -> [(String, String)] -> IO Response
+callAPIsigned (Secret s) xs = query zs
+  where ys = map (second encodeString) . filter (not . null . snd) $ xs
+        zs = ("api_sig", sign ys) : ys
 
-        isError :: String -> Maybe Int
+        sign :: [(String, String)] -> String
+        sign = show . md5 . BS.pack . (++ s) . concatMap (uncurry (++)) . sortBy (compare `on` fst)
+
+query :: [(String, String)] -> IO Response
+query xs = withCurlDo $ do
+  response <- respBody <$> (curlGetResponse_ "http://ws.audioscrobbler.com/2.0/?"
+                             [ CurlPostFields . map (export . urlEncode) $ xs
+                             , CurlFailOnError False
+                             , CurlUserAgent "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0 Iceweasel/10.0"
+                             ]
+                             :: IO CurlResponse)
+  maybe (return response) (\n -> throw $ LastfmAPIError (toEnum $ n - 1)) (isError response)
+  where isError :: String -> Maybe Int
         isError response = do xml <- parseXMLDoc response
                               read <$> (findAttr (unqual "code") <=< findChild (unqual "error")) xml

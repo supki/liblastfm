@@ -5,9 +5,7 @@ module Network.Lastfm.API.Chart
   , getTopArtists, getTopTags, getTopTracks
   ) where
 
-import Network.Lastfm ( Lastfm, Response, callAPI, dispatch
-                      , (?<), APIKey, Limit, Page
-                      )
+import Network.Lastfm
 
 -- | Get the hyped artists chart.
 --
@@ -46,8 +44,9 @@ getTopTracks :: Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getTopTracks = get "getTopTracks"
 
 get :: String -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-get method page limit apiKey = dispatch . callAPI ("chart." ++ method) $
-  [ "page" ?< page
+get method page limit apiKey = dispatch . callAPI $
+  [ "method" ?< ("chart." ++ method)
+  , "page" ?< page
   , "limit" ?< limit
   , "api_key" ?< apiKey
   ]

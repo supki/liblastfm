@@ -3,6 +3,8 @@ module Network.Lastfm.Types where
 
 import Data.List (intercalate)
 
+newtype Secret = Secret String deriving Show
+
 newtype Album = Album String deriving (Show, LastfmValue)
 newtype AlbumArtist = AlbumArtist String deriving (Show, LastfmValue)
 newtype APIKey = APIKey String deriving (Show, LastfmValue)
@@ -110,4 +112,3 @@ instance LastfmValue a => LastfmValue (Maybe a) where
 
 (?<) :: LastfmValue a => String -> a -> (String, String)
 a ?< b = (a, unpack b)
-

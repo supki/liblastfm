@@ -10,17 +10,15 @@ module Network.Lastfm.API.User
 
 import Control.Monad (void)
 
-import Network.Lastfm ( Lastfm, Response, callAPI, dispatch
-                      , (?<), APIKey, Artist, FestivalsOnly, From, Limit, Message, Page
-                      , Period, RecentTracks, SessionKey, Tag, TaggingType, To, User, UseRecs
-                      )
+import Network.Lastfm
 
 -- | Get a list of tracks by a given artist scrobbled by this user, including scrobble time. Can be limited to specific timeranges, defaults to all time.
 --
 -- More: <http://www.lastfm.ru/api/show/user.getArtistTracks>
 getArtistTracks :: User -> Artist -> Maybe From -> Maybe To -> Maybe Page -> APIKey -> Lastfm Response
-getArtistTracks user artist startTimestamp endTimestamp page apiKey = dispatch . callAPI "user.getArtistTracks" $
-  [ "user" ?< user
+getArtistTracks user artist startTimestamp endTimestamp page apiKey = dispatch . callAPI $
+  [ "method" ?< "user.getArtistTracks"
+  , "user" ?< user
   , "artist" ?< artist
   , "startTimestamp" ?< startTimestamp
   , "page" ?< page
@@ -32,8 +30,9 @@ getArtistTracks user artist startTimestamp endTimestamp page apiKey = dispatch .
 --
 -- More: <http://www.lastfm.ru/api/show/user.getBannedTracks>
 getBannedTracks :: User -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getBannedTracks user page limit apiKey = dispatch . callAPI "user.getBannedTracks" $
-  [ "user" ?< user
+getBannedTracks user page limit apiKey = dispatch . callAPI $
+  [ "method" ?< "user.getBannedTracks"
+  , "user" ?< user
   , "page" ?< page
   , "limit" ?< limit
   , "api_key" ?< apiKey
@@ -43,8 +42,9 @@ getBannedTracks user page limit apiKey = dispatch . callAPI "user.getBannedTrack
 --
 -- Mpre: <http://www.lastfm.ru/api/show/user.getEvents>
 getEvents :: User -> Maybe Page -> Maybe Limit -> Maybe FestivalsOnly -> APIKey -> Lastfm Response
-getEvents user page limit festivalsOnly apiKey = dispatch . callAPI "user.getEvents" $
-  [ "user" ?< user
+getEvents user page limit festivalsOnly apiKey = dispatch . callAPI $
+  [ "method" ?< "user.getEvents"
+  , "user" ?< user
   , "page" ?< page
   , "limit" ?< limit
   , "festivalsonly" ?< festivalsOnly
@@ -55,8 +55,9 @@ getEvents user page limit festivalsOnly apiKey = dispatch . callAPI "user.getEve
 --
 -- More: <http://www.lastfm.ru/api/show/user.getFriends>
 getFriends :: User -> Maybe RecentTracks -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getFriends user recentTracks page limit apiKey = dispatch . callAPI "user.getFriends" $
-  [ "user" ?< user
+getFriends user recentTracks page limit apiKey = dispatch . callAPI $
+  [ "method" ?< "user.getFriends"
+  , "user" ?< user
   , "recenttracks" ?< recentTracks
   , "page" ?< page
   , "limit" ?< limit
@@ -67,8 +68,9 @@ getFriends user recentTracks page limit apiKey = dispatch . callAPI "user.getFri
 --
 -- More: <http://www.lastfm.ru/api/show/user.getInfo>
 getInfo :: Maybe User -> APIKey -> Lastfm Response
-getInfo user apiKey = dispatch $ callAPI "user.getInfo"
-  [ "user" ?< user
+getInfo user apiKey = dispatch . callAPI $
+  [ "method" ?< "user.getInfo"
+  , "user" ?< user
   , "api_key" ?< apiKey
   ]
 
@@ -76,8 +78,9 @@ getInfo user apiKey = dispatch $ callAPI "user.getInfo"
 --
 -- More: <http://www.lastfm.ru/api/show/user.getLovedTracks>
 getLovedTracks :: User -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getLovedTracks user page limit apiKey = dispatch . callAPI "user.getLovedTracks" $
-  [ "user" ?< user
+getLovedTracks user page limit apiKey = dispatch . callAPI $
+  [ "method" ?< "user.getLovedTracks"
+  , "user" ?< user
   , "page" ?< page
   , "limit" ?< limit
   , "api_key" ?< apiKey
@@ -87,8 +90,9 @@ getLovedTracks user page limit apiKey = dispatch . callAPI "user.getLovedTracks"
 --
 -- More: <http://www.lastfm.ru/api/show/user.getNeighbours>
 getNeighbours :: User -> Maybe Limit -> APIKey -> Lastfm Response
-getNeighbours user limit apiKey = dispatch . callAPI "user.getNeighbours" $
-  [ "user" ?< user
+getNeighbours user limit apiKey = dispatch . callAPI $
+  [ "method" ?< "user.getNeighbours"
+  , "user" ?< user
   , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
@@ -97,8 +101,9 @@ getNeighbours user limit apiKey = dispatch . callAPI "user.getNeighbours" $
 --
 -- More: <http://www.lastfm.ru/api/show/user.getNewReleases>
 getNewReleases :: User -> Maybe UseRecs -> APIKey -> Lastfm Response
-getNewReleases user useRecs apiKey = dispatch . callAPI "user.getNewReleases" $
-  [ "user" ?< user
+getNewReleases user useRecs apiKey = dispatch . callAPI $
+  [ "method" ?< "user.getNewReleases"
+  , "user" ?< user
   , "userecs" ?< useRecs
   , "api_key" ?< apiKey
   ]
@@ -107,8 +112,9 @@ getNewReleases user useRecs apiKey = dispatch . callAPI "user.getNewReleases" $
 --
 -- More: <http://www.lastfm.ru/api/show/user.getPastEvents>
 getPastEvents :: User -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getPastEvents user page limit apiKey = dispatch . callAPI "user.getPastEvents" $
-  [ "user" ?< user
+getPastEvents user page limit apiKey = dispatch . callAPI $
+  [ "method" ?< "user.getPastEvents"
+  , "user" ?< user
   , "page" ?< page
   , "limit" ?< limit
   , "api_key" ?< apiKey
@@ -124,8 +130,9 @@ getPersonalTags :: User
                 -> Maybe Limit
                 -> APIKey
                 -> Lastfm Response
-getPersonalTags user tag taggingType page limit apiKey = dispatch . callAPI "user.getPersonalTags" $
-  [ "user" ?< user
+getPersonalTags user tag taggingType page limit apiKey = dispatch . callAPI $
+  [ "method" ?< "user.getPersonalTags"
+  , "user" ?< user
   , "tag" ?< tag
   , "taggingtype" ?< taggingType
   , "page" ?< page
@@ -137,17 +144,19 @@ getPersonalTags user tag taggingType page limit apiKey = dispatch . callAPI "use
 --
 -- More: <http://www.lastfm.ru/api/show/user.getPlaylists>
 getPlaylists :: User -> APIKey -> Lastfm Response
-getPlaylists user apiKey = dispatch . callAPI "user.getPlaylists" $
-  [ "user" ?< user
+getPlaylists user apiKey = dispatch . callAPI $
+  [ "method" ?< "user.getPlaylists"
+  , "user" ?< user
   , "api_key" ?< apiKey
   ]
 
 -- | Get a list of the recent Stations listened to by this user.
 --
 -- More: <http://www.lastfm.ru/api/show/user.getRecentStations>
-getRecentStations :: User -> Maybe Page -> Maybe Limit -> APIKey -> SessionKey -> Lastfm Response
-getRecentStations user page limit apiKey sessionKey = dispatch . callAPI "user.getRecentStations" $
-  [ "user" ?< user
+getRecentStations :: User -> Maybe Page -> Maybe Limit -> APIKey -> SessionKey -> Secret -> Lastfm Response
+getRecentStations user page limit apiKey sessionKey secret = dispatch . callAPIsigned secret $
+  [ "method" ?< "user.getRecentStations"
+  , "user" ?< user
   , "page" ?< page
   , "limit" ?< limit
   , "api_key" ?< apiKey
@@ -158,8 +167,9 @@ getRecentStations user page limit apiKey sessionKey = dispatch . callAPI "user.g
 --
 -- More: <http://www.lastfm.ru/api/show/user.getRecentTracks>
 getRecentTracks :: User -> Maybe Page -> Maybe Limit -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
-getRecentTracks user page limit from to apiKey = dispatch . callAPI "user.getRecentTracks" $
-  [ "user" ?< user
+getRecentTracks user page limit from to apiKey = dispatch . callAPI $
+  [ "method" ?< "user.getRecentTracks"
+  , "user" ?< user
   , "page" ?< page
   , "limit" ?< limit
   , "from" ?< from
@@ -170,9 +180,10 @@ getRecentTracks user page limit from to apiKey = dispatch . callAPI "user.getRec
 -- | Get Last.fm artist recommendations for a user.
 --
 -- Mpre: <http://www.lastfm.ru/api/show/user.getRecommendedArtists>
-getRecommendedArtists :: Maybe Page -> Maybe Limit -> APIKey -> SessionKey -> Lastfm Response
-getRecommendedArtists page limit apiKey sessionKey = dispatch . callAPI "user.getRecommendedArtists" $
-  [ "page" ?< page
+getRecommendedArtists :: Maybe Page -> Maybe Limit -> APIKey -> SessionKey -> Secret -> Lastfm Response
+getRecommendedArtists page limit apiKey sessionKey secret = dispatch . callAPIsigned secret $
+  [ "method" ?< "user.getRecommendedArtists"
+  , "page" ?< page
   , "limit" ?< limit
   , "api_key" ?< apiKey
   , "sk" ?< sessionKey
@@ -181,9 +192,10 @@ getRecommendedArtists page limit apiKey sessionKey = dispatch . callAPI "user.ge
 -- | Get a paginated list of all events recommended to a user by Last.fm, based on their listening profile.
 --
 -- More: <http://www.lastfm.ru/api/show/user.getRecommendedEvents>
-getRecommendedEvents :: Maybe Page -> Maybe Limit -> APIKey -> SessionKey -> Lastfm Response
-getRecommendedEvents page limit apiKey sessionKey = dispatch . callAPI "user.getRecommendedEvents" $
-  [ "page" ?< page
+getRecommendedEvents :: Maybe Page -> Maybe Limit -> APIKey -> SessionKey -> Secret -> Lastfm Response
+getRecommendedEvents page limit apiKey sessionKey secret = dispatch . callAPIsigned secret $
+  [ "method" ?< "user.getRecommendedEvents"
+  , "page" ?< page
   , "limit" ?< limit
   , "api_key" ?< apiKey
   , "sk" ?< sessionKey
@@ -193,8 +205,9 @@ getRecommendedEvents page limit apiKey sessionKey = dispatch . callAPI "user.get
 --
 -- More: <http://www.lastfm.ru/api/show/user.getShouts>
 getShouts :: User -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getShouts user page limit apiKey = dispatch . callAPI "user.getShouts" $
-  [ "user" ?< user
+getShouts user page limit apiKey = dispatch . callAPI $
+  [ "method" ?< "user.getShouts"
+  , "user" ?< user
   , "page" ?< page
   , "limit" ?< limit
   , "api_key" ?< apiKey
@@ -204,8 +217,9 @@ getShouts user page limit apiKey = dispatch . callAPI "user.getShouts" $
 --
 -- More: <http://www.lastfm.ru/api/show/user.getTopAlbums>
 getTopAlbums :: User -> Maybe Period -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopAlbums user period page limit apiKey = dispatch . callAPI "user.getTopAlbums" $
-  [ "user" ?< user
+getTopAlbums user period page limit apiKey = dispatch . callAPI $
+  [ "method" ?< "user.getTopAlbums"
+  , "user" ?< user
   , "period" ?< period
   , "page" ?< page
   , "limit" ?< limit
@@ -216,8 +230,9 @@ getTopAlbums user period page limit apiKey = dispatch . callAPI "user.getTopAlbu
 --
 -- More: <http://www.lastfm.ru/api/show/user.getTopArtists>
 getTopArtists :: User -> Maybe Period -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopArtists user period page limit apiKey = dispatch . callAPI "user.getTopArtists" $
-  [ "user" ?< user
+getTopArtists user period page limit apiKey = dispatch . callAPI $
+  [ "method" ?< "user.getTopArtists"
+  , "user" ?< user
   , "period" ?< period
   , "page" ?< page
   , "limit" ?< limit
@@ -228,8 +243,9 @@ getTopArtists user period page limit apiKey = dispatch . callAPI "user.getTopArt
 --
 -- More: <http://www.lastfm.ru/api/show/user.getTopTags>
 getTopTags :: User -> Maybe Limit -> APIKey -> Lastfm Response
-getTopTags user limit apiKey = dispatch . callAPI "user.getTopTags" $
-  [ "user" ?< user
+getTopTags user limit apiKey = dispatch . callAPI $
+  [ "method" ?< "user.getTopTags"
+  , "user" ?< user
   , "limit" ?< limit
   , "api_key" ?< apiKey
   ]
@@ -238,8 +254,9 @@ getTopTags user limit apiKey = dispatch . callAPI "user.getTopTags" $
 --
 -- More: <http://www.lastfm.ru/api/show/user.getTopTracks>
 getTopTracks :: User -> Maybe Period -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopTracks user period page limit apiKey = dispatch . callAPI "user.getTopTracks" $
-  [ "user" ?< user
+getTopTracks user period page limit apiKey = dispatch . callAPI $
+  [ "method" ?< "user.getTopTracks"
+  , "user" ?< user
   , "period" ?< period
   , "page" ?< page
   , "limit" ?< limit
@@ -250,8 +267,9 @@ getTopTracks user period page limit apiKey = dispatch . callAPI "user.getTopTrac
 --
 -- More: <http://www.lastfm.ru/api/show/user.getWeeklyAlbumChart>
 getWeeklyAlbumChart :: User -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
-getWeeklyAlbumChart user from to apiKey = dispatch . callAPI "user.getWeeklyAlbumChart" $
-  [ "user" ?< user
+getWeeklyAlbumChart user from to apiKey = dispatch . callAPI $
+  [ "method" ?< "user.getWeeklyAlbumChart"
+  , "user" ?< user
   , "from" ?< from
   , "to" ?< to
   , "api_key" ?< apiKey
@@ -261,8 +279,9 @@ getWeeklyAlbumChart user from to apiKey = dispatch . callAPI "user.getWeeklyAlbu
 --
 -- More: <http://www.lastfm.ru/api/show/user.getWeeklyArtistChart>
 getWeeklyArtistChart :: User -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
-getWeeklyArtistChart user from to apiKey = dispatch . callAPI "user.getWeeklyArtistChart" $
-  [ "user" ?< user
+getWeeklyArtistChart user from to apiKey = dispatch . callAPI $
+  [ "method" ?< "user.getWeeklyArtistChart"
+  , "user" ?< user
   , "from" ?< from
   , "to" ?< to
   , "api_key" ?< apiKey
@@ -272,14 +291,19 @@ getWeeklyArtistChart user from to apiKey = dispatch . callAPI "user.getWeeklyArt
 --
 -- More: <http://www.lastfm.ru/api/show/user.getWeeklyChartList>
 getWeeklyChartList :: User -> APIKey -> Lastfm Response
-getWeeklyChartList user apiKey = dispatch . callAPI "user.getWeeklyChartList" $ ["user" ?< user, "api_key" ?< apiKey]
+getWeeklyChartList user apiKey = dispatch . callAPI $
+  [ "method" ?< "user.getWeeklyChartList"
+  , "user" ?< user
+  , "api_key" ?< apiKey
+  ]
 
 -- | Get a track chart for a user profile, for a given date range. If no date range is supplied, it will return the most recent track chart for this user.
 --
 -- More: <http://www.lastfm.ru/api/show/user.getWeeklyTrackChart>
 getWeeklyTrackChart :: User -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
-getWeeklyTrackChart user from to apiKey = dispatch . callAPI "user.getWeeklyTrackChart" $
-  [ "user" ?< user
+getWeeklyTrackChart user from to apiKey = dispatch . callAPI $
+  [ "method" ?< "user.getWeeklyTrackChart"
+  , "user" ?< user
   , "from" ?< from
   , "to" ?< to
   , "api_key" ?< apiKey
@@ -288,9 +312,10 @@ getWeeklyTrackChart user from to apiKey = dispatch . callAPI "user.getWeeklyTrac
 -- | Shout on this user's shoutbox.
 --
 -- More: <http://www.lastfm.ru/api/show/user.shout>
-shout :: User -> Message -> APIKey -> SessionKey -> Lastfm ()
-shout user message apiKey sessionKey = dispatch . void . callAPI "user.shout" $
-  [ "user" ?< user
+shout :: User -> Message -> APIKey -> SessionKey -> Secret -> Lastfm ()
+shout user message apiKey sessionKey secret = dispatch . void . callAPIsigned secret $
+  [ "method" ?< "user.shout"
+  , "user" ?< user
   , "message" ?< message
   , "api_key" ?< apiKey
   , "sk" ?< sessionKey
