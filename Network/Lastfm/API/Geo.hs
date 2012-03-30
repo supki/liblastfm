@@ -6,6 +6,7 @@ module Network.Lastfm.API.Geo
   , getMetroWeeklyChartlist, getMetros, getTopArtists, getTopTracks
   ) where
 
+import Control.Monad.Error (runErrorT)
 import Network.Lastfm
 
 -- | Get all events in a specific location by country or city name.
@@ -19,7 +20,7 @@ getEvents :: Maybe Latitude
           -> Maybe Limit
           -> APIKey
           -> Lastfm Response
-getEvents latitude longitude location distance page limit apiKey = dispatch . callAPI $
+getEvents latitude longitude location distance page limit apiKey = runErrorT . callAPI $
   [ "method" ?< "geo.getEvents"
   , "lat" ?< latitude
   , "long" ?< longitude
@@ -70,7 +71,7 @@ getMetroUniqueTrackChart = getMetroChart "geo.getMetroUniqueTrackChart"
 --
 -- More: <http://www.lastfm.ru/api/show/geo.getMetroWeeklyChartlist>
 getMetroWeeklyChartlist :: Metro -> APIKey -> Lastfm Response
-getMetroWeeklyChartlist metro apiKey = dispatch . callAPI $
+getMetroWeeklyChartlist metro apiKey = runErrorT . callAPI $
   [ "method" ?< "geo.getMetroWeeklyChartlist"
   , "metro" ?< metro
   , "api_key" ?< apiKey
@@ -80,7 +81,7 @@ getMetroWeeklyChartlist metro apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/geo.getMetros>
 getMetros :: Maybe Country -> APIKey -> Lastfm Response
-getMetros country apiKey = dispatch . callAPI $
+getMetros country apiKey = runErrorT . callAPI $
   [ "method" ?< "geo.getMetros"
   , "country" ?< country
   , "api_key" ?< apiKey
@@ -90,7 +91,7 @@ getMetros country apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/geo.getTopArtists>
 getTopArtists :: Country -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopArtists country page limit apiKey = dispatch . callAPI $
+getTopArtists country page limit apiKey = runErrorT . callAPI $
   [ "method" ?< "geo.getTopArtists"
   , "country" ?< country
   , "page" ?< page
@@ -102,7 +103,7 @@ getTopArtists country page limit apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/geo.getTopTracks>
 getTopTracks :: Country -> Maybe Location -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopTracks country location page limit apiKey = dispatch . callAPI $
+getTopTracks country location page limit apiKey = runErrorT . callAPI $
   [ "method" ?< "geo.getTopTracks"
   , "country" ?< country
   , "location" ?< location
@@ -112,7 +113,7 @@ getTopTracks country location page limit apiKey = dispatch . callAPI $
   ]
 
 getMetroChart :: String -> Country -> Metro -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
-getMetroChart method country metro from to apiKey = dispatch . callAPI $
+getMetroChart method country metro from to apiKey = runErrorT . callAPI $
   [ "method" ?< method
   , "country" ?< country
   , "metro" ?< metro

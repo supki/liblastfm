@@ -5,14 +5,14 @@ module Network.Lastfm.API.Playlist
   ) where
 
 import Control.Monad (void)
-
+import Control.Monad.Error (runErrorT)
 import Network.Lastfm
 
 -- | Add a track to a Last.fm user's playlist.
 --
 -- More: <http://www.lastfm.ru/api/show/playlist.addTrack>
 addTrack :: Playlist -> Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm ()
-addTrack playlist artist track apiKey sessionKey secret = dispatch . void . callAPIsigned secret $
+addTrack playlist artist track apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ "method" ?< "playlist.addTrack"
   , "playlistID" ?< playlist
   , "artist" ?< artist
@@ -25,7 +25,7 @@ addTrack playlist artist track apiKey sessionKey secret = dispatch . void . call
 --
 -- More: <http://www.lastfm.ru/api/show/playlist.create>
 create :: Maybe Title -> Maybe Description -> APIKey -> SessionKey -> Secret -> Lastfm ()
-create title description apiKey sessionKey secret = dispatch . void . callAPIsigned secret $
+create title description apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ "method" ?< "playlist.create"
   , "api_key" ?< apiKey
   , "sk" ?< sessionKey

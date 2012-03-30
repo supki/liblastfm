@@ -4,8 +4,7 @@ module Network.Lastfm.API.Radio
   ( getPlaylist, search, tune
   ) where
 
-import Control.Exception (throw)
-
+import Control.Monad.Error (runErrorT, throwError)
 import Network.Lastfm
 
 -- | Fetch new radio content periodically in an XSPF format.
@@ -20,10 +19,10 @@ getPlaylist :: Maybe Discovery
             -> SessionKey
             -> Secret
             -> Lastfm Response
-getPlaylist discovery rtp buylinks multiplier bitrate apiKey sessionKey secret = dispatch go
+getPlaylist discovery rtp buylinks multiplier bitrate apiKey sessionKey secret = runErrorT go
   where go
-          | unpack multiplier /= "1.0" && unpack multiplier /= "2.0" = throw $ WrapperCallError method "unsupported multiplier."
-          | unpack bitrate /= "64" && unpack bitrate /= "128" = throw $ WrapperCallError method "unsupported bitrate."
+          | unpack multiplier /= "1.0" && unpack multiplier /= "2.0" = throwError $ WrapperCallError method "unsupported multiplier."
+          | unpack bitrate /= "64" && unpack bitrate /= "128" = throwError $ WrapperCallError method "unsupported bitrate."
           | otherwise = callAPIsigned secret
             [ "method" ?< method
             , "discovery" ?< discovery
@@ -40,7 +39,7 @@ getPlaylist discovery rtp buylinks multiplier bitrate apiKey sessionKey secret =
 --
 -- More: <http://www.lastfm.ru/api/show/radio.search>
 search :: Name -> APIKey -> Lastfm Response
-search name apiKey = dispatch . callAPI $
+search name apiKey = runErrorT . callAPI $
   [ "method" ?< "radio.search"
   , "name" ?< name
   , "api_key" ?< apiKey
@@ -50,7 +49,7 @@ search name apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/radio.tune>
 tune :: Maybe Language -> Station -> APIKey -> SessionKey -> Secret -> Lastfm Response
-tune language station apiKey sessionKey secret = dispatch . callAPIsigned secret $
+tune language station apiKey sessionKey secret = runErrorT . callAPIsigned secret $
   [ "method" ?< "radio.tune"
   , "lang" ?< language
   , "station" ?< station

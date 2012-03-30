@@ -5,13 +5,14 @@ module Network.Lastfm.API.Auth
   , getAuthorizeTokenLink
   ) where
 
+import Control.Monad.Error (runErrorT, throwError)
 import Network.Lastfm
 
 -- | Create a web service session for a user. Used for authenticating a user when the password can be inputted by the user. Only suitable for standalone mobile devices.
 --
 -- More: <http://www.lastfm.ru/api/show/auth.getMobileSession>
 getMobileSession :: User -> APIKey -> AuthToken -> Lastfm Response
-getMobileSession user apiKey token = dispatch . callAPI $
+getMobileSession user apiKey token = runErrorT . callAPI $
   [ "method" ?< "auth.getMobileSession"
   , "username" ?< user
   , "authToken" ?< token
@@ -22,7 +23,7 @@ getMobileSession user apiKey token = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/auth.getSession>
 getSession :: APIKey -> Token -> Lastfm Response
-getSession apiKey token = dispatch . callAPI $
+getSession apiKey token = runErrorT . callAPI $
   [ "method" ?< "auth.getSession"
   , "api_key" ?< apiKey
   , "token" ?< token
@@ -32,7 +33,7 @@ getSession apiKey token = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/auth.getToken>
 getToken :: APIKey -> Lastfm Response
-getToken apiKey = dispatch . callAPI $
+getToken apiKey = runErrorT . callAPI $
   [ "method" ?< "auth.getToken"
   , "api_key" ?< apiKey
   ]

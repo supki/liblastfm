@@ -5,13 +5,14 @@ module Network.Lastfm.API.Tag
   , getWeeklyArtistChart, getWeeklyChartList, search
   ) where
 
+import Control.Monad.Error (runErrorT)
 import Network.Lastfm
 
 -- | Get the metadata for a tag.
 --
 -- More: <http://www.lastfm.ru/api/show/tag.getInfo>
 getInfo :: Tag -> Maybe Language -> APIKey -> Lastfm Response
-getInfo tag language apiKey = dispatch . callAPI $
+getInfo tag language apiKey = runErrorT . callAPI $
   [ "method" ?< "tag.getInfo"
   , "tag" ?< tag
   , "lang" ?< language
@@ -22,7 +23,7 @@ getInfo tag language apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/tag.getSimilar>
 getSimilar :: Tag -> APIKey -> Lastfm Response
-getSimilar tag apiKey = dispatch . callAPI $
+getSimilar tag apiKey = runErrorT . callAPI $
   [ "method" ?< "tag.getSimilar"
   , "tag" ?< tag
   , "api_key" ?< apiKey
@@ -32,7 +33,7 @@ getSimilar tag apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/tag.getTopAlbums>
 getTopAlbums :: Tag -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopAlbums tag page limit apiKey = dispatch . callAPI $
+getTopAlbums tag page limit apiKey = runErrorT . callAPI $
   [ "method" ?< "tag.getTopAlbums"
   , "tag" ?< tag
   , "page" ?< page
@@ -44,7 +45,7 @@ getTopAlbums tag page limit apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/tag.getTopArtists>
 getTopArtists :: Tag -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopArtists tag limit page apiKey = dispatch . callAPI $
+getTopArtists tag limit page apiKey = runErrorT . callAPI $
   [ "method" ?< "tag.getTopArtists"
   , "tag" ?< tag
   , "page" ?< page
@@ -56,7 +57,7 @@ getTopArtists tag limit page apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/tag.getTopTags>
 getTopTags :: APIKey -> Lastfm Response
-getTopTags apiKey = dispatch . callAPI $
+getTopTags apiKey = runErrorT . callAPI $
   [ "method" ?< "tag.getTopArtists"
   , "api_key" ?< apiKey
   ]
@@ -65,7 +66,7 @@ getTopTags apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/tag.getTopTracks>
 getTopTracks :: Tag -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopTracks tag limit page apiKey = dispatch . callAPI $
+getTopTracks tag limit page apiKey = runErrorT . callAPI $
   [ "method" ?< "tag.getTopTracks"
   , "tag" ?< tag
   , "page" ?< page
@@ -77,7 +78,7 @@ getTopTracks tag limit page apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/tag.getWeeklyArtistChart>
 getWeeklyArtistChart :: Tag -> Maybe From -> Maybe To -> Maybe Limit -> APIKey -> Lastfm Response
-getWeeklyArtistChart tag from to limit apiKey = dispatch . callAPI $
+getWeeklyArtistChart tag from to limit apiKey = runErrorT . callAPI $
   [ "method" ?< "tag.getWeeklyArtistChart"
   , "tag" ?< tag
   , "from" ?< from
@@ -90,7 +91,7 @@ getWeeklyArtistChart tag from to limit apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/tag.getWeeklyChartList>
 getWeeklyChartList :: Tag -> APIKey -> Lastfm Response
-getWeeklyChartList tag apiKey = dispatch . callAPI $
+getWeeklyChartList tag apiKey = runErrorT . callAPI $
   [ "method" ?< "tag.getWeeklyChartList"
   , "tag" ?< tag
   , "api_key" ?< apiKey
@@ -100,7 +101,7 @@ getWeeklyChartList tag apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/tag.search>
 search :: Tag -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-search tag page limit apiKey = dispatch . callAPI $
+search tag page limit apiKey = runErrorT . callAPI $
   [ "method" ?< "tag.search"
   , "tag" ?< tag
   , "page" ?< page

@@ -6,19 +6,18 @@ module Network.Lastfm.API.Album
   ) where
 
 import Control.Arrow ((|||))
-import Control.Exception (throw)
+import Control.Monad.Error (runErrorT, throwError)
 import Control.Monad (void)
-
 import Network.Lastfm
 
 -- | Tag an album using a list of user supplied tags.
 --
 -- More: <http://www.lastfm.ru/api/show/album.addTags>
 addTags :: (Artist, Album) -> [Tag] -> APIKey -> SessionKey -> Secret -> Lastfm ()
-addTags (artist, album) tags apiKey sessionKey secret = dispatch go
+addTags (artist, album) tags apiKey sessionKey secret = runErrorT go
   where go
-          | null tags        = throw $ WrapperCallError method "empty tag list."
-          | length tags > 10 = throw $ WrapperCallError method "tag list length has exceeded maximum."
+          | null tags        = throwError $ WrapperCallError method "empty tag list."
+          | length tags > 10 = throwError $ WrapperCallError method "tag list length has exceeded maximum."
           | otherwise        = void $ callAPIsigned secret
           [ "method" ?< method
           , "artist" ?< artist
@@ -33,7 +32,7 @@ addTags (artist, album) tags apiKey sessionKey secret = dispatch go
 --
 -- More: <http://www.lastfm.ru/api/show/album.getBuylinks>
 getBuyLinks :: Either (Artist, Album) Mbid -> Maybe Autocorrect -> Country -> APIKey -> Lastfm Response
-getBuyLinks a autocorrect country apiKey = dispatch . callAPI $
+getBuyLinks a autocorrect country apiKey = runErrorT . callAPI $
   target a ++
   [ "method" ?< "album.getBuyLinks"
   , "autocorrect" ?< autocorrect
@@ -45,7 +44,7 @@ getBuyLinks a autocorrect country apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/album.getInfo>
 getInfo :: Either (Artist, Album) Mbid -> Maybe Autocorrect -> Maybe Language -> Maybe User -> APIKey -> Lastfm Response
-getInfo a autocorrect lang username apiKey = dispatch . callAPI $
+getInfo a autocorrect lang username apiKey = runErrorT . callAPI $
   target a ++
   [ "method" ?< "album.getInfo"
   , "autocorrect" ?< autocorrect
@@ -58,7 +57,7 @@ getInfo a autocorrect lang username apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/album.getShouts>
 getShouts :: Either (Artist, Album) Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getShouts a autocorrect page limit apiKey = dispatch . callAPI $
+getShouts a autocorrect page limit apiKey = runErrorT . callAPI $
   target a ++
   [ "method" ?< "album.getShouts"
   , "autocorrect" ?< autocorrect
@@ -71,7 +70,7 @@ getShouts a autocorrect page limit apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/album.getTags>
 getTags :: Either (Artist, Album) Mbid -> Maybe Autocorrect -> Either User (SessionKey, Secret) -> APIKey -> Lastfm Response
-getTags a autocorrect b apiKey = dispatch $ case b of
+getTags a autocorrect b apiKey = runErrorT $ case b of
   Left user -> callAPI $ target a ++ ["user" ?< user] ++ args
   Right (sessionKey, secret) -> callAPIsigned secret $ target a ++ ["sk" ?< sessionKey] ++ args
   where args =
@@ -84,7 +83,7 @@ getTags a autocorrect b apiKey = dispatch $ case b of
 --
 -- More: <http://www.lastfm.ru/api/show/album.getTopTags>
 getTopTags :: Either (Artist, Album) Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
-getTopTags a autocorrect apiKey = dispatch . callAPI $
+getTopTags a autocorrect apiKey = runErrorT . callAPI $
   target a ++
   [ "method" ?< "album.getTopTags"
   , "autocorrect" ?< autocorrect
@@ -95,7 +94,7 @@ getTopTags a autocorrect apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/album.removeTag>
 removeTag :: Artist -> Album -> Tag -> APIKey -> SessionKey -> Secret -> Lastfm ()
-removeTag artist album tag apiKey sessionKey secret = dispatch . void . callAPIsigned secret $
+removeTag artist album tag apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ "method" ?< "album.removeTag"
   , "artist" ?< artist
   , "album" ?< album
@@ -108,7 +107,7 @@ removeTag artist album tag apiKey sessionKey secret = dispatch . void . callAPIs
 --
 -- More: <http://www.lastfm.ru/api/show/album.search>
 search :: Album -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-search album page limit apiKey = dispatch . callAPI $
+search album page limit apiKey = runErrorT . callAPI $
   [ "method" ?< "album.search"
   , "album" ?< album
   , "page" ?< page
@@ -120,10 +119,10 @@ search album page limit apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/album.share>
 share :: Artist -> Album -> [Recipient] -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Secret -> Lastfm ()
-share artist album recipients message public apiKey sessionKey secret = dispatch go
+share artist album recipients message public apiKey sessionKey secret = runErrorT go
   where go
-          | null recipients        = throw $ WrapperCallError method "empty recipient list."
-          | length recipients > 10 = throw $ WrapperCallError method "recipient list length has exceeded maximum."
+          | null recipients        = throwError $ WrapperCallError method "empty recipient list."
+          | length recipients > 10 = throwError $ WrapperCallError method "recipient list length has exceeded maximum."
           | otherwise              = void $ callAPIsigned secret
             [ "method" ?< method
             , "artist" ?< artist

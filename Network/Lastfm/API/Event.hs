@@ -4,16 +4,15 @@ module Network.Lastfm.API.Event
   ( attend, getAttendees, getInfo, getShouts, share, shout
   ) where
 
-import Control.Exception (throw)
 import Control.Monad (void)
-
+import Control.Monad.Error (runErrorT, throwError)
 import Network.Lastfm
 
 -- | Set a user's attendance status for an event.
 --
 -- More: <http://www.lastfm.ru/api/show/event.attend>
 attend :: Event -> Status -> APIKey -> SessionKey -> Secret -> Lastfm ()
-attend event status apiKey sessionKey secret = dispatch . void . callAPIsigned secret $
+attend event status apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ "method" ?< "event.attend"
   , "event" ?< event
   , "status" ?< status
@@ -25,7 +24,7 @@ attend event status apiKey sessionKey secret = dispatch . void . callAPIsigned s
 --
 -- More: <http://www.lastfm.ru/api/show/event.getAttendees>
 getAttendees :: Event -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getAttendees event page limit apiKey = dispatch . callAPI $
+getAttendees event page limit apiKey = runErrorT . callAPI $
   [ "method" ?< "event.getAttendees"
   , "event" ?< event
   , "page" ?< page
@@ -37,7 +36,7 @@ getAttendees event page limit apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/event.getInfo>
 getInfo :: Event -> APIKey -> Lastfm Response
-getInfo event apiKey = dispatch . callAPI $
+getInfo event apiKey = runErrorT . callAPI $
   [ "method" ?< "event.getInfo"
   , "event" ?< event
   , "api_key" ?< apiKey
@@ -47,7 +46,7 @@ getInfo event apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/event.getShouts>
 getShouts :: Event -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getShouts event page limit apiKey = dispatch . callAPI $
+getShouts event page limit apiKey = runErrorT . callAPI $
   [ "method" ?< "event.getShouts"
   , "event" ?< event
   , "page" ?< page
@@ -59,10 +58,10 @@ getShouts event page limit apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/event.share>
 share :: Event -> [Recipient] -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Secret -> Lastfm ()
-share event recipients message public apiKey sessionKey secret = dispatch go
+share event recipients message public apiKey sessionKey secret = runErrorT go
   where go
-          | null recipients        = throw $ WrapperCallError method "empty recipient list."
-          | length recipients > 10 = throw $ WrapperCallError method "recipient list length has exceeded maximum."
+          | null recipients        = throwError $ WrapperCallError method "empty recipient list."
+          | length recipients > 10 = throwError $ WrapperCallError method "recipient list length has exceeded maximum."
           | otherwise              = void $ callAPIsigned secret
             [ "method" ?< method
             , "event" ?< event
@@ -78,7 +77,7 @@ share event recipients message public apiKey sessionKey secret = dispatch go
 --
 -- More: <http://www.lastfm.ru/api/show/event.shout>
 shout :: Event -> Message -> APIKey -> SessionKey -> Secret -> Lastfm ()
-shout event message apiKey sessionKey secret = dispatch . void . callAPIsigned secret $
+shout event message apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ "method" ?< "event.shout"
   , "event" ?< event
   , "message" ?< message

@@ -7,19 +7,18 @@ module Network.Lastfm.API.Track
   ) where
 
 import Control.Arrow ((|||))
-import Control.Exception (throw)
 import Control.Monad (void)
-
+import Control.Monad.Error (runErrorT, throwError)
 import Network.Lastfm
 
 -- | Tag a track using a list of user supplied tags.
 --
 -- More: <http://www.lastfm.ru/api/show/track.addTags>
 addTags :: Artist -> Track -> [Tag] -> APIKey -> SessionKey -> Secret -> Lastfm ()
-addTags artist track tags apiKey sessionKey secret = dispatch go
+addTags artist track tags apiKey sessionKey secret = runErrorT go
   where go
-          | null tags        = throw $ WrapperCallError method "empty tag list."
-          | length tags > 10 = throw $ WrapperCallError method "tag list length has exceeded maximum."
+          | null tags        = throwError $ WrapperCallError method "empty tag list."
+          | length tags > 10 = throwError $ WrapperCallError method "tag list length has exceeded maximum."
           | otherwise        = void $ callAPIsigned secret
             [ "method" ?< method
             , "artist" ?< artist
@@ -34,7 +33,7 @@ addTags artist track tags apiKey sessionKey secret = dispatch go
 --
 -- More: <http://www.lastfm.ru/api/show/track.ban>
 ban :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm ()
-ban artist track apiKey sessionKey secret = dispatch . void . callAPIsigned secret $
+ban artist track apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ "method" ?< "track.ban"
   , "artist" ?< artist
   , "track" ?< track
@@ -46,7 +45,7 @@ ban artist track apiKey sessionKey secret = dispatch . void . callAPIsigned secr
 --
 -- More: <http://www.lastfm.ru/api/show/track.getBuylinks>
 getBuyLinks :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Country -> APIKey -> Lastfm Response
-getBuyLinks a autocorrect country apiKey = dispatch . callAPI $
+getBuyLinks a autocorrect country apiKey = runErrorT . callAPI $
   target a ++
   [ "method" ?< "track.getBuyLinks"
   , "autocorrect" ?< autocorrect
@@ -58,7 +57,7 @@ getBuyLinks a autocorrect country apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/track.getCorrection>
 getCorrection :: Artist -> Track -> APIKey -> Lastfm Response
-getCorrection artist track apiKey = dispatch . callAPI $
+getCorrection artist track apiKey = runErrorT . callAPI $
   [ "method" ?< "track.getCorrection"
   , "artist" ?< artist
   , "track" ?< track
@@ -69,7 +68,7 @@ getCorrection artist track apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/track.getFingerprintMetadata>
 getFingerprintMetadata :: Fingerprint -> APIKey -> Lastfm Response
-getFingerprintMetadata fingerprint apiKey = dispatch . callAPI $
+getFingerprintMetadata fingerprint apiKey = runErrorT . callAPI $
   [ "method" ?< "track.getFingerprintMetadata"
   , "fingerprintid" ?< fingerprint
   , "api_key" ?< apiKey
@@ -79,7 +78,7 @@ getFingerprintMetadata fingerprint apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/track.getInfo>
 getInfo :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Maybe User -> APIKey -> Lastfm Response
-getInfo a autocorrect username apiKey = dispatch . callAPI $
+getInfo a autocorrect username apiKey = runErrorT . callAPI $
   target a ++
   [ "method" ?< "track.getInfo"
   , "autocorrect" ?< autocorrect
@@ -91,7 +90,7 @@ getInfo a autocorrect username apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/track.getShouts>
 getShouts :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getShouts a autocorrect page limit apiKey = dispatch . callAPI $
+getShouts a autocorrect page limit apiKey = runErrorT . callAPI $
   target a ++
   [ "method" ?< "track.getShouts"
   , "autocorrect" ?< autocorrect
@@ -104,7 +103,7 @@ getShouts a autocorrect page limit apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/track.getSimilar>
 getSimilar :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Maybe Limit -> APIKey -> Lastfm Response
-getSimilar a autocorrect limit apiKey = dispatch . callAPI $
+getSimilar a autocorrect limit apiKey = runErrorT . callAPI $
   target a ++
   [ "method" ?< "track.getSimilar"
   , "autocorrect" ?< autocorrect
@@ -116,7 +115,7 @@ getSimilar a autocorrect limit apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/track.getTags>
 getTags :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Either User (SessionKey, Secret) -> APIKey -> Lastfm Response
-getTags a autocorrect b apiKey = dispatch $ case b of
+getTags a autocorrect b apiKey = runErrorT $ case b of
   Left user -> callAPI $ target a ++ ["user" ?< user] ++ args
   Right (sessionKey, secret) -> callAPIsigned secret $ target a ++ ["sk" ?< sessionKey] ++ args
   where args =
@@ -129,7 +128,7 @@ getTags a autocorrect b apiKey = dispatch $ case b of
 --
 -- More: <http://www.lastfm.ru/api/show/track.getTopFans>
 getTopFans :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
-getTopFans a autocorrect apiKey = dispatch . callAPI $
+getTopFans a autocorrect apiKey = runErrorT . callAPI $
   target a ++
   [ "method" ?< "track.getTopFans"
   , "autocorrect" ?< autocorrect
@@ -140,7 +139,7 @@ getTopFans a autocorrect apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/track.getTopTags>
 getTopTags :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
-getTopTags a autocorrect apiKey = dispatch . callAPI $
+getTopTags a autocorrect apiKey = runErrorT . callAPI $
   target a ++
   [ "method" ?< "track.getTopTags"
   , "autocorrect" ?< autocorrect
@@ -151,7 +150,7 @@ getTopTags a autocorrect apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/track.love>
 love :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm ()
-love artist track apiKey sessionKey secret = dispatch . void . callAPIsigned secret $
+love artist track apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ "method" ?< "track.love"
   , "artist" ?< artist
   , "track" ?< track
@@ -163,7 +162,7 @@ love artist track apiKey sessionKey secret = dispatch . void . callAPIsigned sec
 --
 -- More: <http://www.lastfm.ru/api/show/track.removeTag>
 removeTag :: Artist -> Track -> Tag -> APIKey -> SessionKey -> Secret -> Lastfm ()
-removeTag artist track tag apiKey sessionKey secret = dispatch . void . callAPIsigned secret $
+removeTag artist track tag apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ "method" ?< "track.removeTag"
   , "artist" ?< artist
   , "track" ?< track
@@ -182,7 +181,7 @@ scrobble :: ( Timestamp, Maybe Album, Artist, Track, Maybe AlbumArtist
          -> SessionKey
          -> Secret
          -> Lastfm ()
-scrobble (timestamp, album, artist, track, albumArtist, duration, streamId, chosenByUser, context, trackNumber, mbid) apiKey sessionKey secret = dispatch . void . callAPIsigned secret $
+scrobble (timestamp, album, artist, track, albumArtist, duration, streamId, chosenByUser, context, trackNumber, mbid) apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ "method" ?< "track.scrobble"
   , "timestamp" ?< timestamp
   , "artist" ?< artist
@@ -203,7 +202,7 @@ scrobble (timestamp, album, artist, track, albumArtist, duration, streamId, chos
 --
 -- More: <http://www.lastfm.ru/api/show/track.search>
 search :: Track -> Maybe Page -> Maybe Limit -> Maybe Artist -> APIKey -> Lastfm Response
-search limit page track artist apiKey = dispatch . callAPI $
+search limit page track artist apiKey = runErrorT . callAPI $
   [ "method" ?< "track.search"
   , "track" ?< track
   , "page" ?< page
@@ -216,10 +215,10 @@ search limit page track artist apiKey = dispatch . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/track.share>
 share :: Artist -> Track -> [Recipient] -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Secret -> Lastfm ()
-share artist track recipients message public apiKey sessionKey secret = dispatch go
+share artist track recipients message public apiKey sessionKey secret = runErrorT go
   where go
-          | null recipients        = throw $ WrapperCallError method "empty recipient list."
-          | length recipients > 10 = throw $ WrapperCallError method "recipient list length has exceeded maximum."
+          | null recipients        = throwError $ WrapperCallError method "empty recipient list."
+          | length recipients > 10 = throwError $ WrapperCallError method "recipient list length has exceeded maximum."
           | otherwise              = void $ callAPIsigned secret
             [ "method" ?< method
             , "artist" ?< artist
@@ -236,7 +235,7 @@ share artist track recipients message public apiKey sessionKey secret = dispatch
 --
 -- More: <http://www.lastfm.ru/api/show/track.unban>
 unban :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm ()
-unban artist track apiKey sessionKey secret = dispatch . void . callAPIsigned secret $
+unban artist track apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ "method" ?< "track.unban"
   , "artist" ?< artist
   , "track" ?< track
@@ -248,7 +247,7 @@ unban artist track apiKey sessionKey secret = dispatch . void . callAPIsigned se
 --
 -- More: <http://www.lastfm.ru/api/show/track.unlove>
 unlove :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm ()
-unlove artist track apiKey sessionKey secret = dispatch . void . callAPIsigned secret $
+unlove artist track apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ "method" ?< "track.unlove"
   , "artist" ?< artist
   , "track" ?< track
@@ -272,7 +271,7 @@ updateNowPlaying :: Artist
                  -> SessionKey
                  -> Secret
                  -> Lastfm ()
-updateNowPlaying artist track album albumArtist context trackNumber mbid duration apiKey sessionKey secret = dispatch . void . callAPIsigned secret $
+updateNowPlaying artist track album albumArtist context trackNumber mbid duration apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ "method" ?< "track.updateNowPlaying"
   , "artist" ?< artist
   , "track" ?< track

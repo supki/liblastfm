@@ -1,9 +1,8 @@
-{-# LANGUAGE FlexibleInstances, OverlappingInstances, TypeSynonymInstances, GeneralizedNewtypeDeriving, DeriveDataTypeable  #-}
+{-# LANGUAGE FlexibleInstances, OverlappingInstances, TypeSynonymInstances, GeneralizedNewtypeDeriving #-}
 module Network.Lastfm.Types where
 
-import Control.Exception (Exception)
+import Control.Monad.Error (Error)
 import Data.List (intercalate)
-import Data.Typeable (Typeable)
 
 newtype Secret = Secret String deriving Show
 
@@ -180,7 +179,7 @@ instance Show APIError where
 data LastfmError
   = LastfmAPIError APIError -- ^ Internal Lastfm errors
   | WrapperCallError String String -- ^ Wrapper errors
-    deriving (Show, Typeable)
+    deriving Show
 
-instance Exception LastfmError
+instance Error LastfmError
 
