@@ -21,7 +21,7 @@ getPastEvents = parse r f "Artists from 10 last events"
 
 search :: IO ()
 search = parse r f "Venue ids"
-  where r = Venue.search (Name "Arena") Nothing Nothing Nothing apiKey
+  where r = Venue.search (Venuename "Arena") Nothing Nothing Nothing apiKey
         f = mapM (content <=< tag "id") <=< tags "venue" <=< tag "venuematches" <=< tag "results"
 
 common :: IO ()

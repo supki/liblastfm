@@ -34,7 +34,7 @@ getPastEvents venue festivalsOnly page limit apiKey = runErrorT . callAPI $
 -- | Search for a venue by venue name.
 --
 -- More: <http://www.lastfm.ru/api/show/venue.search>
-search :: Name -> Maybe Page -> Maybe Limit -> Maybe Country -> APIKey -> Lastfm Response
+search :: Venuename -> Maybe Page -> Maybe Limit -> Maybe Country -> APIKey -> Lastfm Response
 search venue page limit country apiKey = runErrorT . callAPI $
   [ (#) (Method "venue.search")
   , (#) venue

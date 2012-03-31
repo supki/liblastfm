@@ -49,6 +49,7 @@ newtype Token = Token String
 newtype Track = Track String
 newtype User = User String
 newtype Username = Username String
+newtype Venuename = Venuename String
 instance Argument Album where key = const "album"; value (Album a) = a
 instance Argument AlbumArtist where key = const "albumartist"; value (AlbumArtist a) = a
 instance Argument APIKey where key = const "api_key"; value (APIKey a) = a
@@ -79,6 +80,7 @@ instance Argument Token where key = const "token"; value (Token a) = a
 instance Argument Track where key = const "track"; value (Track a) = a
 instance Argument User where key = const "user"; value (User a) = a
 instance Argument Username where key = const "username"; value (Username a) = a
+instance Argument Venuename where key = const "venue"; value (Venuename a) = a
 
 boolToString :: Bool -> String
 boolToString True = "1"
