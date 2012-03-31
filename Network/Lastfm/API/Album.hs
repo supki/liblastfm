@@ -6,14 +6,13 @@ module Network.Lastfm.API.Album
   ) where
 
 import Control.Arrow ((|||))
-import Control.Monad.Error (runErrorT)
 import Network.Lastfm
 
 -- | Tag an album using a list of user supplied tags.
 --
 -- More: <http://www.lastfm.ru/api/show/album.addTags>
 addTags :: (Artist, Album) -> [Tag] -> APIKey -> SessionKey -> Secret -> Lastfm Response
-addTags (artist, album) tags apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+addTags (artist, album) tags apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "album.addTags")
   , (#) artist
   , (#) album
@@ -26,7 +25,7 @@ addTags (artist, album) tags apiKey sessionKey secret = runErrorT . callAPIsigne
 --
 -- More: <http://www.lastfm.ru/api/show/album.getBuylinks>
 getBuyLinks :: Either (Artist, Album) Mbid -> Maybe Autocorrect -> Country -> APIKey -> Lastfm Response
-getBuyLinks a autocorrect country apiKey = runErrorT . callAPI $
+getBuyLinks a autocorrect country apiKey = callAPI $
   target a ++
   [ (#) (Method "album.getBuyLinks")
   , (#) autocorrect
@@ -38,7 +37,7 @@ getBuyLinks a autocorrect country apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/album.getInfo>
 getInfo :: Either (Artist, Album) Mbid -> Maybe Autocorrect -> Maybe Language -> Maybe Username -> APIKey -> Lastfm Response
-getInfo a autocorrect lang username apiKey = runErrorT . callAPI $
+getInfo a autocorrect lang username apiKey = callAPI $
   target a ++
   [ (#) (Method "album.getInfo")
   , (#) autocorrect
@@ -51,7 +50,7 @@ getInfo a autocorrect lang username apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/album.getShouts>
 getShouts :: Either (Artist, Album) Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getShouts a autocorrect page limit apiKey = runErrorT . callAPI $
+getShouts a autocorrect page limit apiKey = callAPI $
   target a ++
   [ (#) (Method "album.getShouts")
   , (#) autocorrect
@@ -64,7 +63,7 @@ getShouts a autocorrect page limit apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/album.getTags>
 getTags :: Either (Artist, Album) Mbid -> Maybe Autocorrect -> Either User (SessionKey, Secret) -> APIKey -> Lastfm Response
-getTags a autocorrect b apiKey = runErrorT $ case b of
+getTags a autocorrect b apiKey = case b of
   Left user -> callAPI $ target a ++ [(#) user] ++ args
   Right (sessionKey, secret) -> callAPIsigned secret $ target a ++ [(#) sessionKey] ++ args
   where args =
@@ -77,7 +76,7 @@ getTags a autocorrect b apiKey = runErrorT $ case b of
 --
 -- More: <http://www.lastfm.ru/api/show/album.getTopTags>
 getTopTags :: Either (Artist, Album) Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
-getTopTags a autocorrect apiKey = runErrorT . callAPI $
+getTopTags a autocorrect apiKey = callAPI $
   target a ++
   [ (#) (Method "album.getTopTags")
   , (#) autocorrect
@@ -88,7 +87,7 @@ getTopTags a autocorrect apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/album.removeTag>
 removeTag :: Artist -> Album -> Tag -> APIKey -> SessionKey -> Secret -> Lastfm Response
-removeTag artist album tag apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+removeTag artist album tag apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "album.removeTag")
   , (#) artist
   , (#) album
@@ -101,7 +100,7 @@ removeTag artist album tag apiKey sessionKey secret = runErrorT . callAPIsigned 
 --
 -- More: <http://www.lastfm.ru/api/show/album.search>
 search :: Album -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-search album page limit apiKey = runErrorT . callAPI $
+search album page limit apiKey = callAPI
   [ (#) (Method "album.search")
   , (#) album
   , (#) page
@@ -113,7 +112,7 @@ search album page limit apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/album.share>
 share :: Artist -> Album -> Recipient -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Secret -> Lastfm Response
-share artist album recipient message public apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+share artist album recipient message public apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "album.share")
   , (#) artist
   , (#) album

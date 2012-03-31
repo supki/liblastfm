@@ -11,7 +11,7 @@ import Network.Lastfm
 --
 -- More: <http://www.lastfm.ru/api/show/venue.getEvents>
 getEvents :: Venue -> Maybe FestivalsOnly -> APIKey -> Lastfm Response
-getEvents venue festivalsOnly apiKey = runErrorT . callAPI $
+getEvents venue festivalsOnly apiKey = callAPI
   [ (#) (Method "venue.getEvents")
   , (#) venue
   , (#) festivalsOnly
@@ -22,7 +22,7 @@ getEvents venue festivalsOnly apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/venue.getPastEvents>
 getPastEvents :: Venue -> Maybe FestivalsOnly -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getPastEvents venue festivalsOnly page limit apiKey = runErrorT . callAPI $
+getPastEvents venue festivalsOnly page limit apiKey = callAPI
   [ (#) (Method "venue.getPastEvents")
   , (#) venue
   , (#) festivalsOnly
@@ -35,7 +35,7 @@ getPastEvents venue festivalsOnly page limit apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/venue.search>
 search :: Venuename -> Maybe Page -> Maybe Limit -> Maybe Country -> APIKey -> Lastfm Response
-search venue page limit country apiKey = runErrorT . callAPI $
+search venue page limit country apiKey = callAPI
   [ (#) (Method "venue.search")
   , (#) venue
   , (#) page

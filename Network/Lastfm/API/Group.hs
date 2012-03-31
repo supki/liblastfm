@@ -4,14 +4,13 @@ module Network.Lastfm.API.Group
   ( getHype, getMembers, getWeeklyChartList, getWeeklyAlbumChart, getWeeklyArtistChart, getWeeklyTrackChart
   ) where
 
-import Control.Monad.Error (runErrorT)
 import Network.Lastfm
 
 -- | Get the hype list for a group.
 --
 -- More: <http://www.lastfm.ru/api/show/group.getHype>
 getHype :: Group -> APIKey -> Lastfm Response
-getHype group apiKey = runErrorT . callAPI $
+getHype group apiKey = callAPI
   [ (#) (Method "group.getHype")
   , (#) group
   , (#) apiKey
@@ -21,7 +20,7 @@ getHype group apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/group.getMembers>
 getMembers :: Group -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getMembers group page limit apiKey = runErrorT . callAPI $
+getMembers group page limit apiKey = callAPI
   [ (#) (Method "group.getMembers")
   , (#) group
   , (#) page
@@ -33,7 +32,7 @@ getMembers group page limit apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/group.getWeeklyAlbumChart>
 getWeeklyChartList :: Group -> APIKey -> Lastfm Response
-getWeeklyChartList group apiKey = runErrorT . callAPI $
+getWeeklyChartList group apiKey = callAPI
   [ (#) (Method "group.getWeeklyChartList")
   , (#) group
   , (#) apiKey
@@ -43,7 +42,7 @@ getWeeklyChartList group apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/group.getWeeklyArtistChart>
 getWeeklyAlbumChart :: Group -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
-getWeeklyAlbumChart group from to apiKey = runErrorT . callAPI $
+getWeeklyAlbumChart group from to apiKey = callAPI
   [ (#) (Method "group.getWeeklyAlbumChart")
   , (#) group
   , (#) from
@@ -55,7 +54,7 @@ getWeeklyAlbumChart group from to apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/group.getWeeklyChartList>
 getWeeklyArtistChart :: Group -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
-getWeeklyArtistChart group from to apiKey = runErrorT . callAPI $
+getWeeklyArtistChart group from to apiKey = callAPI
   [ (#) (Method "group.getWeeklyArtistChart")
   , (#) group
   , (#) from
@@ -68,7 +67,7 @@ getWeeklyArtistChart group from to apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/group.getWeeklyTrackChart>
 getWeeklyTrackChart :: Group -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
-getWeeklyTrackChart group from to apiKey = runErrorT . callAPI $
+getWeeklyTrackChart group from to apiKey = callAPI
   [ (#) (Method "group.getWeeklyTrackChart")
   , (#) group
   , (#) from

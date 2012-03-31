@@ -11,7 +11,7 @@ import Network.Lastfm
 --
 -- More: <http://www.lastfm.ru/api/show/playlist.addTrack>
 addTrack :: Playlist -> Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm Response
-addTrack playlist artist track apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+addTrack playlist artist track apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "playlist.addTrack")
   , (#) playlist
   , (#) artist
@@ -24,7 +24,7 @@ addTrack playlist artist track apiKey sessionKey secret = runErrorT . callAPIsig
 --
 -- More: <http://www.lastfm.ru/api/show/playlist.create>
 create :: Maybe Title -> Maybe Description -> APIKey -> SessionKey -> Secret -> Lastfm Response
-create title description apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+create title description apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "playlist.create")
   , (#) title
   , (#) description

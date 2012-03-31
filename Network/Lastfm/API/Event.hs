@@ -4,14 +4,13 @@ module Network.Lastfm.API.Event
   ( attend, getAttendees, getInfo, getShouts, share, shout
   ) where
 
-import Control.Monad.Error (runErrorT)
 import Network.Lastfm
 
 -- | Set a user's attendance status for an event.
 --
 -- More: <http://www.lastfm.ru/api/show/event.attend>
 attend :: Event -> Status -> APIKey -> SessionKey -> Secret -> Lastfm Response
-attend event status apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+attend event status apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "event.attend")
   , (#) event
   , (#) status
@@ -23,7 +22,7 @@ attend event status apiKey sessionKey secret = runErrorT . callAPIsigned secret 
 --
 -- More: <http://www.lastfm.ru/api/show/event.getAttendees>
 getAttendees :: Event -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getAttendees event page limit apiKey = runErrorT . callAPI $
+getAttendees event page limit apiKey = callAPI
   [ (#) (Method "event.getAttendees")
   , (#) event
   , (#) page
@@ -35,7 +34,7 @@ getAttendees event page limit apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/event.getInfo>
 getInfo :: Event -> APIKey -> Lastfm Response
-getInfo event apiKey = runErrorT . callAPI $
+getInfo event apiKey = callAPI
   [ (#) (Method "event.getInfo")
   , (#) event
   , (#) apiKey
@@ -45,7 +44,7 @@ getInfo event apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/event.getShouts>
 getShouts :: Event -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getShouts event page limit apiKey = runErrorT . callAPI $
+getShouts event page limit apiKey = callAPI
   [ (#) (Method "event.getShouts")
   , (#) event
   , (#) page
@@ -57,7 +56,7 @@ getShouts event page limit apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/event.share>
 share :: Event -> Recipient -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Secret -> Lastfm Response
-share event recipient message public apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+share event recipient message public apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "event.share")
   , (#) event
   , (#) public
@@ -71,7 +70,7 @@ share event recipient message public apiKey sessionKey secret = runErrorT . call
 --
 -- More: <http://www.lastfm.ru/api/show/event.shout>
 shout :: Event -> Message -> APIKey -> SessionKey -> Secret -> Lastfm Response
-shout event message apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+shout event message apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "event.shout")
   , (#) event
   , (#) message

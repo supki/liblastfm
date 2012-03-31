@@ -11,7 +11,7 @@ import Codec.Binary.UTF8.String (encodeString)
 import Control.Applicative ((<$>))
 import Control.Arrow (second)
 import Control.Monad ((<=<))
-import Control.Monad.Error (ErrorT, throwError)
+import Control.Monad.Error (ErrorT, runErrorT, throwError)
 import Control.Monad.Trans (liftIO)
 import qualified Data.ByteString.Lazy.Char8 as BS
 import Data.Digest.Pure.MD5 (md5)
@@ -28,12 +28,12 @@ type Lastfm a = IO (Either LastfmError a)
 type Response = String
 
 -- | Low level function. Sends POST query to Lastfm API.
-callAPI :: [(String, String)] -> ErrorT LastfmError IO Response
-callAPI = query . map (second encodeString)
+callAPI :: [(String, String)] -> Lastfm Response
+callAPI = runErrorT . query . map (second encodeString)
 
 -- | Low level function. Sends signed POST query to Lastfm API.
-callAPIsigned :: Secret -> [(String, String)] -> ErrorT LastfmError IO Response
-callAPIsigned (Secret s) xs = query zs
+callAPIsigned :: Secret -> [(String, String)] -> Lastfm Response
+callAPIsigned (Secret s) xs = runErrorT $ query zs
   where ys = map (second encodeString) . filter (not . null . snd) $ xs
         zs = ("api_sig", sign ys) : ys
 

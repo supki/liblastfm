@@ -19,7 +19,7 @@ getPlaylist :: Maybe Discovery
             -> SessionKey
             -> Secret
             -> Lastfm Response
-getPlaylist discovery rtp buylinks multiplier bitrate apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+getPlaylist discovery rtp buylinks multiplier bitrate apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "radio.getPlaylist")
   , (#) discovery
   , (#) rtp
@@ -34,7 +34,7 @@ getPlaylist discovery rtp buylinks multiplier bitrate apiKey sessionKey secret =
 --
 -- More: <http://www.lastfm.ru/api/show/radio.search>
 search :: Name -> APIKey -> Lastfm Response
-search name apiKey = runErrorT . callAPI $
+search name apiKey = callAPI
   [ (#) (Method "radio.search")
   , (#) name
   , (#) apiKey
@@ -44,7 +44,7 @@ search name apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/radio.tune>
 tune :: Maybe Language -> Station -> APIKey -> SessionKey -> Secret -> Lastfm Response
-tune language station apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+tune language station apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "radio.tune")
   , (#) language
   , (#) station

@@ -7,14 +7,13 @@ module Network.Lastfm.API.Artist
   ) where
 
 import Control.Arrow ((|||))
-import Control.Monad.Error (runErrorT)
 import Network.Lastfm
 
 -- | Tag an album using a list of user supplied tags.
 --
 -- More: <http://www.lastfm.ru/api/show/artist.addTags>
 addTags :: Artist -> [Tag] -> APIKey -> SessionKey -> Secret -> Lastfm Response
-addTags artist tags apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+addTags artist tags apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "artist.addTags")
   , (#) artist
   , (#) tags
@@ -26,7 +25,7 @@ addTags artist tags apiKey sessionKey secret = runErrorT . callAPIsigned secret 
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getCorrection>
 getCorrection :: Artist -> APIKey -> Lastfm Response
-getCorrection artist apiKey = runErrorT . callAPI $
+getCorrection artist apiKey = callAPI
   [ (#) (Method "artist.getCorrection")
   , (#) artist
   , (#) apiKey
@@ -36,7 +35,7 @@ getCorrection artist apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getEvents>
 getEvents :: Either Artist Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> Maybe FestivalsOnly -> APIKey -> Lastfm Response
-getEvents a autocorrect page limit festivalsOnly apiKey = runErrorT . callAPI $
+getEvents a autocorrect page limit festivalsOnly apiKey = callAPI $
   target a ++
   [ (#) (Method "artist.getEvents")
   , (#) autocorrect
@@ -50,7 +49,7 @@ getEvents a autocorrect page limit festivalsOnly apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getImages>
 getImages :: Either Artist Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> Maybe Order -> APIKey -> Lastfm Response
-getImages a autocorrect page limit order apiKey = runErrorT . callAPI $
+getImages a autocorrect page limit order apiKey = callAPI $
   target a ++
   [ (#) (Method "artist.getImages")
   , (#) autocorrect
@@ -64,7 +63,7 @@ getImages a autocorrect page limit order apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getInfo>
 getInfo :: Either Artist Mbid -> Maybe Autocorrect -> Maybe Language -> Maybe Username -> APIKey -> Lastfm Response
-getInfo a autocorrect language username apiKey = runErrorT . callAPI $
+getInfo a autocorrect language username apiKey = callAPI $
   target a ++
   [ (#) (Method "artist.getInfo")
   , (#) autocorrect
@@ -77,7 +76,7 @@ getInfo a autocorrect language username apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getPastEvents>
 getPastEvents :: Either Artist Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getPastEvents a autocorrect page limit apiKey = runErrorT . callAPI $
+getPastEvents a autocorrect page limit apiKey = callAPI $
   target a ++
   [ (#) (Method "artist.getPastEvents")
   , (#) autocorrect
@@ -90,7 +89,7 @@ getPastEvents a autocorrect page limit apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getPodcast>
 getPodcast :: Either Artist Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
-getPodcast a autocorrect apiKey = runErrorT . callAPI $
+getPodcast a autocorrect apiKey = callAPI $
   target a ++
   [ (#) (Method "artist.getPodcast")
   , (#) autocorrect
@@ -101,7 +100,7 @@ getPodcast a autocorrect apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getShouts>
 getShouts :: Either Artist Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getShouts a autocorrect page limit apiKey = runErrorT . callAPI $
+getShouts a autocorrect page limit apiKey = callAPI $
   target a ++
   [ (#) (Method "artist.getShouts")
   , (#) autocorrect
@@ -114,7 +113,7 @@ getShouts a autocorrect page limit apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getSimilar>
 getSimilar :: Either Artist Mbid -> Maybe Autocorrect -> Maybe Limit -> APIKey -> Lastfm Response
-getSimilar a autocorrect limit apiKey = runErrorT . callAPI $
+getSimilar a autocorrect limit apiKey = callAPI $
   target a ++
   [ (#) (Method "artist.getSimilar")
   , (#) autocorrect
@@ -126,7 +125,7 @@ getSimilar a autocorrect limit apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getTags>
 getTags :: Either Artist Mbid -> Maybe Autocorrect -> Either User (SessionKey, Secret) -> APIKey -> Lastfm Response
-getTags a autocorrect b apiKey = runErrorT $ case b of
+getTags a autocorrect b apiKey = case b of
   Left user -> callAPI $ target a ++ [(#) user] ++ args
   Right (sessionKey, secret) -> callAPIsigned secret $ target a ++ [(#) sessionKey] ++ args
   where args =
@@ -139,7 +138,7 @@ getTags a autocorrect b apiKey = runErrorT $ case b of
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getTopAlbums>
 getTopAlbums :: Either Artist Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopAlbums a autocorrect page limit apiKey = runErrorT . callAPI $
+getTopAlbums a autocorrect page limit apiKey = callAPI $
   target a ++
   [ (#) (Method "artist.getTopAlbums")
   , (#) autocorrect
@@ -152,7 +151,7 @@ getTopAlbums a autocorrect page limit apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getTopFans>
 getTopFans :: Either Artist Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
-getTopFans a autocorrect apiKey = runErrorT . callAPI $
+getTopFans a autocorrect apiKey = callAPI $
   target a ++
   [ (#) (Method "artist.getTopFans")
   , (#) autocorrect
@@ -163,7 +162,7 @@ getTopFans a autocorrect apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getTopTags>
 getTopTags :: Either Artist Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
-getTopTags a autocorrect apiKey = runErrorT . callAPI $
+getTopTags a autocorrect apiKey = callAPI $
   target a ++
   [ (#) (Method "artist.getTopTags")
   , (#) autocorrect
@@ -174,7 +173,7 @@ getTopTags a autocorrect apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/artist.getTopTracks>
 getTopTracks :: Either Artist Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopTracks a autocorrect page limit apiKey = runErrorT . callAPI $
+getTopTracks a autocorrect page limit apiKey = callAPI $
   target a ++
   [ (#) (Method "artist.getTopTracks")
   , (#) autocorrect
@@ -187,7 +186,7 @@ getTopTracks a autocorrect page limit apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/artist.removeTag>
 removeTag :: Artist -> Tag -> APIKey -> SessionKey -> Secret -> Lastfm Response
-removeTag artist tag apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+removeTag artist tag apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "artist.removeTag")
   , (#) artist
   , (#) tag
@@ -199,7 +198,7 @@ removeTag artist tag apiKey sessionKey secret = runErrorT . callAPIsigned secret
 --
 -- More: <http://www.lastfm.ru/api/show/artist.search>
 search :: Artist -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-search artist page limit apiKey = runErrorT . callAPI $
+search artist page limit apiKey = callAPI
   [ (#) (Method "artist.search")
   , (#) artist
   , (#) apiKey
@@ -211,7 +210,7 @@ search artist page limit apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/artist.share>
 share :: Artist -> Recipient -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Secret -> Lastfm Response
-share artist recipient message public apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+share artist recipient message public apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "artist.share")
   , (#) artist
   , (#) recipient
@@ -225,7 +224,7 @@ share artist recipient message public apiKey sessionKey secret = runErrorT . cal
 --
 -- More: <http://www.lastfm.ru/api/show/artist.shout>
 shout :: Artist -> Message -> APIKey -> SessionKey -> Secret -> Lastfm Response
-shout artist message apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+shout artist message apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "artist.shout")
   , (#) artist
   , (#) message

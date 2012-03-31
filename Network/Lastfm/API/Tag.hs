@@ -12,7 +12,7 @@ import Network.Lastfm
 --
 -- More: <http://www.lastfm.ru/api/show/tag.getInfo>
 getInfo :: Tag -> Maybe Language -> APIKey -> Lastfm Response
-getInfo tag language apiKey = runErrorT . callAPI $
+getInfo tag language apiKey = callAPI
   [ (#) (Method "tag.getInfo")
   , (#) tag
   , (#) language
@@ -23,7 +23,7 @@ getInfo tag language apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/tag.getSimilar>
 getSimilar :: Tag -> APIKey -> Lastfm Response
-getSimilar tag apiKey = runErrorT . callAPI $
+getSimilar tag apiKey = callAPI
   [ (#) (Method "tag.getSimilar")
   , (#) tag
   , (#) apiKey
@@ -33,7 +33,7 @@ getSimilar tag apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/tag.getTopAlbums>
 getTopAlbums :: Tag -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopAlbums tag page limit apiKey = runErrorT . callAPI $
+getTopAlbums tag page limit apiKey = callAPI
   [ (#) (Method "tag.getTopAlbums")
   , (#) tag
   , (#) page
@@ -45,7 +45,7 @@ getTopAlbums tag page limit apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/tag.getTopArtists>
 getTopArtists :: Tag -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopArtists tag limit page apiKey = runErrorT . callAPI $
+getTopArtists tag limit page apiKey = callAPI
   [ (#) (Method "tag.getTopArtists")
   , (#) tag
   , (#) page
@@ -57,7 +57,7 @@ getTopArtists tag limit page apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/tag.getTopTags>
 getTopTags :: APIKey -> Lastfm Response
-getTopTags apiKey = runErrorT . callAPI $
+getTopTags apiKey = callAPI
   [ (#) (Method "tag.getTopArtists")
   , (#) apiKey
   ]
@@ -66,7 +66,7 @@ getTopTags apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/tag.getTopTracks>
 getTopTracks :: Tag -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopTracks tag limit page apiKey = runErrorT . callAPI $
+getTopTracks tag limit page apiKey = callAPI
   [ (#) (Method "tag.getTopTracks")
   , (#) tag
   , (#) page
@@ -78,7 +78,7 @@ getTopTracks tag limit page apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/tag.getWeeklyArtistChart>
 getWeeklyArtistChart :: Tag -> Maybe From -> Maybe To -> Maybe Limit -> APIKey -> Lastfm Response
-getWeeklyArtistChart tag from to limit apiKey = runErrorT . callAPI $
+getWeeklyArtistChart tag from to limit apiKey = callAPI
   [ (#) (Method "tag.getWeeklyArtistChart")
   , (#) tag
   , (#) from
@@ -91,7 +91,7 @@ getWeeklyArtistChart tag from to limit apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/tag.getWeeklyChartList>
 getWeeklyChartList :: Tag -> APIKey -> Lastfm Response
-getWeeklyChartList tag apiKey = runErrorT . callAPI $
+getWeeklyChartList tag apiKey = callAPI
   [ (#) (Method "tag.getWeeklyChartList")
   , (#) tag
   , (#) apiKey
@@ -101,7 +101,7 @@ getWeeklyChartList tag apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/tag.search>
 search :: Tag -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-search tag page limit apiKey = runErrorT . callAPI $
+search tag page limit apiKey = callAPI
   [ (#) (Method "tag.search")
   , (#) tag
   , (#) page

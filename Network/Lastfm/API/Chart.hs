@@ -5,7 +5,6 @@ module Network.Lastfm.API.Chart
   , getTopArtists, getTopTags, getTopTracks
   ) where
 
-import Control.Monad.Error (runErrorT)
 import Network.Lastfm
 
 -- | Get the hyped artists chart.
@@ -45,7 +44,7 @@ getTopTracks :: Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getTopTracks = get "getTopTracks"
 
 get :: String -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-get method page limit apiKey = runErrorT . callAPI $
+get method page limit apiKey = callAPI
   [ (#) (Method $ "chart." ++ method)
   , (#) page
   , (#) limit

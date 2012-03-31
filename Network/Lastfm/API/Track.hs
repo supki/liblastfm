@@ -7,32 +7,26 @@ module Network.Lastfm.API.Track
   ) where
 
 import Control.Arrow ((|||))
-import Control.Monad.Error (runErrorT, throwError)
 import Network.Lastfm
 
 -- | Tag a track using a list of user supplied tags.
 --
 -- More: <http://www.lastfm.ru/api/show/track.addTags>
 addTags :: Artist -> Track -> [Tag] -> APIKey -> SessionKey -> Secret -> Lastfm Response
-addTags artist track tags apiKey sessionKey secret = runErrorT go
-  where go
-          | null tags        = throwError $ WrapperCallError method "empty tag list."
-          | length tags > 10 = throwError $ WrapperCallError method "tag list length has exceeded maximum."
-          | otherwise        = callAPIsigned secret
-            [ (#) (Method method)
-            , (#) artist
-            , (#) track
-            , (#) tags
-            , (#) apiKey
-            , (#) sessionKey
-            ]
-            where method = "track.addTags"
+addTags artist track tags apiKey sessionKey secret = callAPIsigned secret
+  [ (#) (Method "track.addTags")
+  , (#) artist
+  , (#) track
+  , (#) tags
+  , (#) apiKey
+  , (#) sessionKey
+  ]
 
 -- | Ban a track for a given user profile.
 --
 -- More: <http://www.lastfm.ru/api/show/track.ban>
 ban :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm Response
-ban artist track apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+ban artist track apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "track.ban")
   , (#) artist
   , (#) track
@@ -44,7 +38,7 @@ ban artist track apiKey sessionKey secret = runErrorT . callAPIsigned secret $
 --
 -- More: <http://www.lastfm.ru/api/show/track.getBuylinks>
 getBuyLinks :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Country -> APIKey -> Lastfm Response
-getBuyLinks a autocorrect country apiKey = runErrorT . callAPI $
+getBuyLinks a autocorrect country apiKey = callAPI $
   target a ++
   [ (#) (Method "track.getBuyLinks")
   , (#) autocorrect
@@ -56,7 +50,7 @@ getBuyLinks a autocorrect country apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/track.getCorrection>
 getCorrection :: Artist -> Track -> APIKey -> Lastfm Response
-getCorrection artist track apiKey = runErrorT . callAPI $
+getCorrection artist track apiKey = callAPI
   [ (#) (Method "track.getCorrection")
   , (#) artist
   , (#) track
@@ -67,7 +61,7 @@ getCorrection artist track apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/track.getFingerprintMetadata>
 getFingerprintMetadata :: Fingerprint -> APIKey -> Lastfm Response
-getFingerprintMetadata fingerprint apiKey = runErrorT . callAPI $
+getFingerprintMetadata fingerprint apiKey = callAPI
   [ (#) (Method "track.getFingerprintMetadata")
   , (#) fingerprint
   , (#) apiKey
@@ -77,7 +71,7 @@ getFingerprintMetadata fingerprint apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/track.getInfo>
 getInfo :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Maybe Username -> APIKey -> Lastfm Response
-getInfo a autocorrect username apiKey = runErrorT . callAPI $
+getInfo a autocorrect username apiKey = callAPI $
   target a ++
   [ (#) (Method "track.getInfo")
   , (#) autocorrect
@@ -89,7 +83,7 @@ getInfo a autocorrect username apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/track.getShouts>
 getShouts :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getShouts a autocorrect page limit apiKey = runErrorT . callAPI $
+getShouts a autocorrect page limit apiKey = callAPI $
   target a ++
   [ (#) (Method "track.getShouts")
   , (#) autocorrect
@@ -102,7 +96,7 @@ getShouts a autocorrect page limit apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/track.getSimilar>
 getSimilar :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Maybe Limit -> APIKey -> Lastfm Response
-getSimilar a autocorrect limit apiKey = runErrorT . callAPI $
+getSimilar a autocorrect limit apiKey = callAPI $
   target a ++
   [ (#) (Method "track.getSimilar")
   , (#) autocorrect
@@ -114,7 +108,7 @@ getSimilar a autocorrect limit apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/track.getTags>
 getTags :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Either User (SessionKey, Secret) -> APIKey -> Lastfm Response
-getTags a autocorrect b apiKey = runErrorT $ case b of
+getTags a autocorrect b apiKey = case b of
   Left user -> callAPI $ target a ++ [(#) user] ++ args
   Right (sessionKey, secret) -> callAPIsigned secret $ target a ++ [(#) sessionKey] ++ args
   where args =
@@ -127,7 +121,7 @@ getTags a autocorrect b apiKey = runErrorT $ case b of
 --
 -- More: <http://www.lastfm.ru/api/show/track.getTopFans>
 getTopFans :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
-getTopFans a autocorrect apiKey = runErrorT . callAPI $
+getTopFans a autocorrect apiKey = callAPI $
   target a ++
   [ (#) (Method "track.getTopFans")
   , (#) autocorrect
@@ -138,7 +132,7 @@ getTopFans a autocorrect apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/track.getTopTags>
 getTopTags :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
-getTopTags a autocorrect apiKey = runErrorT . callAPI $
+getTopTags a autocorrect apiKey = callAPI $
   target a ++
   [ (#) (Method "track.getTopTags")
   , (#) autocorrect
@@ -149,7 +143,7 @@ getTopTags a autocorrect apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/track.love>
 love :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm Response
-love artist track apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+love artist track apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "track.love")
   , (#) artist
   , (#) track
@@ -161,7 +155,7 @@ love artist track apiKey sessionKey secret = runErrorT . callAPIsigned secret $
 --
 -- More: <http://www.lastfm.ru/api/show/track.removeTag>
 removeTag :: Artist -> Track -> Tag -> APIKey -> SessionKey -> Secret -> Lastfm Response
-removeTag artist track tag apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+removeTag artist track tag apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "track.removeTag")
   , (#) artist
   , (#) track
@@ -180,7 +174,7 @@ scrobble :: ( Timestamp, Maybe Album, Artist, Track, Maybe AlbumArtist
          -> SessionKey
          -> Secret
          -> Lastfm Response
-scrobble (timestamp, album, artist, track, albumArtist, duration, streamId, chosenByUser, context, trackNumber, mbid) apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+scrobble (timestamp, album, artist, track, albumArtist, duration, streamId, chosenByUser, context, trackNumber, mbid) apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "track.scrobble")
   , (#) timestamp
   , (#) artist
@@ -201,7 +195,7 @@ scrobble (timestamp, album, artist, track, albumArtist, duration, streamId, chos
 --
 -- More: <http://www.lastfm.ru/api/show/track.search>
 search :: Track -> Maybe Page -> Maybe Limit -> Maybe Artist -> APIKey -> Lastfm Response
-search track page limit artist apiKey = runErrorT . callAPI $
+search track page limit artist apiKey = callAPI
   [ (#) (Method "track.search")
   , (#) track
   , (#) page
@@ -214,7 +208,7 @@ search track page limit artist apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/track.share>
 share :: Artist -> Track -> Recipient -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Secret -> Lastfm Response
-share artist track recipient message public apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+share artist track recipient message public apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "track.share")
   , (#) artist
   , (#) track
@@ -229,7 +223,7 @@ share artist track recipient message public apiKey sessionKey secret = runErrorT
 --
 -- More: <http://www.lastfm.ru/api/show/track.unban>
 unban :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm Response
-unban artist track apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+unban artist track apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "track.unban")
   , (#) artist
   , (#) track
@@ -241,7 +235,7 @@ unban artist track apiKey sessionKey secret = runErrorT . callAPIsigned secret $
 --
 -- More: <http://www.lastfm.ru/api/show/track.unlove>
 unlove :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm Response
-unlove artist track apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+unlove artist track apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "track.unlove")
   , (#) artist
   , (#) track
@@ -265,7 +259,7 @@ updateNowPlaying :: Artist
                  -> SessionKey
                  -> Secret
                  -> Lastfm Response
-updateNowPlaying artist track album albumArtist context trackNumber mbid duration apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+updateNowPlaying artist track album albumArtist context trackNumber mbid duration apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "track.updateNowPlaying")
   , (#) artist
   , (#) track

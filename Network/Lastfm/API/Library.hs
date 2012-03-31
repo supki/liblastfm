@@ -12,7 +12,7 @@ import Network.Lastfm
 --
 -- More: <http://www.lastfm.ru/api/show/library.addAlbum>
 addAlbum :: Artist -> Album -> APIKey -> SessionKey -> Secret -> Lastfm Response
-addAlbum artist album apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+addAlbum artist album apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "library.addAlbum")
   , (#) artist
   , (#) album
@@ -24,7 +24,7 @@ addAlbum artist album apiKey sessionKey secret = runErrorT . callAPIsigned secre
 --
 -- More: <http://www.lastfm.ru/api/show/library.addArtist>
 addArtist :: Artist -> APIKey -> SessionKey -> Secret -> Lastfm Response
-addArtist artist apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+addArtist artist apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "library.addArtist")
   , (#) artist
   , (#) apiKey
@@ -35,7 +35,7 @@ addArtist artist apiKey sessionKey secret = runErrorT . callAPIsigned secret $
 --
 -- More: <http://www.lastfm.ru/api/show/library.addTrack>
 addTrack :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm Response
-addTrack artist track apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+addTrack artist track apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "library.addTrack")
   , (#) artist
   , (#) track
@@ -47,7 +47,7 @@ addTrack artist track apiKey sessionKey secret = runErrorT . callAPIsigned secre
 --
 -- More: <http://www.lastfm.ru/api/show/library.getAlbums>
 getAlbums :: User -> Maybe Artist -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getAlbums user artist page limit apiKey = runErrorT . callAPI $
+getAlbums user artist page limit apiKey = callAPI
   [ (#) (Method "library.getAlbums")
   , (#) user
   , (#) artist
@@ -60,7 +60,7 @@ getAlbums user artist page limit apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/library.getArtists>
 getArtists :: User -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getArtists user page limit apiKey = runErrorT . callAPI $
+getArtists user page limit apiKey = callAPI
   [ (#) (Method "library.getArtists")
   , (#) user
   , (#) page
@@ -72,7 +72,7 @@ getArtists user page limit apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/library.getTracks>
 getTracks :: User -> Maybe Artist -> Maybe Album -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTracks user artist album page limit apiKey = runErrorT . callAPI $
+getTracks user artist album page limit apiKey = callAPI
   [ (#) (Method "library.getTracks")
   , (#) user
   , (#) artist
@@ -86,7 +86,7 @@ getTracks user artist album page limit apiKey = runErrorT . callAPI $
 --
 -- More: <http://www.lastfm.ru/api/show/library.removeAlbum>
 removeAlbum :: Artist -> Album -> APIKey -> SessionKey -> Secret -> Lastfm Response
-removeAlbum artist album apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+removeAlbum artist album apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "library.removeAlbum")
   , (#) artist
   , (#) album
@@ -98,7 +98,7 @@ removeAlbum artist album apiKey sessionKey secret = runErrorT . callAPIsigned se
 --
 -- More: <http://www.lastfm.ru/api/show/library.removeArtist>
 removeArtist :: Artist -> APIKey -> SessionKey -> Secret -> Lastfm Response
-removeArtist artist apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+removeArtist artist apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "library.removeArtist")
   , (#) artist
   , (#) apiKey
@@ -109,7 +109,7 @@ removeArtist artist apiKey sessionKey secret = runErrorT . callAPIsigned secret 
 --
 -- More: <http://www.lastfm.ru/api/show/library.removeScrobble>
 removeScrobble :: Artist -> Track -> Timestamp -> APIKey -> SessionKey -> Secret -> Lastfm Response
-removeScrobble artist track timestamp apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+removeScrobble artist track timestamp apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "library.removeScrobble")
   , (#) artist
   , (#) track
@@ -122,7 +122,7 @@ removeScrobble artist track timestamp apiKey sessionKey secret = runErrorT . cal
 --
 -- More: <http://www.lastfm.ru/api/show/library.removeTrack>
 removeTrack :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm Response
-removeTrack artist track apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+removeTrack artist track apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "library.removeTrack")
   , (#) artist
   , (#) track
