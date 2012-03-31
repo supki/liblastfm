@@ -33,7 +33,7 @@ getFingerprintMetadata = parse r f "Tracks"
 
 getInfo :: IO ()
 getInfo = parse r f "Replays count"
-  where r = Track.getInfo (Left (Artist "Pink Floyd", Track "Brain Damage")) Nothing (Just $ User "aswalrus") apiKey
+  where r = Track.getInfo (Left (Artist "Pink Floyd", Track "Brain Damage")) Nothing (Just $ Username "aswalrus") apiKey
         f = fmap return . content <=< tag "userplaycount" <=< tag "track"
 
 getShouts :: IO ()
@@ -78,7 +78,7 @@ search = parse r f "12 search results for \"Believe\" query"
         f = mapM (content <=< tag "name") <=< tags "track" <=< tag "trackmatches" <=< tag "results"
 
 share :: APIKey -> SessionKey -> Secret -> IO ()
-share ak sk s = Track.share (Artist "Led Zeppelin") (Track "When the Levee Breaks") [Recipient "liblastfm"] (Just $ Message "Just listen!") Nothing ak sk s >>= print ||| const (return ())
+share ak sk s = Track.share (Artist "Led Zeppelin") (Track "When the Levee Breaks") (Recipient "liblastfm") (Just $ Message "Just listen!") Nothing ak sk s >>= print ||| const (return ())
 
 unban :: APIKey -> SessionKey -> Secret -> IO ()
 unban ak sk s = Track.unban (Artist "Eminem") (Track "Kim") ak sk s >>= print ||| const (return ())

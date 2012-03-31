@@ -30,7 +30,7 @@ getShouts = parse r f "First 8 shouts"
         f = mapM (content <=< tag "body") <=< tags "shout" <=< tag "shouts"
 
 share :: APIKey -> SessionKey -> Secret -> IO ()
-share ak sk s = Event.share event [Recipient "liblastfm"] (Just $ Message "Just listen!") Nothing ak sk s >>= print ||| const (return ())
+share ak sk s = Event.share event (Recipient "liblastfm") (Just $ Message "Just listen!") Nothing ak sk s >>= print ||| const (return ())
 
 common :: IO ()
 common = do getAttendees

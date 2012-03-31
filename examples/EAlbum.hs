@@ -52,7 +52,7 @@ search = parse r f "5 search results for \"wall\" query"
         f = mapM (content <=< tag "name") <=< tags "album" <=< tag "albummatches" <=< tag "results"
 
 share :: APIKey -> SessionKey -> Secret -> IO ()
-share ak sk s = Album.share (Artist "Sleep") (Album "Jerusalem") [Recipient "liblastfm"] (Just $ Message "Just listen!") Nothing ak sk s >>= print ||| const (return ())
+share ak sk s = Album.share (Artist "Sleep") (Album "Jerusalem") (Recipient "liblastfm") (Just $ Message "Just listen!") Nothing ak sk s >>= print ||| const (return ())
 
 common :: IO ()
 common = do getBuylinks

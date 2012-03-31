@@ -6,7 +6,7 @@ module Network.Lastfm.API.Album
   ) where
 
 import Control.Arrow ((|||))
-import Control.Monad.Error (runErrorT, throwError)
+import Control.Monad.Error (runErrorT)
 import Control.Monad (void)
 import Network.Lastfm
 
@@ -14,19 +14,14 @@ import Network.Lastfm
 --
 -- More: <http://www.lastfm.ru/api/show/album.addTags>
 addTags :: (Artist, Album) -> [Tag] -> APIKey -> SessionKey -> Secret -> Lastfm ()
-addTags (artist, album) tags apiKey sessionKey secret = runErrorT go
-  where go
-          | null tags        = throwError $ WrapperCallError method "empty tag list."
-          | length tags > 10 = throwError $ WrapperCallError method "tag list length has exceeded maximum."
-          | otherwise        = void $ callAPIsigned secret
-          [ (#) (Method method)
-          , "artist" ?< artist
-          , "album" ?< album
-          , "tags" ?< tags
-          , (#) apiKey
-          , (#) sessionKey
-          ]
-          where method = "album.addTags"
+addTags (artist, album) tags apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
+  [ (#) (Method "album.addTags")
+  , (#) artist
+  , (#) album
+  , (#) tags
+  , (#) apiKey
+  , (#) sessionKey
+  ]
 
 -- | Get a list of Buy Links for a particular Album. It is required that you supply either the artist and track params or the mbid param.
 --
@@ -36,20 +31,20 @@ getBuyLinks a autocorrect country apiKey = runErrorT . callAPI $
   target a ++
   [ (#) (Method "album.getBuyLinks")
   , (#) autocorrect
-  , "country" ?< country
+  , (#) country
   , (#) apiKey
   ]
 
 -- | Get the metadata for an album on Last.fm using the album name or a musicbrainz id. See playlist.fetch on how to get the album playlist.
 --
 -- More: <http://www.lastfm.ru/api/show/album.getInfo>
-getInfo :: Either (Artist, Album) Mbid -> Maybe Autocorrect -> Maybe Language -> Maybe User -> APIKey -> Lastfm Response
+getInfo :: Either (Artist, Album) Mbid -> Maybe Autocorrect -> Maybe Language -> Maybe Username -> APIKey -> Lastfm Response
 getInfo a autocorrect lang username apiKey = runErrorT . callAPI $
   target a ++
   [ (#) (Method "album.getInfo")
   , (#) autocorrect
   , (#) lang
-  , "username" ?< username
+  , (#) username
   , (#) apiKey
   ]
 
@@ -71,8 +66,8 @@ getShouts a autocorrect page limit apiKey = runErrorT . callAPI $
 -- More: <http://www.lastfm.ru/api/show/album.getTags>
 getTags :: Either (Artist, Album) Mbid -> Maybe Autocorrect -> Either User (SessionKey, Secret) -> APIKey -> Lastfm Response
 getTags a autocorrect b apiKey = runErrorT $ case b of
-  Left user -> callAPI $ target a ++ ["user" ?< user] ++ args
-  Right (sessionKey, secret) -> callAPIsigned secret $ target a ++ ["sk" ?< sessionKey] ++ args
+  Left user -> callAPI $ target a ++ [(#) user] ++ args
+  Right (sessionKey, secret) -> callAPIsigned secret $ target a ++ [(#) sessionKey] ++ args
   where args =
           [ (#) (Method "album.getTags")
           , (#) autocorrect
@@ -96,8 +91,8 @@ getTopTags a autocorrect apiKey = runErrorT . callAPI $
 removeTag :: Artist -> Album -> Tag -> APIKey -> SessionKey -> Secret -> Lastfm ()
 removeTag artist album tag apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ (#) (Method "album.removeTag")
-  , "artist" ?< artist
-  , "album" ?< album
+  , (#) artist
+  , (#) album
   , (#) tag
   , (#) apiKey
   , (#) sessionKey
@@ -109,7 +104,7 @@ removeTag artist album tag apiKey sessionKey secret = runErrorT . void . callAPI
 search :: Album -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 search album page limit apiKey = runErrorT . callAPI $
   [ (#) (Method "album.search")
-  , "album" ?< album
+  , (#) album
   , (#) page
   , (#) limit
   , (#) apiKey
@@ -118,22 +113,17 @@ search album page limit apiKey = runErrorT . callAPI $
 -- | Share an album with one or more Last.fm users or other friends.
 --
 -- More: <http://www.lastfm.ru/api/show/album.share>
-share :: Artist -> Album -> [Recipient] -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Secret -> Lastfm ()
-share artist album recipients message public apiKey sessionKey secret = runErrorT go
-  where go
-          | null recipients        = throwError $ WrapperCallError method "empty recipient list."
-          | length recipients > 10 = throwError $ WrapperCallError method "recipient list length has exceeded maximum."
-          | otherwise              = void $ callAPIsigned secret
-            [ (#) (Method method)
-            , "artist" ?< artist
-            , "album" ?< album
-            , "public" ?< public
-            , "message" ?< message
-            , "recipient" ?< recipients
-            , (#) apiKey
-            , (#) sessionKey
-            ]
-            where method = "album.share"
+share :: Artist -> Album -> Recipient -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Secret -> Lastfm ()
+share artist album recipient message public apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
+  [ (#) (Method "album.share")
+  , (#) artist
+  , (#) album
+  , (#) public
+  , (#) message
+  , (#) recipient
+  , (#) apiKey
+  , (#) sessionKey
+  ]
 
 target :: Either (Artist, Album) Mbid -> [(String, String)]
-target = (\(artist, album) -> ["artist" ?< artist, "album" ?< album]) ||| return . ("mbid" ?<)
+target = (\(artist, album) -> [(#) artist, (#) album]) ||| return . (#)

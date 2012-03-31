@@ -13,8 +13,8 @@ import Network.Lastfm
 getEvents :: Venue -> Maybe FestivalsOnly -> APIKey -> Lastfm Response
 getEvents venue festivalsOnly apiKey = runErrorT . callAPI $
   [ (#) (Method "venue.getEvents")
-  , "venue" ?< venue
-  , "festivalsonly" ?< festivalsOnly
+  , (#) venue
+  , (#) festivalsOnly
   , (#) apiKey
   ]
 
@@ -24,8 +24,8 @@ getEvents venue festivalsOnly apiKey = runErrorT . callAPI $
 getPastEvents :: Venue -> Maybe FestivalsOnly -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getPastEvents venue festivalsOnly page limit apiKey = runErrorT . callAPI $
   [ (#) (Method "venue.getPastEvents")
-  , "venue" ?< venue
-  , "festivalsonly" ?< festivalsOnly
+  , (#) venue
+  , (#) festivalsOnly
   , (#) page
   , (#) limit
   , (#) apiKey
@@ -37,9 +37,9 @@ getPastEvents venue festivalsOnly page limit apiKey = runErrorT . callAPI $
 search :: Name -> Maybe Page -> Maybe Limit -> Maybe Country -> APIKey -> Lastfm Response
 search venue page limit country apiKey = runErrorT . callAPI $
   [ (#) (Method "venue.search")
-  , "venue" ?< venue
+  , (#) venue
   , (#) page
   , (#) limit
-  , "country" ?< country
+  , (#) country
   , (#) apiKey
   ]

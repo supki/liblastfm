@@ -15,14 +15,14 @@ import Network.Lastfm
 -- | Get a list of tracks by a given artist scrobbled by this user, including scrobble time. Can be limited to specific timeranges, defaults to all time.
 --
 -- More: <http://www.lastfm.ru/api/show/user.getArtistTracks>
-getArtistTracks :: User -> Artist -> Maybe From -> Maybe To -> Maybe Page -> APIKey -> Lastfm Response
+getArtistTracks :: User -> Artist -> Maybe StartTimestamp -> Maybe EndTimestamp -> Maybe Page -> APIKey -> Lastfm Response
 getArtistTracks user artist startTimestamp endTimestamp page apiKey = runErrorT . callAPI $
   [ (#) (Method "user.getArtistTracks")
-  , "user" ?< user
-  , "artist" ?< artist
-  , "startTimestamp" ?< startTimestamp
+  , (#) user
+  , (#) artist
+  , (#) startTimestamp
   , (#) page
-  , "endTimestamp" ?< endTimestamp
+  , (#) endTimestamp
   , (#) apiKey
   ]
 
@@ -32,7 +32,7 @@ getArtistTracks user artist startTimestamp endTimestamp page apiKey = runErrorT 
 getBannedTracks :: User -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getBannedTracks user page limit apiKey = runErrorT . callAPI $
   [ (#) (Method "user.getBannedTracks")
-  , "user" ?< user
+  , (#) user
   , (#) page
   , (#) limit
   , (#) apiKey
@@ -44,10 +44,10 @@ getBannedTracks user page limit apiKey = runErrorT . callAPI $
 getEvents :: User -> Maybe Page -> Maybe Limit -> Maybe FestivalsOnly -> APIKey -> Lastfm Response
 getEvents user page limit festivalsOnly apiKey = runErrorT . callAPI $
   [ (#) (Method "user.getEvents")
-  , "user" ?< user
+  , (#) user
   , (#) page
   , (#) limit
-  , "festivalsonly" ?< festivalsOnly
+  , (#) festivalsOnly
   , (#) apiKey
   ]
 
@@ -57,8 +57,8 @@ getEvents user page limit festivalsOnly apiKey = runErrorT . callAPI $
 getFriends :: User -> Maybe RecentTracks -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getFriends user recentTracks page limit apiKey = runErrorT . callAPI $
   [ (#) (Method "user.getFriends")
-  , "user" ?< user
-  , "recenttracks" ?< recentTracks
+  , (#) user
+  , (#) recentTracks
   , (#) page
   , (#) limit
   , (#) apiKey
@@ -70,7 +70,7 @@ getFriends user recentTracks page limit apiKey = runErrorT . callAPI $
 getInfo :: Maybe User -> APIKey -> Lastfm Response
 getInfo user apiKey = runErrorT . callAPI $
   [ (#) (Method "user.getInfo")
-  , "user" ?< user
+  , (#) user
   , (#) apiKey
   ]
 
@@ -80,7 +80,7 @@ getInfo user apiKey = runErrorT . callAPI $
 getLovedTracks :: User -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getLovedTracks user page limit apiKey = runErrorT . callAPI $
   [ (#) (Method "user.getLovedTracks")
-  , "user" ?< user
+  , (#) user
   , (#) page
   , (#) limit
   , (#) apiKey
@@ -92,7 +92,7 @@ getLovedTracks user page limit apiKey = runErrorT . callAPI $
 getNeighbours :: User -> Maybe Limit -> APIKey -> Lastfm Response
 getNeighbours user limit apiKey = runErrorT . callAPI $
   [ (#) (Method "user.getNeighbours")
-  , "user" ?< user
+  , (#) user
   , (#) limit
   , (#) apiKey
   ]
@@ -103,8 +103,8 @@ getNeighbours user limit apiKey = runErrorT . callAPI $
 getNewReleases :: User -> Maybe UseRecs -> APIKey -> Lastfm Response
 getNewReleases user useRecs apiKey = runErrorT . callAPI $
   [ (#) (Method "user.getNewReleases")
-  , "user" ?< user
-  , "userecs" ?< useRecs
+  , (#) user
+  , (#) useRecs
   , (#) apiKey
   ]
 
@@ -114,7 +114,7 @@ getNewReleases user useRecs apiKey = runErrorT . callAPI $
 getPastEvents :: User -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getPastEvents user page limit apiKey = runErrorT . callAPI $
   [ (#) (Method "user.getPastEvents")
-  , "user" ?< user
+  , (#) user
   , (#) page
   , (#) limit
   , (#) apiKey
@@ -132,9 +132,9 @@ getPersonalTags :: User
                 -> Lastfm Response
 getPersonalTags user tag taggingType page limit apiKey = runErrorT . callAPI $
   [ (#) (Method "user.getPersonalTags")
-  , "user" ?< user
+  , (#) user
   , (#) tag
-  , "taggingtype" ?< taggingType
+  , (#) taggingType
   , (#) page
   , (#) limit
   , (#) apiKey
@@ -146,7 +146,7 @@ getPersonalTags user tag taggingType page limit apiKey = runErrorT . callAPI $
 getPlaylists :: User -> APIKey -> Lastfm Response
 getPlaylists user apiKey = runErrorT . callAPI $
   [ (#) (Method "user.getPlaylists")
-  , "user" ?< user
+  , (#) user
   , (#) apiKey
   ]
 
@@ -156,7 +156,7 @@ getPlaylists user apiKey = runErrorT . callAPI $
 getRecentStations :: User -> Maybe Page -> Maybe Limit -> APIKey -> SessionKey -> Secret -> Lastfm Response
 getRecentStations user page limit apiKey sessionKey secret = runErrorT . callAPIsigned secret $
   [ (#) (Method "user.getRecentStations")
-  , "user" ?< user
+  , (#) user
   , (#) page
   , (#) limit
   , (#) apiKey
@@ -169,7 +169,7 @@ getRecentStations user page limit apiKey sessionKey secret = runErrorT . callAPI
 getRecentTracks :: User -> Maybe Page -> Maybe Limit -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
 getRecentTracks user page limit from to apiKey = runErrorT . callAPI $
   [ (#) (Method "user.getRecentTracks")
-  , "user" ?< user
+  , (#) user
   , (#) page
   , (#) limit
   , (#) from
@@ -207,7 +207,7 @@ getRecommendedEvents page limit apiKey sessionKey secret = runErrorT . callAPIsi
 getShouts :: User -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getShouts user page limit apiKey = runErrorT . callAPI $
   [ (#) (Method "user.getShouts")
-  , "user" ?< user
+  , (#) user
   , (#) page
   , (#) limit
   , (#) apiKey
@@ -219,8 +219,8 @@ getShouts user page limit apiKey = runErrorT . callAPI $
 getTopAlbums :: User -> Maybe Period -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getTopAlbums user period page limit apiKey = runErrorT . callAPI $
   [ (#) (Method "user.getTopAlbums")
-  , "user" ?< user
-  , "period" ?< period
+  , (#) user
+  , (#) period
   , (#) page
   , (#) limit
   , (#) apiKey
@@ -232,8 +232,8 @@ getTopAlbums user period page limit apiKey = runErrorT . callAPI $
 getTopArtists :: User -> Maybe Period -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getTopArtists user period page limit apiKey = runErrorT . callAPI $
   [ (#) (Method "user.getTopArtists")
-  , "user" ?< user
-  , "period" ?< period
+  , (#) user
+  , (#) period
   , (#) page
   , (#) limit
   , (#) apiKey
@@ -245,7 +245,7 @@ getTopArtists user period page limit apiKey = runErrorT . callAPI $
 getTopTags :: User -> Maybe Limit -> APIKey -> Lastfm Response
 getTopTags user limit apiKey = runErrorT . callAPI $
   [ (#) (Method "user.getTopTags")
-  , "user" ?< user
+  , (#) user
   , (#) limit
   , (#) apiKey
   ]
@@ -256,8 +256,8 @@ getTopTags user limit apiKey = runErrorT . callAPI $
 getTopTracks :: User -> Maybe Period -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getTopTracks user period page limit apiKey = runErrorT . callAPI $
   [ (#) (Method "user.getTopTracks")
-  , "user" ?< user
-  , "period" ?< period
+  , (#) user
+  , (#) period
   , (#) page
   , (#) limit
   , (#) apiKey
@@ -269,7 +269,7 @@ getTopTracks user period page limit apiKey = runErrorT . callAPI $
 getWeeklyAlbumChart :: User -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
 getWeeklyAlbumChart user from to apiKey = runErrorT . callAPI $
   [ (#) (Method "user.getWeeklyAlbumChart")
-  , "user" ?< user
+  , (#) user
   , (#) from
   , (#) to
   , (#) apiKey
@@ -281,7 +281,7 @@ getWeeklyAlbumChart user from to apiKey = runErrorT . callAPI $
 getWeeklyArtistChart :: User -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
 getWeeklyArtistChart user from to apiKey = runErrorT . callAPI $
   [ (#) (Method "user.getWeeklyArtistChart")
-  , "user" ?< user
+  , (#) user
   , (#) from
   , (#) to
   , (#) apiKey
@@ -293,7 +293,7 @@ getWeeklyArtistChart user from to apiKey = runErrorT . callAPI $
 getWeeklyChartList :: User -> APIKey -> Lastfm Response
 getWeeklyChartList user apiKey = runErrorT . callAPI $
   [ (#) (Method "user.getWeeklyChartList")
-  , "user" ?< user
+  , (#) user
   , (#) apiKey
   ]
 
@@ -303,7 +303,7 @@ getWeeklyChartList user apiKey = runErrorT . callAPI $
 getWeeklyTrackChart :: User -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
 getWeeklyTrackChart user from to apiKey = runErrorT . callAPI $
   [ (#) (Method "user.getWeeklyTrackChart")
-  , "user" ?< user
+  , (#) user
   , (#) from
   , (#) to
   , (#) apiKey
@@ -315,8 +315,8 @@ getWeeklyTrackChart user from to apiKey = runErrorT . callAPI $
 shout :: User -> Message -> APIKey -> SessionKey -> Secret -> Lastfm ()
 shout user message apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ (#) (Method "user.shout")
-  , "user" ?< user
-  , "message" ?< message
+  , (#) user
+  , (#) message
   , (#) apiKey
   , (#) sessionKey
   ]

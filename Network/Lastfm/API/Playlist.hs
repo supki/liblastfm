@@ -14,9 +14,9 @@ import Network.Lastfm
 addTrack :: Playlist -> Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm ()
 addTrack playlist artist track apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ (#) (Method "playlist.addTrack")
-  , "playlistID" ?< playlist
-  , "artist" ?< artist
-  , "track" ?< track
+  , (#) playlist
+  , (#) artist
+  , (#) track
   , (#) apiKey
   , (#) sessionKey
   ]
@@ -27,8 +27,8 @@ addTrack playlist artist track apiKey sessionKey secret = runErrorT . void . cal
 create :: Maybe Title -> Maybe Description -> APIKey -> SessionKey -> Secret -> Lastfm ()
 create title description apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ (#) (Method "playlist.create")
-  , "title" ?< title
-  , "description" ?< description
+  , (#) title
+  , (#) description
   , (#) apiKey
   , (#) sessionKey
   ]

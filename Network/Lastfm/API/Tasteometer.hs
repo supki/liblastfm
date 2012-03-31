@@ -8,6 +8,9 @@ import Control.Monad.Error (runErrorT, throwError)
 import Network.Lastfm
 import Prelude hiding (compare)
 
+(?<) :: Argument a => a -> Int -> (String, String)
+a ?< n = (key a ++ show n, value a)
+
 -- | Get a Tasteometer score from two inputs, along with a list of shared artists. If the input is a User some additional information is returned.
 --
 -- More: <http://www.lastfm.ru/api/show/tasteometer.compare>
@@ -20,22 +23,19 @@ compare value1 value2 limit apiKey = runErrorT go
           | isExceededMaximum value2 = throwError $ WrapperCallError method "second artists list length has exceeded maximum (100)."
           | otherwise = callAPI
             [ (#) (Method method)
-            , "type1" ?< type1
-            , "type2" ?< type2
-            , "value1" ?< value1
-            , "value2" ?< value2
+            , (,) "type1" (show value1)
+            , (,) "type2" (show value2)
+            , (?<) value1 1
+            , (?<) value2 2
             , (#) limit
             , (#) apiKey
             ]
             where method = "tasteometer.compare"
 
-                  type1 = show value1
-                  type2 = show value2
-
                   isNull :: Value -> Bool
-                  isNull (ValueUser _) = False
-                  isNull (ValueArtists as) = null as
+                  isNull (ValueArtists []) = True
+                  isNull _ = False
 
                   isExceededMaximum :: Value -> Bool
                   isExceededMaximum (ValueUser _) = False
-                  isExceededMaximum (ValueArtists as) = length as > 100
+                  isExceededMaximum (ValueArtists as) = null . drop 100 $ as

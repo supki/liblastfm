@@ -11,11 +11,11 @@ import Network.Lastfm
 -- | Create a web service session for a user. Used for authenticating a user when the password can be inputted by the user. Only suitable for standalone mobile devices.
 --
 -- More: <http://www.lastfm.ru/api/show/auth.getMobileSession>
-getMobileSession :: User -> APIKey -> AuthToken -> Lastfm Response
-getMobileSession user apiKey token = runErrorT . callAPI $
+getMobileSession :: Username -> APIKey -> AuthToken -> Lastfm Response
+getMobileSession username apiKey token = runErrorT . callAPI $
   [ (#) (Method "auth.getMobileSession")
-  , "username" ?< user
-  , "authToken" ?< token
+  , (#) username
+  , (#) token
   , (#) apiKey
   ]
 
@@ -26,7 +26,7 @@ getSession :: APIKey -> Token -> Lastfm Response
 getSession apiKey token = runErrorT . callAPI $
   [ (#) (Method "auth.getSession")
   , (#) apiKey
-  , "token" ?< token
+  , (#) token
   ]
 
 -- | Fetch an unathorized request token for an API account.

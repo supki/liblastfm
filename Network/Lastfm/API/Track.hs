@@ -21,9 +21,9 @@ addTags artist track tags apiKey sessionKey secret = runErrorT go
           | length tags > 10 = throwError $ WrapperCallError method "tag list length has exceeded maximum."
           | otherwise        = void $ callAPIsigned secret
             [ (#) (Method method)
-            , "artist" ?< artist
-            , "track" ?< track
-            , "tags" ?< tags
+            , (#) artist
+            , (#) track
+            , (#) tags
             , (#) apiKey
             , (#) sessionKey
             ]
@@ -35,8 +35,8 @@ addTags artist track tags apiKey sessionKey secret = runErrorT go
 ban :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm ()
 ban artist track apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ (#) (Method "track.ban")
-  , "artist" ?< artist
-  , "track" ?< track
+  , (#) artist
+  , (#) track
   , (#) apiKey
   , (#) sessionKey
   ]
@@ -49,7 +49,7 @@ getBuyLinks a autocorrect country apiKey = runErrorT . callAPI $
   target a ++
   [ (#) (Method "track.getBuyLinks")
   , (#) autocorrect
-  , "country" ?< country
+  , (#) country
   , (#) apiKey
   ]
 
@@ -59,8 +59,8 @@ getBuyLinks a autocorrect country apiKey = runErrorT . callAPI $
 getCorrection :: Artist -> Track -> APIKey -> Lastfm Response
 getCorrection artist track apiKey = runErrorT . callAPI $
   [ (#) (Method "track.getCorrection")
-  , "artist" ?< artist
-  , "track" ?< track
+  , (#) artist
+  , (#) track
   , (#) apiKey
   ]
 
@@ -70,19 +70,19 @@ getCorrection artist track apiKey = runErrorT . callAPI $
 getFingerprintMetadata :: Fingerprint -> APIKey -> Lastfm Response
 getFingerprintMetadata fingerprint apiKey = runErrorT . callAPI $
   [ (#) (Method "track.getFingerprintMetadata")
-  , "fingerprintid" ?< fingerprint
+  , (#) fingerprint
   , (#) apiKey
   ]
 
 -- | Get the metadata for a track on Last.fm.
 --
 -- More: <http://www.lastfm.ru/api/show/track.getInfo>
-getInfo :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Maybe User -> APIKey -> Lastfm Response
+getInfo :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Maybe Username -> APIKey -> Lastfm Response
 getInfo a autocorrect username apiKey = runErrorT . callAPI $
   target a ++
   [ (#) (Method "track.getInfo")
   , (#) autocorrect
-  , "username" ?< username
+  , (#) username
   , (#) apiKey
   ]
 
@@ -116,7 +116,7 @@ getSimilar a autocorrect limit apiKey = runErrorT . callAPI $
 -- More: <http://www.lastfm.ru/api/show/track.getTags>
 getTags :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Either User (SessionKey, Secret) -> APIKey -> Lastfm Response
 getTags a autocorrect b apiKey = runErrorT $ case b of
-  Left user -> callAPI $ target a ++ ["user" ?< user] ++ args
+  Left user -> callAPI $ target a ++ [(#) user] ++ args
   Right (sessionKey, secret) -> callAPIsigned secret $ target a ++ [(#) sessionKey] ++ args
   where args =
           [ (#) (Method "track.getTags")
@@ -152,8 +152,8 @@ getTopTags a autocorrect apiKey = runErrorT . callAPI $
 love :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm ()
 love artist track apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ (#) (Method "track.love")
-  , "artist" ?< artist
-  , "track" ?< track
+  , (#) artist
+  , (#) track
   , (#) apiKey
   , (#) sessionKey
   ]
@@ -164,9 +164,9 @@ love artist track apiKey sessionKey secret = runErrorT . void . callAPIsigned se
 removeTag :: Artist -> Track -> Tag -> APIKey -> SessionKey -> Secret -> Lastfm ()
 removeTag artist track tag apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ (#) (Method "track.removeTag")
-  , "artist" ?< artist
-  , "track" ?< track
-  , "tag" ?< tag
+  , (#) artist
+  , (#) track
+  , (#) tag
   , (#) apiKey
   , (#) sessionKey
   ]
@@ -183,17 +183,17 @@ scrobble :: ( Timestamp, Maybe Album, Artist, Track, Maybe AlbumArtist
          -> Lastfm ()
 scrobble (timestamp, album, artist, track, albumArtist, duration, streamId, chosenByUser, context, trackNumber, mbid) apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ (#) (Method "track.scrobble")
-  , "timestamp" ?< timestamp
-  , "artist" ?< artist
-  , "track" ?< track
-  , "album" ?< album
-  , "albumArtist" ?< albumArtist
-  , "duration" ?< duration
-  , "streamId" ?< streamId
-  , "chosenByUser" ?< chosenByUser
-  , "context" ?< context
-  , "trackNumber" ?< trackNumber
-  , "mbid" ?< mbid
+  , (#) timestamp
+  , (#) artist
+  , (#) track
+  , (#) album
+  , (#) albumArtist
+  , (#) duration
+  , (#) streamId
+  , (#) chosenByUser
+  , (#) context
+  , (#) trackNumber
+  , (#) mbid
   , (#) apiKey
   , (#) sessionKey
   ]
@@ -204,7 +204,7 @@ scrobble (timestamp, album, artist, track, albumArtist, duration, streamId, chos
 search :: Track -> Maybe Page -> Maybe Limit -> Maybe Artist -> APIKey -> Lastfm Response
 search limit page track artist apiKey = runErrorT . callAPI $
   [ (#) (Method "track.search")
-  , "track" ?< track
+  , (#) track
   , (#) page
   , (#) limit
   , (#) apiKey
@@ -213,22 +213,17 @@ search limit page track artist apiKey = runErrorT . callAPI $
 -- | Share a track twith one or more Last.fm users or other friends.
 --
 -- More: <http://www.lastfm.ru/api/show/track.share>
-share :: Artist -> Track -> [Recipient] -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Secret -> Lastfm ()
-share artist track recipients message public apiKey sessionKey secret = runErrorT go
-  where go
-          | null recipients        = throwError $ WrapperCallError method "empty recipient list."
-          | length recipients > 10 = throwError $ WrapperCallError method "recipient list length has exceeded maximum."
-          | otherwise              = void $ callAPIsigned secret
-            [ (#) (Method method)
-            , "artist" ?< artist
-            , "track" ?< track
-            , "recipient" ?< recipients
-            , "public" ?< public
-            , "message" ?< message
-            , (#) apiKey
-            , (#) sessionKey
-            ]
-            where method = "track.share"
+share :: Artist -> Track -> Recipient -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Secret -> Lastfm ()
+share artist track recipient message public apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
+  [ (#) (Method "track.share")
+  , (#) artist
+  , (#) track
+  , (#) recipient
+  , (#) public
+  , (#) message
+  , (#) apiKey
+  , (#) sessionKey
+  ]
 
 -- | Unban a track for a user profile.
 --
@@ -236,8 +231,8 @@ share artist track recipients message public apiKey sessionKey secret = runError
 unban :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm ()
 unban artist track apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ (#) (Method "track.unban")
-  , "artist" ?< artist
-  , "track" ?< track
+  , (#) artist
+  , (#) track
   , (#) apiKey
   , (#) sessionKey
   ]
@@ -248,8 +243,8 @@ unban artist track apiKey sessionKey secret = runErrorT . void . callAPIsigned s
 unlove :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm ()
 unlove artist track apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ (#) (Method "track.unlove")
-  , "artist" ?< artist
-  , "track" ?< track
+  , (#) artist
+  , (#) track
   , (#) apiKey
   , (#) sessionKey
   ]
@@ -272,17 +267,17 @@ updateNowPlaying :: Artist
                  -> Lastfm ()
 updateNowPlaying artist track album albumArtist context trackNumber mbid duration apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ (#) (Method "track.updateNowPlaying")
-  , "artist" ?< artist
-  , "track" ?< track
-  , "album" ?< album
-  , "albumArtist" ?< albumArtist
-  , "context" ?< context
-  , "trackNumber" ?< trackNumber
-  , "mbid" ?< mbid
-  , "duration" ?< duration
+  , (#) artist
+  , (#) track
+  , (#) album
+  , (#) albumArtist
+  , (#) context
+  , (#) trackNumber
+  , (#) mbid
+  , (#) duration
   , (#) apiKey
   , (#) sessionKey
   ]
 
 target :: Either (Artist, Track) Mbid -> [(String, String)]
-target = (\(artist, track) -> ["artist" ?< artist, "track" ?< track]) ||| return . ("mbid" ?<)
+target = (\(artist, track) -> [(#) artist, (#) track]) ||| return . (#)

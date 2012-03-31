@@ -16,7 +16,7 @@ tune ak sk s = parse r f "Tune"
 
 getPlaylist :: APIKey -> SessionKey -> Secret -> IO ()
 getPlaylist ak sk s = parse r f "Playlist"
-  where r = Radio.getPlaylist Nothing Nothing Nothing (Multiplier 2.0) (Bitrate 64) ak sk s
+  where r = Radio.getPlaylist Nothing Nothing Nothing M2 B64 ak sk s
         f = mapM (content <=< tag "title") <=< tags "track" <=< tag "trackList" <=< tag "playlist"
 
 search :: IO ()

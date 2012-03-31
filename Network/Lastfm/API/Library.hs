@@ -15,8 +15,8 @@ import Network.Lastfm
 addAlbum :: Artist -> Album -> APIKey -> SessionKey -> Secret -> Lastfm ()
 addAlbum artist album apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ (#) (Method "library.addAlbum")
-  , "artist" ?< artist
-  , "album" ?< album
+  , (#) artist
+  , (#) album
   , (#) apiKey
   , (#) sessionKey
   ]
@@ -27,7 +27,7 @@ addAlbum artist album apiKey sessionKey secret = runErrorT . void . callAPIsigne
 addArtist :: Artist -> APIKey -> SessionKey -> Secret -> Lastfm ()
 addArtist artist apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ (#) (Method "library.addArtist")
-  , "artist" ?< artist
+  , (#) artist
   , (#) apiKey
   , (#) sessionKey
   ]
@@ -38,8 +38,8 @@ addArtist artist apiKey sessionKey secret = runErrorT . void . callAPIsigned sec
 addTrack :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm ()
 addTrack artist track apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ (#) (Method "library.addTrack")
-  , "artist" ?< artist
-  , "track" ?< track
+  , (#) artist
+  , (#) track
   , (#) apiKey
   , (#) sessionKey
   ]
@@ -50,8 +50,8 @@ addTrack artist track apiKey sessionKey secret = runErrorT . void . callAPIsigne
 getAlbums :: User -> Maybe Artist -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getAlbums user artist page limit apiKey = runErrorT . callAPI $
   [ (#) (Method "library.getAlbums")
-  , "user" ?< user
-  , "artist" ?< artist
+  , (#) user
+  , (#) artist
   , (#) page
   , (#) limit
   , (#) apiKey
@@ -63,7 +63,7 @@ getAlbums user artist page limit apiKey = runErrorT . callAPI $
 getArtists :: User -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getArtists user page limit apiKey = runErrorT . callAPI $
   [ (#) (Method "library.getArtists")
-  , "user" ?< user
+  , (#) user
   , (#) page
   , (#) limit
   , (#) apiKey
@@ -75,9 +75,9 @@ getArtists user page limit apiKey = runErrorT . callAPI $
 getTracks :: User -> Maybe Artist -> Maybe Album -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getTracks user artist album page limit apiKey = runErrorT . callAPI $
   [ (#) (Method "library.getTracks")
-  , "user" ?< user
-  , "artist" ?< artist
-  , "album" ?< album
+  , (#) user
+  , (#) artist
+  , (#) album
   , (#) page
   , (#) limit
   , (#) apiKey
@@ -89,8 +89,8 @@ getTracks user artist album page limit apiKey = runErrorT . callAPI $
 removeAlbum :: Artist -> Album -> APIKey -> SessionKey -> Secret -> Lastfm ()
 removeAlbum artist album apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ (#) (Method "library.removeAlbum")
-  , "artist" ?< artist
-  , "album" ?< album
+  , (#) artist
+  , (#) album
   , (#) apiKey
   , (#) sessionKey
   ]
@@ -101,7 +101,7 @@ removeAlbum artist album apiKey sessionKey secret = runErrorT . void . callAPIsi
 removeArtist :: Artist -> APIKey -> SessionKey -> Secret -> Lastfm ()
 removeArtist artist apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ (#) (Method "library.removeArtist")
-  , "artist" ?< artist
+  , (#) artist
   , (#) apiKey
   , (#) sessionKey
   ]
@@ -112,9 +112,9 @@ removeArtist artist apiKey sessionKey secret = runErrorT . void . callAPIsigned 
 removeScrobble :: Artist -> Track -> Timestamp -> APIKey -> SessionKey -> Secret -> Lastfm ()
 removeScrobble artist track timestamp apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ (#) (Method "library.removeScrobble")
-  , "artist" ?< artist
-  , "track" ?< track
-  , "timestamp" ?< timestamp
+  , (#) artist
+  , (#) track
+  , (#) timestamp
   , (#) apiKey
   , (#) sessionKey
   ]
@@ -125,8 +125,8 @@ removeScrobble artist track timestamp apiKey sessionKey secret = runErrorT . voi
 removeTrack :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm ()
 removeTrack artist track apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ (#) (Method "library.removeTrack")
-  , "artist" ?< artist
-  , "track" ?< track
+  , (#) artist
+  , (#) track
   , (#) apiKey
   , (#) sessionKey
   ]

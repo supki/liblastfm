@@ -31,6 +31,7 @@ type Response = String
 callAPI :: [(String, String)] -> ErrorT LastfmError IO Response
 callAPI = query . map (second encodeString)
 
+-- | Low level function. Sends signed POST query to Lastfm API.
 callAPIsigned :: Secret -> [(String, String)] -> ErrorT LastfmError IO Response
 callAPIsigned (Secret s) xs = query zs
   where ys = map (second encodeString) . filter (not . null . snd) $ xs

@@ -1,137 +1,184 @@
-{-# LANGUAGE FlexibleInstances, OverlappingInstances, TypeSynonymInstances, GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE FlexibleInstances, OverlappingInstances, TypeSynonymInstances #-}
 module Network.Lastfm.Types where
 
 import Control.Monad.Error (Error)
 import Data.List (intercalate)
 
-class Argument a where
-  key :: a -> String
-  value :: a -> String
-
-(?<) :: Argument a => String -> a -> (String, String)
-a ?< b = (a, value b)
+newtype Secret = Secret String deriving Show
 
 (#) :: Argument a => a -> (String, String)
 (#) x = (key x, value x)
 
-newtype Method = Method {method :: String}
-instance Argument Method where key = const "method"; value = method
+class Argument a where
+  key :: a -> String
+  value :: a -> String
 
+instance Argument a => Argument (Maybe a) where key = maybe "" key; value = maybe "" value
+instance Argument a => Argument [a] where
+  key (a:_) = key a ++ "s"
+  key [] = ""
+  value = intercalate "," . map value
+
+newtype Album = Album String
+newtype AlbumArtist = AlbumArtist String
 newtype APIKey = APIKey String
-newtype Autocorrect = Autocorrect Bool
-newtype From = From Integer
+newtype Artist = Artist String
+newtype AuthToken = AuthToken String
+newtype ChosenByUser = ChosenByUser String
+newtype Context = Context String
+newtype Country = Country String
+newtype Description = Description String
 newtype Group = Group String
 newtype Language = Language String
-newtype Limit = Limit Int
-newtype Page = Page Int
+newtype Latitude = Latitude String
+newtype Location = Location String
+newtype Longitude = Longitude String
+newtype Mbid = Mbid String
+newtype Message = Message String
+newtype Method = Method String
+newtype Metro = Metro String
+newtype Name = Name String
+newtype Recipient = Recipient String
 newtype SessionKey = SessionKey String
+newtype Station = Station String
+newtype StreamId = StreamId String
 newtype Tag = Tag String
-newtype To = To Integer
+newtype TaggingType = TaggingType String
+newtype Title = Title String
+newtype Token = Token String
+newtype Track = Track String
+newtype User = User String
+newtype Username = Username String
+instance Argument Album where key = const "album"; value (Album a) = a
+instance Argument AlbumArtist where key = const "albumartist"; value (AlbumArtist a) = a
 instance Argument APIKey where key = const "api_key"; value (APIKey a) = a
-instance Argument Autocorrect where key = const "autocorrect"; value (Autocorrect a) = value a
-instance Argument From where key = const "from"; value (From a) = value a
+instance Argument Artist where key = const "artist"; value (Artist a) = a
+instance Argument AuthToken where key = const "authToken"; value (AuthToken a) = a
+instance Argument ChosenByUser where key = const "chosenByUser"; value (ChosenByUser a) = a
+instance Argument Context where key = const "context"; value (Context a) = a
+instance Argument Country where key = const "country"; value (Country a) = a
+instance Argument Description where key = const "description"; value (Description a) = a
 instance Argument Group where key = const "group"; value (Group a) = a
 instance Argument Language where key = const "lang"; value (Language a) = a
-instance Argument Limit where key = const "limit"; value (Limit a) = value a
-instance Argument Page where key = const "page"; value (Page a) = value a
+instance Argument Latitude where key = const "lat"; value (Latitude a) = a
+instance Argument Location where key = const "location"; value (Location a) = a
+instance Argument Longitude where key = const "long"; value (Longitude a) = a
+instance Argument Mbid where key = const "mbid"; value (Mbid a) = a
+instance Argument Message where key = const "message"; value (Message a) = a
+instance Argument Method where key = const "method"; value (Method a) = a
+instance Argument Metro where key = const "metro"; value (Metro a) = a
+instance Argument Name where key = const "name"; value (Name a) = a
+instance Argument Recipient where key = const "recipient"; value (Recipient a) = a
 instance Argument SessionKey where key = const "sk"; value (SessionKey a) = a
+instance Argument Station where key = const "station"; value (Station a) = a
+instance Argument StreamId where key = const "streamId"; value (StreamId a) = a
 instance Argument Tag where key = const "tag"; value (Tag a) = a
-instance Argument To where key = const "to"; value (To a) = value a
+instance Argument TaggingType where key = const "taggingtype"; value (TaggingType a) = a
+instance Argument Title where key = const "title"; value (Title a) = a
+instance Argument Token where key = const "token"; value (Token a) = a
+instance Argument Track where key = const "track"; value (Track a) = a
+instance Argument User where key = const "user"; value (User a) = a
+instance Argument Username where key = const "username"; value (Username a) = a
 
-newtype Secret = Secret String deriving Show
+boolToString :: Bool -> String
+boolToString True = "1"
+boolToString False = "0"
 
-newtype Album = Album String deriving (Show, Argument)
-newtype AlbumArtist = AlbumArtist String deriving (Show, Argument)
-newtype Artist = Artist String deriving (Show, Argument)
-newtype AuthToken = AuthToken String deriving (Show, Argument)
-newtype Bitrate = Bitrate Int deriving (Show, Argument)
-newtype BuyLinks = BuyLinks Bool deriving (Show, Argument)
-newtype ChosenByUser = ChosenByUser String deriving (Show, Argument)
-newtype Context = Context String deriving (Show, Argument)
-newtype Country = Country String deriving (Show, Argument)
-newtype Description = Description String deriving (Show, Argument)
-newtype Discovery = Discovery Bool deriving (Show, Argument)
-newtype Distance = Distance Int deriving (Show, Argument)
-newtype Duration = Duration Int deriving (Show, Argument)
-newtype Event = Event Int deriving (Show, Argument)
-newtype FestivalsOnly = FestivalsOnly Bool deriving (Show, Argument)
-newtype Fingerprint = Fingerprint Integer deriving (Show, Argument)
-newtype Latitude = Latitude String deriving (Show, Argument)
-newtype Location = Location String deriving (Show, Argument)
-newtype Longitude = Longitude String deriving (Show, Argument)
-newtype Mbid = Mbid String deriving (Show, Argument)
-newtype Message = Message String deriving (Show, Argument)
-newtype Metro = Metro String deriving (Show, Argument)
-newtype Multiplier = Multiplier Double deriving (Show, Argument)
-newtype Name = Name String deriving (Show, Argument)
-newtype Playlist = Playlist Int deriving (Show, Argument)
-newtype Public = Public Bool deriving (Show, Argument)
-newtype RecentTracks = RecentTracks Bool deriving (Show, Argument)
-newtype Recipient = Recipient String deriving (Show, Argument)
-newtype RTP = RTP Bool deriving (Show, Argument)
-newtype Station = Station String deriving (Show, Argument)
-newtype StreamId = StreamId String deriving (Show, Argument)
-newtype TaggingType = TaggingType String deriving (Show, Argument)
-newtype Timestamp = Timestamp Integer deriving (Show, Argument)
-newtype Title = Title String deriving (Show, Argument)
-newtype Token = Token String deriving (Show, Argument)
-newtype Track = Track String deriving (Show, Argument)
-newtype TrackNumber = TrackNumber String deriving (Show, Argument)
-newtype User = User String deriving (Show, Argument)
-newtype UseRecs = UseRecs Bool deriving (Show, Argument)
-newtype Venue = Venue Int deriving (Show, Argument)
+newtype Autocorrect = Autocorrect Bool
+newtype BuyLinks = BuyLinks Bool
+newtype Discovery = Discovery Bool
+newtype FestivalsOnly = FestivalsOnly Bool
+newtype Public = Public Bool
+newtype RecentTracks = RecentTracks Bool
+newtype RTP = RTP Bool
+newtype UseRecs = UseRecs Bool
+instance Argument Autocorrect where key = const "autocorrect"; value (Autocorrect a) = boolToString a
+instance Argument BuyLinks where key = const "buylinks"; value (BuyLinks a) = boolToString a
+instance Argument Discovery where key = const "discovery"; value (Discovery a) = boolToString a
+instance Argument FestivalsOnly where key = const "festivalsonly"; value (FestivalsOnly a) = boolToString a
+instance Argument Public where key = const "public"; value (Public a) = boolToString a
+instance Argument RecentTracks where key = const "recenttracks"; value (RecentTracks a) = boolToString a
+instance Argument RTP where key = const "rtp"; value (RTP a) = boolToString a
+instance Argument UseRecs where key = const "userecs"; value (UseRecs a) = boolToString a
 
-data Order = Popularity | DateAdded deriving Show
+newtype Distance = Distance Int
+newtype Duration = Duration Int
+newtype Event = Event Int
+newtype Limit = Limit Int
+newtype Page = Page Int
+newtype Playlist = Playlist Int
+newtype TrackNumber = TrackNumber Int
+newtype Venue = Venue Int
+instance Argument Distance where key = const "distance"; value (Distance a) = show a
+instance Argument Duration where key = const "duration"; value (Duration a) = show a
+instance Argument Event where key = const "event"; value (Event a) = show a
+instance Argument Limit where key = const "limit"; value (Limit a) = show a
+instance Argument Page where key = const "page"; value (Page a) = show a
+instance Argument Playlist where key = const "playlistID"; value (Playlist a) = show a
+instance Argument TrackNumber where key = const "tracknumber"; value (TrackNumber a) = show a
+instance Argument Venue where key = const "venue"; value (Venue a) = show a
 
+newtype End = End Integer
+newtype EndTimestamp = EndTimestamp Integer
+newtype Fingerprint = Fingerprint Integer
+newtype From = From Integer
+newtype Start = Start Integer
+newtype StartTimestamp = StartTimestamp Integer
+newtype Timestamp = Timestamp Integer
+newtype To = To Integer
+instance Argument End where key = const "end"; value (End a) = show a
+instance Argument EndTimestamp where key = const "endTimestamp"; value (EndTimestamp a) = show a
+instance Argument Fingerprint where key = const "fingerprintid"; value (Fingerprint a) = show a
+instance Argument From where key = const "from"; value (From a) = show a
+instance Argument Start where key = const "start"; value (Start a) = show a
+instance Argument StartTimestamp where key = const "startTimestamp"; value (StartTimestamp a) = show a
+instance Argument Timestamp where key = const "timestamp"; value (Timestamp a) = show a
+instance Argument To where key = const "to"; value (To a) = show a
+
+data Bitrate = B64 | B128
+
+instance Argument Bitrate where
+  key = const "bitrate"
+  value B64 = "64"
+  value B128 = "128"
+
+data Multiplier = M1 | M2
+instance Argument Multiplier where
+  key = const "speed_multiplier"
+  value M1 = "1.0"
+  value M2 = "2.0"
+
+data Order = Popularity | DateAdded
 instance Argument Order where
+  key = const "order"
   value Popularity = "popularity"
   value DateAdded  = "dateadded"
 
-data Status = Yes | Maybe | No deriving Show
-
+data Status = Yes | Maybe | No
 instance Argument Status where
+  key = const "status"
   value Yes = "0"
   value Maybe = "1"
   value No = "2"
 
 data Value = ValueUser User
            | ValueArtists [Artist]
-
 instance Show Value where
   show (ValueUser _)    = "user"
   show (ValueArtists _) = "artists"
-
 instance Argument Value where
+  key = const "value"
   value (ValueUser u)     = value u
   value (ValueArtists as) = value as
 
 data Period = Week | Quater | HalfYear | Year | Overall
-              deriving (Show)
-
 instance Argument Period where
+  key = const "period"
   value Week     = "7day"
   value Quater   = "3month"
   value HalfYear = "6month"
   value Year     = "12month"
   value Overall  = "overall"
-
-instance Argument Bool where
-  value True = "1"
-  value False = "0"
-instance Argument Int where
-  value = show
-instance Argument Integer where
-  value = show
-instance Argument Double where
-  value = show
-instance Argument String where
-  value = id
-instance Argument a => Argument [a] where
-  value = intercalate "," . map value
-instance Argument a => Argument (Maybe a) where
-  value (Just a) = value a
-  value Nothing  = ""
-
 
 data APIError
   = DoesntExist

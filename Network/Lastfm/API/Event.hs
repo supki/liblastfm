@@ -14,8 +14,8 @@ import Network.Lastfm
 attend :: Event -> Status -> APIKey -> SessionKey -> Secret -> Lastfm ()
 attend event status apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ (#) (Method "event.attend")
-  , "event" ?< event
-  , "status" ?< status
+  , (#) event
+  , (#) status
   , (#) apiKey
   , (#) sessionKey
   ]
@@ -26,7 +26,7 @@ attend event status apiKey sessionKey secret = runErrorT . void . callAPIsigned 
 getAttendees :: Event -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getAttendees event page limit apiKey = runErrorT . callAPI $
   [ (#) (Method "event.getAttendees")
-  , "event" ?< event
+  , (#) event
   , (#) page
   , (#) limit
   , (#) apiKey
@@ -38,7 +38,7 @@ getAttendees event page limit apiKey = runErrorT . callAPI $
 getInfo :: Event -> APIKey -> Lastfm Response
 getInfo event apiKey = runErrorT . callAPI $
   [ (#) (Method "event.getInfo")
-  , "event" ?< event
+  , (#) event
   , (#) apiKey
   ]
 
@@ -48,7 +48,7 @@ getInfo event apiKey = runErrorT . callAPI $
 getShouts :: Event -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getShouts event page limit apiKey = runErrorT . callAPI $
   [ (#) (Method "event.getShouts")
-  , "event" ?< event
+  , (#) event
   , (#) page
   , (#) limit
   , (#) apiKey
@@ -57,21 +57,16 @@ getShouts event page limit apiKey = runErrorT . callAPI $
 -- | Share an event with one or more Last.fm users or other friends.
 --
 -- More: <http://www.lastfm.ru/api/show/event.share>
-share :: Event -> [Recipient] -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Secret -> Lastfm ()
-share event recipients message public apiKey sessionKey secret = runErrorT go
-  where go
-          | null recipients        = throwError $ WrapperCallError method "empty recipient list."
-          | length recipients > 10 = throwError $ WrapperCallError method "recipient list length has exceeded maximum."
-          | otherwise              = void $ callAPIsigned secret
-            [ (#) (Method method)
-            , "event" ?< event
-            , "public" ?< public
-            , "message" ?< message
-            , "recipient" ?< recipients
-            , (#) apiKey
-            , (#) sessionKey
-            ]
-            where method = "event.share"
+share :: Event -> Recipient -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Secret -> Lastfm ()
+share event recipient message public apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
+  [ (#) (Method "event.share")
+  , (#) event
+  , (#) public
+  , (#) message
+  , (#) recipient
+  , (#) apiKey
+  , (#) sessionKey
+  ]
 
 -- | Shout in this event's shoutbox.
 --
@@ -79,8 +74,8 @@ share event recipients message public apiKey sessionKey secret = runErrorT go
 shout :: Event -> Message -> APIKey -> SessionKey -> Secret -> Lastfm ()
 shout event message apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
   [ (#) (Method "event.shout")
-  , "event" ?< event
-  , "message" ?< message
+  , (#) event
+  , (#) message
   , (#) apiKey
   , (#) sessionKey
   ]

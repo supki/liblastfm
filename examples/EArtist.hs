@@ -92,7 +92,7 @@ search = parse r f "12 search results for \"Mesh\" query"
         f = mapM (content <=< tag "name") <=< tags "artist" <=< tag "artistmatches" <=< tag "results"
 
 share :: APIKey -> SessionKey -> Secret -> IO ()
-share ak sk s = Artist.share (Artist "Sleep") [Recipient "liblastfm"] (Just $ Message "Just listen!") Nothing ak sk s >>= print ||| const (return ())
+share ak sk s = Artist.share (Artist "Sleep") (Recipient "liblastfm") (Just $ Message "Just listen!") Nothing ak sk s >>= print ||| const (return ())
 
 common :: IO ()
 common = do getCorrection

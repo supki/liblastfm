@@ -4,7 +4,7 @@ module Network.Lastfm.API.Radio
   ( getPlaylist, search, tune
   ) where
 
-import Control.Monad.Error (runErrorT, throwError)
+import Control.Monad.Error (runErrorT)
 import Network.Lastfm
 
 -- | Fetch new radio content periodically in an XSPF format.
@@ -19,21 +19,16 @@ getPlaylist :: Maybe Discovery
             -> SessionKey
             -> Secret
             -> Lastfm Response
-getPlaylist discovery rtp buylinks multiplier bitrate apiKey sessionKey secret = runErrorT go
-  where go
-          | value multiplier /= "1.0" && value multiplier /= "2.0" = throwError $ WrapperCallError method "unsupported multiplier."
-          | value bitrate /= "64" && value bitrate /= "128" = throwError $ WrapperCallError method "unsupported bitrate."
-          | otherwise = callAPIsigned secret
-            [ (#) (Method method)
-            , "discovery" ?< discovery
-            , "rtp" ?< rtp
-            , "buylinks" ?< buylinks
-            , "speed_multiplier" ?< multiplier
-            , "bitrate" ?< bitrate
-            , (#) apiKey
-            , (#) sessionKey
-            ]
-            where method = "radio.getPlaylist"
+getPlaylist discovery rtp buylinks multiplier bitrate apiKey sessionKey secret = runErrorT . callAPIsigned secret $
+  [ (#) (Method "radio.getPlaylist")
+  , (#) discovery
+  , (#) rtp
+  , (#) buylinks
+  , (#) multiplier
+  , (#) bitrate
+  , (#) apiKey
+  , (#) sessionKey
+  ]
 
 -- | Resolve the name of a resource into a station depending on which resource it is most likely to represent.
 --
@@ -41,7 +36,7 @@ getPlaylist discovery rtp buylinks multiplier bitrate apiKey sessionKey secret =
 search :: Name -> APIKey -> Lastfm Response
 search name apiKey = runErrorT . callAPI $
   [ (#) (Method "radio.search")
-  , "name" ?< name
+  , (#) name
   , (#) apiKey
   ]
 
@@ -52,7 +47,7 @@ tune :: Maybe Language -> Station -> APIKey -> SessionKey -> Secret -> Lastfm Re
 tune language station apiKey sessionKey secret = runErrorT . callAPIsigned secret $
   [ (#) (Method "radio.tune")
   , (#) language
-  , "station" ?< station
+  , (#) station
   , (#) apiKey
   , (#) sessionKey
   ]
