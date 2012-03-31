@@ -1,7 +1,10 @@
 module ETrack (common, auth) where
 
+import Control.Applicative ((<$>))
 import Control.Arrow ((|||))
 import Control.Monad ((<=<))
+import Data.Time (formatTime, getCurrentTime)
+import System.Locale (defaultTimeLocale)
 
 import Network.Lastfm.Types
 import qualified Network.Lastfm.API.Track as Track
@@ -87,7 +90,12 @@ unlove :: APIKey -> SessionKey -> Secret -> IO ()
 unlove ak sk s = Track.unlove (Artist "Gojira") (Track "Ocean") ak sk s >>= print ||| const (return ())
 
 scrobble :: APIKey -> SessionKey -> Secret -> IO ()
-scrobble ak sk s = Track.scrobble (Timestamp 1328905590, Nothing, Artist "Gojira", Track "Ocean", Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing) ak sk s >>= print ||| const (return ())
+scrobble ak sk s = do
+  t <- read . formatTime defaultTimeLocale "%s" <$> getCurrentTime
+  r <- Track.scrobble (Timestamp t, Nothing, Artist "Gojira", Track "Ocean", Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing) ak sk s 
+  case r of
+    Left e -> print e
+    Right _ -> return ()
 
 updateNowPlaying :: APIKey -> SessionKey -> Secret -> IO ()
 updateNowPlaying ak sk s = Track.updateNowPlaying (Artist "Gojira") (Track "Ocean") Nothing Nothing Nothing Nothing Nothing Nothing ak sk s >>= print ||| const (return ())
