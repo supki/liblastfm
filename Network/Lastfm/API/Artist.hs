@@ -8,14 +8,13 @@ module Network.Lastfm.API.Artist
 
 import Control.Arrow ((|||))
 import Control.Monad.Error (runErrorT)
-import Control.Monad (void)
 import Network.Lastfm
 
 -- | Tag an album using a list of user supplied tags.
 --
 -- More: <http://www.lastfm.ru/api/show/artist.addTags>
-addTags :: Artist -> [Tag] -> APIKey -> SessionKey -> Secret -> Lastfm ()
-addTags artist tags apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
+addTags :: Artist -> [Tag] -> APIKey -> SessionKey -> Secret -> Lastfm Response
+addTags artist tags apiKey sessionKey secret = runErrorT . callAPIsigned secret $
   [ (#) (Method "artist.addTags")
   , (#) artist
   , (#) tags
@@ -187,8 +186,8 @@ getTopTracks a autocorrect page limit apiKey = runErrorT . callAPI $
 -- | Remove a user's tag from an artist.
 --
 -- More: <http://www.lastfm.ru/api/show/artist.removeTag>
-removeTag :: Artist -> Tag -> APIKey -> SessionKey -> Secret -> Lastfm ()
-removeTag artist tag apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
+removeTag :: Artist -> Tag -> APIKey -> SessionKey -> Secret -> Lastfm Response
+removeTag artist tag apiKey sessionKey secret = runErrorT . callAPIsigned secret $
   [ (#) (Method "artist.removeTag")
   , (#) artist
   , (#) tag
@@ -211,8 +210,8 @@ search artist page limit apiKey = runErrorT . callAPI $
 -- | Share an artist with Last.fm users or other friends.
 --
 -- More: <http://www.lastfm.ru/api/show/artist.share>
-share :: Artist -> Recipient -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Secret -> Lastfm ()
-share artist recipient message public apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
+share :: Artist -> Recipient -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Secret -> Lastfm Response
+share artist recipient message public apiKey sessionKey secret = runErrorT . callAPIsigned secret $
   [ (#) (Method "artist.share")
   , (#) artist
   , (#) recipient
@@ -225,8 +224,8 @@ share artist recipient message public apiKey sessionKey secret = runErrorT . voi
 -- | Shout in this artist's shoutbox.
 --
 -- More: <http://www.lastfm.ru/api/show/artist.shout>
-shout :: Artist -> Message -> APIKey -> SessionKey -> Secret -> Lastfm ()
-shout artist message apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
+shout :: Artist -> Message -> APIKey -> SessionKey -> Secret -> Lastfm Response
+shout artist message apiKey sessionKey secret = runErrorT . callAPIsigned secret $
   [ (#) (Method "artist.shout")
   , (#) artist
   , (#) message

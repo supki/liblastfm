@@ -5,7 +5,7 @@ module Network.Lastfm.API.Auth
   , getAuthorizeTokenLink
   ) where
 
-import Control.Monad.Error (runErrorT, throwError)
+import Control.Monad.Error (runErrorT)
 import Network.Lastfm
 
 -- | Create a web service session for a user. Used for authenticating a user when the password can be inputted by the user. Only suitable for standalone mobile devices.

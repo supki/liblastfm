@@ -5,15 +5,14 @@ module Network.Lastfm.API.Library
   , removeAlbum, removeArtist, removeScrobble, removeTrack
   ) where
 
-import Control.Monad (void)
 import Control.Monad.Error (runErrorT)
 import Network.Lastfm
 
 -- | Add an album or collection of albums to a user's Last.fm library.
 --
 -- More: <http://www.lastfm.ru/api/show/library.addAlbum>
-addAlbum :: Artist -> Album -> APIKey -> SessionKey -> Secret -> Lastfm ()
-addAlbum artist album apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
+addAlbum :: Artist -> Album -> APIKey -> SessionKey -> Secret -> Lastfm Response
+addAlbum artist album apiKey sessionKey secret = runErrorT . callAPIsigned secret $
   [ (#) (Method "library.addAlbum")
   , (#) artist
   , (#) album
@@ -24,8 +23,8 @@ addAlbum artist album apiKey sessionKey secret = runErrorT . void . callAPIsigne
 -- | Add an artist to a user's Last.fm library.
 --
 -- More: <http://www.lastfm.ru/api/show/library.addArtist>
-addArtist :: Artist -> APIKey -> SessionKey -> Secret -> Lastfm ()
-addArtist artist apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
+addArtist :: Artist -> APIKey -> SessionKey -> Secret -> Lastfm Response
+addArtist artist apiKey sessionKey secret = runErrorT . callAPIsigned secret $
   [ (#) (Method "library.addArtist")
   , (#) artist
   , (#) apiKey
@@ -35,8 +34,8 @@ addArtist artist apiKey sessionKey secret = runErrorT . void . callAPIsigned sec
 -- | Add a track to a user's Last.fm library.
 --
 -- More: <http://www.lastfm.ru/api/show/library.addTrack>
-addTrack :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm ()
-addTrack artist track apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
+addTrack :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm Response
+addTrack artist track apiKey sessionKey secret = runErrorT . callAPIsigned secret $
   [ (#) (Method "library.addTrack")
   , (#) artist
   , (#) track
@@ -86,8 +85,8 @@ getTracks user artist album page limit apiKey = runErrorT . callAPI $
 -- | Remove an album from a user's Last.fm library.
 --
 -- More: <http://www.lastfm.ru/api/show/library.removeAlbum>
-removeAlbum :: Artist -> Album -> APIKey -> SessionKey -> Secret -> Lastfm ()
-removeAlbum artist album apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
+removeAlbum :: Artist -> Album -> APIKey -> SessionKey -> Secret -> Lastfm Response
+removeAlbum artist album apiKey sessionKey secret = runErrorT . callAPIsigned secret $
   [ (#) (Method "library.removeAlbum")
   , (#) artist
   , (#) album
@@ -98,8 +97,8 @@ removeAlbum artist album apiKey sessionKey secret = runErrorT . void . callAPIsi
 -- | Remove an artist from a user's Last.fm library.
 --
 -- More: <http://www.lastfm.ru/api/show/library.removeArtist>
-removeArtist :: Artist -> APIKey -> SessionKey -> Secret -> Lastfm ()
-removeArtist artist apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
+removeArtist :: Artist -> APIKey -> SessionKey -> Secret -> Lastfm Response
+removeArtist artist apiKey sessionKey secret = runErrorT . callAPIsigned secret $
   [ (#) (Method "library.removeArtist")
   , (#) artist
   , (#) apiKey
@@ -109,8 +108,8 @@ removeArtist artist apiKey sessionKey secret = runErrorT . void . callAPIsigned 
 -- | Remove a scrobble from a user's Last.fm library.
 --
 -- More: <http://www.lastfm.ru/api/show/library.removeScrobble>
-removeScrobble :: Artist -> Track -> Timestamp -> APIKey -> SessionKey -> Secret -> Lastfm ()
-removeScrobble artist track timestamp apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
+removeScrobble :: Artist -> Track -> Timestamp -> APIKey -> SessionKey -> Secret -> Lastfm Response
+removeScrobble artist track timestamp apiKey sessionKey secret = runErrorT . callAPIsigned secret $
   [ (#) (Method "library.removeScrobble")
   , (#) artist
   , (#) track
@@ -122,8 +121,8 @@ removeScrobble artist track timestamp apiKey sessionKey secret = runErrorT . voi
 -- | Remove a track from a user's Last.fm library.
 --
 -- More: <http://www.lastfm.ru/api/show/library.removeTrack>
-removeTrack :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm ()
-removeTrack artist track apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
+removeTrack :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm Response
+removeTrack artist track apiKey sessionKey secret = runErrorT . callAPIsigned secret $
   [ (#) (Method "library.removeTrack")
   , (#) artist
   , (#) track

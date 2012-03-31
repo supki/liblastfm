@@ -8,7 +8,6 @@ module Network.Lastfm.API.User
   , getWeeklyChartList, getWeeklyTrackChart, shout
   ) where
 
-import Control.Monad (void)
 import Control.Monad.Error (runErrorT)
 import Network.Lastfm
 
@@ -312,8 +311,8 @@ getWeeklyTrackChart user from to apiKey = runErrorT . callAPI $
 -- | Shout on this user's shoutbox.
 --
 -- More: <http://www.lastfm.ru/api/show/user.shout>
-shout :: User -> Message -> APIKey -> SessionKey -> Secret -> Lastfm ()
-shout user message apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
+shout :: User -> Message -> APIKey -> SessionKey -> Secret -> Lastfm Response
+shout user message apiKey sessionKey secret = runErrorT . callAPIsigned secret $
   [ (#) (Method "user.shout")
   , (#) user
   , (#) message

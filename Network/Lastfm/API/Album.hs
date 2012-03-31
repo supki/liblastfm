@@ -7,14 +7,13 @@ module Network.Lastfm.API.Album
 
 import Control.Arrow ((|||))
 import Control.Monad.Error (runErrorT)
-import Control.Monad (void)
 import Network.Lastfm
 
 -- | Tag an album using a list of user supplied tags.
 --
 -- More: <http://www.lastfm.ru/api/show/album.addTags>
-addTags :: (Artist, Album) -> [Tag] -> APIKey -> SessionKey -> Secret -> Lastfm ()
-addTags (artist, album) tags apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
+addTags :: (Artist, Album) -> [Tag] -> APIKey -> SessionKey -> Secret -> Lastfm Response
+addTags (artist, album) tags apiKey sessionKey secret = runErrorT . callAPIsigned secret $
   [ (#) (Method "album.addTags")
   , (#) artist
   , (#) album
@@ -88,8 +87,8 @@ getTopTags a autocorrect apiKey = runErrorT . callAPI $
 -- | Remove a user's tag from an album.
 --
 -- More: <http://www.lastfm.ru/api/show/album.removeTag>
-removeTag :: Artist -> Album -> Tag -> APIKey -> SessionKey -> Secret -> Lastfm ()
-removeTag artist album tag apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
+removeTag :: Artist -> Album -> Tag -> APIKey -> SessionKey -> Secret -> Lastfm Response
+removeTag artist album tag apiKey sessionKey secret = runErrorT . callAPIsigned secret $
   [ (#) (Method "album.removeTag")
   , (#) artist
   , (#) album
@@ -113,8 +112,8 @@ search album page limit apiKey = runErrorT . callAPI $
 -- | Share an album with one or more Last.fm users or other friends.
 --
 -- More: <http://www.lastfm.ru/api/show/album.share>
-share :: Artist -> Album -> Recipient -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Secret -> Lastfm ()
-share artist album recipient message public apiKey sessionKey secret = runErrorT . void . callAPIsigned secret $
+share :: Artist -> Album -> Recipient -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Secret -> Lastfm Response
+share artist album recipient message public apiKey sessionKey secret = runErrorT . callAPIsigned secret $
   [ (#) (Method "album.share")
   , (#) artist
   , (#) album
