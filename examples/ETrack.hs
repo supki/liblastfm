@@ -92,7 +92,7 @@ unlove ak sk s = Track.unlove (Artist "Gojira") (Track "Ocean") ak sk s >>= prin
 scrobble :: APIKey -> SessionKey -> Secret -> IO ()
 scrobble ak sk s = do
   t <- read . formatTime defaultTimeLocale "%s" <$> getCurrentTime
-  r <- Track.scrobble (Timestamp t, Nothing, Artist "Gojira", Track "Ocean", Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing) ak sk s 
+  r <- Track.scrobble (Timestamp t, Nothing, Artist "Gojira", Track "Ocean", Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing) ak sk s
   case r of
     Left e -> print e
     Right _ -> return ()
