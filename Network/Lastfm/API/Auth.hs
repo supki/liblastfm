@@ -21,8 +21,8 @@ getMobileSession username apiKey token = callAPI
 -- | Fetch a session key for a user.
 --
 -- More: <http://www.lastfm.ru/api/show/auth.getSession>
-getSession :: APIKey -> Token -> Lastfm Response
-getSession apiKey token = callAPI
+getSession :: APIKey -> Token -> Secret -> Lastfm Response
+getSession apiKey token secret = callAPIsigned secret
   [ (#) (Method "auth.getSession")
   , (#) apiKey
   , (#) token
