@@ -9,7 +9,7 @@ import Network.Lastfm
 
 -- | Create a web service session for a user. Used for authenticating a user when the password can be inputted by the user. Only suitable for standalone mobile devices.
 --
--- More: <http://www.lastfm.ru/api/show/auth.getMobileSession>
+-- More: <http://www.last.fm/api/show/auth.getMobileSession>
 getMobileSession :: Username -> APIKey -> AuthToken -> Lastfm Response
 getMobileSession username apiKey token = callAPI
   [ (#) (Method "auth.getMobileSession")
@@ -20,7 +20,7 @@ getMobileSession username apiKey token = callAPI
 
 -- | Fetch a session key for a user.
 --
--- More: <http://www.lastfm.ru/api/show/auth.getSession>
+-- More: <http://www.last.fm/api/show/auth.getSession>
 getSession :: APIKey -> Token -> Secret -> Lastfm Response
 getSession apiKey token secret = callAPIsigned secret
   [ (#) (Method "auth.getSession")
@@ -30,7 +30,7 @@ getSession apiKey token secret = callAPIsigned secret
 
 -- | Fetch an unathorized request token for an API account.
 --
--- More: <http://www.lastfm.ru/api/show/auth.getToken>
+-- More: <http://www.last.fm/api/show/auth.getToken>
 getToken :: APIKey -> Lastfm Response
 getToken apiKey = callAPI
   [ (#) (Method "auth.getToken")

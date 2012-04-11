@@ -9,7 +9,7 @@ import Network.Lastfm
 
 -- | Fetch new radio content periodically in an XSPF format.
 --
--- More: <http://www.lastfm.ru/api/show/radio.getPlaylist>
+-- More: <http://www.last.fm/api/show/radio.getPlaylist>
 getPlaylist :: Maybe Discovery
             -> Maybe RTP
             -> Maybe BuyLinks
@@ -32,7 +32,7 @@ getPlaylist discovery rtp buylinks multiplier bitrate apiKey sessionKey secret =
 
 -- | Resolve the name of a resource into a station depending on which resource it is most likely to represent.
 --
--- More: <http://www.lastfm.ru/api/show/radio.search>
+-- More: <http://www.last.fm/api/show/radio.search>
 search :: Name -> APIKey -> Lastfm Response
 search name apiKey = callAPI
   [ (#) (Method "radio.search")
@@ -42,7 +42,7 @@ search name apiKey = callAPI
 
 -- | Tune in to a Last.fm radio station.
 --
--- More: <http://www.lastfm.ru/api/show/radio.tune>
+-- More: <http://www.last.fm/api/show/radio.tune>
 tune :: Maybe Language -> Station -> APIKey -> SessionKey -> Secret -> Lastfm Response
 tune language station apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "radio.tune")

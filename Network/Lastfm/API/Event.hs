@@ -8,7 +8,7 @@ import Network.Lastfm
 
 -- | Set a user's attendance status for an event.
 --
--- More: <http://www.lastfm.ru/api/show/event.attend>
+-- More: <http://www.last.fm/api/show/event.attend>
 attend :: Event -> Status -> APIKey -> SessionKey -> Secret -> Lastfm Response
 attend event status apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "event.attend")
@@ -20,7 +20,7 @@ attend event status apiKey sessionKey secret = callAPIsigned secret
 
 -- | Get a list of attendees for an event.
 --
--- More: <http://www.lastfm.ru/api/show/event.getAttendees>
+-- More: <http://www.last.fm/api/show/event.getAttendees>
 getAttendees :: Event -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getAttendees event page limit apiKey = callAPI
   [ (#) (Method "event.getAttendees")
@@ -32,7 +32,7 @@ getAttendees event page limit apiKey = callAPI
 
 -- | Get the metadata for an event on Last.fm. Includes attendance and lineup information.
 --
--- More: <http://www.lastfm.ru/api/show/event.getInfo>
+-- More: <http://www.last.fm/api/show/event.getInfo>
 getInfo :: Event -> APIKey -> Lastfm Response
 getInfo event apiKey = callAPI
   [ (#) (Method "event.getInfo")
@@ -42,7 +42,7 @@ getInfo event apiKey = callAPI
 
 -- | Get shouts for this event.
 --
--- More: <http://www.lastfm.ru/api/show/event.getShouts>
+-- More: <http://www.last.fm/api/show/event.getShouts>
 getShouts :: Event -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getShouts event page limit apiKey = callAPI
   [ (#) (Method "event.getShouts")
@@ -54,7 +54,7 @@ getShouts event page limit apiKey = callAPI
 
 -- | Share an event with one or more Last.fm users or other friends.
 --
--- More: <http://www.lastfm.ru/api/show/event.share>
+-- More: <http://www.last.fm/api/show/event.share>
 share :: Event -> Recipient -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Secret -> Lastfm Response
 share event recipient message public apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "event.share")
@@ -68,7 +68,7 @@ share event recipient message public apiKey sessionKey secret = callAPIsigned se
 
 -- | Shout in this event's shoutbox.
 --
--- More: <http://www.lastfm.ru/api/show/event.shout>
+-- More: <http://www.last.fm/api/show/event.shout>
 shout :: Event -> Message -> APIKey -> SessionKey -> Secret -> Lastfm Response
 shout event message apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "event.shout")

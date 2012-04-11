@@ -13,7 +13,7 @@ a ?< n = (key a ++ show n, value a)
 
 -- | Get a Tasteometer score from two inputs, along with a list of shared artists. If the input is a User some additional information is returned.
 --
--- More: <http://www.lastfm.ru/api/show/tasteometer.compare>
+-- More: <http://www.last.fm/api/show/tasteometer.compare>
 compare :: Value -> Value -> Maybe Limit -> APIKey -> Lastfm Response
 compare value1 value2 limit apiKey = callAPI
   [ (#) (Method "tasteometer.compare")

@@ -10,7 +10,7 @@ import Network.Lastfm
 
 -- | Tag an album using a list of user supplied tags.
 --
--- More: <http://www.lastfm.ru/api/show/album.addTags>
+-- More: <http://www.last.fm/api/show/album.addTags>
 addTags :: (Artist, Album) -> [Tag] -> APIKey -> SessionKey -> Secret -> Lastfm Response
 addTags (artist, album) tags apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "album.addTags")
@@ -23,7 +23,7 @@ addTags (artist, album) tags apiKey sessionKey secret = callAPIsigned secret
 
 -- | Get a list of Buy Links for a particular Album. It is required that you supply either the artist and track params or the mbid param.
 --
--- More: <http://www.lastfm.ru/api/show/album.getBuylinks>
+-- More: <http://www.last.fm/api/show/album.getBuylinks>
 getBuyLinks :: Either (Artist, Album) Mbid -> Maybe Autocorrect -> Country -> APIKey -> Lastfm Response
 getBuyLinks a autocorrect country apiKey = callAPI $
   target a ++
@@ -35,7 +35,7 @@ getBuyLinks a autocorrect country apiKey = callAPI $
 
 -- | Get the metadata for an album on Last.fm using the album name or a musicbrainz id. See playlist.fetch on how to get the album playlist.
 --
--- More: <http://www.lastfm.ru/api/show/album.getInfo>
+-- More: <http://www.last.fm/api/show/album.getInfo>
 getInfo :: Either (Artist, Album) Mbid -> Maybe Autocorrect -> Maybe Language -> Maybe Username -> APIKey -> Lastfm Response
 getInfo a autocorrect lang username apiKey = callAPI $
   target a ++
@@ -48,7 +48,7 @@ getInfo a autocorrect lang username apiKey = callAPI $
 
 -- | Get shouts for this album.
 --
--- More: <http://www.lastfm.ru/api/show/album.getShouts>
+-- More: <http://www.last.fm/api/show/album.getShouts>
 getShouts :: Either (Artist, Album) Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 getShouts a autocorrect page limit apiKey = callAPI $
   target a ++
@@ -61,7 +61,7 @@ getShouts a autocorrect page limit apiKey = callAPI $
 
 -- | Get the tags applied by an individual user to an album on Last.fm.
 --
--- More: <http://www.lastfm.ru/api/show/album.getTags>
+-- More: <http://www.last.fm/api/show/album.getTags>
 getTags :: Either (Artist, Album) Mbid -> Maybe Autocorrect -> Either User (SessionKey, Secret) -> APIKey -> Lastfm Response
 getTags a autocorrect b apiKey = case b of
   Left user -> callAPI $ target a ++ [(#) user] ++ args
@@ -74,7 +74,7 @@ getTags a autocorrect b apiKey = case b of
 
 -- | Get the top tags for an album on Last.fm, ordered by popularity.
 --
--- More: <http://www.lastfm.ru/api/show/album.getTopTags>
+-- More: <http://www.last.fm/api/show/album.getTopTags>
 getTopTags :: Either (Artist, Album) Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
 getTopTags a autocorrect apiKey = callAPI $
   target a ++
@@ -85,7 +85,7 @@ getTopTags a autocorrect apiKey = callAPI $
 
 -- | Remove a user's tag from an album.
 --
--- More: <http://www.lastfm.ru/api/show/album.removeTag>
+-- More: <http://www.last.fm/api/show/album.removeTag>
 removeTag :: Artist -> Album -> Tag -> APIKey -> SessionKey -> Secret -> Lastfm Response
 removeTag artist album tag apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "album.removeTag")
@@ -98,7 +98,7 @@ removeTag artist album tag apiKey sessionKey secret = callAPIsigned secret
 
 -- | Search for an album by name. Returns album matches sorted by relevance.
 --
--- More: <http://www.lastfm.ru/api/show/album.search>
+-- More: <http://www.last.fm/api/show/album.search>
 search :: Album -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
 search album page limit apiKey = callAPI
   [ (#) (Method "album.search")
@@ -110,7 +110,7 @@ search album page limit apiKey = callAPI
 
 -- | Share an album with one or more Last.fm users or other friends.
 --
--- More: <http://www.lastfm.ru/api/show/album.share>
+-- More: <http://www.last.fm/api/show/album.share>
 share :: Artist -> Album -> Recipient -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Secret -> Lastfm Response
 share artist album recipient message public apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "album.share")

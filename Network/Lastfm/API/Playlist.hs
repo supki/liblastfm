@@ -9,7 +9,7 @@ import Network.Lastfm
 
 -- | Add a track to a Last.fm user's playlist.
 --
--- More: <http://www.lastfm.ru/api/show/playlist.addTrack>
+-- More: <http://www.last.fm/api/show/playlist.addTrack>
 addTrack :: Playlist -> Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm Response
 addTrack playlist artist track apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "playlist.addTrack")
@@ -22,7 +22,7 @@ addTrack playlist artist track apiKey sessionKey secret = callAPIsigned secret
 
 -- | Create a Last.fm playlist on behalf of a user.
 --
--- More: <http://www.lastfm.ru/api/show/playlist.create>
+-- More: <http://www.last.fm/api/show/playlist.create>
 create :: Maybe Title -> Maybe Description -> APIKey -> SessionKey -> Secret -> Lastfm Response
 create title description apiKey sessionKey secret = callAPIsigned secret
   [ (#) (Method "playlist.create")
