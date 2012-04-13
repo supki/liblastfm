@@ -29,7 +29,6 @@ Library
                    Network.Lastfm.API.Track
                    Network.Lastfm.API.User
                    Network.Lastfm.API.Venue
-                   Network.Lastfm.JSON.Auth
 
 source-repository head
   type:     git

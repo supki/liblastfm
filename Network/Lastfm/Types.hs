@@ -1,8 +1,14 @@
-{-# LANGUAGE FlexibleInstances, OverlappingInstances, TypeSynonymInstances #-}
+{-# LANGUAGE FlexibleInstances, OverlappingInstances, TypeSynonymInstances, OverloadedStrings #-}
 module Network.Lastfm.Types where
 
+import Control.Applicative ((<$>), empty)
+import Control.Monad (liftM)
 import Control.Monad.Error (Error)
+import Data.Aeson ((.:), FromJSON, decode, parseJSON)
 import Data.List (intercalate)
+import Data.Maybe (fromJust)
+import qualified Data.Aeson
+import qualified Data.ByteString.Lazy.Char8 as BL
 
 newtype Secret = Secret String deriving Show
 
@@ -250,3 +256,14 @@ data LastfmError
     deriving Show
 
 instance Error LastfmError
+
+instance FromJSON Token where
+  parseJSON (Data.Aeson.Object v) = Token <$> v .: "token"
+  parseJSON _ = empty
+
+instance FromJSON SessionKey where
+  parseJSON (Data.Aeson.Object v) = SessionKey <$> ((v .: "session") >>= (.: "key"))
+  parseJSON _ = empty
+
+simple :: FromJSON a => Either LastfmError String -> Either LastfmError a
+simple = liftM (fromJust . decode . BL.pack)
