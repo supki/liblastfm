@@ -12,12 +12,7 @@ import Network.Lastfm
 --
 -- More: <http://www.last.fm/api/show/auth.getMobileSession>
 getMobileSession :: Username -> APIKey -> AuthToken -> Lastfm Response
-getMobileSession username apiKey token = callAPI
-  [ (#) (Method "auth.getMobileSession")
-  , (#) username
-  , (#) token
-  , (#) apiKey
-  ]
+getMobileSession username apiKey token = simple <$> callAPIJSON [(#) (Method "auth.getMobileSession"), (#) username, (#) token, (#) apiKey]
 
 -- | Fetch a session key for a user.
 --
