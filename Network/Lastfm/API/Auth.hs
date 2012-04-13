@@ -5,7 +5,9 @@ module Network.Lastfm.API.Auth
   , getAuthorizeTokenLink
   ) where
 
+import Data.Functor ((<$>))
 import Network.Lastfm
+import qualified Network.Lastfm.JSON.Auth as J
 
 -- | Create a web service session for a user. Used for authenticating a user when the password can be inputted by the user. Only suitable for standalone mobile devices.
 --
@@ -31,11 +33,8 @@ getSession apiKey token secret = callAPIsigned secret
 -- | Fetch an unathorized request token for an API account.
 --
 -- More: <http://www.last.fm/api/show/auth.getToken>
-getToken :: APIKey -> Lastfm Response
-getToken apiKey = callAPI
-  [ (#) (Method "auth.getToken")
-  , (#) apiKey
-  ]
+getToken :: APIKey -> Lastfm Token
+getToken apiKey = (J.getToken <$>) <$> callAPIJSON [(#) (Method "auth.getToken"), (#) apiKey]
 
 -- | Construct the link to authorize token.
 getAuthorizeTokenLink :: APIKey -> Token -> String

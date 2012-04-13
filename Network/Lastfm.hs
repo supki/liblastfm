@@ -3,7 +3,7 @@
 {-# OPTIONS_HADDOCK prune #-}
 module Network.Lastfm
   ( Lastfm, Response
-  , callAPI, callAPIsigned
+  , callAPI, callAPIsigned, callAPIJSON
   , module Network.Lastfm.Types
   ) where
 
@@ -26,6 +26,10 @@ import Text.XML.Light
 type Lastfm a = IO (Either LastfmError a)
 -- | Type synonym for Lastfm response
 type Response = String
+
+-- | Low level function. Sends POST query to Lastfm API.
+callAPIJSON :: [(String, String)] -> Lastfm Response
+callAPIJSON = runErrorT . query . (("format", "json") :) . map (second encodeString)
 
 -- | Low level function. Sends POST query to Lastfm API.
 callAPI :: [(String, String)] -> Lastfm Response
