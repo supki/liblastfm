@@ -166,7 +166,7 @@ removeTag artist track tag apiKey sessionKey secret = callAPIsigned XML secret
 
 -- | Used to add a track-play to a user's profile.
 --
--- More; <http://www.last.fm/api/show/track.scrobble>
+-- More: <http://www.last.fm/api/show/track.scrobble>
 scrobble :: ( Timestamp, Maybe Album, Artist, Track, Maybe AlbumArtist
            , Maybe Duration, Maybe StreamId, Maybe ChosenByUser
            , Maybe Context, Maybe TrackNumber, Maybe Mbid )
