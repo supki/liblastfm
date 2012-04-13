@@ -12,7 +12,7 @@ import Network.Lastfm
 --
 -- More: <http://www.last.fm/api/show/auth.getMobileSession>
 getMobileSession :: Username -> APIKey -> AuthToken -> Lastfm Response
-getMobileSession username apiKey token = simple <$> callAPIJSON [(#) (Method "auth.getMobileSession"), (#) username, (#) token, (#) apiKey]
+getMobileSession username apiKey token = simple <$> callAPI JSON [(#) (Method "auth.getMobileSession"), (#) username, (#) token, (#) apiKey]
 
 -- | Fetch a session key for a user.
 --
@@ -24,7 +24,7 @@ getSession apiKey token secret = simple <$> callAPIsignedJSON secret [(#) (Metho
 --
 -- More: <http://www.last.fm/api/show/auth.getToken>
 getToken :: APIKey -> Lastfm Token
-getToken apiKey = simple <$> callAPIJSON [(#) (Method "auth.getToken"), (#) apiKey]
+getToken apiKey = simple <$> callAPI JSON [(#) (Method "auth.getToken"), (#) apiKey]
 
 -- | Construct the link to authorize token.
 getAuthorizeTokenLink :: APIKey -> Token -> String

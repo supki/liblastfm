@@ -15,7 +15,7 @@ import Network.Lastfm
 --
 -- More: <http://www.last.fm/api/show/user.getArtistTracks>
 getArtistTracks :: User -> Artist -> Maybe StartTimestamp -> Maybe EndTimestamp -> Maybe Page -> APIKey -> Lastfm Response
-getArtistTracks user artist startTimestamp endTimestamp page apiKey = callAPI
+getArtistTracks user artist startTimestamp endTimestamp page apiKey = callAPI XML
   [ (#) (Method "user.getArtistTracks")
   , (#) user
   , (#) artist
@@ -29,7 +29,7 @@ getArtistTracks user artist startTimestamp endTimestamp page apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/user.getBannedTracks>
 getBannedTracks :: User -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getBannedTracks user page limit apiKey = callAPI
+getBannedTracks user page limit apiKey = callAPI XML
   [ (#) (Method "user.getBannedTracks")
   , (#) user
   , (#) page
@@ -41,7 +41,7 @@ getBannedTracks user page limit apiKey = callAPI
 --
 -- Mpre: <http://www.last.fm/api/show/user.getEvents>
 getEvents :: User -> Maybe Page -> Maybe Limit -> Maybe FestivalsOnly -> APIKey -> Lastfm Response
-getEvents user page limit festivalsOnly apiKey = callAPI
+getEvents user page limit festivalsOnly apiKey = callAPI XML
   [ (#) (Method "user.getEvents")
   , (#) user
   , (#) page
@@ -54,7 +54,7 @@ getEvents user page limit festivalsOnly apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/user.getFriends>
 getFriends :: User -> Maybe RecentTracks -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getFriends user recentTracks page limit apiKey = callAPI
+getFriends user recentTracks page limit apiKey = callAPI XML
   [ (#) (Method "user.getFriends")
   , (#) user
   , (#) recentTracks
@@ -67,7 +67,7 @@ getFriends user recentTracks page limit apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/user.getInfo>
 getInfo :: Maybe User -> APIKey -> Lastfm Response
-getInfo user apiKey = callAPI
+getInfo user apiKey = callAPI XML
   [ (#) (Method "user.getInfo")
   , (#) user
   , (#) apiKey
@@ -77,7 +77,7 @@ getInfo user apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/user.getLovedTracks>
 getLovedTracks :: User -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getLovedTracks user page limit apiKey = callAPI
+getLovedTracks user page limit apiKey = callAPI XML
   [ (#) (Method "user.getLovedTracks")
   , (#) user
   , (#) page
@@ -89,7 +89,7 @@ getLovedTracks user page limit apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/user.getNeighbours>
 getNeighbours :: User -> Maybe Limit -> APIKey -> Lastfm Response
-getNeighbours user limit apiKey = callAPI
+getNeighbours user limit apiKey = callAPI XML
   [ (#) (Method "user.getNeighbours")
   , (#) user
   , (#) limit
@@ -100,7 +100,7 @@ getNeighbours user limit apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/user.getNewReleases>
 getNewReleases :: User -> Maybe UseRecs -> APIKey -> Lastfm Response
-getNewReleases user useRecs apiKey = callAPI
+getNewReleases user useRecs apiKey = callAPI XML
   [ (#) (Method "user.getNewReleases")
   , (#) user
   , (#) useRecs
@@ -111,7 +111,7 @@ getNewReleases user useRecs apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/user.getPastEvents>
 getPastEvents :: User -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getPastEvents user page limit apiKey = callAPI
+getPastEvents user page limit apiKey = callAPI XML
   [ (#) (Method "user.getPastEvents")
   , (#) user
   , (#) page
@@ -129,7 +129,7 @@ getPersonalTags :: User
                 -> Maybe Limit
                 -> APIKey
                 -> Lastfm Response
-getPersonalTags user tag taggingType page limit apiKey = callAPI
+getPersonalTags user tag taggingType page limit apiKey = callAPI XML
   [ (#) (Method "user.getPersonalTags")
   , (#) user
   , (#) tag
@@ -143,7 +143,7 @@ getPersonalTags user tag taggingType page limit apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/user.getPlaylists>
 getPlaylists :: User -> APIKey -> Lastfm Response
-getPlaylists user apiKey = callAPI
+getPlaylists user apiKey = callAPI XML
   [ (#) (Method "user.getPlaylists")
   , (#) user
   , (#) apiKey
@@ -166,7 +166,7 @@ getRecentStations user page limit apiKey sessionKey secret = callAPIsigned secre
 --
 -- More: <http://www.last.fm/api/show/user.getRecentTracks>
 getRecentTracks :: User -> Maybe Page -> Maybe Limit -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
-getRecentTracks user page limit from to apiKey = callAPI
+getRecentTracks user page limit from to apiKey = callAPI XML
   [ (#) (Method "user.getRecentTracks")
   , (#) user
   , (#) page
@@ -204,7 +204,7 @@ getRecommendedEvents page limit apiKey sessionKey secret = callAPIsigned secret
 --
 -- More: <http://www.last.fm/api/show/user.getShouts>
 getShouts :: User -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getShouts user page limit apiKey = callAPI
+getShouts user page limit apiKey = callAPI XML
   [ (#) (Method "user.getShouts")
   , (#) user
   , (#) page
@@ -216,7 +216,7 @@ getShouts user page limit apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/user.getTopAlbums>
 getTopAlbums :: User -> Maybe Period -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopAlbums user period page limit apiKey = callAPI
+getTopAlbums user period page limit apiKey = callAPI XML
   [ (#) (Method "user.getTopAlbums")
   , (#) user
   , (#) period
@@ -229,7 +229,7 @@ getTopAlbums user period page limit apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/user.getTopArtists>
 getTopArtists :: User -> Maybe Period -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopArtists user period page limit apiKey = callAPI
+getTopArtists user period page limit apiKey = callAPI XML
   [ (#) (Method "user.getTopArtists")
   , (#) user
   , (#) period
@@ -242,7 +242,7 @@ getTopArtists user period page limit apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/user.getTopTags>
 getTopTags :: User -> Maybe Limit -> APIKey -> Lastfm Response
-getTopTags user limit apiKey = callAPI
+getTopTags user limit apiKey = callAPI XML
   [ (#) (Method "user.getTopTags")
   , (#) user
   , (#) limit
@@ -253,7 +253,7 @@ getTopTags user limit apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/user.getTopTracks>
 getTopTracks :: User -> Maybe Period -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopTracks user period page limit apiKey = callAPI
+getTopTracks user period page limit apiKey = callAPI XML
   [ (#) (Method "user.getTopTracks")
   , (#) user
   , (#) period
@@ -266,7 +266,7 @@ getTopTracks user period page limit apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/user.getWeeklyAlbumChart>
 getWeeklyAlbumChart :: User -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
-getWeeklyAlbumChart user from to apiKey = callAPI
+getWeeklyAlbumChart user from to apiKey = callAPI XML
   [ (#) (Method "user.getWeeklyAlbumChart")
   , (#) user
   , (#) from
@@ -278,7 +278,7 @@ getWeeklyAlbumChart user from to apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/user.getWeeklyArtistChart>
 getWeeklyArtistChart :: User -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
-getWeeklyArtistChart user from to apiKey = callAPI
+getWeeklyArtistChart user from to apiKey = callAPI XML
   [ (#) (Method "user.getWeeklyArtistChart")
   , (#) user
   , (#) from
@@ -290,7 +290,7 @@ getWeeklyArtistChart user from to apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/user.getWeeklyChartList>
 getWeeklyChartList :: User -> APIKey -> Lastfm Response
-getWeeklyChartList user apiKey = callAPI
+getWeeklyChartList user apiKey = callAPI XML
   [ (#) (Method "user.getWeeklyChartList")
   , (#) user
   , (#) apiKey
@@ -300,7 +300,7 @@ getWeeklyChartList user apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/user.getWeeklyTrackChart>
 getWeeklyTrackChart :: User -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
-getWeeklyTrackChart user from to apiKey = callAPI
+getWeeklyTrackChart user from to apiKey = callAPI XML
   [ (#) (Method "user.getWeeklyTrackChart")
   , (#) user
   , (#) from

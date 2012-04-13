@@ -47,7 +47,7 @@ addTrack artist track apiKey sessionKey secret = callAPIsigned secret
 --
 -- More: <http://www.last.fm/api/show/library.getAlbums>
 getAlbums :: User -> Maybe Artist -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getAlbums user artist page limit apiKey = callAPI
+getAlbums user artist page limit apiKey = callAPI XML
   [ (#) (Method "library.getAlbums")
   , (#) user
   , (#) artist
@@ -60,7 +60,7 @@ getAlbums user artist page limit apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/library.getArtists>
 getArtists :: User -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getArtists user page limit apiKey = callAPI
+getArtists user page limit apiKey = callAPI XML
   [ (#) (Method "library.getArtists")
   , (#) user
   , (#) page
@@ -72,7 +72,7 @@ getArtists user page limit apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/library.getTracks>
 getTracks :: User -> Maybe Artist -> Maybe Album -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTracks user artist album page limit apiKey = callAPI
+getTracks user artist album page limit apiKey = callAPI XML
   [ (#) (Method "library.getTracks")
   , (#) user
   , (#) artist

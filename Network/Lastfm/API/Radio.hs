@@ -34,7 +34,7 @@ getPlaylist discovery rtp buylinks multiplier bitrate apiKey sessionKey secret =
 --
 -- More: <http://www.last.fm/api/show/radio.search>
 search :: Name -> APIKey -> Lastfm Response
-search name apiKey = callAPI
+search name apiKey = callAPI XML
   [ (#) (Method "radio.search")
   , (#) name
   , (#) apiKey

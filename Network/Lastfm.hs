@@ -2,8 +2,8 @@
 -- | Response module
 {-# OPTIONS_HADDOCK prune #-}
 module Network.Lastfm
-  ( Lastfm, Response
-  , callAPI, callAPIsigned, callAPIJSON, callAPIsignedJSON
+  ( Lastfm, Response, Type(..)
+  , callAPI, callAPIsigned, callAPIsignedJSON
   , module Network.Lastfm.Types
   ) where
 
@@ -26,14 +26,14 @@ import Text.XML.Light
 type Lastfm a = IO (Either LastfmError a)
 -- | Type synonym for Lastfm response
 type Response = String
+-- | Desired type of Lastfm response
+data Type = XML | JSON
 
 -- | Low level function. Sends POST query to Lastfm API.
-callAPIJSON :: [(String, String)] -> Lastfm Response
-callAPIJSON = runErrorT . query . (("format", "json") :) . map (second encodeString)
-
--- | Low level function. Sends POST query to Lastfm API.
-callAPI :: [(String, String)] -> Lastfm Response
-callAPI = runErrorT . query . map (second encodeString)
+callAPI :: Type -> [(String, String)] -> Lastfm Response
+callAPI t = runErrorT . query . insertType t . map (second encodeString)
+  where insertType XML = id
+        insertType JSON = (("format", "json") :)
 
 -- | Low level function. Sends signed POST query to Lastfm API.
 callAPIsignedJSON :: Secret -> [(String, String)] -> Lastfm Response

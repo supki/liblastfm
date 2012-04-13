@@ -38,7 +38,7 @@ ban artist track apiKey sessionKey secret = callAPIsigned secret
 --
 -- More: <http://www.last.fm/api/show/track.getBuylinks>
 getBuyLinks :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Country -> APIKey -> Lastfm Response
-getBuyLinks a autocorrect country apiKey = callAPI $
+getBuyLinks a autocorrect country apiKey = callAPI XML $
   target a ++
   [ (#) (Method "track.getBuyLinks")
   , (#) autocorrect
@@ -50,7 +50,7 @@ getBuyLinks a autocorrect country apiKey = callAPI $
 --
 -- More: <http://www.last.fm/api/show/track.getCorrection>
 getCorrection :: Artist -> Track -> APIKey -> Lastfm Response
-getCorrection artist track apiKey = callAPI
+getCorrection artist track apiKey = callAPI XML
   [ (#) (Method "track.getCorrection")
   , (#) artist
   , (#) track
@@ -61,7 +61,7 @@ getCorrection artist track apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/track.getFingerprintMetadata>
 getFingerprintMetadata :: Fingerprint -> APIKey -> Lastfm Response
-getFingerprintMetadata fingerprint apiKey = callAPI
+getFingerprintMetadata fingerprint apiKey = callAPI XML
   [ (#) (Method "track.getFingerprintMetadata")
   , (#) fingerprint
   , (#) apiKey
@@ -71,7 +71,7 @@ getFingerprintMetadata fingerprint apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/track.getInfo>
 getInfo :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Maybe Username -> APIKey -> Lastfm Response
-getInfo a autocorrect username apiKey = callAPI $
+getInfo a autocorrect username apiKey = callAPI XML $
   target a ++
   [ (#) (Method "track.getInfo")
   , (#) autocorrect
@@ -83,7 +83,7 @@ getInfo a autocorrect username apiKey = callAPI $
 --
 -- More: <http://www.last.fm/api/show/track.getShouts>
 getShouts :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getShouts a autocorrect page limit apiKey = callAPI $
+getShouts a autocorrect page limit apiKey = callAPI XML $
   target a ++
   [ (#) (Method "track.getShouts")
   , (#) autocorrect
@@ -96,7 +96,7 @@ getShouts a autocorrect page limit apiKey = callAPI $
 --
 -- More: <http://www.last.fm/api/show/track.getSimilar>
 getSimilar :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Maybe Limit -> APIKey -> Lastfm Response
-getSimilar a autocorrect limit apiKey = callAPI $
+getSimilar a autocorrect limit apiKey = callAPI XML $
   target a ++
   [ (#) (Method "track.getSimilar")
   , (#) autocorrect
@@ -109,7 +109,7 @@ getSimilar a autocorrect limit apiKey = callAPI $
 -- More: <http://www.last.fm/api/show/track.getTags>
 getTags :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Either User (SessionKey, Secret) -> APIKey -> Lastfm Response
 getTags a autocorrect b apiKey = case b of
-  Left user -> callAPI $ target a ++ [(#) user] ++ args
+  Left user -> callAPI XML $ target a ++ [(#) user] ++ args
   Right (sessionKey, secret) -> callAPIsigned secret $ target a ++ [(#) sessionKey] ++ args
   where args =
           [ (#) (Method "track.getTags")
@@ -121,7 +121,7 @@ getTags a autocorrect b apiKey = case b of
 --
 -- More: <http://www.last.fm/api/show/track.getTopFans>
 getTopFans :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
-getTopFans a autocorrect apiKey = callAPI $
+getTopFans a autocorrect apiKey = callAPI XML $
   target a ++
   [ (#) (Method "track.getTopFans")
   , (#) autocorrect
@@ -132,7 +132,7 @@ getTopFans a autocorrect apiKey = callAPI $
 --
 -- More: <http://www.last.fm/api/show/track.getTopTags>
 getTopTags :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> APIKey -> Lastfm Response
-getTopTags a autocorrect apiKey = callAPI $
+getTopTags a autocorrect apiKey = callAPI XML $
   target a ++
   [ (#) (Method "track.getTopTags")
   , (#) autocorrect
@@ -195,7 +195,7 @@ scrobble (timestamp, album, artist, track, albumArtist, duration, streamId, chos
 --
 -- More: <http://www.last.fm/api/show/track.search>
 search :: Track -> Maybe Page -> Maybe Limit -> Maybe Artist -> APIKey -> Lastfm Response
-search track page limit artist apiKey = callAPI
+search track page limit artist apiKey = callAPI XML
   [ (#) (Method "track.search")
   , (#) track
   , (#) page

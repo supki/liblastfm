@@ -15,7 +15,7 @@ a ?< n = (key a ++ show n, value a)
 --
 -- More: <http://www.last.fm/api/show/tasteometer.compare>
 compare :: Value -> Value -> Maybe Limit -> APIKey -> Lastfm Response
-compare value1 value2 limit apiKey = callAPI
+compare value1 value2 limit apiKey = callAPI XML
   [ (#) (Method "tasteometer.compare")
   , (,) "type1" (show value1)
   , (,) "type2" (show value2)

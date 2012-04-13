@@ -12,7 +12,7 @@ import Network.Lastfm
 --
 -- More: <http://www.last.fm/api/show/tag.getInfo>
 getInfo :: Tag -> Maybe Language -> APIKey -> Lastfm Response
-getInfo tag language apiKey = callAPI
+getInfo tag language apiKey = callAPI XML
   [ (#) (Method "tag.getInfo")
   , (#) tag
   , (#) language
@@ -23,7 +23,7 @@ getInfo tag language apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/tag.getSimilar>
 getSimilar :: Tag -> APIKey -> Lastfm Response
-getSimilar tag apiKey = callAPI
+getSimilar tag apiKey = callAPI XML
   [ (#) (Method "tag.getSimilar")
   , (#) tag
   , (#) apiKey
@@ -33,7 +33,7 @@ getSimilar tag apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/tag.getTopAlbums>
 getTopAlbums :: Tag -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopAlbums tag page limit apiKey = callAPI
+getTopAlbums tag page limit apiKey = callAPI XML
   [ (#) (Method "tag.getTopAlbums")
   , (#) tag
   , (#) page
@@ -45,7 +45,7 @@ getTopAlbums tag page limit apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/tag.getTopArtists>
 getTopArtists :: Tag -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopArtists tag limit page apiKey = callAPI
+getTopArtists tag limit page apiKey = callAPI XML
   [ (#) (Method "tag.getTopArtists")
   , (#) tag
   , (#) page
@@ -57,7 +57,7 @@ getTopArtists tag limit page apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/tag.getTopTags>
 getTopTags :: APIKey -> Lastfm Response
-getTopTags apiKey = callAPI
+getTopTags apiKey = callAPI XML
   [ (#) (Method "tag.getTopArtists")
   , (#) apiKey
   ]
@@ -66,7 +66,7 @@ getTopTags apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/tag.getTopTracks>
 getTopTracks :: Tag -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopTracks tag limit page apiKey = callAPI
+getTopTracks tag limit page apiKey = callAPI XML
   [ (#) (Method "tag.getTopTracks")
   , (#) tag
   , (#) page
@@ -78,7 +78,7 @@ getTopTracks tag limit page apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/tag.getWeeklyArtistChart>
 getWeeklyArtistChart :: Tag -> Maybe From -> Maybe To -> Maybe Limit -> APIKey -> Lastfm Response
-getWeeklyArtistChart tag from to limit apiKey = callAPI
+getWeeklyArtistChart tag from to limit apiKey = callAPI XML
   [ (#) (Method "tag.getWeeklyArtistChart")
   , (#) tag
   , (#) from
@@ -91,7 +91,7 @@ getWeeklyArtistChart tag from to limit apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/tag.getWeeklyChartList>
 getWeeklyChartList :: Tag -> APIKey -> Lastfm Response
-getWeeklyChartList tag apiKey = callAPI
+getWeeklyChartList tag apiKey = callAPI XML
   [ (#) (Method "tag.getWeeklyChartList")
   , (#) tag
   , (#) apiKey
@@ -101,7 +101,7 @@ getWeeklyChartList tag apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/tag.search>
 search :: Tag -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-search tag page limit apiKey = callAPI
+search tag page limit apiKey = callAPI XML
   [ (#) (Method "tag.search")
   , (#) tag
   , (#) page

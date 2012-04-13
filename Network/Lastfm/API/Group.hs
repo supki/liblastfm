@@ -10,7 +10,7 @@ import Network.Lastfm
 --
 -- More: <http://www.last.fm/api/show/group.getHype>
 getHype :: Group -> APIKey -> Lastfm Response
-getHype group apiKey = callAPI
+getHype group apiKey = callAPI XML
   [ (#) (Method "group.getHype")
   , (#) group
   , (#) apiKey
@@ -20,7 +20,7 @@ getHype group apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/group.getMembers>
 getMembers :: Group -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getMembers group page limit apiKey = callAPI
+getMembers group page limit apiKey = callAPI XML
   [ (#) (Method "group.getMembers")
   , (#) group
   , (#) page
@@ -32,7 +32,7 @@ getMembers group page limit apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/group.getWeeklyAlbumChart>
 getWeeklyChartList :: Group -> APIKey -> Lastfm Response
-getWeeklyChartList group apiKey = callAPI
+getWeeklyChartList group apiKey = callAPI XML
   [ (#) (Method "group.getWeeklyChartList")
   , (#) group
   , (#) apiKey
@@ -42,7 +42,7 @@ getWeeklyChartList group apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/group.getWeeklyArtistChart>
 getWeeklyAlbumChart :: Group -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
-getWeeklyAlbumChart group from to apiKey = callAPI
+getWeeklyAlbumChart group from to apiKey = callAPI XML
   [ (#) (Method "group.getWeeklyAlbumChart")
   , (#) group
   , (#) from
@@ -54,7 +54,7 @@ getWeeklyAlbumChart group from to apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/group.getWeeklyChartList>
 getWeeklyArtistChart :: Group -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
-getWeeklyArtistChart group from to apiKey = callAPI
+getWeeklyArtistChart group from to apiKey = callAPI XML
   [ (#) (Method "group.getWeeklyArtistChart")
   , (#) group
   , (#) from
@@ -67,7 +67,7 @@ getWeeklyArtistChart group from to apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/group.getWeeklyTrackChart>
 getWeeklyTrackChart :: Group -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
-getWeeklyTrackChart group from to apiKey = callAPI
+getWeeklyTrackChart group from to apiKey = callAPI XML
   [ (#) (Method "group.getWeeklyTrackChart")
   , (#) group
   , (#) from

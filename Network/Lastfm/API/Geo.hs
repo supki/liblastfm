@@ -19,7 +19,7 @@ getEvents :: Maybe Latitude
           -> Maybe Limit
           -> APIKey
           -> Lastfm Response
-getEvents latitude longitude location distance page limit apiKey = callAPI
+getEvents latitude longitude location distance page limit apiKey = callAPI XML
   [ (#) (Method "geo.getEvents")
   , (#) latitude
   , (#) longitude
@@ -70,7 +70,7 @@ getMetroUniqueTrackChart = getMetroChart "geo.getMetroUniqueTrackChart"
 --
 -- More: <http://www.last.fm/api/show/geo.getMetroWeeklyChartlist>
 getMetroWeeklyChartlist :: Metro -> APIKey -> Lastfm Response
-getMetroWeeklyChartlist metro apiKey = callAPI
+getMetroWeeklyChartlist metro apiKey = callAPI XML
   [ (#) (Method "geo.getMetroWeeklyChartlist")
   , (#) metro
   , (#) apiKey
@@ -80,7 +80,7 @@ getMetroWeeklyChartlist metro apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/geo.getMetros>
 getMetros :: Maybe Country -> APIKey -> Lastfm Response
-getMetros country apiKey = callAPI
+getMetros country apiKey = callAPI XML
   [ (#) (Method "geo.getMetros")
   , (#) country
   , (#) apiKey
@@ -90,7 +90,7 @@ getMetros country apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/geo.getTopArtists>
 getTopArtists :: Country -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopArtists country page limit apiKey = callAPI
+getTopArtists country page limit apiKey = callAPI XML
   [ (#) (Method "geo.getTopArtists")
   , (#) country
   , (#) page
@@ -102,7 +102,7 @@ getTopArtists country page limit apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/geo.getTopTracks>
 getTopTracks :: Country -> Maybe Location -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getTopTracks country location page limit apiKey = callAPI
+getTopTracks country location page limit apiKey = callAPI XML
   [ (#) (Method "geo.getTopTracks")
   , (#) country
   , (#) location
@@ -112,7 +112,7 @@ getTopTracks country location page limit apiKey = callAPI
   ]
 
 getMetroChart :: String -> Country -> Metro -> Maybe Start -> Maybe End -> APIKey -> Lastfm Response
-getMetroChart method country metro start end apiKey = callAPI
+getMetroChart method country metro start end apiKey = callAPI XML
   [ (#) (Method method)
   , (#) country
   , (#) metro

@@ -22,7 +22,7 @@ attend event status apiKey sessionKey secret = callAPIsigned secret
 --
 -- More: <http://www.last.fm/api/show/event.getAttendees>
 getAttendees :: Event -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getAttendees event page limit apiKey = callAPI
+getAttendees event page limit apiKey = callAPI XML
   [ (#) (Method "event.getAttendees")
   , (#) event
   , (#) page
@@ -34,7 +34,7 @@ getAttendees event page limit apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/event.getInfo>
 getInfo :: Event -> APIKey -> Lastfm Response
-getInfo event apiKey = callAPI
+getInfo event apiKey = callAPI XML
   [ (#) (Method "event.getInfo")
   , (#) event
   , (#) apiKey
@@ -44,7 +44,7 @@ getInfo event apiKey = callAPI
 --
 -- More: <http://www.last.fm/api/show/event.getShouts>
 getShouts :: Event -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
-getShouts event page limit apiKey = callAPI
+getShouts event page limit apiKey = callAPI XML
   [ (#) (Method "event.getShouts")
   , (#) event
   , (#) page
