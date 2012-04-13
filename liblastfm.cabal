@@ -14,6 +14,9 @@ Library
   Build-Depends: aeson, base >= 3 && < 5, bytestring, mtl, curl, pureMD5, urlencoded, xml, utf8-string
   Exposed-Modules: Network.Lastfm
                    Network.Lastfm.Types
+                   Network.Lastfm.Types.Types
+                   Network.Lastfm.Types.Argument
+                   Network.Lastfm.Types.Error
                    Network.Lastfm.API.Album
                    Network.Lastfm.API.Artist
                    Network.Lastfm.API.Auth
