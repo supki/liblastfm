@@ -4,9 +4,9 @@ module Network.Lastfm.Types.Types where
 import Control.Applicative ((<$>), empty)
 import Control.Monad (liftM)
 import Data.Aeson ((.:), FromJSON, decode, parseJSON)
+import Data.ByteString.Lazy.Char8 (ByteString)
 import Data.Maybe (fromJust)
 import qualified Data.Aeson
-import qualified Data.ByteString.Lazy.Char8 as BL
 
 newtype Album = Album String
 newtype AlbumArtist = AlbumArtist String
@@ -86,5 +86,5 @@ instance FromJSON SessionKey where
   parseJSON (Data.Aeson.Object v) = SessionKey <$> ((v .: "session") >>= (.: "key"))
   parseJSON _ = empty
 
-simple :: (FromJSON a, Monad m) => m String -> m a
-simple = liftM (fromJust . decode . BL.pack)
+simple :: (FromJSON a, Monad m) => m ByteString -> m a
+simple = liftM (fromJust . decode)

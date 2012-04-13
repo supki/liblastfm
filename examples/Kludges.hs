@@ -3,13 +3,14 @@ module Kludges where
 import Control.Applicative ((<$>))
 import Control.Arrow ((|||))
 import Control.Monad (liftM, (<=<))
+import Data.ByteString.Lazy.Char8 (ByteString)
 import Text.XML.Light
 
 import Network.Lastfm
 
 newtype KludgeResponse = KludgeResponse {unwrap :: Element}
 
-wrap :: String -> Maybe KludgeResponse
+wrap :: ByteString -> Maybe KludgeResponse
 wrap = Just . KludgeResponse . (!! 1) . onlyElems . parseXML
 
 tag = lookupChild

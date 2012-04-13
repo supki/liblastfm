@@ -10,22 +10,21 @@ module Network.Lastfm
 import Codec.Binary.UTF8.String (encodeString)
 import Control.Applicative ((<$>))
 import Control.Arrow (second)
-import Control.Monad ((<=<))
 import Control.Monad.Error (ErrorT, runErrorT, throwError)
 import Control.Monad.Trans (liftIO)
-import qualified Data.ByteString.Lazy.Char8 as BS
+import Data.ByteString.Lazy.Char8 (ByteString)
 import Data.Digest.Pure.MD5 (md5)
 import Data.Function (on)
 import Data.List (sortBy)
 import Data.URLEncoded (urlEncode, export)
 import Network.Curl
 import Network.Lastfm.Types
-import Text.XML.Light
+import qualified Data.ByteString.Lazy.Char8 as BS
 
 -- | Type synonym for Lastfm response or error.
 type Lastfm a = IO (Either LastfmError a)
 -- | Type synonym for Lastfm response
-type Response = String
+type Response = ByteString
 -- | Desired type of Lastfm response
 data Type = XML | JSON
 
@@ -53,8 +52,7 @@ query xs = do
                              , CurlFailOnError False
                              , CurlUserAgent "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0 Iceweasel/10.0"
                              ]
-                             :: IO CurlResponse)
+                             :: IO (CurlResponse_ [(String, String)] ByteString))
   maybe (return response) (throwError . LastfmAPIError . toEnum . (subtract 1)) (getError response)
-  where getError :: String -> Maybe Int
-        getError response = do xml <- parseXMLDoc response
-                               read <$> (findAttr (unqual "code") <=< findChild (unqual "error")) xml
+  where getError :: ByteString -> Maybe Int
+        getError _ = Nothing

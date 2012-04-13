@@ -11,7 +11,7 @@ Cabal-Version: >= 1.6
 Build-Type: Simple
 
 Library
-  Build-Depends: aeson, base >= 3 && < 5, bytestring, mtl, curl, pureMD5, urlencoded, xml, utf8-string
+  Build-Depends: aeson, base >= 3 && < 5, bytestring, mtl, curl, pureMD5, urlencoded, utf8-string
   Exposed-Modules: Network.Lastfm
                    Network.Lastfm.Types
                    Network.Lastfm.Types.Types
