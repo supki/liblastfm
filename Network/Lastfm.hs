@@ -3,7 +3,7 @@
 {-# OPTIONS_HADDOCK prune #-}
 module Network.Lastfm
   ( Lastfm, Response
-  , callAPI, callAPIsigned, callAPIJSON
+  , callAPI, callAPIsigned, callAPIJSON, callAPIsignedJSON
   , module Network.Lastfm.Types
   ) where
 
@@ -34,6 +34,15 @@ callAPIJSON = runErrorT . query . (("format", "json") :) . map (second encodeStr
 -- | Low level function. Sends POST query to Lastfm API.
 callAPI :: [(String, String)] -> Lastfm Response
 callAPI = runErrorT . query . map (second encodeString)
+
+-- | Low level function. Sends signed POST query to Lastfm API.
+callAPIsignedJSON :: Secret -> [(String, String)] -> Lastfm Response
+callAPIsignedJSON (Secret s) xs = runErrorT $ query zs
+  where ys = map (second encodeString) . filter (not . null . snd) $ xs
+        zs = ("format", "json") : ("api_sig", sign ys) : ys
+
+        sign :: [(String, String)] -> String
+        sign = show . md5 . BS.pack . (++ s) . concatMap (uncurry (++)) . sortBy (compare `on` fst)
 
 -- | Low level function. Sends signed POST query to Lastfm API.
 callAPIsigned :: Secret -> [(String, String)] -> Lastfm Response

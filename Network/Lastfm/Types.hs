@@ -250,4 +250,3 @@ data LastfmError
     deriving Show
 
 instance Error LastfmError
-

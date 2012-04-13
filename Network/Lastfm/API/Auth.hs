@@ -23,18 +23,14 @@ getMobileSession username apiKey token = callAPI
 -- | Fetch a session key for a user.
 --
 -- More: <http://www.last.fm/api/show/auth.getSession>
-getSession :: APIKey -> Token -> Secret -> Lastfm Response
-getSession apiKey token secret = callAPIsigned secret
-  [ (#) (Method "auth.getSession")
-  , (#) apiKey
-  , (#) token
-  ]
+getSession :: APIKey -> Token -> Secret -> Lastfm SessionKey
+getSession apiKey token secret = J.getSession <$> callAPIsignedJSON secret [(#) (Method "auth.getSession"), (#) apiKey, (#) token]
 
 -- | Fetch an unathorized request token for an API account.
 --
 -- More: <http://www.last.fm/api/show/auth.getToken>
 getToken :: APIKey -> Lastfm Token
-getToken apiKey = (J.getToken <$>) <$> callAPIJSON [(#) (Method "auth.getToken"), (#) apiKey]
+getToken apiKey = J.getToken <$> callAPIJSON [(#) (Method "auth.getToken"), (#) apiKey]
 
 -- | Construct the link to authorize token.
 getAuthorizeTokenLink :: APIKey -> Token -> String
