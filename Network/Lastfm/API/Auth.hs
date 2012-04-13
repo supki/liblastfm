@@ -11,7 +11,7 @@ import Network.Lastfm
 -- | Create a web service session for a user. Used for authenticating a user when the password can be inputted by the user. Only suitable for standalone mobile devices.
 --
 -- More: <http://www.last.fm/api/show/auth.getMobileSession>
-getMobileSession :: Username -> APIKey -> AuthToken -> Lastfm Response
+getMobileSession :: Username -> APIKey -> AuthToken -> Lastfm SessionKey
 getMobileSession username apiKey token = simple <$> callAPI JSON [(#) (Method "auth.getMobileSession"), (#) username, (#) token, (#) apiKey]
 
 -- | Fetch a session key for a user.
