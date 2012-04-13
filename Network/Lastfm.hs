@@ -3,7 +3,7 @@
 {-# OPTIONS_HADDOCK prune #-}
 module Network.Lastfm
   ( Lastfm, Response, Type(..)
-  , callAPI, callAPIsigned, callAPIsignedJSON
+  , callAPI, callAPIsigned
   , module Network.Lastfm.Types
   ) where
 
@@ -32,26 +32,19 @@ data Type = XML | JSON
 -- | Low level function. Sends POST query to Lastfm API.
 callAPI :: Type -> [(String, String)] -> Lastfm Response
 callAPI t = runErrorT . query . insertType t . map (second encodeString)
-  where insertType XML = id
-        insertType JSON = (("format", "json") :)
 
 -- | Low level function. Sends signed POST query to Lastfm API.
-callAPIsignedJSON :: Secret -> [(String, String)] -> Lastfm Response
-callAPIsignedJSON (Secret s) xs = runErrorT $ query zs
+callAPIsigned :: Type -> Secret -> [(String, String)] -> Lastfm Response
+callAPIsigned t (Secret s) xs = runErrorT $ query zs
   where ys = map (second encodeString) . filter (not . null . snd) $ xs
-        zs = ("format", "json") : ("api_sig", sign ys) : ys
+        zs = insertType t $ ("api_sig", sign ys) : ys
 
         sign :: [(String, String)] -> String
         sign = show . md5 . BS.pack . (++ s) . concatMap (uncurry (++)) . sortBy (compare `on` fst)
 
--- | Low level function. Sends signed POST query to Lastfm API.
-callAPIsigned :: Secret -> [(String, String)] -> Lastfm Response
-callAPIsigned (Secret s) xs = runErrorT $ query zs
-  where ys = map (second encodeString) . filter (not . null . snd) $ xs
-        zs = ("api_sig", sign ys) : ys
-
-        sign :: [(String, String)] -> String
-        sign = show . md5 . BS.pack . (++ s) . concatMap (uncurry (++)) . sortBy (compare `on` fst)
+insertType :: Type -> [(String, String)] -> [(String, String)]
+insertType XML = id
+insertType JSON = (("format", "json") :)
 
 query :: [(String, String)] -> ErrorT LastfmError IO Response
 query xs = do

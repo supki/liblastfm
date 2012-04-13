@@ -10,7 +10,7 @@ import Network.Lastfm
 --
 -- More: <http://www.last.fm/api/show/event.attend>
 attend :: Event -> Status -> APIKey -> SessionKey -> Secret -> Lastfm Response
-attend event status apiKey sessionKey secret = callAPIsigned secret
+attend event status apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "event.attend")
   , (#) event
   , (#) status
@@ -56,7 +56,7 @@ getShouts event page limit apiKey = callAPI XML
 --
 -- More: <http://www.last.fm/api/show/event.share>
 share :: Event -> Recipient -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Secret -> Lastfm Response
-share event recipient message public apiKey sessionKey secret = callAPIsigned secret
+share event recipient message public apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "event.share")
   , (#) event
   , (#) public
@@ -70,7 +70,7 @@ share event recipient message public apiKey sessionKey secret = callAPIsigned se
 --
 -- More: <http://www.last.fm/api/show/event.shout>
 shout :: Event -> Message -> APIKey -> SessionKey -> Secret -> Lastfm Response
-shout event message apiKey sessionKey secret = callAPIsigned secret
+shout event message apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "event.shout")
   , (#) event
   , (#) message

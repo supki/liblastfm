@@ -153,7 +153,7 @@ getPlaylists user apiKey = callAPI XML
 --
 -- More: <http://www.last.fm/api/show/user.getRecentStations>
 getRecentStations :: User -> Maybe Page -> Maybe Limit -> APIKey -> SessionKey -> Secret -> Lastfm Response
-getRecentStations user page limit apiKey sessionKey secret = callAPIsigned secret
+getRecentStations user page limit apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "user.getRecentStations")
   , (#) user
   , (#) page
@@ -180,7 +180,7 @@ getRecentTracks user page limit from to apiKey = callAPI XML
 --
 -- Mpre: <http://www.last.fm/api/show/user.getRecommendedArtists>
 getRecommendedArtists :: Maybe Page -> Maybe Limit -> APIKey -> SessionKey -> Secret -> Lastfm Response
-getRecommendedArtists page limit apiKey sessionKey secret = callAPIsigned secret
+getRecommendedArtists page limit apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "user.getRecommendedArtists")
   , (#) page
   , (#) limit
@@ -192,7 +192,7 @@ getRecommendedArtists page limit apiKey sessionKey secret = callAPIsigned secret
 --
 -- More: <http://www.last.fm/api/show/user.getRecommendedEvents>
 getRecommendedEvents :: Maybe Page -> Maybe Limit -> APIKey -> SessionKey -> Secret -> Lastfm Response
-getRecommendedEvents page limit apiKey sessionKey secret = callAPIsigned secret
+getRecommendedEvents page limit apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "user.getRecommendedEvents")
   , (#) page
   , (#) limit
@@ -312,7 +312,7 @@ getWeeklyTrackChart user from to apiKey = callAPI XML
 --
 -- More: <http://www.last.fm/api/show/user.shout>
 shout :: User -> Message -> APIKey -> SessionKey -> Secret -> Lastfm Response
-shout user message apiKey sessionKey secret = callAPIsigned secret
+shout user message apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "user.shout")
   , (#) user
   , (#) message

@@ -13,7 +13,7 @@ import Network.Lastfm
 --
 -- More: <http://www.last.fm/api/show/track.addTags>
 addTags :: Artist -> Track -> [Tag] -> APIKey -> SessionKey -> Secret -> Lastfm Response
-addTags artist track tags apiKey sessionKey secret = callAPIsigned secret
+addTags artist track tags apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "track.addTags")
   , (#) artist
   , (#) track
@@ -26,7 +26,7 @@ addTags artist track tags apiKey sessionKey secret = callAPIsigned secret
 --
 -- More: <http://www.last.fm/api/show/track.ban>
 ban :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm Response
-ban artist track apiKey sessionKey secret = callAPIsigned secret
+ban artist track apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "track.ban")
   , (#) artist
   , (#) track
@@ -110,7 +110,7 @@ getSimilar a autocorrect limit apiKey = callAPI XML $
 getTags :: Either (Artist, Track) Mbid -> Maybe Autocorrect -> Either User (SessionKey, Secret) -> APIKey -> Lastfm Response
 getTags a autocorrect b apiKey = case b of
   Left user -> callAPI XML $ target a ++ [(#) user] ++ args
-  Right (sessionKey, secret) -> callAPIsigned secret $ target a ++ [(#) sessionKey] ++ args
+  Right (sessionKey, secret) -> callAPIsigned XML secret $ target a ++ [(#) sessionKey] ++ args
   where args =
           [ (#) (Method "track.getTags")
           , (#) autocorrect
@@ -143,7 +143,7 @@ getTopTags a autocorrect apiKey = callAPI XML $
 --
 -- More: <http://www.last.fm/api/show/track.love>
 love :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm Response
-love artist track apiKey sessionKey secret = callAPIsigned secret
+love artist track apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "track.love")
   , (#) artist
   , (#) track
@@ -155,7 +155,7 @@ love artist track apiKey sessionKey secret = callAPIsigned secret
 --
 -- More: <http://www.last.fm/api/show/track.removeTag>
 removeTag :: Artist -> Track -> Tag -> APIKey -> SessionKey -> Secret -> Lastfm Response
-removeTag artist track tag apiKey sessionKey secret = callAPIsigned secret
+removeTag artist track tag apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "track.removeTag")
   , (#) artist
   , (#) track
@@ -174,7 +174,7 @@ scrobble :: ( Timestamp, Maybe Album, Artist, Track, Maybe AlbumArtist
          -> SessionKey
          -> Secret
          -> Lastfm Response
-scrobble (timestamp, album, artist, track, albumArtist, duration, streamId, chosenByUser, context, trackNumber, mbid) apiKey sessionKey secret = callAPIsigned secret
+scrobble (timestamp, album, artist, track, albumArtist, duration, streamId, chosenByUser, context, trackNumber, mbid) apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "track.scrobble")
   , (#) timestamp
   , (#) artist
@@ -208,7 +208,7 @@ search track page limit artist apiKey = callAPI XML
 --
 -- More: <http://www.last.fm/api/show/track.share>
 share :: Artist -> Track -> Recipient -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Secret -> Lastfm Response
-share artist track recipient message public apiKey sessionKey secret = callAPIsigned secret
+share artist track recipient message public apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "track.share")
   , (#) artist
   , (#) track
@@ -223,7 +223,7 @@ share artist track recipient message public apiKey sessionKey secret = callAPIsi
 --
 -- More: <http://www.last.fm/api/show/track.unban>
 unban :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm Response
-unban artist track apiKey sessionKey secret = callAPIsigned secret
+unban artist track apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "track.unban")
   , (#) artist
   , (#) track
@@ -235,7 +235,7 @@ unban artist track apiKey sessionKey secret = callAPIsigned secret
 --
 -- More: <http://www.last.fm/api/show/track.unlove>
 unlove :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm Response
-unlove artist track apiKey sessionKey secret = callAPIsigned secret
+unlove artist track apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "track.unlove")
   , (#) artist
   , (#) track
@@ -259,7 +259,7 @@ updateNowPlaying :: Artist
                  -> SessionKey
                  -> Secret
                  -> Lastfm Response
-updateNowPlaying artist track album albumArtist context trackNumber mbid duration apiKey sessionKey secret = callAPIsigned secret
+updateNowPlaying artist track album albumArtist context trackNumber mbid duration apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "track.updateNowPlaying")
   , (#) artist
   , (#) track

@@ -19,7 +19,7 @@ getPlaylist :: Maybe Discovery
             -> SessionKey
             -> Secret
             -> Lastfm Response
-getPlaylist discovery rtp buylinks multiplier bitrate apiKey sessionKey secret = callAPIsigned secret
+getPlaylist discovery rtp buylinks multiplier bitrate apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "radio.getPlaylist")
   , (#) discovery
   , (#) rtp
@@ -44,7 +44,7 @@ search name apiKey = callAPI XML
 --
 -- More: <http://www.last.fm/api/show/radio.tune>
 tune :: Maybe Language -> Station -> APIKey -> SessionKey -> Secret -> Lastfm Response
-tune language station apiKey sessionKey secret = callAPIsigned secret
+tune language station apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "radio.tune")
   , (#) language
   , (#) station

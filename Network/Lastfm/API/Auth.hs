@@ -18,7 +18,7 @@ getMobileSession username apiKey token = simple <$> callAPI JSON [(#) (Method "a
 --
 -- More: <http://www.last.fm/api/show/auth.getSession>
 getSession :: APIKey -> Token -> Secret -> Lastfm SessionKey
-getSession apiKey token secret = simple <$> callAPIsignedJSON secret [(#) (Method "auth.getSession"), (#) apiKey, (#) token]
+getSession apiKey token secret = simple <$> callAPIsigned JSON secret [(#) (Method "auth.getSession"), (#) apiKey, (#) token]
 
 -- | Fetch an unathorized request token for an API account.
 --

@@ -12,7 +12,7 @@ import Network.Lastfm
 --
 -- More: <http://www.last.fm/api/show/album.addTags>
 addTags :: (Artist, Album) -> [Tag] -> APIKey -> SessionKey -> Secret -> Lastfm Response
-addTags (artist, album) tags apiKey sessionKey secret = callAPIsigned secret
+addTags (artist, album) tags apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "album.addTags")
   , (#) artist
   , (#) album
@@ -65,7 +65,7 @@ getShouts a autocorrect page limit apiKey = callAPI XML $
 getTags :: Either (Artist, Album) Mbid -> Maybe Autocorrect -> Either User (SessionKey, Secret) -> APIKey -> Lastfm Response
 getTags a autocorrect b apiKey = case b of
   Left user -> callAPI XML $ target a ++ [(#) user] ++ args
-  Right (sessionKey, secret) -> callAPIsigned secret $ target a ++ [(#) sessionKey] ++ args
+  Right (sessionKey, secret) -> callAPIsigned XML secret $ target a ++ [(#) sessionKey] ++ args
   where args =
           [ (#) (Method "album.getTags")
           , (#) autocorrect
@@ -87,7 +87,7 @@ getTopTags a autocorrect apiKey = callAPI XML $
 --
 -- More: <http://www.last.fm/api/show/album.removeTag>
 removeTag :: Artist -> Album -> Tag -> APIKey -> SessionKey -> Secret -> Lastfm Response
-removeTag artist album tag apiKey sessionKey secret = callAPIsigned secret
+removeTag artist album tag apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "album.removeTag")
   , (#) artist
   , (#) album
@@ -112,7 +112,7 @@ search album page limit apiKey = callAPI XML
 --
 -- More: <http://www.last.fm/api/show/album.share>
 share :: Artist -> Album -> Recipient -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Secret -> Lastfm Response
-share artist album recipient message public apiKey sessionKey secret = callAPIsigned secret
+share artist album recipient message public apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "album.share")
   , (#) artist
   , (#) album

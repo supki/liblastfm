@@ -13,7 +13,7 @@ import Network.Lastfm
 --
 -- More: <http://www.last.fm/api/show/artist.addTags>
 addTags :: Artist -> [Tag] -> APIKey -> SessionKey -> Secret -> Lastfm Response
-addTags artist tags apiKey sessionKey secret = callAPIsigned secret
+addTags artist tags apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "artist.addTags")
   , (#) artist
   , (#) tags
@@ -127,7 +127,7 @@ getSimilar a autocorrect limit apiKey = callAPI XML $
 getTags :: Either Artist Mbid -> Maybe Autocorrect -> Either User (SessionKey, Secret) -> APIKey -> Lastfm Response
 getTags a autocorrect b apiKey = case b of
   Left user -> callAPI XML $ target a ++ [(#) user] ++ args
-  Right (sessionKey, secret) -> callAPIsigned secret $ target a ++ [(#) sessionKey] ++ args
+  Right (sessionKey, secret) -> callAPIsigned XML secret $ target a ++ [(#) sessionKey] ++ args
   where args =
           [ (#) (Method "artist.getTags")
           , (#) autocorrect
@@ -186,7 +186,7 @@ getTopTracks a autocorrect page limit apiKey = callAPI XML $
 --
 -- More: <http://www.last.fm/api/show/artist.removeTag>
 removeTag :: Artist -> Tag -> APIKey -> SessionKey -> Secret -> Lastfm Response
-removeTag artist tag apiKey sessionKey secret = callAPIsigned secret
+removeTag artist tag apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "artist.removeTag")
   , (#) artist
   , (#) tag
@@ -210,7 +210,7 @@ search artist page limit apiKey = callAPI XML
 --
 -- More: <http://www.last.fm/api/show/artist.share>
 share :: Artist -> Recipient -> Maybe Message -> Maybe Public -> APIKey -> SessionKey -> Secret -> Lastfm Response
-share artist recipient message public apiKey sessionKey secret = callAPIsigned secret
+share artist recipient message public apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "artist.share")
   , (#) artist
   , (#) recipient
@@ -224,7 +224,7 @@ share artist recipient message public apiKey sessionKey secret = callAPIsigned s
 --
 -- More: <http://www.last.fm/api/show/artist.shout>
 shout :: Artist -> Message -> APIKey -> SessionKey -> Secret -> Lastfm Response
-shout artist message apiKey sessionKey secret = callAPIsigned secret
+shout artist message apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "artist.shout")
   , (#) artist
   , (#) message

@@ -12,7 +12,7 @@ import Network.Lastfm
 --
 -- More: <http://www.last.fm/api/show/library.addAlbum>
 addAlbum :: Artist -> Album -> APIKey -> SessionKey -> Secret -> Lastfm Response
-addAlbum artist album apiKey sessionKey secret = callAPIsigned secret
+addAlbum artist album apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "library.addAlbum")
   , (#) artist
   , (#) album
@@ -24,7 +24,7 @@ addAlbum artist album apiKey sessionKey secret = callAPIsigned secret
 --
 -- More: <http://www.last.fm/api/show/library.addArtist>
 addArtist :: Artist -> APIKey -> SessionKey -> Secret -> Lastfm Response
-addArtist artist apiKey sessionKey secret = callAPIsigned secret
+addArtist artist apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "library.addArtist")
   , (#) artist
   , (#) apiKey
@@ -35,7 +35,7 @@ addArtist artist apiKey sessionKey secret = callAPIsigned secret
 --
 -- More: <http://www.last.fm/api/show/library.addTrack>
 addTrack :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm Response
-addTrack artist track apiKey sessionKey secret = callAPIsigned secret
+addTrack artist track apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "library.addTrack")
   , (#) artist
   , (#) track
@@ -86,7 +86,7 @@ getTracks user artist album page limit apiKey = callAPI XML
 --
 -- More: <http://www.last.fm/api/show/library.removeAlbum>
 removeAlbum :: Artist -> Album -> APIKey -> SessionKey -> Secret -> Lastfm Response
-removeAlbum artist album apiKey sessionKey secret = callAPIsigned secret
+removeAlbum artist album apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "library.removeAlbum")
   , (#) artist
   , (#) album
@@ -98,7 +98,7 @@ removeAlbum artist album apiKey sessionKey secret = callAPIsigned secret
 --
 -- More: <http://www.last.fm/api/show/library.removeArtist>
 removeArtist :: Artist -> APIKey -> SessionKey -> Secret -> Lastfm Response
-removeArtist artist apiKey sessionKey secret = callAPIsigned secret
+removeArtist artist apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "library.removeArtist")
   , (#) artist
   , (#) apiKey
@@ -109,7 +109,7 @@ removeArtist artist apiKey sessionKey secret = callAPIsigned secret
 --
 -- More: <http://www.last.fm/api/show/library.removeScrobble>
 removeScrobble :: Artist -> Track -> Timestamp -> APIKey -> SessionKey -> Secret -> Lastfm Response
-removeScrobble artist track timestamp apiKey sessionKey secret = callAPIsigned secret
+removeScrobble artist track timestamp apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "library.removeScrobble")
   , (#) artist
   , (#) track
@@ -122,7 +122,7 @@ removeScrobble artist track timestamp apiKey sessionKey secret = callAPIsigned s
 --
 -- More: <http://www.last.fm/api/show/library.removeTrack>
 removeTrack :: Artist -> Track -> APIKey -> SessionKey -> Secret -> Lastfm Response
-removeTrack artist track apiKey sessionKey secret = callAPIsigned secret
+removeTrack artist track apiKey sessionKey secret = callAPIsigned XML secret
   [ (#) (Method "library.removeTrack")
   , (#) artist
   , (#) track
