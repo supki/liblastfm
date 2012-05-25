@@ -29,30 +29,30 @@ type Response = ByteString
 data Type = XML | JSON
 
 -- | Low level function. Sends POST query to Lastfm API.
-callAPI :: Type -> [(String, String)] -> Lastfm Response
+callAPI ∷ Type → [(String, String)] → Lastfm Response
 callAPI t = runErrorT . query . insertType t . map (second encodeString)
 
 -- | Low level function. Sends signed POST query to Lastfm API.
-callAPIsigned :: Type -> Secret -> [(String, String)] -> Lastfm Response
+callAPIsigned ∷ Type → Secret → [(String, String)] → Lastfm Response
 callAPIsigned t (Secret s) xs = runErrorT $ query zs
   where ys = map (second encodeString) . filter (not . null . snd) $ xs
         zs = insertType t $ ("api_sig", sign ys) : ys
 
-        sign :: [(String, String)] -> String
+        sign ∷ [(String, String)] → String
         sign = show . md5 . BS.pack . (++ s) . concatMap (uncurry (++)) . sortBy (compare `on` fst)
 
-insertType :: Type -> [(String, String)] -> [(String, String)]
+insertType ∷ Type → [(String, String)] → [(String, String)]
 insertType XML = id
 insertType JSON = (("format", "json") :)
 
-query :: [(String, String)] -> ErrorT LastfmError IO Response
+query ∷ [(String, String)] → ErrorT LastfmError IO Response
 query xs = do
-  !response <- liftIO $ withCurlDo $ respBody <$> (curlGetResponse_ "http://ws.audioscrobbler.com/2.0/?"
+  !response ← liftIO $ withCurlDo $ respBody <$> (curlGetResponse_ "http://ws.audioscrobbler.com/2.0/?"
                              [ CurlPostFields . map (export . urlEncode) $ xs
                              , CurlFailOnError False
                              , CurlUserAgent "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0 Iceweasel/10.0"
                              ]
-                             :: IO (CurlResponse_ [(String, String)] ByteString))
+                             ∷ IO (CurlResponse_ [(String, String)] ByteString))
   maybe (return response) (throwError . LastfmAPIError . toEnum . (subtract 1)) (getError response)
-  where getError :: ByteString -> Maybe Int
+  where getError ∷ ByteString → Maybe Int
         getError _ = Nothing

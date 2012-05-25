@@ -10,7 +10,7 @@ import Network.Lastfm
 -- | Get a list of upcoming events at this venue.
 --
 -- More: <http://www.last.fm/api/show/venue.getEvents>
-getEvents :: Venue -> Maybe FestivalsOnly -> APIKey -> Lastfm Response
+getEvents ∷ Venue → Maybe FestivalsOnly → APIKey → Lastfm Response
 getEvents venue festivalsOnly apiKey = callAPI XML
   [ (#) (Method "venue.getEvents")
   , (#) venue
@@ -21,7 +21,7 @@ getEvents venue festivalsOnly apiKey = callAPI XML
 -- | Get a paginated list of all the events held at this venue in the past.
 --
 -- More: <http://www.last.fm/api/show/venue.getPastEvents>
-getPastEvents :: Venue -> Maybe FestivalsOnly -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
+getPastEvents ∷ Venue → Maybe FestivalsOnly → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 getPastEvents venue festivalsOnly page limit apiKey = callAPI XML
   [ (#) (Method "venue.getPastEvents")
   , (#) venue
@@ -34,7 +34,7 @@ getPastEvents venue festivalsOnly page limit apiKey = callAPI XML
 -- | Search for a venue by venue name.
 --
 -- More: <http://www.last.fm/api/show/venue.search>
-search :: Venuename -> Maybe Page -> Maybe Limit -> Maybe Country -> APIKey -> Lastfm Response
+search ∷ Venuename → Maybe Page → Maybe Limit → Maybe Country → APIKey → Lastfm Response
 search venue page limit country apiKey = callAPI XML
   [ (#) (Method "venue.search")
   , (#) venue

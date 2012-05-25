@@ -6,20 +6,20 @@ import Data.List (intercalate)
 import Network.Lastfm.Types.TH
 import Network.Lastfm.Types.Types
 
-(#) :: Argument a => a -> (String, String)
+(#) ∷ Argument a ⇒ a → (String, String)
 (#) x = (key x, value x)
 
 class Argument a where
-  key :: a -> String
-  value :: a -> String
+  key ∷ a → String
+  value ∷ a → String
 
-instance Argument a => Argument (Maybe a) where key = maybe "" key; value = maybe "" value
-instance Argument a => Argument [a] where
+instance Argument a ⇒ Argument (Maybe a) where key = maybe "" key; value = maybe "" value
+instance Argument a ⇒ Argument [a] where
   key (a:_) = key a ++ "s"
   key [] = ""
   value = intercalate "," . map value
 
-boolToString :: Bool -> String
+boolToString ∷ Bool → String
 boolToString True = "1"
 boolToString False = "0"
 

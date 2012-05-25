@@ -9,7 +9,7 @@ import Network.Lastfm
 -- | Get the hype list for a group.
 --
 -- More: <http://www.last.fm/api/show/group.getHype>
-getHype :: Group -> APIKey -> Lastfm Response
+getHype ∷ Group → APIKey → Lastfm Response
 getHype group apiKey = callAPI XML
   [ (#) (Method "group.getHype")
   , (#) group
@@ -19,7 +19,7 @@ getHype group apiKey = callAPI XML
 -- | Get a list of members for this group.
 --
 -- More: <http://www.last.fm/api/show/group.getMembers>
-getMembers :: Group -> Maybe Page -> Maybe Limit -> APIKey -> Lastfm Response
+getMembers ∷ Group → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 getMembers group page limit apiKey = callAPI XML
   [ (#) (Method "group.getMembers")
   , (#) group
@@ -31,7 +31,7 @@ getMembers group page limit apiKey = callAPI XML
 -- | Get an album chart for a group, for a given date range. If no date range is supplied, it will return the most recent album chart for this group.
 --
 -- More: <http://www.last.fm/api/show/group.getWeeklyAlbumChart>
-getWeeklyChartList :: Group -> APIKey -> Lastfm Response
+getWeeklyChartList ∷ Group → APIKey → Lastfm Response
 getWeeklyChartList group apiKey = callAPI XML
   [ (#) (Method "group.getWeeklyChartList")
   , (#) group
@@ -41,7 +41,7 @@ getWeeklyChartList group apiKey = callAPI XML
 -- | Get an artist chart for a group, for a given date range. If no date range is supplied, it will return the most recent artist chart for this group.
 --
 -- More: <http://www.last.fm/api/show/group.getWeeklyArtistChart>
-getWeeklyAlbumChart :: Group -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
+getWeeklyAlbumChart ∷ Group → Maybe From → Maybe To → APIKey → Lastfm Response
 getWeeklyAlbumChart group from to apiKey = callAPI XML
   [ (#) (Method "group.getWeeklyAlbumChart")
   , (#) group
@@ -53,7 +53,7 @@ getWeeklyAlbumChart group from to apiKey = callAPI XML
 -- | Get a list of available charts for this group, expressed as date ranges which can be sent to the chart services.
 --
 -- More: <http://www.last.fm/api/show/group.getWeeklyChartList>
-getWeeklyArtistChart :: Group -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
+getWeeklyArtistChart ∷ Group → Maybe From → Maybe To → APIKey → Lastfm Response
 getWeeklyArtistChart group from to apiKey = callAPI XML
   [ (#) (Method "group.getWeeklyArtistChart")
   , (#) group
@@ -66,7 +66,7 @@ getWeeklyArtistChart group from to apiKey = callAPI XML
 -- | Get a track chart for a group, for a given date range. If no date range is supplied, it will return the most recent track chart for this group.
 --
 -- More: <http://www.last.fm/api/show/group.getWeeklyTrackChart>
-getWeeklyTrackChart :: Group -> Maybe From -> Maybe To -> APIKey -> Lastfm Response
+getWeeklyTrackChart ∷ Group → Maybe From → Maybe To → APIKey → Lastfm Response
 getWeeklyTrackChart group from to apiKey = callAPI XML
   [ (#) (Method "group.getWeeklyTrackChart")
   , (#) group
