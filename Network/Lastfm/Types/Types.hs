@@ -11,12 +11,13 @@ import qualified Data.Aeson
 
 import Network.Lastfm.Types.TH
 
-$(newtypes "String" ["Album", "AlbumArtist", "APIKey", "Artist", "AuthToken", "Context", "Country", "Description", "Group", "Language", "Latitude", "Location", "Longitude", "Mbid", "Message", "Method", "Metro", "Name", "Recipient", "SessionKey", "Station", "StreamId", "Tag", "TaggingType", "Title", "Token", "Track", "User", "Username", "Venuename", "ChosenByUser"])
-
+$(newtypes "String" ["Album", "AlbumArtist", "APIKey", "Artist", "AuthToken",
+  "Context", "Country", "Description", "Group", "Language", "Latitude",
+  "Location", "Longitude", "Mbid", "Message", "Method", "Metro", "Name",
+  "Recipient", "SessionKey", "Station", "StreamId", "Tag", "TaggingType",
+  "Title", "Token", "Track", "User", "Username", "Venuename", "ChosenByUser"])
 $(newtypes "Bool" ["Autocorrect", "BuyLinks", "Discovery", "FestivalsOnly", "Public", "RecentTracks", "RTP", "UseRecs"])
-
 $(newtypes "Int" ["Distance", "Duration", "Event", "Limit", "Page", "Playlist", "TrackNumber", "Venue"])
-
 $(newtypes "Integer" ["End", "EndTimestamp", "Fingerprint", "From", "Start", "StartTimestamp", "Timestamp", "To"])
 
 data Bitrate = B64 | B128
