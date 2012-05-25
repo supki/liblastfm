@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell #-}
 module Network.Lastfm.Types.Types where
 
 import Control.Applicative ((<$>), empty)
@@ -8,64 +9,15 @@ import Data.ByteString.Lazy.Char8 (ByteString)
 import Data.Maybe (fromJust)
 import qualified Data.Aeson
 
-newtype Album = Album String
-newtype AlbumArtist = AlbumArtist String
-newtype APIKey = APIKey String
-newtype Artist = Artist String
-newtype AuthToken = AuthToken String
-newtype ChosenByUser = ChosenByUser String
-newtype Context = Context String
-newtype Country = Country String
-newtype Description = Description String
-newtype Group = Group String
-newtype Language = Language String
-newtype Latitude = Latitude String
-newtype Location = Location String
-newtype Longitude = Longitude String
-newtype Mbid = Mbid String
-newtype Message = Message String
-newtype Method = Method String
-newtype Metro = Metro String
-newtype Name = Name String
-newtype Recipient = Recipient String
-newtype SessionKey = SessionKey String
-newtype Station = Station String
-newtype StreamId = StreamId String
-newtype Tag = Tag String
-newtype TaggingType = TaggingType String
-newtype Title = Title String
-newtype Token = Token String
-newtype Track = Track String
-newtype User = User String
-newtype Username = Username String
-newtype Venuename = Venuename String
+import Network.Lastfm.Types.TH
 
-newtype Autocorrect = Autocorrect Bool
-newtype BuyLinks = BuyLinks Bool
-newtype Discovery = Discovery Bool
-newtype FestivalsOnly = FestivalsOnly Bool
-newtype Public = Public Bool
-newtype RecentTracks = RecentTracks Bool
-newtype RTP = RTP Bool
-newtype UseRecs = UseRecs Bool
+$(newtypes "String" ["Album", "AlbumArtist", "APIKey", "Artist", "AuthToken", "Context", "Country", "Description", "Group", "Language", "Latitude", "Location", "Longitude", "Mbid", "Message", "Method", "Metro", "Name", "Recipient", "SessionKey", "Station", "StreamId", "Tag", "TaggingType", "Title", "Token", "Track", "User", "Username", "Venuename", "ChosenByUser"])
 
-newtype Distance = Distance Int
-newtype Duration = Duration Int
-newtype Event = Event Int
-newtype Limit = Limit Int
-newtype Page = Page Int
-newtype Playlist = Playlist Int
-newtype TrackNumber = TrackNumber Int
-newtype Venue = Venue Int
+$(newtypes "Bool" ["Autocorrect", "BuyLinks", "Discovery", "FestivalsOnly", "Public", "RecentTracks", "RTP", "UseRecs"])
 
-newtype End = End Integer
-newtype EndTimestamp = EndTimestamp Integer
-newtype Fingerprint = Fingerprint Integer
-newtype From = From Integer
-newtype Start = Start Integer
-newtype StartTimestamp = StartTimestamp Integer
-newtype Timestamp = Timestamp Integer
-newtype To = To Integer
+$(newtypes "Int" ["Distance", "Duration", "Event", "Limit", "Page", "Playlist", "TrackNumber", "Venue"])
+
+$(newtypes "Integer" ["End", "EndTimestamp", "Fingerprint", "From", "Start", "StartTimestamp", "Timestamp", "To"])
 
 data Bitrate = B64 | B128
 data Multiplier = M1 | M2
@@ -86,5 +38,5 @@ instance FromJSON SessionKey where
   parseJSON (Data.Aeson.Object v) = SessionKey <$> ((v .: "session") >>= (.: "key"))
   parseJSON _ = empty
 
-simple :: (FromJSON a, Monad m) => m ByteString -> m a
+simple ∷ (FromJSON a, Monad m) ⇒ m ByteString → m a
 simple = liftM (fromJust . decode)

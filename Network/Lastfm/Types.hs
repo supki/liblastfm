@@ -1,4 +1,3 @@
-{-# LANGUAGE FlexibleInstances, OverlappingInstances, TypeSynonymInstances #-}
 module Network.Lastfm.Types
   ( module Network.Lastfm.Types.Argument
   , module Network.Lastfm.Types.Error
