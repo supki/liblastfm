@@ -2,7 +2,7 @@ module EPlaylist (common, auth) where
 
 import Control.Arrow ((|||))
 
-import Network.Lastfm.Types
+import Network.Lastfm
 import qualified Network.Lastfm.XML.Playlist as Playlist
 
 addTrack :: APIKey -> SessionKey -> Secret -> IO ()

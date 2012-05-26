@@ -3,7 +3,7 @@ module EUser (common, auth) where
 import Control.Arrow ((|||), (&&&))
 import Control.Monad ((<=<), liftM2)
 
-import Network.Lastfm.Types
+import Network.Lastfm
 import qualified Network.Lastfm.XML.User as User
 
 import Kludges

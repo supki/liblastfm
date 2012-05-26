@@ -3,7 +3,7 @@ module EArtist (common, auth) where
 import Control.Arrow ((|||))
 import Control.Monad ((<=<))
 
-import Network.Lastfm.Types
+import Network.Lastfm
 import qualified Network.Lastfm.XML.Artist as Artist
 
 import Kludges
@@ -54,13 +54,13 @@ getSimilar = parse r f "7 similar artists"
         f = mapM (content <=< tag "name") <=< tags "artist" <=< tag "similarartists"
 
 getTags :: IO ()
-getTags = parse r f "Burzum tags"
-  where r = Artist.getTags (Left $ Artist "Burzum") Nothing (Left $ User "liblastfm") apiKey
+getTags = parse r f "Егор Летов tags"
+  where r = Artist.getTags (Left $ Artist "Егор Летов") Nothing (Left $ User "liblastfm") apiKey
         f = mapM (content <=< tag "name") <=< tags "tag" <=< tag "tags"
 
 getTagsAuth :: APIKey -> SessionKey -> Secret -> IO ()
-getTagsAuth ak sk s = parse r f "Burzum tags"
-  where r = Artist.getTags (Left $ Artist "Burzum") Nothing (Right (sk, s)) ak
+getTagsAuth ak sk s = parse r f "Егор Летов tags"
+  where r = Artist.getTags (Left $ Artist "Егор Летов") Nothing (Right (sk, s)) ak
         f = mapM (content <=< tag "name") <=< tags "tag" <=< tag "tags"
 
 getTopAlbums :: IO ()
@@ -84,7 +84,7 @@ getTopTracks = parse r f "10 most popular tracks"
         f = mapM (content <=< tag "name") <=< tags "track" <=< tag "toptracks"
 
 removeTag :: APIKey -> SessionKey -> Secret -> IO ()
-removeTag ak sk s = Artist.removeTag (Artist "Burzum") (Tag "black metal") ak sk s >>= print ||| const (return ())
+removeTag ak sk s = Artist.removeTag (Artist "Егор Летов") (Tag "russian") ak sk s >>= print ||| const (return ())
 
 search :: IO ()
 search = parse r f "12 search results for \"Mesh\" query"

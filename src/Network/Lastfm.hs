@@ -1,6 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables, TemplateHaskell #-}
 -- | Response module
-{-# OPTIONS_HADDOCK prune #-}
+{-# OPTIONS_HADDOCK not-home #-}
 module Network.Lastfm
   ( Lastfm, Response, ResponseType(..)
   , callAPI, callAPIsigned

@@ -2,7 +2,7 @@ module EVenue (common, auth) where
 
 import Control.Monad ((<=<), liftM)
 
-import Network.Lastfm.Types
+import Network.Lastfm
 import qualified Network.Lastfm.XML.Venue as Venue
 
 import Kludges

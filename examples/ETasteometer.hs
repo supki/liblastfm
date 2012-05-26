@@ -3,7 +3,7 @@ module ETasteometer (common, auth) where
 import Control.Monad ((<=<))
 import Prelude hiding (compare)
 
-import Network.Lastfm.Types
+import Network.Lastfm
 import qualified Network.Lastfm.XML.Tasteometer as Tasteometer
 
 import Kludges

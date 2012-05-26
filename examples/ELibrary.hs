@@ -3,7 +3,7 @@ module ELibrary (common, auth) where
 import Control.Arrow ((|||))
 import Control.Monad ((<=<))
 
-import Network.Lastfm.Types
+import Network.Lastfm
 import qualified Network.Lastfm.XML.Library as Library
 
 import Kludges

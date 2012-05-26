@@ -6,7 +6,7 @@ import Control.Monad ((<=<))
 import Data.Time (formatTime, getCurrentTime)
 import System.Locale (defaultTimeLocale)
 
-import Network.Lastfm.Types
+import Network.Lastfm
 import qualified Network.Lastfm.XML.Track as Track
 
 import Kludges
