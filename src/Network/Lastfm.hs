@@ -20,6 +20,7 @@ import Data.List (sortBy)
 import Data.URLEncoded (urlEncode, export)
 import Language.Haskell.TH
 import Network.Curl
+import Network.Lastfm.Error
 import Network.Lastfm.Types
 import qualified Data.ByteString.Lazy.Char8 as BS
 

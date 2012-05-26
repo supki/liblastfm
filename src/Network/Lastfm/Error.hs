@@ -1,4 +1,4 @@
-module Network.Lastfm.Types.Error where
+module Network.Lastfm.Error where
 
 import Control.Monad.Error (Error)
 
