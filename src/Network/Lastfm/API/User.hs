@@ -8,7 +8,6 @@ module Network.Lastfm.API.User
   , getWeeklyChartList, getWeeklyTrackChart, shout
   ) where
 
-import Control.Monad.Error (runErrorT)
 import Network.Lastfm
 
 -- | Get a list of tracks by a given artist scrobbled by this user, including scrobble time. Can be limited to specific timeranges, defaults to all time.

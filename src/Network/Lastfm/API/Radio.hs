@@ -4,7 +4,6 @@ module Network.Lastfm.API.Radio
   ( getPlaylist, search, tune
   ) where
 
-import Control.Monad.Error (runErrorT)
 import Network.Lastfm
 
 -- | Fetch new radio content periodically in an XSPF format.

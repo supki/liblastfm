@@ -4,7 +4,6 @@ module Network.Lastfm.API.Venue
   ( getEvents, getPastEvents, search
   ) where
 
-import Control.Monad.Error (runErrorT)
 import Network.Lastfm
 
 -- | Get a list of upcoming events at this venue.

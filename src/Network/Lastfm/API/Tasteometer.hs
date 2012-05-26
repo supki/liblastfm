@@ -4,7 +4,6 @@ module Network.Lastfm.API.Tasteometer
   ( compare
   ) where
 
-import Control.Monad.Error (runErrorT)
 import Network.Lastfm
 import Prelude hiding (compare)
 

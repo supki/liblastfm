@@ -5,7 +5,6 @@ module Network.Lastfm.API.Library
   , removeAlbum, removeArtist, removeScrobble, removeTrack
   ) where
 
-import Control.Monad.Error (runErrorT)
 import Network.Lastfm
 
 -- | Add an album or collection of albums to a user's Last.fm library.

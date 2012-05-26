@@ -12,11 +12,9 @@ Build-Type: Simple
 
 Library
   Build-Depends: aeson, base >= 3 && < 5, bytestring, mtl, curl, pureMD5, template-haskell, urlencoded, utf8-string
+  HS-Source-Dirs: src
   Exposed-Modules: Network.Lastfm
                    Network.Lastfm.Types
-                   Network.Lastfm.Types.Types
-                   Network.Lastfm.Types.Argument
-                   Network.Lastfm.Types.Error
                    Network.Lastfm.API.Album
                    Network.Lastfm.API.Artist
                    Network.Lastfm.API.Auth
@@ -32,7 +30,12 @@ Library
                    Network.Lastfm.API.Track
                    Network.Lastfm.API.User
                    Network.Lastfm.API.Venue
+  Other-Modules:   Network.Lastfm.Types.Types
+                   Network.Lastfm.Types.Argument
+                   Network.Lastfm.Types.Error
+                   Network.Lastfm.Types.TH
   Extensions: UnicodeSyntax
+  GHC-Options: -Wall
 
 source-repository head
   type:     git

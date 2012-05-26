@@ -2,7 +2,7 @@
 -- | Response module
 {-# OPTIONS_HADDOCK prune #-}
 module Network.Lastfm
-  ( Lastfm, Response, Type(..)
+  ( Lastfm, Response, ResponseType(..)
   , callAPI, callAPIsigned
   , module Network.Lastfm.Types
   ) where
@@ -26,14 +26,14 @@ type Lastfm a = IO (Either LastfmError a)
 -- | Type synonym for Lastfm response
 type Response = ByteString
 -- | Desired type of Lastfm response
-data Type = XML | JSON
+data ResponseType = XML | JSON
 
 -- | Low level function. Sends POST query to Lastfm API.
-callAPI ∷ Type → [(String, String)] → Lastfm Response
+callAPI ∷ ResponseType → [(String, String)] → Lastfm Response
 callAPI t = runErrorT . query . insertType t . map (second encodeString)
 
 -- | Low level function. Sends signed POST query to Lastfm API.
-callAPIsigned ∷ Type → Secret → [(String, String)] → Lastfm Response
+callAPIsigned ∷ ResponseType → Secret → [(String, String)] → Lastfm Response
 callAPIsigned t (Secret s) xs = runErrorT $ query zs
   where ys = map (second encodeString) . filter (not . null . snd) $ xs
         zs = insertType t $ ("api_sig", sign ys) : ys
@@ -41,7 +41,7 @@ callAPIsigned t (Secret s) xs = runErrorT $ query zs
         sign ∷ [(String, String)] → String
         sign = show . md5 . BS.pack . (++ s) . concatMap (uncurry (++)) . sortBy (compare `on` fst)
 
-insertType ∷ Type → [(String, String)] → [(String, String)]
+insertType ∷ ResponseType → [(String, String)] → [(String, String)]
 insertType XML = id
 insertType JSON = (("format", "json") :)
 
@@ -53,6 +53,6 @@ query xs = do
                              , CurlUserAgent "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0 Iceweasel/10.0"
                              ]
                              ∷ IO (CurlResponse_ [(String, String)] ByteString))
-  maybe (return response) (throwError . LastfmAPIError . toEnum . (subtract 1)) (getError response)
+  maybe (return response) (throwError . LastfmAPIError . toEnum . subtract 1) (getError response)
   where getError ∷ ByteString → Maybe Int
         getError _ = Nothing

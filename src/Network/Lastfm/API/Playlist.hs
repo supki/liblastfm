@@ -4,7 +4,6 @@ module Network.Lastfm.API.Playlist
   ( addTrack, create
   ) where
 
-import Control.Monad.Error (runErrorT)
 import Network.Lastfm
 
 -- | Add a track to a Last.fm user's playlist.

@@ -5,7 +5,6 @@ module Network.Lastfm.API.Tag
   , getWeeklyArtistChart, getWeeklyChartList, search
   ) where
 
-import Control.Monad.Error (runErrorT)
 import Network.Lastfm
 
 -- | Get the metadata for a tag.
