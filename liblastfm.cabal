@@ -11,7 +11,7 @@ Cabal-Version: >= 1.6
 Build-Type: Simple
 
 Library
-  Build-Depends: aeson, base >= 3 && < 5, bytestring, mtl, curl, pureMD5, template-haskell, urlencoded, utf8-string
+  Build-Depends: base >= 3 && < 5, template-haskell == 2.7.*, bytestring == 0.9.*, mtl == 2.*, curl == 1.3.7, pureMD5 == 2.1.*, urlencoded == 0.3.*, aeson == 0.6.*, utf8-string == 0.3.*
   HS-Source-Dirs: src
   Exposed-Modules: Network.Lastfm
                    Network.Lastfm.Types
