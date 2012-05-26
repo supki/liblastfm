@@ -1,9 +1,16 @@
+{-# LANGUAGE OverloadedStrings #-}
 module Network.Lastfm.Error where
 
+import Control.Applicative ((<$>), empty)
+import Control.Monad ((<=<))
 import Control.Monad.Error (Error)
+import Data.Aeson
+import Data.ByteString.Lazy.Char8 (ByteString)
+import Text.XML.Light
 
-data APIError
-  = DoesntExist
+data LastfmError
+  = NotUsed -- To avoid subtracting 1 from Lastfm reponses
+  | DoesntExist
   | InvalidService
   | InvalidMethod
   | AuthenticationFailed
@@ -31,9 +38,10 @@ data APIError
   | SuspendedAPIKey
   | Deprecated
   | RateLimitExceeded
-    deriving (Enum)
+    deriving Enum
 
-instance Show APIError where
+instance Show LastfmError where
+  show NotUsed = "NotUsed: Internal liblastfm error for convenience"
   show DoesntExist = "DoesntExist: This error does not exist"
   show InvalidService = "InvalidService: This service does not exist"
   show InvalidMethod = "InvalidMethod: No method with that name in this package"
@@ -63,10 +71,16 @@ instance Show APIError where
   show Deprecated = "Deprecated: This type of request is no longer supported"
   show RateLimitExceeded = "RateLimitExceeded: Your IP has made too many requests in a short period"
 
--- Various Lastfm errors.
-data LastfmError
-  = LastfmAPIError APIError -- ^ Internal Lastfm errors
-  | WrapperCallError String String -- ^ Wrapper errors
-    deriving Show
-
 instance Error LastfmError
+
+xmlError ∷ ByteString → Maybe LastfmError
+xmlError r = do
+  xml ← parseXMLDoc r
+  toEnum . read <$> (findAttr (unqual "code") <=< findChild (unqual "error")) xml
+
+jsonError ∷ ByteString → Maybe LastfmError
+jsonError = decode
+
+instance FromJSON LastfmError where
+  parseJSON (Object v) = toEnum <$> v .: "error"
+  parseJSON _ = empty

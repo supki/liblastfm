@@ -1,4 +1,4 @@
-{-# LANGUAGE BangPatterns, ScopedTypeVariables, TemplateHaskell #-}
+{-# LANGUAGE ScopedTypeVariables, TemplateHaskell #-}
 -- | Response module
 {-# OPTIONS_HADDOCK prune #-}
 module Network.Lastfm
@@ -11,8 +11,6 @@ module Network.Lastfm
 import Codec.Binary.UTF8.String (encodeString)
 import Control.Applicative ((<$>))
 import Control.Arrow (second)
-import Control.Monad.Error (ErrorT, runErrorT, throwError)
-import Control.Monad.Trans (liftIO)
 import Data.ByteString.Lazy.Char8 (ByteString)
 import Data.Digest.Pure.MD5 (md5)
 import Data.Function (on)
@@ -33,11 +31,11 @@ data ResponseType = XML | JSON
 
 -- | Low level function. Sends POST query to Lastfm API.
 callAPI ∷ ResponseType → [(String, String)] → Lastfm Response
-callAPI t = runErrorT . query . insertType t . map (second encodeString)
+callAPI t = query (parseError t) . insertType t . map (second encodeString)
 
 -- | Low level function. Sends signed POST query to Lastfm API.
 callAPIsigned ∷ ResponseType → Secret → [(String, String)] → Lastfm Response
-callAPIsigned t (Secret s) xs = runErrorT $ query zs
+callAPIsigned t (Secret s) xs = query (parseError t) zs
   where ys = map (second encodeString) . filter (not . null . snd) $ xs
         zs = insertType t $ ("api_sig", sign ys) : ys
 
@@ -48,17 +46,23 @@ insertType ∷ ResponseType → [(String, String)] → [(String, String)]
 insertType XML = id
 insertType JSON = (("format", "json") :)
 
-query ∷ [(String, String)] → ErrorT LastfmError IO Response
-query xs = do
-  !response ← liftIO $ withCurlDo $ respBody <$> (curlGetResponse_ "http://ws.audioscrobbler.com/2.0/?"
-                             [ CurlPostFields . map (export . urlEncode) $ xs
-                             , CurlFailOnError False
-                             , CurlUserAgent "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0 Iceweasel/10.0"
-                             ]
-                             ∷ IO (CurlResponse_ [(String, String)] ByteString))
-  maybe (return response) (throwError . LastfmAPIError . toEnum . subtract 1) (getError response)
-  where getError ∷ ByteString → Maybe Int
-        getError _ = Nothing
+parseError ∷ ResponseType → ByteString → Maybe LastfmError
+parseError XML = xmlError
+parseError JSON = jsonError
+
+query ∷ (ByteString → Maybe LastfmError) → [(String, String)] → IO (Either LastfmError Response)
+query γ xs = curlResponse xs >>= \r →
+  return $ case γ r of
+    Just n → Left n
+    Nothing → Right r
+
+curlResponse ∷ [(String, String)] → IO ByteString
+curlResponse xs = withCurlDo $
+  respBody <$> (curlGetResponse_ "http://ws.audioscrobbler.com/2.0/?"
+    [ CurlPostFields . map (export . urlEncode) $ xs
+    , CurlFailOnError False
+    , CurlUserAgent "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0 Iceweasel/10.0"
+    ] ∷ IO (CurlResponse_ [(String, String)] ByteString))
 
 xml ∷ [String] → Q [Dec]
 xml = mapM func
