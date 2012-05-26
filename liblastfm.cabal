@@ -15,6 +15,21 @@ Library
   HS-Source-Dirs: src
   Exposed-Modules: Network.Lastfm
                    Network.Lastfm.Types
+                   Network.Lastfm.JSON.Album
+                   Network.Lastfm.JSON.Artist
+                   Network.Lastfm.JSON.Auth
+                   Network.Lastfm.JSON.Chart
+                   Network.Lastfm.JSON.Event
+                   Network.Lastfm.JSON.Geo
+                   Network.Lastfm.JSON.Group
+                   Network.Lastfm.JSON.Library
+                   Network.Lastfm.JSON.Playlist
+                   Network.Lastfm.JSON.Radio
+                   Network.Lastfm.JSON.Tag
+                   Network.Lastfm.JSON.Tasteometer
+                   Network.Lastfm.JSON.Track
+                   Network.Lastfm.JSON.User
+                   Network.Lastfm.JSON.Venue
                    Network.Lastfm.XML.Album
                    Network.Lastfm.XML.Artist
                    Network.Lastfm.XML.Auth
@@ -31,6 +46,7 @@ Library
                    Network.Lastfm.XML.User
                    Network.Lastfm.XML.Venue
   Other-Modules:   Network.Lastfm.TH
+                   Network.Lastfm.Error
                    Network.Lastfm.API.Album
                    Network.Lastfm.API.Artist
                    Network.Lastfm.API.Auth
