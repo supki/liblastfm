@@ -3,7 +3,7 @@ module Network.Lastfm.Types.Argument where
 
 import Data.List (intercalate)
 
-import Network.Lastfm.Types.TH
+import Network.Lastfm.TH
 import Network.Lastfm.Types.Types
 
 (#) ∷ Argument a ⇒ a → (String, String)

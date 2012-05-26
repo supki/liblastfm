@@ -15,6 +15,25 @@ Library
   HS-Source-Dirs: src
   Exposed-Modules: Network.Lastfm
                    Network.Lastfm.Types
+                   Network.Lastfm.Types.Types
+                   Network.Lastfm.XML.Album
+                   Network.Lastfm.XML.Artist
+                   Network.Lastfm.XML.Auth
+                   Network.Lastfm.XML.Chart
+                   Network.Lastfm.XML.Event
+                   Network.Lastfm.XML.Geo
+                   Network.Lastfm.XML.Group
+                   Network.Lastfm.XML.Library
+                   Network.Lastfm.XML.Playlist
+                   Network.Lastfm.XML.Radio
+                   Network.Lastfm.XML.Tag
+                   Network.Lastfm.XML.Tasteometer
+                   Network.Lastfm.XML.Track
+                   Network.Lastfm.XML.User
+                   Network.Lastfm.XML.Venue
+  Other-Modules:   Network.Lastfm.TH
+                   Network.Lastfm.Types.Argument
+                   Network.Lastfm.Types.Error
                    Network.Lastfm.API.Album
                    Network.Lastfm.API.Artist
                    Network.Lastfm.API.Auth
@@ -30,10 +49,6 @@ Library
                    Network.Lastfm.API.Track
                    Network.Lastfm.API.User
                    Network.Lastfm.API.Venue
-  Other-Modules:   Network.Lastfm.Types.Types
-                   Network.Lastfm.Types.Argument
-                   Network.Lastfm.Types.Error
-                   Network.Lastfm.Types.TH
   Extensions: UnicodeSyntax
   GHC-Options: -Wall
 

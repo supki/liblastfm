@@ -7,7 +7,7 @@ import Data.Time (formatTime, getCurrentTime)
 import System.Locale (defaultTimeLocale)
 
 import Network.Lastfm.Types
-import qualified Network.Lastfm.API.Track as Track
+import qualified Network.Lastfm.XML.Track as Track
 
 import Kludges
 

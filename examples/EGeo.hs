@@ -4,7 +4,7 @@ import Control.Arrow ((&&&))
 import Control.Monad ((<=<), liftM2)
 
 import Network.Lastfm.Types
-import qualified Network.Lastfm.API.Geo as Geo
+import qualified Network.Lastfm.XML.Geo as Geo
 
 import Kludges
 

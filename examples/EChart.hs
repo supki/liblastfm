@@ -3,7 +3,7 @@ module EChart (common, auth) where
 import Control.Monad ((<=<))
 
 import Network.Lastfm.Types
-import qualified Network.Lastfm.API.Chart as Chart
+import qualified Network.Lastfm.XML.Chart as Chart
 
 import Kludges
 

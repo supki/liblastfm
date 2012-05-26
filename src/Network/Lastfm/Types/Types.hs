@@ -9,7 +9,7 @@ import Data.ByteString.Lazy.Char8 (ByteString)
 import Data.Maybe (fromJust)
 import qualified Data.Aeson
 
-import Network.Lastfm.Types.TH
+import Network.Lastfm.TH
 
 $(newtypes "String" ["Album", "AlbumArtist", "APIKey", "Artist", "AuthToken",
   "Context", "Country", "Description", "Group", "Language", "Latitude",

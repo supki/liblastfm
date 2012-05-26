@@ -1,9 +1,10 @@
-{-# LANGUAGE BangPatterns, ScopedTypeVariables #-}
+{-# LANGUAGE BangPatterns, ScopedTypeVariables, TemplateHaskell #-}
 -- | Response module
 {-# OPTIONS_HADDOCK prune #-}
 module Network.Lastfm
   ( Lastfm, Response, ResponseType(..)
   , callAPI, callAPIsigned
+  , xml, json
   , module Network.Lastfm.Types
   ) where
 
@@ -17,6 +18,7 @@ import Data.Digest.Pure.MD5 (md5)
 import Data.Function (on)
 import Data.List (sortBy)
 import Data.URLEncoded (urlEncode, export)
+import Language.Haskell.TH
 import Network.Curl
 import Network.Lastfm.Types
 import qualified Data.ByteString.Lazy.Char8 as BS
@@ -56,3 +58,11 @@ query xs = do
   maybe (return response) (throwError . LastfmAPIError . toEnum . subtract 1) (getError response)
   where getError ∷ ByteString → Maybe Int
         getError _ = Nothing
+
+xml ∷ [String] → Q [Dec]
+xml = mapM func
+  where func xs = funD (mkName xs) [clause [] (normalB $ appE (varE (mkName ("API." ++ xs))) [e| XML |]) []]
+
+json ∷ [String] → Q [Dec]
+json = mapM func
+  where func xs = funD (mkName xs) [clause [] (normalB $ appE (varE (mkName ("API." ++ xs))) [e| JSON |]) []]

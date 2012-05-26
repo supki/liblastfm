@@ -3,7 +3,7 @@ module ERadio (common, auth) where
 import Control.Monad ((<=<))
 
 import Network.Lastfm.Types
-import qualified Network.Lastfm.API.Radio as Radio
+import qualified Network.Lastfm.XML.Radio as Radio
 
 import Kludges
 

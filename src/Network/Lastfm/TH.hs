@@ -1,6 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE ViewPatterns #-}
-module Network.Lastfm.Types.TH where
+module Network.Lastfm.TH where
 
 import Language.Haskell.TH
 

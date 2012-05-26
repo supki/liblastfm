@@ -1,5 +1,3 @@
--- | Album API module
-{-# OPTIONS_HADDOCK prune #-}
 module Network.Lastfm.API.Album
   ( addTags, getBuyLinks, getInfo, getShouts, getTags
   , getTopTags, removeTag, search, share
@@ -8,11 +6,8 @@ module Network.Lastfm.API.Album
 import Control.Arrow ((|||))
 import Network.Lastfm
 
--- | Tag an album using a list of user supplied tags.
---
--- More: <http://www.last.fm/api/show/album.addTags>
-addTags ∷ (Artist, Album) → [Tag] → APIKey → SessionKey → Secret → Lastfm Response
-addTags (artist, album) tags apiKey sessionKey secret = callAPIsigned XML secret
+addTags ∷ ResponseType → (Artist, Album) → [Tag] → APIKey → SessionKey → Secret → Lastfm Response
+addTags t (artist, album) tags apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "album.addTags")
   , (#) artist
   , (#) album
@@ -21,11 +16,8 @@ addTags (artist, album) tags apiKey sessionKey secret = callAPIsigned XML secret
   , (#) sessionKey
   ]
 
--- | Get a list of Buy Links for a particular Album. It is required that you supply either the artist and track params or the mbid param.
---
--- More: <http://www.last.fm/api/show/album.getBuylinks>
-getBuyLinks ∷ Either (Artist, Album) Mbid → Maybe Autocorrect → Country → APIKey → Lastfm Response
-getBuyLinks a autocorrect country apiKey = callAPI XML $
+getBuyLinks ∷ ResponseType → Either (Artist, Album) Mbid → Maybe Autocorrect → Country → APIKey → Lastfm Response
+getBuyLinks t a autocorrect country apiKey = callAPI t $
   target a ++
   [ (#) (Method "album.getBuyLinks")
   , (#) autocorrect
@@ -33,11 +25,8 @@ getBuyLinks a autocorrect country apiKey = callAPI XML $
   , (#) apiKey
   ]
 
--- | Get the metadata for an album on Last.fm using the album name or a musicbrainz id. See playlist.fetch on how to get the album playlist.
---
--- More: <http://www.last.fm/api/show/album.getInfo>
-getInfo ∷ Either (Artist, Album) Mbid → Maybe Autocorrect → Maybe Language → Maybe Username → APIKey → Lastfm Response
-getInfo a autocorrect lang username apiKey = callAPI XML $
+getInfo ∷ ResponseType → Either (Artist, Album) Mbid → Maybe Autocorrect → Maybe Language → Maybe Username → APIKey → Lastfm Response
+getInfo t a autocorrect lang username apiKey = callAPI t $
   target a ++
   [ (#) (Method "album.getInfo")
   , (#) autocorrect
@@ -46,11 +35,8 @@ getInfo a autocorrect lang username apiKey = callAPI XML $
   , (#) apiKey
   ]
 
--- | Get shouts for this album.
---
--- More: <http://www.last.fm/api/show/album.getShouts>
-getShouts ∷ Either (Artist, Album) Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → APIKey → Lastfm Response
-getShouts a autocorrect page limit apiKey = callAPI XML $
+getShouts ∷ ResponseType → Either (Artist, Album) Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getShouts t a autocorrect page limit apiKey = callAPI t $
   target a ++
   [ (#) (Method "album.getShouts")
   , (#) autocorrect
@@ -59,35 +45,26 @@ getShouts a autocorrect page limit apiKey = callAPI XML $
   , (#) apiKey
   ]
 
--- | Get the tags applied by an individual user to an album on Last.fm.
---
--- More: <http://www.last.fm/api/show/album.getTags>
-getTags ∷ Either (Artist, Album) Mbid → Maybe Autocorrect → Either User (SessionKey, Secret) → APIKey → Lastfm Response
-getTags a autocorrect b apiKey = case b of
-  Left user → callAPI XML $ target a ++ [(#) user] ++ args
-  Right (sessionKey, secret) → callAPIsigned XML secret $ target a ++ [(#) sessionKey] ++ args
+getTags ∷ ResponseType → Either (Artist, Album) Mbid → Maybe Autocorrect → Either User (SessionKey, Secret) → APIKey → Lastfm Response
+getTags t a autocorrect b apiKey = case b of
+  Left user → callAPI t $ target a ++ [(#) user] ++ args
+  Right (sessionKey, secret) → callAPIsigned t secret $ target a ++ [(#) sessionKey] ++ args
   where args =
           [ (#) (Method "album.getTags")
           , (#) autocorrect
           , (#) apiKey
           ]
 
--- | Get the top tags for an album on Last.fm, ordered by popularity.
---
--- More: <http://www.last.fm/api/show/album.getTopTags>
-getTopTags ∷ Either (Artist, Album) Mbid → Maybe Autocorrect → APIKey → Lastfm Response
-getTopTags a autocorrect apiKey = callAPI XML $
+getTopTags ∷ ResponseType → Either (Artist, Album) Mbid → Maybe Autocorrect → APIKey → Lastfm Response
+getTopTags t a autocorrect apiKey = callAPI t $
   target a ++
   [ (#) (Method "album.getTopTags")
   , (#) autocorrect
   , (#) apiKey
   ]
 
--- | Remove a user's tag from an album.
---
--- More: <http://www.last.fm/api/show/album.removeTag>
-removeTag ∷ Artist → Album → Tag → APIKey → SessionKey → Secret → Lastfm Response
-removeTag artist album tag apiKey sessionKey secret = callAPIsigned XML secret
+removeTag ∷ ResponseType → Artist → Album → Tag → APIKey → SessionKey → Secret → Lastfm Response
+removeTag t artist album tag apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "album.removeTag")
   , (#) artist
   , (#) album
@@ -96,11 +73,8 @@ removeTag artist album tag apiKey sessionKey secret = callAPIsigned XML secret
   , (#) sessionKey
   ]
 
--- | Search for an album by name. Returns album matches sorted by relevance.
---
--- More: <http://www.last.fm/api/show/album.search>
-search ∷ Album → Maybe Page → Maybe Limit → APIKey → Lastfm Response
-search album page limit apiKey = callAPI XML
+search ∷ ResponseType → Album → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+search t album page limit apiKey = callAPI t
   [ (#) (Method "album.search")
   , (#) album
   , (#) page
@@ -108,11 +82,8 @@ search album page limit apiKey = callAPI XML
   , (#) apiKey
   ]
 
--- | Share an album with one or more Last.fm users or other friends.
---
--- More: <http://www.last.fm/api/show/album.share>
-share ∷ Artist → Album → Recipient → Maybe Message → Maybe Public → APIKey → SessionKey → Secret → Lastfm Response
-share artist album recipient message public apiKey sessionKey secret = callAPIsigned XML secret
+share ∷ ResponseType → Artist → Album → Recipient → Maybe Message → Maybe Public → APIKey → SessionKey → Secret → Lastfm Response
+share t artist album recipient message public apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "album.share")
   , (#) artist
   , (#) album

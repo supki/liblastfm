@@ -1,5 +1,3 @@
--- | Library API module
-{-# OPTIONS_HADDOCK prune #-}
 module Network.Lastfm.API.Library
   ( addAlbum, addArtist, addTrack, getAlbums, getArtists, getTracks
   , removeAlbum, removeArtist, removeScrobble, removeTrack
@@ -7,11 +5,8 @@ module Network.Lastfm.API.Library
 
 import Network.Lastfm
 
--- | Add an album or collection of albums to a user's Last.fm library.
---
--- More: <http://www.last.fm/api/show/library.addAlbum>
-addAlbum ∷ Artist → Album → APIKey → SessionKey → Secret → Lastfm Response
-addAlbum artist album apiKey sessionKey secret = callAPIsigned XML secret
+addAlbum ∷ ResponseType → Artist → Album → APIKey → SessionKey → Secret → Lastfm Response
+addAlbum t artist album apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "library.addAlbum")
   , (#) artist
   , (#) album
@@ -19,22 +14,16 @@ addAlbum artist album apiKey sessionKey secret = callAPIsigned XML secret
   , (#) sessionKey
   ]
 
--- | Add an artist to a user's Last.fm library.
---
--- More: <http://www.last.fm/api/show/library.addArtist>
-addArtist ∷ Artist → APIKey → SessionKey → Secret → Lastfm Response
-addArtist artist apiKey sessionKey secret = callAPIsigned XML secret
+addArtist ∷ ResponseType → Artist → APIKey → SessionKey → Secret → Lastfm Response
+addArtist t artist apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "library.addArtist")
   , (#) artist
   , (#) apiKey
   , (#) sessionKey
   ]
 
--- | Add a track to a user's Last.fm library.
---
--- More: <http://www.last.fm/api/show/library.addTrack>
-addTrack ∷ Artist → Track → APIKey → SessionKey → Secret → Lastfm Response
-addTrack artist track apiKey sessionKey secret = callAPIsigned XML secret
+addTrack ∷ ResponseType → Artist → Track → APIKey → SessionKey → Secret → Lastfm Response
+addTrack t artist track apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "library.addTrack")
   , (#) artist
   , (#) track
@@ -42,11 +31,8 @@ addTrack artist track apiKey sessionKey secret = callAPIsigned XML secret
   , (#) sessionKey
   ]
 
--- | A paginated list of all the albums in a user's library, with play counts and tag counts.
---
--- More: <http://www.last.fm/api/show/library.getAlbums>
-getAlbums ∷ User → Maybe Artist → Maybe Page → Maybe Limit → APIKey → Lastfm Response
-getAlbums user artist page limit apiKey = callAPI XML
+getAlbums ∷ ResponseType → User → Maybe Artist → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getAlbums t user artist page limit apiKey = callAPI t
   [ (#) (Method "library.getAlbums")
   , (#) user
   , (#) artist
@@ -55,11 +41,8 @@ getAlbums user artist page limit apiKey = callAPI XML
   , (#) apiKey
   ]
 
--- | A paginated list of all the artists in a user's library, with play counts and tag counts.
---
--- More: <http://www.last.fm/api/show/library.getArtists>
-getArtists ∷ User → Maybe Page → Maybe Limit → APIKey → Lastfm Response
-getArtists user page limit apiKey = callAPI XML
+getArtists ∷ ResponseType → User → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getArtists t user page limit apiKey = callAPI t
   [ (#) (Method "library.getArtists")
   , (#) user
   , (#) page
@@ -67,11 +50,8 @@ getArtists user page limit apiKey = callAPI XML
   , (#) apiKey
   ]
 
--- | A paginated list of all the tracks in a user's library, with play counts and tag counts.
---
--- More: <http://www.last.fm/api/show/library.getTracks>
-getTracks ∷ User → Maybe Artist → Maybe Album → Maybe Page → Maybe Limit → APIKey → Lastfm Response
-getTracks user artist album page limit apiKey = callAPI XML
+getTracks ∷ ResponseType → User → Maybe Artist → Maybe Album → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getTracks t user artist album page limit apiKey = callAPI t
   [ (#) (Method "library.getTracks")
   , (#) user
   , (#) artist
@@ -81,11 +61,8 @@ getTracks user artist album page limit apiKey = callAPI XML
   , (#) apiKey
   ]
 
--- | Remove an album from a user's Last.fm library.
---
--- More: <http://www.last.fm/api/show/library.removeAlbum>
-removeAlbum ∷ Artist → Album → APIKey → SessionKey → Secret → Lastfm Response
-removeAlbum artist album apiKey sessionKey secret = callAPIsigned XML secret
+removeAlbum ∷ ResponseType → Artist → Album → APIKey → SessionKey → Secret → Lastfm Response
+removeAlbum t artist album apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "library.removeAlbum")
   , (#) artist
   , (#) album
@@ -93,22 +70,16 @@ removeAlbum artist album apiKey sessionKey secret = callAPIsigned XML secret
   , (#) sessionKey
   ]
 
--- | Remove an artist from a user's Last.fm library.
---
--- More: <http://www.last.fm/api/show/library.removeArtist>
-removeArtist ∷ Artist → APIKey → SessionKey → Secret → Lastfm Response
-removeArtist artist apiKey sessionKey secret = callAPIsigned XML secret
+removeArtist ∷ ResponseType → Artist → APIKey → SessionKey → Secret → Lastfm Response
+removeArtist t artist apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "library.removeArtist")
   , (#) artist
   , (#) apiKey
   , (#) sessionKey
   ]
 
--- | Remove a scrobble from a user's Last.fm library.
---
--- More: <http://www.last.fm/api/show/library.removeScrobble>
-removeScrobble ∷ Artist → Track → Timestamp → APIKey → SessionKey → Secret → Lastfm Response
-removeScrobble artist track timestamp apiKey sessionKey secret = callAPIsigned XML secret
+removeScrobble ∷ ResponseType → Artist → Track → Timestamp → APIKey → SessionKey → Secret → Lastfm Response
+removeScrobble t artist track timestamp apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "library.removeScrobble")
   , (#) artist
   , (#) track
@@ -117,11 +88,8 @@ removeScrobble artist track timestamp apiKey sessionKey secret = callAPIsigned X
   , (#) sessionKey
   ]
 
--- | Remove a track from a user's Last.fm library.
---
--- More: <http://www.last.fm/api/show/library.removeTrack>
-removeTrack ∷ Artist → Track → APIKey → SessionKey → Secret → Lastfm Response
-removeTrack artist track apiKey sessionKey secret = callAPIsigned XML secret
+removeTrack ∷ ResponseType → Artist → Track → APIKey → SessionKey → Secret → Lastfm Response
+removeTrack t artist track apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "library.removeTrack")
   , (#) artist
   , (#) track

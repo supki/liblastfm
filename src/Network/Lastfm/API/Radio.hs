@@ -1,15 +1,11 @@
--- | Radio API module
-{-# OPTIONS_HADDOCK prune #-}
 module Network.Lastfm.API.Radio
   ( getPlaylist, search, tune
   ) where
 
 import Network.Lastfm
 
--- | Fetch new radio content periodically in an XSPF format.
---
--- More: <http://www.last.fm/api/show/radio.getPlaylist>
-getPlaylist ∷ Maybe Discovery
+getPlaylist ∷ ResponseType
+            → Maybe Discovery
             → Maybe RTP
             → Maybe BuyLinks
             → Multiplier
@@ -18,7 +14,7 @@ getPlaylist ∷ Maybe Discovery
             → SessionKey
             → Secret
             → Lastfm Response
-getPlaylist discovery rtp buylinks multiplier bitrate apiKey sessionKey secret = callAPIsigned XML secret
+getPlaylist t discovery rtp buylinks multiplier bitrate apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "radio.getPlaylist")
   , (#) discovery
   , (#) rtp
@@ -29,21 +25,15 @@ getPlaylist discovery rtp buylinks multiplier bitrate apiKey sessionKey secret =
   , (#) sessionKey
   ]
 
--- | Resolve the name of a resource into a station depending on which resource it is most likely to represent.
---
--- More: <http://www.last.fm/api/show/radio.search>
-search ∷ Name → APIKey → Lastfm Response
-search name apiKey = callAPI XML
+search ∷ ResponseType → Name → APIKey → Lastfm Response
+search t name apiKey = callAPI t
   [ (#) (Method "radio.search")
   , (#) name
   , (#) apiKey
   ]
 
--- | Tune in to a Last.fm radio station.
---
--- More: <http://www.last.fm/api/show/radio.tune>
-tune ∷ Maybe Language → Station → APIKey → SessionKey → Secret → Lastfm Response
-tune language station apiKey sessionKey secret = callAPIsigned XML secret
+tune ∷ ResponseType → Maybe Language → Station → APIKey → SessionKey → Secret → Lastfm Response
+tune t language station apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "radio.tune")
   , (#) language
   , (#) station

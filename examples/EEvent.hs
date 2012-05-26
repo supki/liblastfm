@@ -4,7 +4,7 @@ import Control.Arrow ((|||))
 import Control.Monad ((<=<))
 
 import Network.Lastfm.Types
-import qualified Network.Lastfm.API.Event as Event
+import qualified Network.Lastfm.XML.Event as Event
 
 import Kludges
 

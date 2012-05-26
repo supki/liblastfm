@@ -4,7 +4,7 @@ import Control.Monad ((<=<))
 import Prelude hiding (compare)
 
 import Network.Lastfm.Types
-import qualified Network.Lastfm.API.Tasteometer as Tasteometer
+import qualified Network.Lastfm.XML.Tasteometer as Tasteometer
 
 import Kludges
 

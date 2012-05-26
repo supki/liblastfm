@@ -3,7 +3,7 @@ module EPlaylist (common, auth) where
 import Control.Arrow ((|||))
 
 import Network.Lastfm.Types
-import qualified Network.Lastfm.API.Playlist as Playlist
+import qualified Network.Lastfm.XML.Playlist as Playlist
 
 addTrack :: APIKey -> SessionKey -> Secret -> IO ()
 addTrack ak sk s = Playlist.addTrack (Playlist 10298486) (Artist "Apoptose") (Track "Horizont") ak sk s >>= print ||| const (return ())

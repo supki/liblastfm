@@ -1,5 +1,3 @@
--- | Artist API module
-{-# OPTIONS_HADDOCK prune #-}
 module Network.Lastfm.API.Artist
   ( addTags, getCorrection, getEvents, getImages, getInfo
   , getPastEvents, getPodcast, getShouts, getSimilar, getTags, getTopAlbums
@@ -9,11 +7,8 @@ module Network.Lastfm.API.Artist
 import Control.Arrow ((|||))
 import Network.Lastfm
 
--- | Tag an album using a list of user supplied tags.
---
--- More: <http://www.last.fm/api/show/artist.addTags>
-addTags ∷ Artist → [Tag] → APIKey → SessionKey → Secret → Lastfm Response
-addTags artist tags apiKey sessionKey secret = callAPIsigned XML secret
+addTags ∷ ResponseType → Artist → [Tag] → APIKey → SessionKey → Secret → Lastfm Response
+addTags t artist tags apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "artist.addTags")
   , (#) artist
   , (#) tags
@@ -21,21 +16,15 @@ addTags artist tags apiKey sessionKey secret = callAPIsigned XML secret
   , (#) sessionKey
   ]
 
--- | Use the last.fm corrections data to check whether the supplied artist has a correction to a canonical artist
---
--- More: <http://www.last.fm/api/show/artist.getCorrection>
-getCorrection ∷ Artist → APIKey → Lastfm Response
-getCorrection artist apiKey = callAPI XML
+getCorrection ∷ ResponseType → Artist → APIKey → Lastfm Response
+getCorrection t artist apiKey = callAPI t
   [ (#) (Method "artist.getCorrection")
   , (#) artist
   , (#) apiKey
   ]
 
--- | Get a list of upcoming events for this artist.
---
--- More: <http://www.last.fm/api/show/artist.getEvents>
-getEvents ∷ Either Artist Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → Maybe FestivalsOnly → APIKey → Lastfm Response
-getEvents a autocorrect page limit festivalsOnly apiKey = callAPI XML $
+getEvents ∷ ResponseType → Either Artist Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → Maybe FestivalsOnly → APIKey → Lastfm Response
+getEvents t a autocorrect page limit festivalsOnly apiKey = callAPI t $
   target a ++
   [ (#) (Method "artist.getEvents")
   , (#) autocorrect
@@ -45,11 +34,8 @@ getEvents a autocorrect page limit festivalsOnly apiKey = callAPI XML $
   , (#) apiKey
   ]
 
--- | Get Images for this artist in a variety of sizes.
---
--- More: <http://www.last.fm/api/show/artist.getImages>
-getImages ∷ Either Artist Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → Maybe Order → APIKey → Lastfm Response
-getImages a autocorrect page limit order apiKey = callAPI XML $
+getImages ∷ ResponseType → Either Artist Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → Maybe Order → APIKey → Lastfm Response
+getImages t a autocorrect page limit order apiKey = callAPI t $
   target a ++
   [ (#) (Method "artist.getImages")
   , (#) autocorrect
@@ -59,11 +45,8 @@ getImages a autocorrect page limit order apiKey = callAPI XML $
   , (#) apiKey
   ]
 
--- | Get the metadata for an artist. Includes biography.
---
--- More: <http://www.last.fm/api/show/artist.getInfo>
-getInfo ∷ Either Artist Mbid → Maybe Autocorrect → Maybe Language → Maybe Username → APIKey → Lastfm Response
-getInfo a autocorrect language username apiKey = callAPI XML $
+getInfo ∷ ResponseType → Either Artist Mbid → Maybe Autocorrect → Maybe Language → Maybe Username → APIKey → Lastfm Response
+getInfo t a autocorrect language username apiKey = callAPI t $
   target a ++
   [ (#) (Method "artist.getInfo")
   , (#) autocorrect
@@ -72,11 +55,8 @@ getInfo a autocorrect language username apiKey = callAPI XML $
   , (#) apiKey
   ]
 
--- | Get a paginated list of all the events this artist has played at in the past.
---
--- More: <http://www.last.fm/api/show/artist.getPastEvents>
-getPastEvents ∷ Either Artist Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → APIKey → Lastfm Response
-getPastEvents a autocorrect page limit apiKey = callAPI XML $
+getPastEvents ∷ ResponseType → Either Artist Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getPastEvents t a autocorrect page limit apiKey = callAPI t $
   target a ++
   [ (#) (Method "artist.getPastEvents")
   , (#) autocorrect
@@ -85,22 +65,16 @@ getPastEvents a autocorrect page limit apiKey = callAPI XML $
   , (#) apiKey
   ]
 
--- | Get a podcast of free mp3s based on an artist.
---
--- More: <http://www.last.fm/api/show/artist.getPodcast>
-getPodcast ∷ Either Artist Mbid → Maybe Autocorrect → APIKey → Lastfm Response
-getPodcast a autocorrect apiKey = callAPI XML $
+getPodcast ∷ ResponseType → Either Artist Mbid → Maybe Autocorrect → APIKey → Lastfm Response
+getPodcast t a autocorrect apiKey = callAPI t $
   target a ++
   [ (#) (Method "artist.getPodcast")
   , (#) autocorrect
   , (#) apiKey
   ]
 
--- | Get shouts for this artist. Also available as an rss feed.
---
--- More: <http://www.last.fm/api/show/artist.getShouts>
-getShouts ∷ Either Artist Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → APIKey → Lastfm Response
-getShouts a autocorrect page limit apiKey = callAPI XML $
+getShouts ∷ ResponseType → Either Artist Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getShouts t a autocorrect page limit apiKey = callAPI t $
   target a ++
   [ (#) (Method "artist.getShouts")
   , (#) autocorrect
@@ -109,11 +83,8 @@ getShouts a autocorrect page limit apiKey = callAPI XML $
   , (#) apiKey
   ]
 
--- | Get all the artists similar to this artist.
---
--- More: <http://www.last.fm/api/show/artist.getSimilar>
-getSimilar ∷ Either Artist Mbid → Maybe Autocorrect → Maybe Limit → APIKey → Lastfm Response
-getSimilar a autocorrect limit apiKey = callAPI XML $
+getSimilar ∷ ResponseType → Either Artist Mbid → Maybe Autocorrect → Maybe Limit → APIKey → Lastfm Response
+getSimilar t a autocorrect limit apiKey = callAPI t $
   target a ++
   [ (#) (Method "artist.getSimilar")
   , (#) autocorrect
@@ -121,24 +92,18 @@ getSimilar a autocorrect limit apiKey = callAPI XML $
   , (#) apiKey
   ]
 
--- | Get the tags applied by an individual user to an artist on Last.fm. If accessed as an authenticated service /and/ you don't supply a user parameter then this service will return tags for the authenticated user.
---
--- More: <http://www.last.fm/api/show/artist.getTags>
-getTags ∷ Either Artist Mbid → Maybe Autocorrect → Either User (SessionKey, Secret) → APIKey → Lastfm Response
-getTags a autocorrect b apiKey = case b of
-  Left user → callAPI XML $ target a ++ [(#) user] ++ args
-  Right (sessionKey, secret) → callAPIsigned XML secret $ target a ++ [(#) sessionKey] ++ args
+getTags ∷ ResponseType → Either Artist Mbid → Maybe Autocorrect → Either User (SessionKey, Secret) → APIKey → Lastfm Response
+getTags t a autocorrect b apiKey = case b of
+  Left user → callAPI t $ target a ++ [(#) user] ++ args
+  Right (sessionKey, secret) → callAPIsigned t secret $ target a ++ [(#) sessionKey] ++ args
   where args =
           [ (#) (Method "artist.getTags")
           , (#) autocorrect
           , (#) apiKey
           ]
 
--- | Get the top albums for an artist on Last.fm, ordered by popularity.
---
--- More: <http://www.last.fm/api/show/artist.getTopAlbums>
-getTopAlbums ∷ Either Artist Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → APIKey → Lastfm Response
-getTopAlbums a autocorrect page limit apiKey = callAPI XML $
+getTopAlbums ∷ ResponseType → Either Artist Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getTopAlbums t a autocorrect page limit apiKey = callAPI t $
   target a ++
   [ (#) (Method "artist.getTopAlbums")
   , (#) autocorrect
@@ -147,33 +112,24 @@ getTopAlbums a autocorrect page limit apiKey = callAPI XML $
   , (#) apiKey
   ]
 
--- | Get the top fans for an artist on Last.fm, based on listening data.
---
--- More: <http://www.last.fm/api/show/artist.getTopFans>
-getTopFans ∷ Either Artist Mbid → Maybe Autocorrect → APIKey → Lastfm Response
-getTopFans a autocorrect apiKey = callAPI XML $
+getTopFans ∷ ResponseType → Either Artist Mbid → Maybe Autocorrect → APIKey → Lastfm Response
+getTopFans t a autocorrect apiKey = callAPI t $
   target a ++
   [ (#) (Method "artist.getTopFans")
   , (#) autocorrect
   , (#) apiKey
   ]
 
--- | Get the top tags for an artist on Last.fm, ordered by popularity.
---
--- More: <http://www.last.fm/api/show/artist.getTopTags>
-getTopTags ∷ Either Artist Mbid → Maybe Autocorrect → APIKey → Lastfm Response
-getTopTags a autocorrect apiKey = callAPI XML $
+getTopTags ∷ ResponseType → Either Artist Mbid → Maybe Autocorrect → APIKey → Lastfm Response
+getTopTags t a autocorrect apiKey = callAPI t $
   target a ++
   [ (#) (Method "artist.getTopTags")
   , (#) autocorrect
   , (#) apiKey
   ]
 
--- | Get the top tracks by an artist on Last.fm, ordered by popularity.
---
--- More: <http://www.last.fm/api/show/artist.getTopTracks>
-getTopTracks ∷ Either Artist Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → APIKey → Lastfm Response
-getTopTracks a autocorrect page limit apiKey = callAPI XML $
+getTopTracks ∷ ResponseType → Either Artist Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getTopTracks t a autocorrect page limit apiKey = callAPI t $
   target a ++
   [ (#) (Method "artist.getTopTracks")
   , (#) autocorrect
@@ -182,11 +138,8 @@ getTopTracks a autocorrect page limit apiKey = callAPI XML $
   , (#) apiKey
   ]
 
--- | Remove a user's tag from an artist.
---
--- More: <http://www.last.fm/api/show/artist.removeTag>
-removeTag ∷ Artist → Tag → APIKey → SessionKey → Secret → Lastfm Response
-removeTag artist tag apiKey sessionKey secret = callAPIsigned XML secret
+removeTag ∷ ResponseType → Artist → Tag → APIKey → SessionKey → Secret → Lastfm Response
+removeTag t artist tag apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "artist.removeTag")
   , (#) artist
   , (#) tag
@@ -194,11 +147,8 @@ removeTag artist tag apiKey sessionKey secret = callAPIsigned XML secret
   , (#) sessionKey
   ]
 
--- | Search for an artist by name. Returns artist matches sorted by relevance.
---
--- More: <http://www.last.fm/api/show/artist.search>
-search ∷ Artist → Maybe Page → Maybe Limit → APIKey → Lastfm Response
-search artist page limit apiKey = callAPI XML
+search ∷ ResponseType → Artist → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+search t artist page limit apiKey = callAPI t
   [ (#) (Method "artist.search")
   , (#) artist
   , (#) apiKey
@@ -206,11 +156,8 @@ search artist page limit apiKey = callAPI XML
   , (#) limit
   ]
 
--- | Share an artist with Last.fm users or other friends.
---
--- More: <http://www.last.fm/api/show/artist.share>
-share ∷ Artist → Recipient → Maybe Message → Maybe Public → APIKey → SessionKey → Secret → Lastfm Response
-share artist recipient message public apiKey sessionKey secret = callAPIsigned XML secret
+share ∷ ResponseType → Artist → Recipient → Maybe Message → Maybe Public → APIKey → SessionKey → Secret → Lastfm Response
+share t artist recipient message public apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "artist.share")
   , (#) artist
   , (#) recipient
@@ -220,11 +167,8 @@ share artist recipient message public apiKey sessionKey secret = callAPIsigned X
   , (#) message
   ]
 
--- | Shout in this artist's shoutbox.
---
--- More: <http://www.last.fm/api/show/artist.shout>
-shout ∷ Artist → Message → APIKey → SessionKey → Secret → Lastfm Response
-shout artist message apiKey sessionKey secret = callAPIsigned XML secret
+shout ∷ ResponseType → Artist → Message → APIKey → SessionKey → Secret → Lastfm Response
+shout t artist message apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "artist.shout")
   , (#) artist
   , (#) message

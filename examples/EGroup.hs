@@ -4,7 +4,7 @@ import Control.Arrow ((&&&))
 import Control.Monad ((<=<), liftM2)
 
 import Network.Lastfm.Types
-import qualified Network.Lastfm.API.Group as Group
+import qualified Network.Lastfm.XML.Group as Group
 
 import Kludges
 
