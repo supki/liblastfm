@@ -64,6 +64,8 @@ Library
                    Network.Lastfm.API.Venue
   Extensions: UnicodeSyntax
   GHC-Options: -Wall
+               -fno-warn-unused-do-bind
+               -Werror
 
 source-repository head
   type:     git
