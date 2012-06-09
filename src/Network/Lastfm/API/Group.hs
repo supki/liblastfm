@@ -2,7 +2,7 @@ module Network.Lastfm.API.Group
   ( getHype, getMembers, getWeeklyChartList, getWeeklyAlbumChart, getWeeklyArtistChart, getWeeklyTrackChart
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 
 getHype ∷ ResponseType → Group → APIKey → Lastfm Response
 getHype t group apiKey = callAPI t

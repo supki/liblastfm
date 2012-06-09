@@ -5,7 +5,7 @@ module Network.Lastfm.JSON.Playlist
   ( addTrack, create
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 import qualified Network.Lastfm.API.Playlist as API
 
 $(json ["addTrack", "create"])

@@ -7,7 +7,7 @@ module Network.Lastfm.XML.Geo
   , getMetroWeeklyChartlist, getMetros, getTopArtists, getTopTracks
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 import qualified Network.Lastfm.API.Geo as API
 
 $(xml ["getEvents", "getMetroArtistChart", "getMetroHypeArtistChart", "getMetroHypeTrackChart", "getMetroTrackChart", "getMetroUniqueArtistChart", "getMetroUniqueTrackChart", "getMetroWeeklyChartlist", "getMetros", "getTopArtists", "getTopTracks"])

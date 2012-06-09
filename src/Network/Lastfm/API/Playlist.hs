@@ -2,7 +2,7 @@ module Network.Lastfm.API.Playlist
   ( addTrack, create
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 
 addTrack ∷ ResponseType → Playlist → Artist → Track → APIKey → SessionKey → Secret → Lastfm Response
 addTrack t playlist artist track apiKey sessionKey secret = callAPIsigned t secret

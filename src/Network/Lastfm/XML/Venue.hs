@@ -5,7 +5,7 @@ module Network.Lastfm.XML.Venue
   ( getEvents, getPastEvents, search
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 import qualified Network.Lastfm.API.Venue as API
 
 $(xml ["getEvents", "getPastEvents", "search"])

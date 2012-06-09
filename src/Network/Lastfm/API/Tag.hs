@@ -3,7 +3,7 @@ module Network.Lastfm.API.Tag
   , getWeeklyArtistChart, getWeeklyChartList, search
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 
 getInfo ∷ ResponseType → Tag → Maybe Language → APIKey → Lastfm Response
 getInfo t tag language apiKey = callAPI t

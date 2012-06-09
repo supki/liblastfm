@@ -5,7 +5,7 @@ module Network.Lastfm.XML.Group
   ( getHype, getMembers, getWeeklyChartList, getWeeklyAlbumChart, getWeeklyArtistChart, getWeeklyTrackChart
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 import qualified Network.Lastfm.API.Group as API
 
 $(xml ["getHype", "getMembers", "getWeeklyChartList", "getWeeklyAlbumChart", "getWeeklyArtistChart", "getWeeklyTrackChart"])

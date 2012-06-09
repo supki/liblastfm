@@ -2,7 +2,7 @@ module Network.Lastfm.API.Venue
   ( getEvents, getPastEvents, search
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 
 getEvents ∷ ResponseType → Venue → Maybe FestivalsOnly → APIKey → Lastfm Response
 getEvents t venue festivalsOnly apiKey = callAPI t

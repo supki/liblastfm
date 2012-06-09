@@ -7,7 +7,7 @@ module Network.Lastfm.JSON.Track
   , love, removeTag, scrobble, search, share, unban, unlove, updateNowPlaying
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 import qualified Network.Lastfm.API.Track as API
 
 $(json ["addTags", "ban", "getBuyLinks", "getCorrection", "getFingerprintMetadata", "getInfo", "getShouts", "getSimilar", "getTags", "getTopFans", "getTopTags", "love", "removeTag", "scrobble", "search", "share", "unban", "unlove", "updateNowPlaying"])

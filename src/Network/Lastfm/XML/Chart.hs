@@ -6,7 +6,7 @@ module Network.Lastfm.XML.Chart
   , getTopArtists, getTopTags, getTopTracks
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 import qualified Network.Lastfm.API.Chart as API
 
 $(xml ["getHypedArtists", "getHypedTracks", "getLovedTracks", "getTopArtists", "getTopTags", "getTopTracks"])

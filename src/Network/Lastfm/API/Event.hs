@@ -2,7 +2,7 @@ module Network.Lastfm.API.Event
   ( attend, getAttendees, getInfo, getShouts, share, shout
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 
 attend ∷ ResponseType → Event → Status → APIKey → SessionKey → Secret → Lastfm Response
 attend t event status apiKey sessionKey secret = callAPIsigned t secret

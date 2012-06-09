@@ -3,7 +3,7 @@ module Network.Lastfm.API.Chart
   , getTopArtists, getTopTags, getTopTracks
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 
 getHypedArtists = get "getHypedArtists"
 

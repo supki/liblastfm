@@ -44,8 +44,8 @@ Library
                    Network.Lastfm.XML.Track
                    Network.Lastfm.XML.User
                    Network.Lastfm.XML.Venue
-  Other-Modules:   Network.Lastfm.TH
-                   Network.Lastfm.Types
+  Other-Modules:   Network.Lastfm.Internal
+                   Network.Lastfm.TH
                    Network.Lastfm.Error
                    Network.Lastfm.API.Album
                    Network.Lastfm.API.Artist

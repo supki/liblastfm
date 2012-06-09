@@ -6,7 +6,7 @@ module Network.Lastfm.API.User
   , getWeeklyChartList, getWeeklyTrackChart, shout
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 
 getArtistTracks ∷ ResponseType → User → Artist → Maybe StartTimestamp → Maybe EndTimestamp → Maybe Page → APIKey → Lastfm Response
 getArtistTracks t user artist startTimestamp endTimestamp page apiKey = callAPI t

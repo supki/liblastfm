@@ -7,7 +7,7 @@ module Network.Lastfm.XML.Tasteometer
 
 import Prelude hiding (compare)
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 import qualified Network.Lastfm.API.Tasteometer as API
 
 $(xml ["compare"])

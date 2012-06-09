@@ -5,7 +5,7 @@ module Network.Lastfm.XML.Playlist
   ( addTrack, create
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 import qualified Network.Lastfm.API.Playlist as API
 
 $(xml ["addTrack", "create"])

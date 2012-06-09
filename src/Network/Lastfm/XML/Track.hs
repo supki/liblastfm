@@ -7,7 +7,7 @@ module Network.Lastfm.XML.Track
   , love, removeTag, scrobble, search, share, unban, unlove, updateNowPlaying
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 import qualified Network.Lastfm.API.Track as API
 
 $(xml ["addTags", "ban", "getBuyLinks", "getCorrection", "getFingerprintMetadata", "getInfo", "getShouts", "getSimilar", "getTags", "getTopFans", "getTopTags", "love", "removeTag", "scrobble", "search", "share", "unban", "unlove", "updateNowPlaying"])

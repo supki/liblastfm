@@ -3,7 +3,7 @@ module Network.Lastfm.API.Library
   , removeAlbum, removeArtist, removeScrobble, removeTrack
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 
 addAlbum ∷ ResponseType → Artist → Album → APIKey → SessionKey → Secret → Lastfm Response
 addAlbum t artist album apiKey sessionKey secret = callAPIsigned t secret

@@ -4,7 +4,7 @@ module Network.Lastfm.API.Auth
   ) where
 
 import Data.Functor ((<$>))
-import Network.Lastfm
+import Network.Lastfm.Internal
 
 getMobileSession ∷ Username → APIKey → AuthToken → Lastfm SessionKey
 getMobileSession username apiKey token = simple <$> callAPI JSON [(#) (Method "auth.getMobileSession"), (#) username, (#) token, (#) apiKey]

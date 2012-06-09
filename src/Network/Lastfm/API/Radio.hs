@@ -2,7 +2,7 @@ module Network.Lastfm.API.Radio
   ( getPlaylist, search, tune
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 
 getPlaylist ∷ ResponseType
             → Maybe Discovery

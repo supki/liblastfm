@@ -6,7 +6,7 @@ module Network.Lastfm.XML.Tag
   , getWeeklyArtistChart, getWeeklyChartList, search
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 import qualified Network.Lastfm.API.Tag as API
 
 $(xml ["getInfo", "getSimilar", "getTopAlbums", "getTopArtists", "getTopTags", "getTopTracks", "getWeeklyArtistChart", "getWeeklyChartList", "search"])

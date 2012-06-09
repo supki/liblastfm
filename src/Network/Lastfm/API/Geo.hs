@@ -4,7 +4,7 @@ module Network.Lastfm.API.Geo
   , getMetroWeeklyChartlist, getMetros, getTopArtists, getTopTracks
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 
 getEvents ∷ ResponseType
           → Maybe Latitude

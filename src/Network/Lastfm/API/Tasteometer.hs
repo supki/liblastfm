@@ -2,7 +2,7 @@ module Network.Lastfm.API.Tasteometer
   ( compare
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 import Prelude hiding (compare)
 
 (?<) ∷ Argument a ⇒ a → Int → (String, String)

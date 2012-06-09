@@ -5,7 +5,7 @@ module Network.Lastfm.XML.Event
   ( attend, getAttendees, getInfo, getShouts, share, shout
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 import qualified Network.Lastfm.API.Event as API
 
 $(xml ["attend", "getAttendees", "getInfo", "getShouts", "share", "shout"])

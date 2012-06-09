@@ -5,7 +5,7 @@ module Network.Lastfm.JSON.Event
   ( attend, getAttendees, getInfo, getShouts, share, shout
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 import qualified Network.Lastfm.API.Event as API
 
 $(json ["attend", "getAttendees", "getInfo", "getShouts", "share", "shout"])

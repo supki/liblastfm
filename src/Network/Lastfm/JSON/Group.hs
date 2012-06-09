@@ -5,7 +5,7 @@ module Network.Lastfm.JSON.Group
   ( getHype, getMembers, getWeeklyChartList, getWeeklyAlbumChart, getWeeklyArtistChart, getWeeklyTrackChart
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 import qualified Network.Lastfm.API.Group as API
 
 $(json ["getHype", "getMembers", "getWeeklyChartList", "getWeeklyAlbumChart", "getWeeklyArtistChart", "getWeeklyTrackChart"])

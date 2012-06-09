@@ -5,7 +5,7 @@ module Network.Lastfm.XML.Radio
   ( getPlaylist, search, tune
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 import qualified Network.Lastfm.API.Radio as API
 
 $(xml ["getPlaylist", "search", "tune"])

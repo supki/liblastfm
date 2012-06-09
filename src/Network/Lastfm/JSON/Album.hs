@@ -6,7 +6,7 @@ module Network.Lastfm.JSON.Album
   , getTopTags, removeTag, search, share
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 import qualified Network.Lastfm.API.Album as API
 
 $(json ["addTags", "getBuyLinks", "getInfo", "getShouts", "getTags", "getTopTags", "removeTag", "search", "share"])

@@ -6,7 +6,7 @@ module Network.Lastfm.JSON.Library
   , removeAlbum, removeArtist, removeScrobble, removeTrack
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 import qualified Network.Lastfm.API.Library as API
   
 $(json ["addAlbum", "addArtist", "addTrack", "getAlbums", "getArtists", "getTracks", "removeAlbum", "removeArtist", "removeScrobble", "removeTrack"])

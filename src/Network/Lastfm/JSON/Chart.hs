@@ -6,7 +6,7 @@ module Network.Lastfm.JSON.Chart
   , getTopArtists, getTopTags, getTopTracks
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 import qualified Network.Lastfm.API.Chart as API
 
 $(json ["getHypedArtists", "getHypedTracks", "getLovedTracks", "getTopArtists", "getTopTags", "getTopTracks"])

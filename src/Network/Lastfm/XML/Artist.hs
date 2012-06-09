@@ -7,7 +7,7 @@ module Network.Lastfm.XML.Artist
   , getTopFans, getTopTags, getTopTracks, removeTag, search, share, shout
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 import qualified Network.Lastfm.API.Artist as API
   
 $(xml ["addTags", "getCorrection", "getEvents", "getImages", "getInfo", "getPastEvents", "getPodcast", "getShouts", "getSimilar", "getTags", "getTopAlbums", "getTopFans", "getTopTags", "getTopTracks", "removeTag", "search", "share", "shout"])

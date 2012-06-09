@@ -1,73 +1,163 @@
-{-# LANGUAGE ScopedTypeVariables, TemplateHaskell #-}
--- | Response module
-{-# OPTIONS_HADDOCK not-home #-}
-module Network.Lastfm
-  ( Lastfm, Response, ResponseType(..)
-  , callAPI, callAPIsigned
-  , xml, json
-  , module Network.Lastfm.Types
-  ) where
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell #-}
+module Network.Lastfm where
 
-import Codec.Binary.UTF8.String (encodeString)
-import Control.Applicative ((<$>))
-import Control.Arrow (second)
+import Control.Applicative ((<$>), empty)
+import Control.Monad (liftM)
+import Data.Aeson ((.:), FromJSON, decode, parseJSON)
 import Data.ByteString.Lazy.Char8 (ByteString)
-import Data.Digest.Pure.MD5 (md5)
-import Data.Function (on)
-import Data.List (sortBy)
-import Data.URLEncoded (urlEncode, export)
-import Language.Haskell.TH
-import Network.Curl
+import Data.List (intercalate)
+import Data.Maybe (fromJust)
+import qualified Data.Aeson
+
 import Network.Lastfm.Error
-import Network.Lastfm.Types
-import qualified Data.ByteString.Lazy.Char8 as BS
+import Network.Lastfm.TH
 
--- | Type synonym for Lastfm response or error.
 type Lastfm a = IO (Either LastfmError a)
--- | Type synonym for Lastfm response
 type Response = ByteString
--- | Desired type of Lastfm response
-data ResponseType = XML | JSON
 
--- | Low level function. Sends POST query to Lastfm API.
-callAPI ∷ ResponseType → [(String, String)] → Lastfm Response
-callAPI t = query (parseError t) . insertType t . map (second encodeString)
+newtype Secret = Secret String
 
--- | Low level function. Sends signed POST query to Lastfm API.
-callAPIsigned ∷ ResponseType → Secret → [(String, String)] → Lastfm Response
-callAPIsigned t (Secret s) xs = query (parseError t) zs
-  where ys = map (second encodeString) . filter (not . null . snd) $ xs
-        zs = insertType t $ ("api_sig", sign ys) : ys
+$(newtypes "String" ["Album", "AlbumArtist", "APIKey", "Artist", "AuthToken",
+  "Context", "Country", "Description", "Group", "Language", "Latitude",
+  "Location", "Longitude", "Mbid", "Message", "Method", "Metro", "Name",
+  "Recipient", "SessionKey", "Station", "StreamId", "Tag", "TaggingType",
+  "Title", "Token", "Track", "User", "Username", "Venuename", "ChosenByUser"])
+$(newtypes "Bool" ["Autocorrect", "BuyLinks", "Discovery", "FestivalsOnly", "Public", "RecentTracks", "RTP", "UseRecs"])
+$(newtypes "Int" ["Distance", "Duration", "Event", "Limit", "Page", "Playlist", "TrackNumber", "Venue"])
+$(newtypes "Integer" ["End", "EndTimestamp", "Fingerprint", "From", "Start", "StartTimestamp", "Timestamp", "To"])
 
-        sign ∷ [(String, String)] → String
-        sign = show . md5 . BS.pack . (++ s) . concatMap (uncurry (++)) . sortBy (compare `on` fst)
+data Bitrate = B64 | B128
+data Multiplier = M1 | M2
+data Order = Popularity | DateAdded
+data Status = Yes | Maybe | No
+data Value = ValueUser User
+           | ValueArtists [Artist]
+data Period = Week | Quater | HalfYear | Year | Overall
 
-insertType ∷ ResponseType → [(String, String)] → [(String, String)]
-insertType XML = id
-insertType JSON = (("format", "json") :)
+instance Show Value where
+  show (ValueUser _)    = "user"
+  show (ValueArtists _) = "artists"
 
-parseError ∷ ResponseType → ByteString → Maybe LastfmError
-parseError XML = xmlError
-parseError JSON = jsonError
+instance FromJSON Token where
+  parseJSON (Data.Aeson.Object v) = Token <$> v .: "token"
+  parseJSON _ = empty
+instance FromJSON SessionKey where
+  parseJSON (Data.Aeson.Object v) = SessionKey <$> ((v .: "session") >>= (.: "key"))
+  parseJSON _ = empty
 
-query ∷ (ByteString → Maybe LastfmError) → [(String, String)] → IO (Either LastfmError Response)
-query γ xs = curlResponse xs >>= \r →
-  return $ case γ r of
-    Just n → Left n
-    Nothing → Right r
+simple ∷ (FromJSON a, Monad m) ⇒ m ByteString → m a
+simple = liftM (fromJust . decode)
 
-curlResponse ∷ [(String, String)] → IO ByteString
-curlResponse xs = withCurlDo $
-  respBody <$> (curlGetResponse_ "http://ws.audioscrobbler.com/2.0/?"
-    [ CurlPostFields . map (export . urlEncode) $ xs
-    , CurlFailOnError False
-    , CurlUserAgent "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0 Iceweasel/10.0"
-    ] ∷ IO (CurlResponse_ [(String, String)] ByteString))
+class Argument a where
+  key ∷ a → String
+  value ∷ a → String
 
-xml ∷ [String] → Q [Dec]
-xml = mapM func
-  where func xs = funD (mkName xs) [clause [] (normalB $ appE (varE (mkName ("API." ++ xs))) [e| XML |]) []]
+instance Argument a ⇒ Argument (Maybe a) where key = maybe "" key; value = maybe "" value
+instance Argument a ⇒ Argument [a] where
+  key (a:_) = key a ++ "s"
+  key [] = ""
+  value = intercalate "," . map value
 
-json ∷ [String] → Q [Dec]
-json = mapM func
-  where func xs = funD (mkName xs) [clause [] (normalB $ appE (varE (mkName ("API." ++ xs))) [e| JSON |]) []]
+boolToString ∷ Bool → String
+boolToString True = "1"
+boolToString False = "0"
+
+--instance Argument $first where key = const $second; value ($first a) = $func a
+$(instances "id"
+  [ ("Album","album")
+  , ("AlbumArtist", "albumartist")
+  , ("APIKey", "api_key")
+  , ("Artist", "artist")
+  , ("AuthToken", "authToken")
+  , ("ChosenByUser", "chosenByUser")
+  , ("Context", "context")
+  , ("Country", "country")
+  , ("Description", "description")
+  , ("Group", "group")
+  , ("Language", "lang")
+  , ("Latitude", "lat")
+  , ("Location", "location")
+  , ("Longitude", "long")
+  , ("Mbid", "mbid")
+  , ("Message", "message")
+  , ("Method", "method")
+  , ("Metro", "metro")
+  , ("Name", "name")
+  , ("Recipient", "recipient")
+  , ("SessionKey", "sk")
+  , ("Station", "station")
+  , ("StreamId", "streamId")
+  , ("Tag", "tag")
+  , ("TaggingType", "taggingtype")
+  , ("Title", "title")
+  , ("Token", "token")
+  , ("Track", "track")
+  , ("User", "user")
+  , ("Username", "username")
+  , ("Venuename", "venue")
+  ])
+
+$( instances "boolToString"
+  [ ("Autocorrect", "autocorrect")
+  , ("BuyLinks", "buylinks")
+  , ("Discovery", "discovery")
+  , ("FestivalsOnly", "festivalsonly")
+  , ("Public", "public")
+  , ("RecentTracks", "recenttracks")
+  , ("RTP", "rtp")
+  , ("UseRecs", "userecs")
+  ])
+
+$( instances "show"
+  [ ("Distance", "distance")
+  , ("Duration", "duration")
+  , ("Event", "event")
+  , ("Limit", "limit")
+  , ("Page", "page")
+  , ("Playlist", "playlistID")
+  , ("TrackNumber", "tracknumber")
+  , ("Venue", "venue")
+  , ("End", "end")
+  , ("EndTimestamp", "endTimestamp")
+  , ("Fingerprint", "fingerprintid")
+  , ("From", "from")
+  , ("Start", "start")
+  , ("StartTimestamp", "startTimestamp")
+  , ("Timestamp", "timestamp")
+  , ("To", "to")
+  ])
+
+instance Argument Bitrate where
+  key = const "bitrate"
+  value B64 = "64"
+  value B128 = "128"
+
+instance Argument Multiplier where
+  key = const "speed_multiplier"
+  value M1 = "1.0"
+  value M2 = "2.0"
+
+instance Argument Order where
+  key = const "order"
+  value Popularity = "popularity"
+  value DateAdded  = "dateadded"
+
+instance Argument Status where
+  key = const "status"
+  value Yes = "0"
+  value Maybe = "1"
+  value No = "2"
+
+instance Argument Value where
+  key = const "value"
+  value (ValueUser u)     = value u
+  value (ValueArtists as) = value as
+
+instance Argument Period where
+  key = const "period"
+  value Week     = "7day"
+  value Quater   = "3month"
+  value HalfYear = "6month"
+  value Year     = "12month"
+  value Overall  = "overall"

@@ -9,7 +9,7 @@ module Network.Lastfm.JSON.User
   , getWeeklyChartList, getWeeklyTrackChart, shout
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 import qualified Network.Lastfm.API.User as API
 
 $(json ["getArtistTracks", "getBannedTracks", "getEvents", "getFriends", "getInfo", "getLovedTracks", "getNeighbours", "getNewReleases", "getPastEvents", "getPersonalTags", "getPlaylists", "getRecentStations", "getRecentTracks", "getRecommendedArtists", "getRecommendedEvents", "getShouts", "getTopAlbums", "getTopArtists", "getTopTags", "getTopTracks", "getWeeklyAlbumChart", "getWeeklyArtistChart", "getWeeklyChartList", "getWeeklyTrackChart", "shout"])

@@ -5,7 +5,7 @@ module Network.Lastfm.JSON.Venue
   ( getEvents, getPastEvents, search
   ) where
 
-import Network.Lastfm
+import Network.Lastfm.Internal
 import qualified Network.Lastfm.API.Venue as API
 
 $(json ["getEvents", "getPastEvents", "search"])

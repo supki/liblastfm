@@ -5,7 +5,7 @@ module Network.Lastfm.API.Track
   ) where
 
 import Control.Arrow ((|||))
-import Network.Lastfm
+import Network.Lastfm.Internal
 
 addTags ∷ ResponseType → Artist → Track → [Tag] → APIKey → SessionKey → Secret → Lastfm Response
 addTags t artist track tags apiKey sessionKey secret = callAPIsigned t secret
