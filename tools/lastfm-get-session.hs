@@ -10,7 +10,7 @@ import System.Directory (getHomeDirectory)
 import System.Environment (getArgs)
 import System.FilePath ((</>))
 import Text.Printf (printf)
-import qualified Network.Lastfm.API.Auth as Auth
+import qualified Network.Lastfm.XML.Auth as Auth
 
 confFile = ".lastfm.conf"
 
