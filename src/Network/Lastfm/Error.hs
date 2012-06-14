@@ -9,7 +9,7 @@ import Data.ByteString.Lazy.Char8 (ByteString)
 import Text.XML.Light
 
 data LastfmError
-  = NotUsed -- To avoid subtracting 1 from Lastfm reponses
+  = CurlError
   | DoesntExist
   | InvalidService
   | InvalidMethod
@@ -41,7 +41,7 @@ data LastfmError
     deriving Enum
 
 instance Show LastfmError where
-  show NotUsed = "NotUsed: Internal liblastfm error for convenience"
+  show CurlError = "CurlError: "
   show DoesntExist = "DoesntExist: This error does not exist"
   show InvalidService = "InvalidService: This service does not exist"
   show InvalidMethod = "InvalidMethod: No method with that name in this package"

@@ -9,7 +9,7 @@ module Network.Lastfm.Internal
 
 import Codec.Binary.UTF8.String (encodeString)
 import Control.Applicative ((<$>))
-import Control.Arrow (second)
+import Control.Arrow ((&&&), second)
 import Data.ByteString.Lazy.Char8 (ByteString)
 import Data.Digest.Pure.MD5 (md5)
 import Data.Function (on)
@@ -48,18 +48,22 @@ parseError XML = xmlError
 parseError JSON = jsonError
 
 query ∷ (ByteString → Maybe LastfmError) → [(String, String)] → IO (Either LastfmError Response)
-query γ xs = curlResponse xs >>= \r →
-  return $ case γ r of
-    Just n → Left n
-    Nothing → Right r
+query γ xs = do
+  (status, body) ← (respCurlCode &&& respBody) <$> curlResponse xs
+  return $ case status of
+    CurlOK → case γ body of
+               Nothing → Right body
+               Just n → Left n
+    _ → Left CurlError
 
-curlResponse ∷ [(String, String)] → IO ByteString
+curlResponse ∷ [(String, String)] → IO (CurlResponse_ [(String, String)] ByteString)
 curlResponse xs = withCurlDo $
-  respBody <$> (curlGetResponse_ "http://ws.audioscrobbler.com/2.0/?"
+  curlGetResponse_ "http://ws.audioscrobbler.com/2.0/?"
     [ CurlPostFields . map (export . urlEncode) $ xs
     , CurlFailOnError False
     , CurlUserAgent "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0 Iceweasel/10.0"
-    ] ∷ IO (CurlResponse_ [(String, String)] ByteString))
+    , CurlConnectTimeout 10
+    ]
 
 -- Construct XML wrapper to specified API function
 xml ∷ [String] → Q [Dec]
