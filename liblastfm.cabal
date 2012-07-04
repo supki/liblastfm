@@ -62,10 +62,11 @@ Library
                    Network.Lastfm.API.Track
                    Network.Lastfm.API.User
                    Network.Lastfm.API.Venue
-  Extensions: UnicodeSyntax
+  Extensions: UnicodeSyntax, CPP
   GHC-Options: -Wall
                -fno-warn-unused-do-bind
                -Werror
+  CPP-Options: -Idocs
 
 source-repository head
   type:     git
