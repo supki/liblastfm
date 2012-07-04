@@ -1,0 +1,23 @@
+#define __attend__ \
+-- | Set a user's attendance status for an event. \
+More: <http://www.last.fm/api/show/event.attend>
+
+#define __getAttendees__ \
+-- | Get a list of attendees for an event. \
+More: <http://www.last.fm/api/show/event.getAttendees>
+
+#define __getInfo__ \
+-- | Get the metadata for an event on Last.fm. Includes attendance and lineup information. \
+More: <http://www.last.fm/api/show/event.getInfo>
+
+#define __getShouts__ \
+-- | Get shouts for this event. \
+More: <http://www.last.fm/api/show/event.getShouts>
+
+#define __share__ \
+-- | Share an event with one or more Last.fm users or other friends. \
+More: <http://www.last.fm/api/show/event.share>
+
+#define __shout__ \
+-- | Shout in this event's shoutbox. \
+More: <http://www.last.fm/api/show/event.shout>

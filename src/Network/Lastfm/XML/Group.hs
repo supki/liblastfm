@@ -5,38 +5,27 @@ module Network.Lastfm.XML.Group
   ( getHype, getMembers, getWeeklyChartList, getWeeklyAlbumChart, getWeeklyArtistChart, getWeeklyTrackChart
   ) where
 
+#include "group.docs"
+
 import Network.Lastfm.Internal
 import qualified Network.Lastfm.API.Group as API
 
 $(xml ["getHype", "getMembers", "getWeeklyChartList", "getWeeklyAlbumChart", "getWeeklyArtistChart", "getWeeklyTrackChart"])
 
--- | Get the hype list for a group.
---
--- More: <http://www.last.fm/api/show/group.getHype>
+__getHype__
 getHype ∷ Group → APIKey → Lastfm Response
 
--- | Get a list of members for this group.
---
--- More: <http://www.last.fm/api/show/group.getMembers>
+__getMembers__
 getMembers ∷ Group → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 
--- | Get an album chart for a group, for a given date range. If no date range is supplied, it will return the most recent album chart for this group.
---
--- More: <http://www.last.fm/api/show/group.getWeeklyAlbumChart>
+__getWeeklyChartList__
 getWeeklyChartList ∷ Group → APIKey → Lastfm Response
 
--- | Get an artist chart for a group, for a given date range. If no date range is supplied, it will return the most recent artist chart for this group.
---
--- More: <http://www.last.fm/api/show/group.getWeeklyArtistChart>
+__getWeeklyAlbumChart__
 getWeeklyAlbumChart ∷ Group → Maybe From → Maybe To → APIKey → Lastfm Response
 
--- | Get a list of available charts for this group, expressed as date ranges which can be sent to the chart services.
---
--- More: <http://www.last.fm/api/show/group.getWeeklyChartList>
+__getWeeklyArtistChart__
 getWeeklyArtistChart ∷ Group → Maybe From → Maybe To → APIKey → Lastfm Response
 
-
--- | Get a track chart for a group, for a given date range. If no date range is supplied, it will return the most recent track chart for this group.
---
--- More: <http://www.last.fm/api/show/group.getWeeklyTrackChart>
+__getWeeklyTrackChart__
 getWeeklyTrackChart ∷ Group → Maybe From → Maybe To → APIKey → Lastfm Response

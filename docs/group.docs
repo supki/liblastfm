@@ -1,0 +1,23 @@
+#define __getHype__ \
+-- | Get the hype list for a group. \
+More: <http://www.last.fm/api/show/group.getHype>
+
+#define __getMembers__ \
+-- | Get a list of members for this group. \
+More: <http://www.last.fm/api/show/group.getMembers>
+
+#define __getWeeklyAlbumChart__ \
+-- | Get an album chart for a group, for a given date range. If no date range is supplied, it will return the most recent album chart for this group. \
+More: <http://www.last.fm/api/show/group.getWeeklyAlbumChart>
+
+#define __getWeeklyArtistChart__ \
+-- | Get an artist chart for a group, for a given date range. If no date range is supplied, it will return the most recent artist chart for this group. \
+More: <http://www.last.fm/api/show/group.getWeeklyArtistChart>
+
+#define __getWeeklyChartList__ \
+-- | Get a list of available charts for this group, expressed as date ranges which can be sent to the chart services. \
+More: <http://www.last.fm/api/show/group.getWeeklyChartList>
+
+#define __getWeeklyTrackChart__ \
+-- | Get a track chart for a group, for a given date range. If no date range is supplied, it will return the most recent track chart for this group. \
+More: <http://www.last.fm/api/show/group.getWeeklyTrackChart>

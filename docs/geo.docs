@@ -1,0 +1,43 @@
+#define __getEvents__ \
+-- | Get all events in a specific location by country or city name. \
+More: <http://www.last.fm/api/show/geo.getEvents>
+
+#define __getMetroArtistChart__ \
+-- | Get a chart of artists for a metro. \
+More: <http://www.last.fm/api/show/geo.getMetroArtistChart>
+
+#define __getMetroHypeArtistChart__ \
+-- | Get a chart of hyped (up and coming) artists for a metro. \
+More: <http://www.last.fm/api/show/geo.getMetroHypeArtistChart>
+
+#define __getMetroHypeTrackChart__ \
+-- | Get a chart of hyped (up and coming) tracks for a metro. \
+More: <http://www.last.fm/api/show/geo.getMetroHypeTrackChart>
+
+#define __getMetroTrackChart__ \
+-- | Get a chart of tracks for a metro. \
+More: <http://www.last.fm/api/show/geo.getMetroTrackChart>
+
+#define __getMetroUniqueArtistChart__ \
+-- | Get a chart of the artists which make that metro unique. \
+More: <http://www.last.fm/api/show/geo.getMetroUniqueArtistChart>
+
+#define __getMetroUniqueTrackChart__ \
+-- | Get a chart of the tracks which make that metro unique. \
+More: <http://www.last.fm/api/show/geo.getMetroUniqueTrackChart>
+
+#define __getMetroWeeklyChartlist__ \
+-- | Get a list of available chart periods for this metro, expressed as date ranges which can be sent to the chart services. \
+More: <http://www.last.fm/api/show/geo.getMetroWeeklyChartlist>
+
+#define __getMetros__ \
+-- | Get a list of valid countries and metros for use in the other webservices. \
+More: <http://www.last.fm/api/show/geo.getMetros>
+
+#define __getTopArtists__ \
+-- | Get the most popular artists on Last.fm by country. \
+More: <http://www.last.fm/api/show/geo.getTopArtists>
+
+#define __getTopTracks__ \
+-- | Get the most popular tracks on Last.fm last week by country. \
+More: <http://www.last.fm/api/show/geo.getTopTracks>
