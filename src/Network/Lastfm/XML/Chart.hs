@@ -6,37 +6,27 @@ module Network.Lastfm.XML.Chart
   , getTopArtists, getTopTags, getTopTracks
   ) where
 
+#include "chart.docs"
+
 import Network.Lastfm.Internal
 import qualified Network.Lastfm.API.Chart as API
 
 $(xml ["getHypedArtists", "getHypedTracks", "getLovedTracks", "getTopArtists", "getTopTags", "getTopTracks"])
 
--- | Get the hyped artists chart.
---
--- More: <http://www.last.fm/api/show/chart.getHypedArtists>
+__getHypedArtists__
 getHypedArtists ∷ Maybe Page → Maybe Limit → APIKey → Lastfm Response
 
--- | Get the hyped tracks chart.
---
--- More: <http://www.last.fm/api/show/chart.getHypedTracks>
+__getHypedTracks__
 getHypedTracks ∷ Maybe Page → Maybe Limit → APIKey → Lastfm Response
 
--- | Get the most loved tracks chart.
---
--- More: <http://www.last.fm/api/show/chart.getLovedTracks>
+__getLovedTracks__
 getLovedTracks ∷ Maybe Page → Maybe Limit → APIKey → Lastfm Response
 
--- | Get the top artists chart.
---
--- More: <http://www.last.fm/api/show/chart.getTopArtists>
+__getTopArtists__
 getTopArtists ∷ Maybe Page → Maybe Limit → APIKey → Lastfm Response
 
--- | Get top tags chart.
---
--- More: <http://www.last.fm/api/show/chart.getTopTags>
+__getTopTags__
 getTopTags ∷ Maybe Page → Maybe Limit → APIKey → Lastfm Response
 
--- | Get the top tracks chart.
---
--- More: <http://www.last.fm/api/show/chart.getTopTracks>
+__getTopTracks__
 getTopTracks ∷ Maybe Page → Maybe Limit → APIKey → Lastfm Response
