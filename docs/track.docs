@@ -1,3 +1,5 @@
+/* THIS FILE IS NOT INTENDED FOR USER READING. USE HADDOCK DOCUMENTATION INSTEAD. */
+
 #define __addTags__ \
 -- | Tag a track using a list of user supplied tags. \
 More: <http://www.last.fm/api/show/track.addTags>

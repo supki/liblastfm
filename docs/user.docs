@@ -1,3 +1,5 @@
+/* THIS FILE IS NOT INTENDED FOR USER READING. USE HADDOCK DOCUMENTATION INSTEAD. */
+
 #define __getArtistTracks__ \
 -- | Get a list of tracks by a given artist scrobbled by this user, including scrobble time. Can be limited to specific timeranges, defaults to all time. \
 More: <http://www.last.fm/api/show/user.getArtistTracks>

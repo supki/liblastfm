@@ -1,3 +1,5 @@
+/* THIS FILE IS NOT INTENDED FOR USER READING. USE HADDOCK DOCUMENTATION INSTEAD. */
+
 #define __addAlbum__ \
 -- | Add an album or collection of albums to a user's Last.fm library. \
 More: <http://www.last.fm/api/show/library.addAlbum>

@@ -1,3 +1,5 @@
+/* THIS FILE IS NOT INTENDED FOR USER READING. USE HADDOCK DOCUMENTATION INSTEAD. */
+
 #define __getEvents__ \
 -- | Get all events in a specific location by country or city name. \
 More: <http://www.last.fm/api/show/geo.getEvents>

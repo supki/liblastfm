@@ -1,3 +1,5 @@
+/* THIS FILE IS NOT INTENDED FOR USER READING. USE HADDOCK DOCUMENTATION INSTEAD. */
+
 #define __attend__ \
 -- | Set a user's attendance status for an event. \
 More: <http://www.last.fm/api/show/event.attend>

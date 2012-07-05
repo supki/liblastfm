@@ -1,3 +1,5 @@
+/* THIS FILE IS NOT INTENDED FOR USER READING. USE HADDOCK DOCUMENTATION INSTEAD. */
+
 #define __getEvents__ \
 -- | Get a list of upcoming events at this venue. \
 More: <http://www.last.fm/api/show/venue.getEvents>

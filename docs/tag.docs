@@ -1,3 +1,5 @@
+/* THIS FILE IS NOT INTENDED FOR USER READING. USE HADDOCK DOCUMENTATION INSTEAD. */
+
 #define __getInfo__ \
 -- | Get the metadata for a tag. \
 More: <http://www.last.fm/api/show/tag.getInfo>
