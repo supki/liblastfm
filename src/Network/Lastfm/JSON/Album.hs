@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE TemplateHaskell #-}
 -- | Album API module
 {-# OPTIONS_HADDOCK prune #-}

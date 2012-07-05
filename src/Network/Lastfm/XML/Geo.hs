@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE TemplateHaskell #-}
 -- | Geo API module
 {-# OPTIONS_HADDOCK prune #-}

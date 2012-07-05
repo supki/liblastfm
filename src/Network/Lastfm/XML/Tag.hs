@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE TemplateHaskell #-}
 -- | Tag API module
 {-# OPTIONS_HADDOCK prune #-}

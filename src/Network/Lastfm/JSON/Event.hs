@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE TemplateHaskell #-}
 -- | Event API module
 {-# OPTIONS_HADDOCK prune #-}

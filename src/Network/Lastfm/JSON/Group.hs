@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE TemplateHaskell #-}
 -- | Group API module
 {-# OPTIONS_HADDOCK prune #-}

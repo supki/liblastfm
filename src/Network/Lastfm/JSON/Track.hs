@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE TemplateHaskell #-}
 -- | Track API module
 {-# OPTIONS_HADDOCK prune #-}

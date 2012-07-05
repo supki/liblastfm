@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE TemplateHaskell #-}
 -- | Radio API module
 {-# OPTIONS_HADDOCK prune #-}

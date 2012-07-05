@@ -62,7 +62,7 @@ Library
                    Network.Lastfm.API.Track
                    Network.Lastfm.API.User
                    Network.Lastfm.API.Venue
-  Extensions: UnicodeSyntax, CPP
+  Extensions: UnicodeSyntax
   GHC-Options: -Wall
                -fno-warn-unused-do-bind
   CPP-Options: -Idocs

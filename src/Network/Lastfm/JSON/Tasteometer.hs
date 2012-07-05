@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE TemplateHaskell #-}
 -- | Tasteometer API module
 {-# OPTIONS_HADDOCK prune #-}

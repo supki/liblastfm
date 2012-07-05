@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE TemplateHaskell #-}
 -- | Playlist API module
 {-# OPTIONS_HADDOCK prune #-}

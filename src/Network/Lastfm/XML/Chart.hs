@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE TemplateHaskell #-}
 -- | Chart API module
 {-# OPTIONS_HADDOCK prune #-}

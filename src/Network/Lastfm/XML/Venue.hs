@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE TemplateHaskell #-}
 -- | Venue API module
 {-# OPTIONS_HADDOCK prune #-}

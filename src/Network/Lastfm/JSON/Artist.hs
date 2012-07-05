@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE TemplateHaskell #-}
 -- | Artist API module
 {-# OPTIONS_HADDOCK prune #-}
