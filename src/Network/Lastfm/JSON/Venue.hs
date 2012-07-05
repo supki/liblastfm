@@ -5,22 +5,18 @@ module Network.Lastfm.JSON.Venue
   ( getEvents, getPastEvents, search
   ) where
 
+#include "venue.docs"
+
 import Network.Lastfm.Internal
 import qualified Network.Lastfm.API.Venue as API
 
 $(json ["getEvents", "getPastEvents", "search"])
 
--- | Get a list of upcoming events at this venue.
---
--- More: <http://www.last.fm/api/show/venue.getEvents>
+__getEvents__
 getEvents ∷ Venue → Maybe FestivalsOnly → APIKey → Lastfm Response
 
--- | Get a paginated list of all the events held at this venue in the past.
---
--- More: <http://www.last.fm/api/show/venue.getPastEvents>
+__getPastEvents__
 getPastEvents ∷ Venue → Maybe FestivalsOnly → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 
--- | Search for a venue by venue name.
---
--- More: <http://www.last.fm/api/show/venue.search>
+__search__
 search ∷ Venuename → Maybe Page → Maybe Limit → Maybe Country → APIKey → Lastfm Response
