@@ -1,0 +1,99 @@
+#define __getArtistTracks__ \
+-- | Get a list of tracks by a given artist scrobbled by this user, including scrobble time. Can be limited to specific timeranges, defaults to all time. \
+More: <http://www.last.fm/api/show/user.getArtistTracks>
+
+#define __getBannedTracks__ \
+-- | Returns the tracks banned by the user. \
+More: <http://www.last.fm/api/show/user.getBannedTracks>
+
+#define __getEvents__ \
+-- | Get a list of upcoming events that this user is attending. \
+More: <http://www.last.fm/api/show/user.getEvents>
+
+#define __getFriends__ \
+-- | Get a list of the user's friends on Last.fm. \
+More: <http://www.last.fm/api/show/user.getFriends>
+
+#define __getInfo__ \
+-- | Get information about a user profile. \
+More: <http://www.last.fm/api/show/user.getInfo>
+
+#define __getLovedTracks__ \
+-- | Get tracks loved by a user. \
+More: <http://www.last.fm/api/show/user.getLovedTracks>
+
+#define __getNeighbours__ \
+-- | Get a list of a user's neighbours on Last.fm. \
+More: <http://www.last.fm/api/show/user.getNeighbours>
+
+#define __getNewReleases__ \
+-- | Gets a list of forthcoming releases based on a user's musical taste. \
+More: <http://www.last.fm/api/show/user.getNewReleases>
+
+#define __getPastEvents__ \
+-- | Get a paginated list of all events a user has attended in the past. \
+More: <http://www.last.fm/api/show/user.getPastEvents>
+
+#define __getPersonalTags__ \
+-- | Get the user's personal tags. \
+More: <http://www.last.fm/api/show/user.getPersonalTags>
+
+#define __getPlaylists__ \
+-- | Get a list of a user's playlists on Last.fm. \
+More: <http://www.last.fm/api/show/user.getPlaylists>
+
+#define __getRecentStations__ \
+-- | Get a list of the recent Stations listened to by this user. \
+More: <http://www.last.fm/api/show/user.getRecentStations>
+
+#define __getRecentTracks__ \
+-- | Get a list of the recent tracks listened to by this user. Also includes the currently playing track with the nowplaying="true" attribute if the user is currently listening. \
+More: <http://www.last.fm/api/show/user.getRecentTracks>
+
+#define __getRecommendedArtists__ \
+-- | Get Last.fm artist recommendations for a user. \
+More: <http://www.last.fm/api/show/user.getRecommendedArtists>
+
+#define __getRecommendedEvents__ \
+-- | Get a paginated list of all events recommended to a user by Last.fm, based on their listening profile. \
+More: <http://www.last.fm/api/show/user.getRecommendedEvents>
+
+#define __getShouts__ \
+-- | Get shouts for this user. Also available as an rss feed. \
+More: <http://www.last.fm/api/show/user.getShouts>
+
+#define __getTopAlbums__ \
+-- | Get the top albums listened to by a user. You can stipulate a time period. Sends the overall chart by default. \
+More: <http://www.last.fm/api/show/user.getTopAlbums>
+
+#define __getTopArtists__ \
+-- | Get the top artists listened to by a user. You can stipulate a time period. Sends the overall chart by default. \
+More: <http://www.last.fm/api/show/user.getTopArtists>
+
+#define __getTopTags__ \
+-- | Get the top tags used by this user. \
+More: <http://www.last.fm/api/show/user.getTopTags>
+
+#define __getTopTracks__ \
+-- | Get the top tracks listened to by a user. You can stipulate a time period. Sends the overall chart by default. \
+More: <http://www.last.fm/api/show/user.getTopTracks>
+
+#define __getWeeklyAlbumChart__ \
+-- | Get an album chart for a user profile, for a given date range. If no date range is supplied, it will return the most recent album chart for this user. \
+More: <http://www.last.fm/api/show/user.getWeeklyAlbumChart>
+
+#define __getWeeklyArtistChart__ \
+-- | Get an artist chart for a user profile, for a given date range. If no date range is supplied, it will return the most recent artist chart for this user. \
+More: <http://www.last.fm/api/show/user.getWeeklyArtistChart>
+
+#define __getWeeklyChartList__ \
+-- | Get a list of available charts for this user, expressed as date ranges which can be sent to the chart services. \
+More: <http://www.last.fm/api/show/user.getWeeklyChartList>
+
+#define __getWeeklyTrackChart__ \
+-- | Get a track chart for a user profile, for a given date range. If no date range is supplied, it will return the most recent track chart for this user. \
+More: <http://www.last.fm/api/show/user.getWeeklyTrackChart>
+
+#define __shout__ \
+-- | Shout on this user's shoutbox. \
+More: <http://www.last.fm/api/show/user.shout>
