@@ -1,0 +1,3 @@
+#define __compare__ \
+-- | Get a Tasteometer score from two inputs, along with a list of shared artists. If the input is a User some additional information is returned. \
+More: <http://www.last.fm/api/show/tasteometer.compare>
