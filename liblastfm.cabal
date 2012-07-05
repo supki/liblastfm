@@ -65,7 +65,6 @@ Library
   Extensions: UnicodeSyntax, CPP
   GHC-Options: -Wall
                -fno-warn-unused-do-bind
-               -Werror
   CPP-Options: -Idocs
 
 source-repository head
