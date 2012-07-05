@@ -1,0 +1,7 @@
+#define __addTrack__ \
+-- | Add a track to a Last.fm user's playlist. \
+More: <http://www.last.fm/api/show/playlist.addTrack>
+
+#define __create__ \
+-- | Create a Last.fm playlist on behalf of a user. \
+More: <http://www.last.fm/api/show/playlist.create>

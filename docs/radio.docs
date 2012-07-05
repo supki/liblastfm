@@ -1,0 +1,11 @@
+#define __getPlaylist__ \
+-- | Fetch new radio content periodically in an XSPF format. \
+More: <http://www.last.fm/api/show/radio.getPlaylist>
+
+#define __search__ \
+-- | Resolve the name of a resource into a station depending on which resource it is most likely to represent. \
+More: <http://www.last.fm/api/show/radio.search>
+
+#define __tune__ \
+-- | Tune in to a Last.fm radio station. \
+More: <http://www.last.fm/api/show/radio.tune>

@@ -6,57 +6,39 @@ module Network.Lastfm.JSON.Library
   , removeAlbum, removeArtist, removeScrobble, removeTrack
   ) where
 
+#include "library.docs"
+
 import Network.Lastfm.Internal
 import qualified Network.Lastfm.API.Library as API
-  
+
 $(json ["addAlbum", "addArtist", "addTrack", "getAlbums", "getArtists", "getTracks", "removeAlbum", "removeArtist", "removeScrobble", "removeTrack"])
 
--- | Add an album or collection of albums to a user's Last.fm library.
---
--- More: <http://www.last.fm/api/show/library.addAlbum>
+__addAlbum__
 addAlbum ∷ Artist → Album → APIKey → SessionKey → Secret → Lastfm Response
 
--- | Add an artist to a user's Last.fm library.
---
--- More: <http://www.last.fm/api/show/library.addArtist>
+__addArtist__
 addArtist ∷ Artist → APIKey → SessionKey → Secret → Lastfm Response
 
--- | Add a track to a user's Last.fm library.
---
--- More: <http://www.last.fm/api/show/library.addTrack>
+__addTrack__
 addTrack ∷ Artist → Track → APIKey → SessionKey → Secret → Lastfm Response
 
--- | A paginated list of all the albums in a user's library, with play counts and tag counts.
---
--- More: <http://www.last.fm/api/show/library.getAlbums>
+__getAlbums__
 getAlbums ∷ User → Maybe Artist → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 
--- | A paginated list of all the artists in a user's library, with play counts and tag counts.
---
--- More: <http://www.last.fm/api/show/library.getArtists>
+__getArtists__
 getArtists ∷ User → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 
--- | A paginated list of all the tracks in a user's library, with play counts and tag counts.
---
--- More: <http://www.last.fm/api/show/library.getTracks>
+__getTracks__
 getTracks ∷ User → Maybe Artist → Maybe Album → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 
--- | Remove an album from a user's Last.fm library.
---
--- More: <http://www.last.fm/api/show/library.removeAlbum>
+__removeAlbum__
 removeAlbum ∷ Artist → Album → APIKey → SessionKey → Secret → Lastfm Response
 
--- | Remove an artist from a user's Last.fm library.
---
--- More: <http://www.last.fm/api/show/library.removeArtist>
+__removeArtist__
 removeArtist ∷ Artist → APIKey → SessionKey → Secret → Lastfm Response
 
--- | Remove a scrobble from a user's Last.fm library.
---
--- More: <http://www.last.fm/api/show/library.removeScrobble>
+__removeScrobble__
 removeScrobble ∷ Artist → Track → Timestamp → APIKey → SessionKey → Secret → Lastfm Response
 
--- | Remove a track from a user's Last.fm library.
---
--- More: <http://www.last.fm/api/show/library.removeTrack>
+__removeTrack__
 removeTrack ∷ Artist → Track → APIKey → SessionKey → Secret → Lastfm Response

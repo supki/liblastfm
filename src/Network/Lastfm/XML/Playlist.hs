@@ -5,17 +5,15 @@ module Network.Lastfm.XML.Playlist
   ( addTrack, create
   ) where
 
+#include "playlist.docs"
+
 import Network.Lastfm.Internal
 import qualified Network.Lastfm.API.Playlist as API
 
 $(xml ["addTrack", "create"])
 
--- | Add a track to a Last.fm user's playlist.
---
--- More: <http://www.last.fm/api/show/playlist.addTrack>
+__addTrack__
 addTrack ∷ Playlist → Artist → Track → APIKey → SessionKey → Secret → Lastfm Response
 
--- | Create a Last.fm playlist on behalf of a user.
---
--- More: <http://www.last.fm/api/show/playlist.create>
+__create__
 create ∷ Maybe Title → Maybe Description → APIKey → SessionKey → Secret → Lastfm Response
