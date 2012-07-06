@@ -3,14 +3,13 @@ module Network.Lastfm.Error where
 
 import Control.Applicative ((<$>), empty)
 import Control.Monad ((<=<))
-import Control.Monad.Error (Error)
 import Data.Aeson
 import Data.ByteString.Lazy.Char8 (ByteString)
+import Network.Curl (CurlCode)
 import Text.XML.Light
 
 data LastfmError
-  = CurlError
-  | DoesntExist
+  = DoesntExist
   | InvalidService
   | InvalidMethod
   | AuthenticationFailed
@@ -38,49 +37,80 @@ data LastfmError
   | SuspendedAPIKey
   | Deprecated
   | RateLimitExceeded
-    deriving Enum
+  | UnknownError Int
+  | CurlError CurlCode
 
 instance Show LastfmError where
-  show CurlError = "CurlError: "
-  show DoesntExist = "DoesntExist: This error does not exist"
-  show InvalidService = "InvalidService: This service does not exist"
-  show InvalidMethod = "InvalidMethod: No method with that name in this package"
-  show AuthenticationFailed = "AuthenticationFailed: You do not have permissions to access the service"
-  show InvalidFormat = "InvalidFormat: This service doesn't exist in that format"
-  show InvalidParameters = "InvalidParameters: Your request is missing a required parameter"
-  show InvalidResource = "InvalidResource: Invalid resource specified"
-  show OperationFailed = "OperationFailed: Something else went wrong"
-  show InvalidSessionKey = "InvalidSessionKey: Please re-authenticate"
-  show InvalidAPIKey = "InvalidAPIKey: You must be granted a valid key by last.fm"
-  show ServiceOffline = "ServiceOffline: This service is temporarily offline. Try again later."
-  show SubscribersOnly  = "SubscribersOnly : This station is only available to paid last.fm subscribers"
-  show InvalidMethodSignature = "InvalidMethodSignature: Invalid method signature supplied"
-  show TokenHasNotAuthorized = "TokenHasNotAuthorized: This token has not been authorized"
-  show NotForStreaming = "NotForStreaming: This item is not available for streaming."
-  show TemporaryUnavailable = "TemporaryUnavailable: The service is temporarily unavailable, please try again."
-  show LoginRequired = "LoginRequired: Login: User requires to be logged in"
-  show TrialExpired = "TrialExpired: This user has no free radio plays left. Subscription required."
-  show DoesntExistAgain = "DoesntExistAgain: This error does not exist"
-  show NotEnoughContent = "NotEnoughContent: There is not enough content to play this station"
-  show NotEnoughMembers = "NotEnoughMembers: This group does not have enough members for radio"
-  show NotEnoughFans = "NotEnoughFans: This artist does not have enough fans for for radio"
-  show NotEnoughNeighbours = "NotEnoughNeighbours: There are not enough neighbours for radio"
-  show NoPeakRadio = "NoPeakRadio: This user is not allowed to listen to radio during peak usage"
-  show RadioNotFound = "RadioNotFound: Radio station not found"
-  show SuspendedAPIKey = "SuspendedAPIKey: Access for your account has been suspended, please contact Last.fm"
-  show Deprecated = "Deprecated: This type of request is no longer supported"
-  show RateLimitExceeded = "RateLimitExceeded: Your IP has made too many requests in a short period"
+  show e = unwords $ case e of
+    DoesntExist            → ["DoesntExist:",            "This error does not exist"]
+    InvalidService         → ["InvalidService:",         "This service does not exist"]
+    InvalidMethod          → ["InvalidMethod:",          "No method with that name in this package"]
+    AuthenticationFailed   → ["AuthenticationFailed:",   "You do not have permissions to access the service"]
+    InvalidFormat          → ["InvalidFormat:",          "This service doesn't exist in that format"]
+    InvalidParameters      → ["InvalidParameters:",      "Your request is missing a required parameter"]
+    InvalidResource        → ["InvalidResource:",        "Invalid resource specified"]
+    OperationFailed        → ["OperationFailed:",        "Something else went wrong"]
+    InvalidSessionKey      → ["InvalidSessionKey:",      "Please re-authenticate"]
+    InvalidAPIKey          → ["InvalidAPIKey:",          "You must be granted a valid key by last.fm"]
+    ServiceOffline         → ["ServiceOffline:",         "This service is temporarily offline. Try again later."]
+    SubscribersOnly        → ["SubscribersOnly:",        "This station is only available to paid last.fm subscribers"]
+    InvalidMethodSignature → ["InvalidMethodSignature:", "Invalid method signature supplied"]
+    TokenHasNotAuthorized  → ["TokenHasNotAuthorized:",  "This token has not been authorized"]
+    NotForStreaming        → ["NotForStreaming:",        "This item is not available for streaming."]
+    TemporaryUnavailable   → ["TemporaryUnavailable:",   "The service is temporarily unavailable, please try again."]
+    LoginRequired          → ["LoginRequired:",          "Login: User requires to be logged in"]
+    TrialExpired           → ["TrialExpired:",           "This user has no free radio plays left. Subscription required."]
+    DoesntExistAgain       → ["DoesntExistAgain:",       "This error does not exist"]
+    NotEnoughContent       → ["NotEnoughContent:",       "There is not enough content to play this station"]
+    NotEnoughMembers       → ["NotEnoughMembers:",       "This group does not have enough members for radio"]
+    NotEnoughFans          → ["NotEnoughFans:",          "This artist does not have enough fans for for radio"]
+    NotEnoughNeighbours    → ["NotEnoughNeighbours:",    "There are not enough neighbours for radio"]
+    NoPeakRadio            → ["NoPeakRadio:",            "This user is not allowed to listen to radio during peak usage"]
+    RadioNotFound          → ["RadioNotFound:",          "Radio station not found"]
+    SuspendedAPIKey        → ["SuspendedAPIKey:",        "Access for your account has been suspended, please contact Last.fm"]
+    Deprecated             → ["Deprecated:",             "This type of request is no longer supported"]
+    RateLimitExceeded      → ["RateLimitExceeded:",      "Your IP has made too many requests in a short period"]
+    UnknownError n         → ["UnknownError:",           "Lastfm API specs say nothing about this particular error:", show n]
+    CurlError s            → ["CurlError:", show s]
 
-instance Error LastfmError
+disambiguate ∷ Int → LastfmError
+disambiguate n = case n of
+  1 → DoesntExist
+  2 → InvalidService
+  3 → InvalidMethod
+  4 → AuthenticationFailed
+  5 → InvalidFormat
+  6 → InvalidParameters
+  7 → InvalidResource
+  8 → OperationFailed
+  9 → InvalidSessionKey
+  10 → InvalidAPIKey
+  11 → ServiceOffline
+  12 → SubscribersOnly
+  13 → InvalidMethodSignature
+  14 → TokenHasNotAuthorized
+  15 → NotForStreaming
+  16 → TemporaryUnavailable
+  17 → LoginRequired
+  18 → TrialExpired
+  19 → DoesntExistAgain
+  20 → NotEnoughContent
+  21 → NotEnoughMembers
+  22 → NotEnoughFans
+  23 → NotEnoughNeighbours
+  24 → NoPeakRadio
+  25 → RadioNotFound
+  26 → SuspendedAPIKey
+  27 → Deprecated
+  28 → RateLimitExceeded
+  _ → UnknownError n
 
 xmlError ∷ ByteString → Maybe LastfmError
-xmlError r = do
-  xml ← parseXMLDoc r
-  toEnum . read <$> (findAttr (unqual "code") <=< findChild (unqual "error")) xml
+xmlError r = disambiguate . read <$> (findAttr (unqual "code") <=< findChild (unqual "error") <=< parseXMLDoc) r
 
 jsonError ∷ ByteString → Maybe LastfmError
 jsonError = decode
 
 instance FromJSON LastfmError where
-  parseJSON (Object v) = toEnum <$> v .: "error"
+  parseJSON (Object v) = disambiguate <$> v .: "error"
   parseJSON _ = empty

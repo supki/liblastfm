@@ -54,7 +54,7 @@ query γ xs = do
     CurlOK → case γ body of
                Nothing → Right body
                Just n → Left n
-    _ → Left CurlError
+    s → Left $ CurlError s
 
 curlResponse ∷ [(String, String)] → IO (CurlResponse_ [(String, String)] ByteString)
 curlResponse xs = withCurlDo $
