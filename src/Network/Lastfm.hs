@@ -4,19 +4,23 @@ module Network.Lastfm where
 
 import Control.Applicative ((<$>), empty)
 import Control.Monad (liftM)
-import Data.Aeson ((.:), FromJSON, decode, parseJSON)
-import Data.ByteString.Lazy.Char8 (ByteString)
 import Data.List (intercalate)
 import Data.Maybe (fromJust)
+
+import Data.Aeson ((.:), FromJSON, decode, parseJSON)
 import qualified Data.Aeson
+import Data.ByteString.Lazy.Char8 (ByteString)
 
 import Network.Lastfm.Error
 import Network.Lastfm.TH
 
+
 type Lastfm a = IO (Either LastfmError a)
 type Response = ByteString
 
+
 newtype Secret = Secret String
+
 
 $(newtypes "String" ["Album", "AlbumArtist", "APIKey", "Artist", "AuthToken",
   "Context", "Country", "Description", "Group", "Language", "Latitude",
@@ -27,6 +31,7 @@ $(newtypes "Bool" ["Autocorrect", "BuyLinks", "Discovery", "FestivalsOnly", "Pub
 $(newtypes "Int" ["Distance", "Duration", "Event", "Limit", "Page", "Playlist", "TrackNumber", "Venue"])
 $(newtypes "Integer" ["End", "EndTimestamp", "Fingerprint", "From", "Start", "StartTimestamp", "Timestamp", "To"])
 
+
 data Bitrate = B64 | B128
 data Multiplier = M1 | M2
 data Order = Popularity | DateAdded
@@ -35,23 +40,30 @@ data Value = ValueUser User
            | ValueArtists [Artist]
 data Period = Week | Quater | HalfYear | Year | Overall
 
+
 instance Show Value where
-  show (ValueUser _)    = "user"
+  show (ValueUser _) = "user"
   show (ValueArtists _) = "artists"
+
 
 instance FromJSON Token where
   parseJSON (Data.Aeson.Object v) = Token <$> v .: "token"
   parseJSON _ = empty
+
+
 instance FromJSON SessionKey where
   parseJSON (Data.Aeson.Object v) = SessionKey <$> ((v .: "session") >>= (.: "key"))
   parseJSON _ = empty
 
+
 simple ∷ (FromJSON a, Monad m) ⇒ m ByteString → m a
 simple = liftM (fromJust . decode)
+
 
 class Argument a where
   key ∷ a → String
   value ∷ a → String
+
 
 instance Argument a ⇒ Argument (Maybe a) where key = maybe "" key; value = maybe "" value
 instance Argument a ⇒ Argument [a] where
@@ -59,9 +71,11 @@ instance Argument a ⇒ Argument [a] where
   key [] = ""
   value = intercalate "," . map value
 
+
 boolToString ∷ Bool → String
 boolToString True = "1"
 boolToString False = "0"
+
 
 --instance Argument $first where key = const $second; value ($first a) = $func a
 $(instances "id"
@@ -98,6 +112,7 @@ $(instances "id"
   , ("Venuename", "venue")
   ])
 
+
 $( instances "boolToString"
   [ ("Autocorrect", "autocorrect")
   , ("BuyLinks", "buylinks")
@@ -108,6 +123,7 @@ $( instances "boolToString"
   , ("RTP", "rtp")
   , ("UseRecs", "userecs")
   ])
+
 
 $( instances "show"
   [ ("Distance", "distance")
@@ -128,20 +144,24 @@ $( instances "show"
   , ("To", "to")
   ])
 
+
 instance Argument Bitrate where
   key = const "bitrate"
   value B64 = "64"
   value B128 = "128"
+
 
 instance Argument Multiplier where
   key = const "speed_multiplier"
   value M1 = "1.0"
   value M2 = "2.0"
 
+
 instance Argument Order where
   key = const "order"
   value Popularity = "popularity"
-  value DateAdded  = "dateadded"
+  value DateAdded = "dateadded"
+
 
 instance Argument Status where
   key = const "status"
@@ -149,15 +169,17 @@ instance Argument Status where
   value Maybe = "1"
   value No = "2"
 
+
 instance Argument Value where
   key = const "value"
-  value (ValueUser u)     = value u
+  value (ValueUser u) = value u
   value (ValueArtists as) = value as
+
 
 instance Argument Period where
   key = const "period"
-  value Week     = "7day"
-  value Quater   = "3month"
+  value Week = "7day"
+  value Quater = "3month"
   value HalfYear = "6month"
-  value Year     = "12month"
-  value Overall  = "overall"
+  value Year = "12month"
+  value Overall = "overall"
