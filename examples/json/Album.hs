@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
-module EAlbum (common, auth) where
+module Album (main) where
 
 import Control.Applicative ((<$>), empty)
 import Data.Char (isSpace)
@@ -14,12 +14,6 @@ import Network.Lastfm.JSON.Album
 
 main ∷ IO ()
 main = common >> auth
-
-
-getConfig ∷ FilePath → IO (APIKey, SessionKey, Secret)
-getConfig fp = do
-  (apiKey:sessionKey:secret:_) ← map (drop 1 . dropWhile (/= '=') . filter (not . isSpace)) . lines <$> readFile fp
-  return (APIKey apiKey, SessionKey sessionKey, Secret secret)
 
 
 common ∷ IO ()
@@ -36,14 +30,18 @@ common = mapM_ ($ ak)
 
 
 auth ∷ IO ()
-auth = do
-  (ak, sk, s) ← getConfig "../.lastfm.conf"
-  mapM_ (\f → f ak sk s)
-    [ exampleAddTags
-    , exampleGetTagsAuth
-    , exampleRemoveTag
-    , exampleShare
-    ]
+auth =
+  do (ak, sk, s) ← getConfig "../.lastfm.conf"
+     mapM_ (\f → f ak sk s)
+       [ exampleAddTags
+       , exampleGetTagsAuth
+       , exampleRemoveTag
+       , exampleShare
+       ]
+ where
+  getConfig fp =
+    do (apiKey:sessionKey:secret:_) ← map (drop 1 . dropWhile (/= '=') . filter (not . isSpace)) . lines <$> readFile fp
+       return (APIKey apiKey, SessionKey sessionKey, Secret secret)
 
 
 exampleAddTags ∷ APIKey → SessionKey → Secret → IO ()
@@ -116,7 +114,7 @@ exampleSearch ak =
   do r ← search (Album "wall") Nothing (Just $ Limit 5) ak
      putStrLn $ case r of
        Left e → "search: ERROR! " <> show e
-       Right r' → "search: OK! 5 search results for \"wall\" query: " <> show (take 5 . unSE <$> decode r')
+       Right r' → "search: OK! 5 search results for \"wall\" query: " <> show (unSE <$> decode r')
 
 
 exampleShare ∷ APIKey → SessionKey → Secret → IO ()
