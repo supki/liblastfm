@@ -13,10 +13,7 @@ import Network.Lastfm.JSON.Album
 
 
 main ∷ IO ()
-main =
-  do (a, sk, s) ← getConfig "../.lastfm.conf"
-     common
-     auth a sk s
+main = common >> auth
 
 
 getConfig ∷ FilePath → IO (APIKey, SessionKey, Secret)
@@ -26,25 +23,27 @@ getConfig fp = do
 
 
 common ∷ IO ()
-common =
-  do mapM_ ($ ak)
-       [ exampleGetBuylinks
-       , exampleGetInfo
-       , exampleGetShouts
-       , exampleGetTags
-       , exampleGetTopTags
-       , exampleSearch
-       ]
+common = mapM_ ($ ak)
+  [ exampleGetBuylinks
+  , exampleGetInfo
+  , exampleGetShouts
+  , exampleGetTags
+  , exampleGetTopTags
+  , exampleSearch
+  ]
  where
   ak = APIKey "b25b959554ed76058ac220b7b2e0a026"
 
 
-auth ∷ APIKey → SessionKey → Secret → IO ()
-auth ak sk s =
-  do exampleAddTags ak sk s
-     exampleGetTagsAuth ak sk s
-     exampleRemoveTag ak sk s
-     exampleShare ak sk s
+auth ∷ IO ()
+auth = do
+  (ak, sk, s) ← getConfig "../.lastfm.conf"
+  mapM_ (\f → f ak sk s)
+    [ exampleAddTags
+    , exampleGetTagsAuth
+    , exampleRemoveTag
+    , exampleShare
+    ]
 
 
 exampleAddTags ∷ APIKey → SessionKey → Secret → IO ()
