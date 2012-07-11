@@ -120,5 +120,5 @@ auth Venue = Venue.auth
 main :: IO ()
 main = do args <- getArgs
           modules <- parseArgs args
-          (a, sk, s) <- getConfig ".lastfm.conf"
+          (a, sk, s) <- getConfig "../.lastfm.conf"
           mapM_ (\m -> common m >> auth m a sk s) modules
