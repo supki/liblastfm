@@ -2,8 +2,7 @@
 {-# LANGUAGE UnicodeSyntax #-}
 module Chart (main) where
 
-import Control.Applicative ((<$>), empty)
-import Data.Char (isSpace)
+import Control.Applicative ((<$>))
 import Data.Monoid ((<>))
 import Prelude hiding (GT)
 
@@ -78,27 +77,13 @@ exampleGetTopTracks ak =
 
 
 newtype GA = GA { unGA ∷ [String] } deriving Show
-
-
-instance FromJSON GA where
-  parseJSON (Object o) =
-    GA <$> ((o .: "artists") >>= (.: "artist") >>= mapM (.: "name"))
-  parseJSON _ = empty
-
-
 newtype GT = GT { unGT ∷ [String] } deriving Show
-
-
-instance FromJSON GT where
-  parseJSON (Object o) =
-    GT <$> ((o .: "tracks") >>= (.: "track") >>= mapM (.: "name"))
-  parseJSON _ = empty
-
-
 newtype GTA = GTA { unGTA ∷ [String] } deriving Show
 
 
+instance FromJSON GA where
+  parseJSON o = GA <$> (parseJSON o >>= (.: "artists") >>= (.: "artist") >>= mapM (.: "name"))
+instance FromJSON GT where
+  parseJSON o = GT <$> (parseJSON o >>= (.: "tracks") >>= (.: "track") >>= mapM (.: "name"))
 instance FromJSON GTA where
-  parseJSON (Object o) =
-    GTA <$> ((o .: "tags") >>= (.: "tag") >>= mapM (.: "name"))
-  parseJSON _ = empty
+  parseJSON o = GTA <$> (parseJSON o >>= (.: "tags") >>= (.: "tag") >>= mapM (.: "name"))

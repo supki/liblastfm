@@ -2,7 +2,7 @@
 {-# LANGUAGE UnicodeSyntax #-}
 module Artist (main) where
 
-import Control.Applicative ((<$>), empty)
+import Control.Applicative ((<$>))
 import Data.Char (isSpace)
 import Data.Monoid ((<>))
 import Prelude hiding (GT)
@@ -81,23 +81,13 @@ exampleShare ak sk s =
 
 
 newtype GA = GA { unGA ∷ [String] } deriving Show
-
-
-instance FromJSON GA where
-  parseJSON (Object o) = GA <$> ((o .: "attendees") >>= (.: "user") >>= mapM (.: "name"))
-  parseJSON _ = empty
-
-
 newtype GI = GI { unGI ∷ String } deriving Show
-
-
-instance FromJSON GI where
-  parseJSON (Object o) = GI <$> ((o .: "event") >>= (.: "venue") >>= (.: "location") >>= (.: "city"))
-  parseJSON _ = empty
-
 newtype GS = GS { unGS ∷ String } deriving Show
 
 
+instance FromJSON GA where
+  parseJSON o = GA <$> (parseJSON o >>= (.: "attendees") >>= (.: "user") >>= mapM (.: "name"))
+instance FromJSON GI where
+  parseJSON o = GI <$> (parseJSON o >>= (.: "event") >>= (.: "venue") >>= (.: "location") >>= (.: "city"))
 instance FromJSON GS where
-  parseJSON (Object o) = GS <$> ((o .: "shouts") >>= (.: "shout") >>= (.: "body"))
-  parseJSON _ = empty
+  parseJSON o = GS <$> (parseJSON o >>= (.: "shouts") >>= (.: "shout") >>= (.: "body"))

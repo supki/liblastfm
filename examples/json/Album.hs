@@ -2,7 +2,7 @@
 {-# LANGUAGE UnicodeSyntax #-}
 module Album (main) where
 
-import Control.Applicative ((<$>), empty)
+import Control.Applicative ((<$>))
 import Data.Char (isSpace)
 import Data.Monoid ((<>))
 import Prelude hiding (GT)
@@ -126,54 +126,22 @@ exampleShare ak sk s =
 
 
 newtype GBL = GBL { unGBL ∷ [String] } deriving Show
-
-
-instance FromJSON GBL where
-  parseJSON (Object o) =
-    GBL <$> ((o .: "affiliations") >>= (.: "physicals") >>= (.: "affiliation") >>= mapM (.: "supplierName"))
-  parseJSON _ = empty
-
-
 newtype GI = GI { unGI ∷ [String] } deriving Show
-
-
-instance FromJSON GI where
-  parseJSON (Object o) =
-    GI <$> ((o .: "album") >>= (.: "toptags") >>= (.: "tag") >>= mapM (.: "name"))
-  parseJSON _ = empty
-
-
 newtype GS = GS { unGS ∷ [String] } deriving Show
-
-
-instance FromJSON GS where
-  parseJSON (Object o) =
-    GS <$> ((o .: "shouts") >>= (.: "shout") >>= mapM (.: "body"))
-  parseJSON _ = empty
-
-
 newtype GT = GT { unGT ∷ [String] } deriving Show
-
-
-instance FromJSON GT where
-  parseJSON (Object o) =
-    GT <$> ((o .: "tags") >>= (.: "tag") >>= mapM (.: "name"))
-  parseJSON _ = empty
-
-
 newtype GTT = GTT { unGTT ∷ [String] } deriving Show
-
-
-instance FromJSON GTT where
-  parseJSON (Object o) =
-    GTT <$> ((o .: "toptags") >>= (.: "tag") >>= mapM (.: "count"))
-  parseJSON _ = empty
-
-
 newtype SE = SE { unSE ∷ [String] } deriving Show
 
 
+instance FromJSON GBL where
+  parseJSON o = GBL <$> (parseJSON o >>= (.: "affiliations") >>= (.: "physicals") >>= (.: "affiliation") >>= mapM (.: "supplierName"))
+instance FromJSON GI where
+  parseJSON o = GI <$> (parseJSON o >>= (.: "album") >>= (.: "toptags") >>= (.: "tag") >>= mapM (.: "name"))
+instance FromJSON GS where
+  parseJSON o = GS <$> (parseJSON o >>= (.: "shouts") >>= (.: "shout") >>= mapM (.: "body"))
+instance FromJSON GT where
+  parseJSON o = GT <$> (parseJSON o >>= (.: "tags") >>= (.: "tag") >>= mapM (.: "name"))
+instance FromJSON GTT where
+  parseJSON o = GTT <$> (parseJSON o >>= (.: "toptags") >>= (.: "tag") >>= mapM (.: "count"))
 instance FromJSON SE where
-  parseJSON (Object o) =
-    SE <$> ((o .: "results") >>= (.: "albummatches") >>= (.: "album") >>= mapM (.: "name"))
-  parseJSON _ = empty
+  parseJSON o = SE <$> (parseJSON o >>= (.: "results") >>= (.: "albummatches") >>= (.: "album") >>= mapM (.: "name"))

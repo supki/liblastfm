@@ -2,8 +2,7 @@
 {-# LANGUAGE UnicodeSyntax #-}
 module Geo (main) where
 
-import Control.Applicative ((<$>), (<*>), empty)
-import Data.Char (isSpace)
+import Control.Applicative ((<$>), (<*>))
 import Data.Monoid ((<>))
 import Prelude hiding (GT)
 
@@ -129,17 +128,12 @@ newtype GT = GT { unGT ∷ [String] } deriving Show
 
 
 instance FromJSON GA where
-  parseJSON (Object o) = GA <$> ((o .: "topartists") >>= (.: "artist") >>= mapM (.: "name"))
-  parseJSON _ = empty
+  parseJSON o = GA <$> (parseJSON o >>= (.: "topartists") >>= (.: "artist") >>= mapM (.: "name"))
 instance FromJSON GC where
-  parseJSON (Object o) = GC <$> ((o .: "weeklychartlist") >>= (.: "chart") >>= mapM (\t → (,) <$> (t .: "from") <*> (t .: "to")))
-  parseJSON _ = empty
+  parseJSON o = GC <$> (parseJSON o >>= (.: "weeklychartlist") >>= (.: "chart") >>= mapM (\t → (,) <$> (t .: "from") <*> (t .: "to")))
 instance FromJSON GE where
-  parseJSON (Object o) = GE <$> ((o .: "events") >>= (.: "event") >>= mapM (.: "id"))
-  parseJSON _ = empty
+  parseJSON o = GE <$> (parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (.: "id"))
 instance FromJSON GM where
-  parseJSON (Object o) = GM <$> ((o .: "metros") >>= (.: "metro") >>= mapM (.: "name"))
-  parseJSON _ = empty
+  parseJSON o = GM <$> (parseJSON o >>= (.: "metros") >>= (.: "metro") >>= mapM (.: "name"))
 instance FromJSON GT where
-  parseJSON (Object o) = GT <$> ((o .: "toptracks") >>= (.: "track") >>= mapM (.: "name"))
-  parseJSON _ = empty
+  parseJSON o = GT <$> (parseJSON o >>= (.: "toptracks") >>= (.: "track") >>= mapM (.: "name"))

@@ -2,7 +2,7 @@
 {-# LANGUAGE UnicodeSyntax #-}
 module Artist (main) where
 
-import Control.Applicative ((<$>), empty)
+import Control.Applicative ((<$>))
 import Data.Char (isSpace)
 import Data.Monoid ((<>))
 import Prelude hiding (GT)
@@ -198,126 +198,46 @@ exampleShare ak sk s =
 
 
 newtype GC = GC { unGC ∷ String } deriving Show
-
-
-instance FromJSON GC where
-  parseJSON (Object o) =
-    GC <$> ((o .: "corrections") >>= (.: "correction") >>= (.: "artist") >>= (.: "name"))
-  parseJSON _ = empty
-
-
 newtype GE = GE { unGE ∷ [String] } deriving Show
-
-
-instance FromJSON GE where
-  parseJSON (Object o) =
-    GE <$> ((o .: "events") >>= (.: "event") >>= mapM (\o' → (o' .: "venue") >>= (.: "name")))
-  parseJSON _ = empty
-
-
 newtype GI = GI { unGI ∷ [String] } deriving Show
-
-
-instance FromJSON GI where
-  parseJSON (Object o) =
-    GI <$> ((o .: "images") >>= (.: "image") >>= mapM (.: "url"))
-  parseJSON _ = empty
-
-
 newtype GIN = GIN { unGIN ∷ String } deriving Show
-
-
-instance FromJSON GIN where
-  parseJSON (Object o) =
-    GIN <$> ((o .: "artist") >>= (.: "stats") >>= (.: "listeners"))
-  parseJSON _ = empty
-
-
 newtype GP = GP { unGP ∷ String } deriving Show
-
-
-instance FromJSON GP where
-  parseJSON (Object o) =
-    GP <$> ((o .: "rss") >>= (.: "channel") >>= (.: "description"))
-  parseJSON _ = empty
-
-
 newtype GPE = GPE { unGPE ∷ [String] } deriving Show
-
-
-instance FromJSON GPE where
-  parseJSON (Object o) =
-    GPE <$> ((o .: "events") >>= (.: "event") >>= mapM (.: "title"))
-  parseJSON _ = empty
-
-
 newtype GS = GS { unGS ∷ [String] } deriving Show
-
-
-instance FromJSON GS where
-  parseJSON (Object o) =
-    GS <$> ((o .: "shouts") >>= (.: "shout") >>= mapM (.: "author"))
-  parseJSON _ = empty
-
-
 newtype GSI = GSI { unGSI ∷ [String] } deriving Show
-
-
-instance FromJSON GSI where
-  parseJSON (Object o) =
-    GSI <$> ((o .: "similarartists") >>= (.: "artist") >>= mapM (.: "name"))
-  parseJSON _ = empty
-
-
 newtype GT = GT { unGT ∷ [String] } deriving Show
-
-
-instance FromJSON GT where
-  parseJSON (Object o) =
-    GT <$> ((o .: "tags") >>= (.: "tag") >>= mapM (.: "name"))
-  parseJSON _ = empty
-
-
 newtype GTA = GTA { unGTA ∷ [String] } deriving Show
-
-
-instance FromJSON GTA where
-  parseJSON (Object o) =
-    GTA <$> ((o .: "topalbums") >>= (.: "album") >>= mapM (.: "name"))
-  parseJSON _ = empty
-
-
 newtype GTF = GTF { unGTF ∷ [String] } deriving Show
-
-
-instance FromJSON GTF where
-  parseJSON (Object o) =
-    GTF <$> ((o .: "topfans") >>= (.: "user") >>= mapM (.: "name"))
-  parseJSON _ = empty
-
-
 newtype GTT = GTT { unGTT ∷ [String] } deriving Show
-
-
-instance FromJSON GTT where
-  parseJSON (Object o) =
-    GTT <$> ((o .: "toptags") >>= (.: "tag") >>= mapM (.: "name"))
-  parseJSON _ = empty
-
-
 newtype GTTR = GTTR { unGTTR ∷ [String] } deriving Show
-
-
-instance FromJSON GTTR where
-  parseJSON (Object o) =
-    GTTR <$> ((o .: "toptracks") >>= (.: "track") >>= mapM (.: "name"))
-  parseJSON _ = empty
-
-
 newtype SE = SE { unSE ∷ [String] } deriving Show
 
 
+instance FromJSON GC where
+  parseJSON o = GC <$> (parseJSON o >>= (.: "corrections") >>= (.: "correction") >>= (.: "artist") >>= (.: "name"))
+instance FromJSON GE where
+  parseJSON o = GE <$> (parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (\o' → (o' .: "venue") >>= (.: "name")))
+instance FromJSON GI where
+  parseJSON o = GI <$> (parseJSON o >>= (.: "images") >>= (.: "image") >>= mapM (.: "url"))
+instance FromJSON GIN where
+  parseJSON o = GIN <$> (parseJSON o >>= (.: "artist") >>= (.: "stats") >>= (.: "listeners"))
+instance FromJSON GP where
+  parseJSON o = GP <$> (parseJSON o >>= (.: "rss") >>= (.: "channel") >>= (.: "description"))
+instance FromJSON GPE where
+  parseJSON o = GPE <$> (parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (.: "title"))
+instance FromJSON GS where
+  parseJSON o = GS <$> (parseJSON o >>= (.: "shouts") >>= (.: "shout") >>= mapM (.: "author"))
+instance FromJSON GSI where
+  parseJSON o = GSI <$> (parseJSON o >>= (.: "similarartists") >>= (.: "artist") >>= mapM (.: "name"))
+instance FromJSON GT where
+  parseJSON o = GT <$> (parseJSON o >>= (.: "tags") >>= (.: "tag") >>= mapM (.: "name"))
+instance FromJSON GTA where
+  parseJSON o = GTA <$> (parseJSON o >>= (.: "topalbums") >>= (.: "album") >>= mapM (.: "name"))
+instance FromJSON GTF where
+  parseJSON o = GTF <$> (parseJSON o >>= (.: "topfans") >>= (.: "user") >>= mapM (.: "name"))
+instance FromJSON GTT where
+  parseJSON o = GTT <$> (parseJSON o >>= (.: "toptags") >>= (.: "tag") >>= mapM (.: "name"))
+instance FromJSON GTTR where
+  parseJSON o = GTTR <$> (parseJSON o >>= (.: "toptracks") >>= (.: "track") >>= mapM (.: "name"))
 instance FromJSON SE where
-  parseJSON (Object o) =
-    SE <$> ((o .: "results") >>= (.: "artistmatches") >>= (.: "artist") >>= mapM (.: "name"))
-  parseJSON _ = empty
+  parseJSON o = SE <$> (parseJSON o >>= (.: "results") >>= (.: "artistmatches") >>= (.: "artist") >>= mapM (.: "name"))
