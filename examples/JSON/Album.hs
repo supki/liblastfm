@@ -1,36 +1,22 @@
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
-module Album (main) where
+module JSON.Album (tests) where
 
 import Control.Applicative ((<$>))
 import Data.Char (isSpace)
+import Data.Maybe (isJust)
 import Data.Monoid ((<>))
 import Prelude hiding (GT)
 
 import Data.Aeson
 import Network.Lastfm
 import Network.Lastfm.JSON.Album
+import Test.HUnit
 
 
 main ∷ IO ()
-main = common >> auth
-
-
-common ∷ IO ()
-common = mapM_ ($ ak)
-  [ exampleGetBuylinks
-  , exampleGetInfo
-  , exampleGetShouts
-  , exampleGetTags
-  , exampleGetTopTags
-  , exampleSearch
-  ]
- where
-  ak = APIKey "b25b959554ed76058ac220b7b2e0a026"
-
-
-auth ∷ IO ()
-auth =
+main =
   do (ak, sk, s) ← getConfig "../.lastfm.conf"
      mapM_ (\f → f ak sk s)
        [ exampleAddTags
@@ -52,53 +38,12 @@ exampleAddTags ak sk s =
        Right _ → "addTags: OK!"
 
 
-exampleGetBuylinks ∷ APIKey → IO ()
-exampleGetBuylinks ak =
-  do r ← getBuyLinks (Left (Artist "Pink Floyd", Album "The Wall")) Nothing (Country "United Kingdom") ak
-     putStrLn $ case r of
-       Left e → "getBuyLinks: ERROR! " <> show e
-       Right r' → "getBuyLinks: OK! Download suppliers: " <>
-                    show (unGBL <$> decode r')
-
-
-exampleGetInfo ∷ APIKey → IO ()
-exampleGetInfo ak =
-  do r ← getInfo (Left (Artist "Pink Floyd", Album "The Wall")) Nothing Nothing Nothing ak
-     putStrLn $ case r of
-       Left e → "getInfo: ERROR! " <> show e
-       Right r' → "getInfo: OK! Top 5 tags: " <> show (unGI <$> decode r')
-
-
-exampleGetShouts ∷ APIKey → IO ()
-exampleGetShouts ak =
-  do r ← getShouts (Left (Artist "Pink Floyd", Album "The Wall")) Nothing Nothing (Just $ Limit 7) ak
-     putStrLn $ case r of
-       Left e → "getShouts: ERROR! " <> show e
-       Right r' → "getShouts: OK! Last 7 shouts: " <> show (unGS <$> decode r')
-
-
-exampleGetTags ∷ APIKey → IO ()
-exampleGetTags ak =
-  do r ← getTags (Left (Artist "Pink Floyd", Album "The Wall")) Nothing (Left $ User "liblastfm") ak
-     putStrLn $ case r of
-       Left e → "getTags: ERROR! " <> show e
-       Right r' → "getTags: OK! The Wall tags: " <> show (unGT <$> decode r')
-
-
 exampleGetTagsAuth ∷ APIKey → SessionKey → Secret → IO ()
 exampleGetTagsAuth ak sk s =
   do r ← getTags (Left (Artist "Pink Floyd", Album "The Wall")) Nothing (Right (sk, s)) ak
      putStrLn $ case r of
        Left e → "getTags: ERROR! " <> show e
        Right r' → "getTags: OK! The Wall tags: " <> show (unGT <$> decode r')
-
-
-exampleGetTopTags ∷ APIKey → IO ()
-exampleGetTopTags ak =
-  do r ← getTopTags (Left (Artist "Pink Floyd", Album "The Wall")) Nothing ak
-     putStrLn $ case r of
-       Left e → "getTopTags: ERROR! " <> show e
-       Right r' → "getTopTags: OK! Top tags counts: " <> show (take 5 . unGTT <$> decode r')
 
 
 exampleRemoveTag ∷ APIKey → SessionKey → Secret → IO ()
@@ -109,20 +54,47 @@ exampleRemoveTag ak sk s =
        Right _ → "removeTag: OK!"
 
 
-exampleSearch ∷ APIKey → IO ()
-exampleSearch ak =
-  do r ← search (Album "wall") Nothing (Just $ Limit 5) ak
-     putStrLn $ case r of
-       Left e → "search: ERROR! " <> show e
-       Right r' → "search: OK! 5 search results for \"wall\" query: " <> show (unSE <$> decode r')
-
-
 exampleShare ∷ APIKey → SessionKey → Secret → IO ()
 exampleShare ak sk s =
   do r ← share (Artist "Sleep") (Album "Jerusalem") (Recipient "liblastfm") (Just $ Message "Just listen!") Nothing ak sk s
      putStrLn $ case r of
        Left e → "share: ERROR! " <> show e
        Right _ → "share: OK!"
+
+
+instance FromJSON α ⇒ Assertable (Lastfm Response, Response → Maybe α) where
+  assert (α, β) = α >>= either (assertFailure . show) (assertBool "Cannot parse JSON" . isJust . β)
+
+
+tests ∷ [Test]
+tests =
+  [ TestLabel "getBuyLinks" $ TestCase testGetBuylinks
+  , TestLabel "getInfo" $ TestCase testGetInfo
+  , TestLabel "getShouts" $ TestCase testGetShouts
+  , TestLabel "getTags" $ TestCase testGetTags
+  , TestLabel "getTopTags" $ TestCase testGetTopTags
+  , TestLabel "search" $ TestCase testSearch
+  ]
+ where
+  ak = APIKey "b25b959554ed76058ac220b7b2e0a026"
+
+  testGetBuylinks = assert
+    (getBuyLinks (Left (Artist "Pink Floyd", Album "The Wall")) Nothing (Country "United Kingdom") ak, decode ∷ Response → Maybe GBL)
+
+  testGetInfo = assert
+    (getInfo (Left (Artist "Pink Floyd", Album "The Wall")) Nothing Nothing Nothing ak, decode ∷ Response → Maybe GI)
+
+  testGetShouts = assert
+    (getShouts (Left (Artist "Pink Floyd", Album "The Wall")) Nothing Nothing (Just $ Limit 7) ak, decode ∷ Response → Maybe GS)
+
+  testGetTags = assert
+    (getTags (Left (Artist "Pink Floyd", Album "The Wall")) Nothing (Left $ User "liblastfm") ak, decode ∷ Response → Maybe GT)
+
+  testGetTopTags = assert
+    (getTopTags (Left (Artist "Pink Floyd", Album "The Wall")) Nothing ak, decode ∷ Response → Maybe GTT)
+
+  testSearch = assert
+    (search (Album "wall") Nothing (Just $ Limit 5) ak, decode ∷ Response → Maybe SE)
 
 
 newtype GBL = GBL { unGBL ∷ [String] } deriving Show
