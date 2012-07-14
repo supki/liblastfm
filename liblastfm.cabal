@@ -7,7 +7,7 @@ Author: Matvey Aksenov, Dmitry Malikov
 Maintainer: Matvey Aksenov <matvey.aksenov@gmail.com>
 Category: Network APIs
 Description: Simple but complete wrapper to Lastfm API. Can send some stuff and receive reponses from Lastfm. JSON/XML parsing is an exercise for the user.
-Cabal-Version: >= 1.6
+Cabal-Version: >= 1.8
 Build-Type: Simple
 Extra-Source-Files: docs/*.docs
 
@@ -67,6 +67,12 @@ Library
   GHC-Options: -Wall
                -fno-warn-unused-do-bind
   CPP-Options: -Idocs
+
+Test-Suite sanity-check
+  Build-Depends: base >= 3 && < 5, aeson == 0.6.*, HUnit == 1.2.4.*, liblastfm
+  Type: exitcode-stdio-1.0
+  Main-Is: TestJSON.hs
+  Hs-Source-Dirs: examples
 
 source-repository head
   type:     git

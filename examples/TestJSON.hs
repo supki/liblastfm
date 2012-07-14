@@ -1,5 +1,7 @@
 {-# LANGUAGE UnicodeSyntax #-}
-module TestJSON where
+module Main where
+
+import System.Exit (ExitCode(ExitFailure), exitSuccess, exitWith)
 
 import Test.HUnit
 import qualified JSON.Album as Album
@@ -11,9 +13,14 @@ import qualified JSON.Geo as Geo
 
 main ∷ IO ()
 main =
-  do runTestTT (TestList Album.tests)
-     runTestTT (TestList Artist.tests)
-     runTestTT (TestList Chart.tests)
-     runTestTT (TestList Event.tests)
-     runTestTT (TestList Geo.tests)
-     return ()
+  do rs ← mapM (runTestTT . TestList)
+       [ Album.tests
+       , Artist.tests
+       , Chart.tests
+       , Event.tests
+       , Geo.tests
+       ]
+     let fs = sum $ map failures rs
+     case fs of
+       0 → exitSuccess
+       n → exitWith (ExitFailure n)
