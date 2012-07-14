@@ -1,2 +1,3 @@
 dist
 examples/.lastfm.conf
+examples/lastfm-keys.json

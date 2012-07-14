@@ -14,11 +14,11 @@ import qualified JSON.Geo as Geo
 main ∷ IO ()
 main =
   do rs ← mapM (runTestTT . TestList)
-       [ Album.tests
-       , Artist.tests
-       , Chart.tests
-       , Event.tests
-       , Geo.tests
+       [ Album.public
+       , Artist.public
+       , Chart.public
+       , Event.public
+       , Geo.public
        ]
      let fs = sum $ map failures rs
      case fs of

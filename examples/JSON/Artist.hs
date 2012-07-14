@@ -1,12 +1,8 @@
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UnicodeSyntax #-}
-module JSON.Artist (tests) where
+module JSON.Artist (private, public) where
 
 import Control.Applicative ((<$>))
-import Data.Char (isSpace)
 import Data.Maybe (isJust)
-import Data.Monoid ((<>))
 import Prelude hiding (GT)
 
 import Data.Aeson
@@ -15,60 +11,35 @@ import Network.Lastfm.JSON.Artist
 import Test.HUnit
 
 
-main ∷ IO ()
-main =
-  do (ak, sk, s) ← getConfig "../.lastfm.conf"
-     mapM_ (\f → f ak sk s)
-       [ exampleAddTags
-       , exampleGetTagsAuth
-       , exampleRemoveTag
-       , exampleShare
-    {- , for shout see User.shout example -}
-       ]
- where
-  getConfig fp =
-    do (apiKey:sessionKey:secret:_) ← map (drop 1 . dropWhile (/= '=') . filter (not . isSpace)) . lines <$> readFile fp
-       return (APIKey apiKey, SessionKey sessionKey, Secret secret)
-
-
-exampleGetTagsAuth ∷ APIKey → SessionKey → Secret → IO ()
-exampleGetTagsAuth ak sk s =
-  do r ← getTags (Left $ Artist "Егор Летов") Nothing (Right (sk, s)) ak
-     putStrLn $ case r of
-       Left e → "getTags: ERROR! " <> show e
-       Right r' → "getTags: OK! Егор Летов tags: " <> show (unGT <$> decode r')
-
-
-exampleRemoveTag ∷ APIKey → SessionKey → Secret → IO ()
-exampleRemoveTag ak sk s =
-  do r ← removeTag (Artist "Егор Летов") (Tag "russian") ak sk s
-     putStrLn $ case r of
-       Left e → "removeTag: ERROR! " <> show e
-       Right _ → "removeTag: OK!"
-
-
-exampleShare ∷ APIKey → SessionKey → Secret → IO ()
-exampleShare ak sk s =
-  do r ← share (Artist "Sleep") (Recipient "liblastfm") (Just $ Message "Just listen!") Nothing ak sk s
-     putStrLn $ case r of
-       Left e → "share: ERROR! " <> show e
-       Right _ → "share: OK!"
-
-
-exampleAddTags ∷ APIKey → SessionKey → Secret → IO ()
-exampleAddTags ak sk s =
-  do r ← addTags (Artist "Егор Летов") [Tag "russian", Tag "black metal"] ak sk s
-     putStrLn $ case r of
-       Left e → "addTags: ERROR! " <> show e
-       Right _ → "addTags: OK!"
-
-
+instance Assertable (Either LastfmError Response) where
+  assert = either (assertFailure . show) (const $ return ())
 instance FromJSON α ⇒ Assertable (Lastfm Response, Response → Maybe α) where
   assert (α, β) = α >>= either (assertFailure . show) (assertBool "Cannot parse JSON" . isJust . β)
 
 
-tests ∷ [Test]
-tests =
+private ∷ APIKey → SessionKey → Secret → [Test]
+private ak sk s =
+  [ TestLabel "addTags" $ TestCase testAddTags
+  , TestLabel "getTags-authenticated" $ TestCase testGetTagsAuth
+  , TestLabel "removeTag" $ TestCase testRemoveTag
+  , TestLabel "share" $ TestCase testShare
+  ]
+ where
+  testGetTagsAuth = assert
+    (getTags (Left $ Artist "Егор Летов") Nothing (Right (sk, s)) ak, decode ∷ Response → Maybe GT)
+
+  testRemoveTag = assert $
+    removeTag (Artist "Егор Летов") (Tag "russian") ak sk s
+
+  testShare = assert $
+    share (Artist "Sleep") (Recipient "liblastfm") (Just $ Message "Just listen!") Nothing ak sk s
+
+  testAddTags = assert $
+    addTags (Artist "Егор Летов") [Tag "russian", Tag "black metal"] ak sk s
+
+
+public ∷ [Test]
+public =
   [ TestLabel "getCorrection" $ TestCase testGetCorrection
   , TestLabel "getEvents" $ TestCase testGetEvents
   , TestLabel "getImages" $ TestCase testGetImages
@@ -130,20 +101,20 @@ tests =
     (search (Artist "Mesh") Nothing (Just $ Limit 3) ak, decode ∷ Response → Maybe SE)
 
 
-newtype GC = GC { unGC ∷ String } deriving Show
-newtype GE = GE { unGE ∷ [String] } deriving Show
-newtype GI = GI { unGI ∷ [String] } deriving Show
-newtype GIN = GIN { unGIN ∷ String } deriving Show
-newtype GP = GP { unGP ∷ String } deriving Show
-newtype GPE = GPE { unGPE ∷ [String] } deriving Show
-newtype GS = GS { unGS ∷ [String] } deriving Show
-newtype GSI = GSI { unGSI ∷ [String] } deriving Show
-newtype GT = GT { unGT ∷ [String] } deriving Show
-newtype GTA = GTA { unGTA ∷ [String] } deriving Show
-newtype GTF = GTF { unGTF ∷ [String] } deriving Show
-newtype GTT = GTT { unGTT ∷ [String] } deriving Show
-newtype GTTR = GTTR { unGTTR ∷ [String] } deriving Show
-newtype SE = SE { unSE ∷ [String] } deriving Show
+newtype GC = GC String deriving Show
+newtype GE = GE [String] deriving Show
+newtype GI = GI [String] deriving Show
+newtype GIN = GIN String deriving Show
+newtype GP = GP String deriving Show
+newtype GPE = GPE [String] deriving Show
+newtype GS = GS [String] deriving Show
+newtype GSI = GSI [String] deriving Show
+newtype GT = GT [String] deriving Show
+newtype GTA = GTA [String] deriving Show
+newtype GTF = GTF [String] deriving Show
+newtype GTT = GTT [String] deriving Show
+newtype GTTR = GTTR [String] deriving Show
+newtype SE = SE [String] deriving Show
 
 
 instance FromJSON GC where

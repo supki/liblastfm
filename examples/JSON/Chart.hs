@@ -1,7 +1,5 @@
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UnicodeSyntax #-}
-module JSON.Chart (tests) where
+module JSON.Chart (public) where
 
 import Control.Applicative ((<$>))
 import Data.Maybe (isJust)
@@ -17,8 +15,8 @@ instance FromJSON α ⇒ Assertable (Lastfm Response, Response → Maybe α) whe
   assert (α, β) = α >>= either (assertFailure . show) (assertBool "Cannot parse JSON" . isJust . β)
 
 
-tests ∷ [Test]
-tests =
+public ∷ [Test]
+public =
   [ TestLabel "getHypedArtists" $ TestCase testGetHypedArtists
   , TestLabel "getHypedTracks" $ TestCase testGetHypedTracks
   , TestLabel "getLovedTracks" $ TestCase testGetLovedTracks

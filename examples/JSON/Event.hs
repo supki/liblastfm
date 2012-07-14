@@ -1,12 +1,8 @@
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UnicodeSyntax #-}
-module JSON.Event (tests) where
+module JSON.Event (private, public) where
 
 import Control.Applicative ((<$>))
-import Data.Char (isSpace)
 import Data.Maybe (isJust)
-import Data.Monoid ((<>))
 import Prelude hiding (GT)
 
 import Data.Aeson
@@ -15,42 +11,27 @@ import Network.Lastfm.JSON.Event
 import Test.HUnit
 
 
-main ∷ IO ()
-main =
-  do (ak, sk, s) ← getConfig "../.lastfm.conf"
-     mapM_ (\f → f ak sk s)
-       [ exampleAttend
-       , exampleShare
-    {- , for shout see User.shout example -}
-       ]
- where
-  getConfig fp =
-    do (apiKey:sessionKey:secret:_) ← map (drop 1 . dropWhile (/= '=') . filter (not . isSpace)) . lines <$> readFile fp
-       return (APIKey apiKey, SessionKey sessionKey, Secret secret)
-
-
-exampleAttend ∷ APIKey → SessionKey → Secret → IO ()
-exampleAttend ak sk s =
-  do r ← attend (Event 3142549) Maybe ak sk s
-     putStrLn $ case r of
-       Left e → "attend: ERROR! " <> show e
-       Right _ → "attend: OK!"
-
-
-exampleShare ∷ APIKey → SessionKey → Secret → IO ()
-exampleShare ak sk s =
-  do r ← share (Event 3142549) (Recipient "liblastfm") (Just $ Message "Just listen!") Nothing ak sk s
-     putStrLn $ case r of
-       Left e → "share: ERROR! " <> show e
-       Right _ → "share: OK!"
-
-
+instance Assertable (Either LastfmError Response) where
+  assert = either (assertFailure . show) (const $ return ())
 instance FromJSON α ⇒ Assertable (Lastfm Response, Response → Maybe α) where
   assert (α, β) = α >>= either (assertFailure . show) (assertBool "Cannot parse JSON" . isJust . β)
 
 
-tests ∷ [Test]
-tests =
+private ∷ APIKey → SessionKey → Secret → [Test]
+private ak sk s =
+  [ TestLabel "attend" $ TestCase testAttend
+  , TestLabel "share" $ TestCase testShare
+  ]
+ where
+  testAttend = assert $
+    attend (Event 3142549) Maybe ak sk s
+
+  testShare = assert $
+    share (Event 3142549) (Recipient "liblastfm") (Just $ Message "Just listen!") Nothing ak sk s
+
+
+public ∷ [Test]
+public =
   [ TestLabel "getAttendees" $ TestCase testGetAttendees
   , TestLabel "getInfo" $ TestCase testGetInfo
   , TestLabel "getShouts" $ TestCase testGetShouts

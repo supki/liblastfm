@@ -11,6 +11,10 @@ cabal-version: >= 1.8
 build-type: Simple
 extra-source-files: docs/*.docs
 
+flag test_auth
+  description: Test authentication requiring LastFM API too.
+  default: False
+
 library
   build-depends: base >= 3 && < 5,
                  template-haskell >= 2.5 && < 2.8,
@@ -77,14 +81,34 @@ library
                -fno-warn-unused-do-bind
   cpp-options: -Idocs
 
-test-suite sanity-check
+test-suite json-no-authentication
   build-depends: base >= 3 && < 5,
                  aeson == 0.6.*,
                  HUnit == 1.2.4.*,
                  liblastfm
   type: exitcode-stdio-1.0
-  main-is: TestJSON.hs
+  main-is: json-no-auth.hs
   hs-source-dirs: examples
+  extensions: OverloadedStrings, UnicodeSyntax
+  ghc-options: -Wall
+               -fno-warn-unused-do-bind
+               -fno-warn-orphans
+
+test-suite json-authentication
+  build-depends: base >= 3 && < 5,
+                 bytestring == 0.9.*,
+                 aeson == 0.6.*,
+                 HUnit == 1.2.4.*,
+                 liblastfm
+  type: exitcode-stdio-1.0
+  main-is: json-auth.hs
+  hs-source-dirs: examples
+  extensions: OverloadedStrings, UnicodeSyntax
+  ghc-options: -Wall
+               -fno-warn-unused-do-bind
+               -fno-warn-orphans
+  if !flag(test_auth)
+     buildable: False
 
 source-repository head
   type:     git

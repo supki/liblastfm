@@ -1,12 +1,8 @@
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UnicodeSyntax #-}
-module JSON.Album (tests) where
+module JSON.Album (private, public) where
 
 import Control.Applicative ((<$>))
-import Data.Char (isSpace)
 import Data.Maybe (isJust)
-import Data.Monoid ((<>))
 import Prelude hiding (GT)
 
 import Data.Aeson
@@ -15,59 +11,35 @@ import Network.Lastfm.JSON.Album
 import Test.HUnit
 
 
-main ∷ IO ()
-main =
-  do (ak, sk, s) ← getConfig "../.lastfm.conf"
-     mapM_ (\f → f ak sk s)
-       [ exampleAddTags
-       , exampleGetTagsAuth
-       , exampleRemoveTag
-       , exampleShare
-       ]
- where
-  getConfig fp =
-    do (apiKey:sessionKey:secret:_) ← map (drop 1 . dropWhile (/= '=') . filter (not . isSpace)) . lines <$> readFile fp
-       return (APIKey apiKey, SessionKey sessionKey, Secret secret)
-
-
-exampleAddTags ∷ APIKey → SessionKey → Secret → IO ()
-exampleAddTags ak sk s =
-  do r ← addTags (Artist "Pink Floyd", Album "The Wall") [Tag "70s", Tag "awesome", Tag "classic"] ak sk s
-     putStrLn $ case r of
-       Left e → "addTags: ERROR! " <> show e
-       Right _ → "addTags: OK!"
-
-
-exampleGetTagsAuth ∷ APIKey → SessionKey → Secret → IO ()
-exampleGetTagsAuth ak sk s =
-  do r ← getTags (Left (Artist "Pink Floyd", Album "The Wall")) Nothing (Right (sk, s)) ak
-     putStrLn $ case r of
-       Left e → "getTags: ERROR! " <> show e
-       Right r' → "getTags: OK! The Wall tags: " <> show (unGT <$> decode r')
-
-
-exampleRemoveTag ∷ APIKey → SessionKey → Secret → IO ()
-exampleRemoveTag ak sk s =
-  do r ← removeTag (Artist "Pink Floyd") (Album "The Wall") (Tag "awesome") ak sk s
-     putStrLn $ case r of
-       Left e → "removeTag: ERROR! " <> show e
-       Right _ → "removeTag: OK!"
-
-
-exampleShare ∷ APIKey → SessionKey → Secret → IO ()
-exampleShare ak sk s =
-  do r ← share (Artist "Sleep") (Album "Jerusalem") (Recipient "liblastfm") (Just $ Message "Just listen!") Nothing ak sk s
-     putStrLn $ case r of
-       Left e → "share: ERROR! " <> show e
-       Right _ → "share: OK!"
-
-
+instance Assertable (Either LastfmError Response) where
+  assert = either (assertFailure . show) (const $ return ())
 instance FromJSON α ⇒ Assertable (Lastfm Response, Response → Maybe α) where
   assert (α, β) = α >>= either (assertFailure . show) (assertBool "Cannot parse JSON" . isJust . β)
 
 
-tests ∷ [Test]
-tests =
+private ∷ APIKey → SessionKey → Secret → [Test]
+private ak sk s =
+  [ TestLabel "addTags" $ TestCase testAddTags
+  , TestLabel "getTags-authenticated" $ TestCase testGetTagsAuth
+  , TestLabel "removeTag" $ TestCase testRemoveTag
+  , TestLabel "share" $ TestCase testShare
+  ]
+ where
+  testAddTags = assert $
+    addTags (Artist "Pink Floyd", Album "The Wall") [Tag "70s", Tag "awesome", Tag "classic"] ak sk s
+
+  testGetTagsAuth = assert
+    (getTags (Left (Artist "Pink Floyd", Album "The Wall")) Nothing (Right (sk, s)) ak, decode ∷ Response → Maybe GT)
+
+  testRemoveTag = assert $
+    removeTag (Artist "Pink Floyd") (Album "The Wall") (Tag "awesome") ak sk s
+
+  testShare = assert $
+    share (Artist "Sleep") (Album "Jerusalem") (Recipient "liblastfm") (Just $ Message "Just listen!") Nothing ak sk s
+
+
+public ∷ [Test]
+public =
   [ TestLabel "getBuyLinks" $ TestCase testGetBuylinks
   , TestLabel "getInfo" $ TestCase testGetInfo
   , TestLabel "getShouts" $ TestCase testGetShouts
@@ -97,12 +69,12 @@ tests =
     (search (Album "wall") Nothing (Just $ Limit 5) ak, decode ∷ Response → Maybe SE)
 
 
-newtype GBL = GBL { unGBL ∷ [String] } deriving Show
-newtype GI = GI { unGI ∷ [String] } deriving Show
-newtype GS = GS { unGS ∷ [String] } deriving Show
-newtype GT = GT { unGT ∷ [String] } deriving Show
-newtype GTT = GTT { unGTT ∷ [String] } deriving Show
-newtype SE = SE { unSE ∷ [String] } deriving Show
+newtype GBL = GBL [String] deriving Show
+newtype GI = GI [String] deriving Show
+newtype GS = GS [String] deriving Show
+newtype GT = GT [String] deriving Show
+newtype GTT = GTT [String] deriving Show
+newtype SE = SE [String] deriving Show
 
 
 instance FromJSON GBL where
