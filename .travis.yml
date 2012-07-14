@@ -1,3 +1,2 @@
 language: haskell
-before_install:
-    - "cabal install HUnit --constraint='HUnit < 1.2.5'"
+after_install: "cabal install HUnit --constraint='HUnit < 1.2.5'"
