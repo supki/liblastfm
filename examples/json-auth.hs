@@ -10,6 +10,7 @@ import Test.HUnit
 import qualified JSON.Album as Album
 import qualified JSON.Artist as Artist
 import qualified JSON.Event as Event
+import qualified JSON.Library as Library
 
 
 main ∷ IO ()
@@ -21,6 +22,7 @@ main =
               [ Album.private
               , Artist.private
               , Event.private
+              , Library.private
               ]
             let fs = sum $ map failures rs
             case fs of
