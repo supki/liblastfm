@@ -3,7 +3,6 @@ module JSON.Venue (public) where
 
 import Control.Applicative ((<$>))
 import Data.Maybe (isJust)
-import Prelude hiding (GT)
 
 import Data.Aeson
 import Network.Lastfm
