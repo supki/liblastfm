@@ -12,6 +12,7 @@ import qualified JSON.Geo as Geo
 import qualified JSON.Group as Group
 import qualified JSON.Library as Library
 import qualified JSON.Venue as Venue
+import qualified JSON.Tasteometer as Tasteometer
 
 
 main ∷ IO ()
@@ -24,6 +25,7 @@ main =
        , Geo.public
        , Group.public
        , Library.public
+       , Tasteometer.public
        , Venue.public
        ]
      let fs = sum $ map failures rs
