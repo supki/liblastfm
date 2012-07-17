@@ -40,7 +40,7 @@ getTopArtists t tag limit page apiKey = callAPI t
 
 getTopTags ∷ ResponseType → APIKey → Lastfm Response
 getTopTags t apiKey = callAPI t
-  [ (#) (Method "tag.getTopArtists")
+  [ (#) (Method "tag.getTopTags")
   , (#) apiKey
   ]
 
