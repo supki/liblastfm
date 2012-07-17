@@ -11,8 +11,9 @@ import qualified JSON.Event as Event
 import qualified JSON.Geo as Geo
 import qualified JSON.Group as Group
 import qualified JSON.Library as Library
-import qualified JSON.Venue as Venue
+import qualified JSON.Tag as Tag
 import qualified JSON.Tasteometer as Tasteometer
+import qualified JSON.Venue as Venue
 
 
 main ∷ IO ()
@@ -25,6 +26,7 @@ main =
        , Geo.public
        , Group.public
        , Library.public
+       , Tag.public
        , Tasteometer.public
        , Venue.public
        ]
