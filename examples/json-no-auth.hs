@@ -11,6 +11,7 @@ import qualified JSON.Event as Event
 import qualified JSON.Geo as Geo
 import qualified JSON.Group as Group
 import qualified JSON.Library as Library
+import qualified JSON.Radio as Radio
 import qualified JSON.Tag as Tag
 import qualified JSON.Tasteometer as Tasteometer
 import qualified JSON.Venue as Venue
@@ -26,6 +27,7 @@ main =
        , Geo.public
        , Group.public
        , Library.public
+       , Radio.public
        , Tag.public
        , Tasteometer.public
        , Venue.public

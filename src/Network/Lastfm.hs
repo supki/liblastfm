@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 module Network.Lastfm
-  ( Lastfm, Response, LastfmError
+  ( Lastfm, Response, LastfmError(..)
   , Secret(..)
   , Argument(..)
   , Album(..)
