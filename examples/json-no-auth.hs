@@ -11,6 +11,7 @@ import qualified JSON.Event as Event
 import qualified JSON.Geo as Geo
 import qualified JSON.Group as Group
 import qualified JSON.Library as Library
+import qualified JSON.Venue as Venue
 
 
 main ∷ IO ()
@@ -23,6 +24,7 @@ main =
        , Geo.public
        , Group.public
        , Library.public
+       , Venue.public
        ]
      let fs = sum $ map failures rs
      case fs of
