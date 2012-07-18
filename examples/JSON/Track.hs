@@ -99,10 +99,7 @@ public =
     (getSimilar (Left (Artist "Pink Floyd", Track "Comfortably Numb")) Nothing (Just $ Limit 4) ak, decode ∷ Response → Maybe GSI)
 
   testGetTags = assert
-    -- works
-    (getTags (Left (Artist "AC/DC", Track "Hells Bells")) Nothing (Left $ User "RJ") ak, decode ∷ Response → Maybe GT)
-    -- fails
-    -- (getTags (Left (Artist "Jefferson Airplane", Track "White Rabbit")) Nothing (Left $ User "liblastfm") ak, decode ∷ Response → Maybe GT)
+    (getTags (Left (Artist "Jefferson Airplane", Track "White Rabbit")) Nothing (Left $ User "liblastfm") ak, decode ∷ Response → Maybe GT)
 
   testGetTopFans = assert
     (getTopFans (Left (Artist "Pink Floyd", Track "Comfortably Numb")) Nothing ak, decode ∷ Response → Maybe GTF)
@@ -120,7 +117,7 @@ newtype GFM = GFM [String] deriving Show
 newtype GI = GI String deriving Show
 newtype GSH = GSH [String] deriving Show
 newtype GSI = GSI [String] deriving Show
-newtype GT = GT [String] deriving Show
+newtype GT = GT String deriving Show
 newtype GTA = GTA [String] deriving Show
 newtype GTF = GTF [String] deriving Show
 newtype GTT = GTT [String] deriving Show
@@ -140,7 +137,7 @@ instance FromJSON GSH where
 instance FromJSON GSI where
   parseJSON o = GSI <$> (parseJSON o >>= (.: "similartracks") >>= (.: "track") >>= mapM (.: "name"))
 instance FromJSON GT where
-  parseJSON o = GT <$> (parseJSON o >>= (.: "tags") >>= (.: "tag") >>= mapM (.: "name"))
+  parseJSON o = GT <$> (parseJSON o >>= (.: "tags") >>= (.: "tag") >>= (.: "name"))
 instance FromJSON GTA where
   parseJSON o = GTA <$> (parseJSON o >>= (.: "tags") >>= (.: "tag") >>= mapM (.: "name"))
 instance FromJSON GTF where
