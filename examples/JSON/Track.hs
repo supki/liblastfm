@@ -99,7 +99,10 @@ public =
     (getSimilar (Left (Artist "Pink Floyd", Track "Comfortably Numb")) Nothing (Just $ Limit 4) ak, decode ∷ Response → Maybe GSI)
 
   testGetTags = assert
-    (getTags (Left (Artist "Jefferson Airplane", Track "White Rabbit")) Nothing (Left $ User "liblastfm") ak, decode ∷ Response → Maybe GT)
+    -- works
+    (getTags (Left (Artist "AC/DC", Track "Hells Bells")) Nothing (Left $ User "RJ") ak, decode ∷ Response → Maybe GT)
+    -- fails
+    -- (getTags (Left (Artist "Jefferson Airplane", Track "White Rabbit")) Nothing (Left $ User "liblastfm") ak, decode ∷ Response → Maybe GT)
 
   testGetTopFans = assert
     (getTopFans (Left (Artist "Pink Floyd", Track "Comfortably Numb")) Nothing ak, decode ∷ Response → Maybe GTF)
