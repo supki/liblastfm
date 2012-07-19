@@ -1,2 +1,0 @@
-language: haskell
-after_install: "cabal install HUnit --constraint='HUnit < 1.2.5'"
