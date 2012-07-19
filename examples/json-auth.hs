@@ -14,6 +14,7 @@ import qualified JSON.Library as Library
 import qualified JSON.Playlist as Playlist
 import qualified JSON.Radio as Radio
 import qualified JSON.User as User
+import qualified JSON.Track as Track
 
 
 main ∷ IO ()
@@ -29,6 +30,7 @@ main =
               , Playlist.private
               , Radio.private
               , User.private
+              , Track.private
               ]
             let fs = sum $ map failures rs
             case fs of

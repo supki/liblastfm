@@ -14,6 +14,7 @@ import qualified JSON.Library as Library
 import qualified JSON.Radio as Radio
 import qualified JSON.Tag as Tag
 import qualified JSON.Tasteometer as Tasteometer
+import qualified JSON.Track as Track
 import qualified JSON.Venue as Venue
 import qualified JSON.User as User
 
@@ -31,6 +32,7 @@ main =
        , Radio.public
        , Tag.public
        , Tasteometer.public
+       , Track.public
        , Venue.public
        , User.public
        ]
