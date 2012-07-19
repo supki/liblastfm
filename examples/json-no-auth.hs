@@ -15,6 +15,7 @@ import qualified JSON.Radio as Radio
 import qualified JSON.Tag as Tag
 import qualified JSON.Tasteometer as Tasteometer
 import qualified JSON.Venue as Venue
+import qualified JSON.User as User
 
 
 main ∷ IO ()
@@ -31,6 +32,7 @@ main =
        , Tag.public
        , Tasteometer.public
        , Venue.public
+       , User.public
        ]
      let fs = sum $ map failures rs
      case fs of
