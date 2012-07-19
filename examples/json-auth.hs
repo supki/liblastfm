@@ -1,6 +1,7 @@
 module Main where
 
 import Control.Applicative (empty)
+import Control.Monad (when)
 import System.Exit (ExitCode(ExitFailure), exitSuccess, exitWith)
 
 import qualified Data.ByteString.Lazy as B
@@ -13,26 +14,31 @@ import qualified JSON.Event as Event
 import qualified JSON.Library as Library
 import qualified JSON.Playlist as Playlist
 import qualified JSON.Radio as Radio
+import System.Directory (doesFileExist)
 
 
 main ∷ IO ()
 main =
-  do keys ← B.readFile "examples/lastfm-keys.json"
-     case decode keys of
-       Just (Keys ak sk s) →
-         do rs ← mapM (runTestTT . TestList . \f → f ak sk s)
-              [ Album.private
-              , Artist.private
-              , Event.private
-              , Library.private
-              , Playlist.private
-              , Radio.private
-              ]
-            let fs = sum $ map failures rs
-            case fs of
-              0 → exitSuccess
-              n → exitWith (ExitFailure n)
-       Nothing → exitWith (ExitFailure 127)
+  do exists ← doesFileExist keysPath
+     when exists $
+       do keys ← B.readFile keysPath
+          case decode keys of
+            Just (Keys ak sk s) →
+              do rs ← mapM (runTestTT . TestList . \f → f ak sk s)
+                   [ Album.private
+                   , Artist.private
+                   , Event.private
+                   , Library.private
+                   , Playlist.private
+                   , Radio.private
+                   ]
+                 let fs = sum $ map failures rs
+                 case fs of
+                   0 → exitSuccess
+                   n → exitWith (ExitFailure n)
+            Nothing → exitWith (ExitFailure 127)
+ where
+  keysPath = "examples/lastfm-keys.json"
 
 
 data Keys = Keys APIKey SessionKey Secret
