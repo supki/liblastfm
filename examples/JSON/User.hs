@@ -23,18 +23,19 @@ private ak sk s =
   , TestLabel "getRecommendedEvents" $ TestCase testGetRecommendedEvents
   , TestLabel "shout" $ TestCase testShout
   ]
-  where
-    testGetRecentStations = assert
-      (getRecentStations (User "liblastfm") Nothing (Just $ Limit 10) ak sk s, decode ∷ Response → Maybe GRS)
+ where
+  testGetRecentStations = assert
+    (getRecentStations (User "liblastfm") Nothing (Just $ Limit 10) ak sk s, decode ∷ Response → Maybe GRS)
 
-    testGetRecommendedArtists = assert
-      (getRecommendedArtists Nothing (Just $ Limit 10) ak sk s, decode ∷ Response → Maybe GRA)
+  testGetRecommendedArtists = assert
+    (getRecommendedArtists Nothing (Just $ Limit 10) ak sk s, decode ∷ Response → Maybe GRA)
 
-    testGetRecommendedEvents = assert
-      (getRecommendedEvents Nothing (Just $ Limit 10) ak sk s, decode ∷ Response → Maybe GRE)
+  testGetRecommendedEvents = assert
+    (getRecommendedEvents Nothing (Just $ Limit 10) ak sk s, decode ∷ Response → Maybe GRE)
 
-    testShout = assert $
-      shout (User "liblastfm") (Message "test message") ak sk s
+  testShout = assert $
+    shout (User "liblastfm") (Message "test message") ak sk s
+
 
 public ∷ [Test]
 public =
@@ -60,71 +61,72 @@ public =
   , TestLabel "getWeeklyChartList" $ TestCase testGetWeeklyChartList
   , TestLabel "getWeeklyTrackChart" $ TestCase testGetWeeklyTrackChart
   ]
-  where
-    ak = APIKey "b25b959554ed76058ac220b7b2e0a026"
+ where
+  ak = APIKey "b25b959554ed76058ac220b7b2e0a026"
 
-    testGetArtistTracks = assert
-      (getArtistTracks (User "smpcln") (Artist "Dvar") Nothing Nothing Nothing ak, decode ∷ Response → Maybe GAT)
+  testGetArtistTracks = assert
+    (getArtistTracks (User "smpcln") (Artist "Dvar") Nothing Nothing Nothing ak, decode ∷ Response → Maybe GAT)
 
-    testGetBannedTracks = assert
-      (getBannedTracks (User "smpcln") Nothing (Just $ Limit 10) ak, decode ∷ Response → Maybe GBT)
+  testGetBannedTracks = assert
+    (getBannedTracks (User "smpcln") Nothing (Just $ Limit 10) ak, decode ∷ Response → Maybe GBT)
 
-    testGetEvents = assert
-      (getEvents (User "chansonnier") Nothing (Just $ Limit 5) Nothing ak, decode ∷ Response → Maybe GE)
+  testGetEvents = assert
+    (getEvents (User "chansonnier") Nothing (Just $ Limit 5) Nothing ak, decode ∷ Response → Maybe GE)
 
-    testGetFriends = assert
-      (getFriends (User "smpcln") Nothing Nothing (Just $ Limit 10) ak, decode ∷ Response → Maybe GF)
+  testGetFriends = assert
+    (getFriends (User "smpcln") Nothing Nothing (Just $ Limit 10) ak, decode ∷ Response → Maybe GF)
 
-    testGetPlayCount = assert
-      (getInfo (Just (User "smpcln")) ak, decode ∷ Response → Maybe GPC)
+  testGetPlayCount = assert
+    (getInfo (Just (User "smpcln")) ak, decode ∷ Response → Maybe GPC)
 
-    testGetLovedTracks = assert
-      (getLovedTracks (User "smpcln") Nothing (Just $ Limit 10) ak, decode ∷ Response → Maybe GLT)
+  testGetLovedTracks = assert
+    (getLovedTracks (User "smpcln") Nothing (Just $ Limit 10) ak, decode ∷ Response → Maybe GLT)
 
-    testGetNeighbours = assert
-      (getNeighbours (User "smpcln") (Just $ Limit 10) ak, decode ∷ Response → Maybe GN)
+  testGetNeighbours = assert
+    (getNeighbours (User "smpcln") (Just $ Limit 10) ak, decode ∷ Response → Maybe GN)
 
-    testGetNewReleases = assert
-      (getNewReleases (User "smpcln") Nothing ak, decode ∷ Response → Maybe GNR)
+  testGetNewReleases = assert
+    (getNewReleases (User "smpcln") Nothing ak, decode ∷ Response → Maybe GNR)
 
-    testGetPastEvents = assert
-      (getPastEvents (User "mokele") Nothing (Just $ Limit 5) ak, decode ∷ Response → Maybe GPE)
+  testGetPastEvents = assert
+    (getPastEvents (User "mokele") Nothing (Just $ Limit 5) ak, decode ∷ Response → Maybe GPE)
 
-    testGetPersonalTags = assert
-      (getPersonalTags (User "crackedcore") (Tag "rhythmic noise") (TaggingType "artist") Nothing (Just $ Limit 10) ak, decode ∷ Response → Maybe GPT)
+  testGetPersonalTags = assert
+    (getPersonalTags (User "crackedcore") (Tag "rhythmic noise") (TaggingType "artist") Nothing (Just $ Limit 10) ak, decode ∷ Response → Maybe GPT)
 
-    testGetPlaylists = assert
-      (getPlaylists (User "mokele") ak, decode ∷ Response → Maybe GP)
+  testGetPlaylists = assert
+    (getPlaylists (User "mokele") ak, decode ∷ Response → Maybe GP)
 
-    testGetRecentTracks = assert
-      (getRecentTracks (User "smpcln") Nothing (Just $ Limit 10) Nothing Nothing ak, decode ∷ Response → Maybe GRT)
+  testGetRecentTracks = assert
+    (getRecentTracks (User "smpcln") Nothing (Just $ Limit 10) Nothing Nothing ak, decode ∷ Response → Maybe GRT)
 
-    testGetShouts = assert
-      (getShouts (User "smpcln") Nothing (Just $ Limit 2) ak, decode ∷ Response → Maybe GS)
+  testGetShouts = assert
+    (getShouts (User "smpcln") Nothing (Just $ Limit 2) ak, decode ∷ Response → Maybe GS)
 
-    testGetTopAlbums = assert
-      (getTopAlbums (User "smpcln") Nothing Nothing (Just $ Limit 5) ak, decode ∷ Response → Maybe GTAL)
+  testGetTopAlbums = assert
+    (getTopAlbums (User "smpcln") Nothing Nothing (Just $ Limit 5) ak, decode ∷ Response → Maybe GTAL)
 
-    testGetTopArtists = assert
-      (getTopArtists (User "smpcln") Nothing Nothing (Just $ Limit 5) ak, decode ∷ Response → Maybe GTAR)
+  testGetTopArtists = assert
+    (getTopArtists (User "smpcln") Nothing Nothing (Just $ Limit 5) ak, decode ∷ Response → Maybe GTAR)
 
-    testGetTopTags = assert
-      (getTopTags (User "smpcln") (Just $ Limit 10) ak, decode ∷ Response → Maybe GTTA)
+  testGetTopTags = assert
+    (getTopTags (User "smpcln") (Just $ Limit 10) ak, decode ∷ Response → Maybe GTTA)
 
-    testGetTopTracks = assert
-      (getTopTracks (User "smpcln") Nothing Nothing (Just $ Limit 10) ak, decode ∷ Response → Maybe GTTR)
+  testGetTopTracks = assert
+    (getTopTracks (User "smpcln") Nothing Nothing (Just $ Limit 10) ak, decode ∷ Response → Maybe GTTR)
 
-    testGetWeeklyAlbumChart = assert
-      (getWeeklyAlbumChart (User "rj") Nothing Nothing ak, decode ∷ Response → Maybe GWALC)
+  testGetWeeklyAlbumChart = assert
+    (getWeeklyAlbumChart (User "rj") Nothing Nothing ak, decode ∷ Response → Maybe GWALC)
 
-    testGetWeeklyArtistChart = assert
-      (getWeeklyArtistChart (User "rj") Nothing Nothing ak, decode ∷ Response → Maybe GWARC)
+  testGetWeeklyArtistChart = assert
+    (getWeeklyArtistChart (User "rj") Nothing Nothing ak, decode ∷ Response → Maybe GWARC)
 
-    testGetWeeklyChartList = assert
-      (getWeeklyChartList (User "rj") ak, decode ∷ Response → Maybe GWCL)
+  testGetWeeklyChartList = assert
+    (getWeeklyChartList (User "rj") ak, decode ∷ Response → Maybe GWCL)
 
-    testGetWeeklyTrackChart = assert
-      (getWeeklyTrackChart (User "rj") Nothing Nothing ak, decode ∷ Response → Maybe GWTC)
+  testGetWeeklyTrackChart = assert
+    (getWeeklyTrackChart (User "rj") Nothing Nothing ak, decode ∷ Response → Maybe GWTC)
+
 
 newtype GAT = GAT [String] deriving Show
 newtype GBT = GBT [String] deriving Show
@@ -150,6 +152,7 @@ newtype GWALC = GWALC [String] deriving Show
 newtype GWARC = GWARC [String] deriving Show
 newtype GWCL = GWCL [String] deriving Show
 newtype GWTC = GWTC [String] deriving Show
+
 
 instance FromJSON GAT where
   parseJSON o = GAT <$> (parseJSON o >>= (.: "artisttracks") >>= (.: "track") >>= mapM (.: "name"))

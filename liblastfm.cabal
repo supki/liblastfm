@@ -7,12 +7,12 @@ author: Matvey Aksenov, Dmitry Malikov
 maintainer: Matvey Aksenov <matvey.aksenov@gmail.com>
 category: Network APIs
 description: Simple but complete wrapper to Lastfm API. Can send some stuff and receive reponses from Lastfm. JSON/XML parsing is an exercise for the user.
-cabal-version: >= 1.8
+cabal-version: >= 1.9.2
 build-type: Simple
 extra-source-files: docs/*.docs
 
-flag test_auth
-  description: Test authentication requiring LastFM API too.
+flag test-authentication
+  description: Test authentication dependent LastFM API too.
   default: False
 
 library
@@ -107,7 +107,7 @@ test-suite json-authentication
   ghc-options: -Wall
                -fno-warn-unused-do-bind
                -fno-warn-orphans
-  if !flag(test_auth)
+  if !flag(test-authentication)
      buildable: False
 
 source-repository head

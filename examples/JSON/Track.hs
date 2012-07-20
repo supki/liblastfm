@@ -31,7 +31,6 @@ private ak sk s =
   , TestLabel "updateNowPlaying" $ TestCase testUpdateNowPlaying
   ]
  where
-
   testAddTags = assert $
     addTags (Artist "Jefferson Airplane") (Track "White rabbit") [Tag "60s", Tag "awesome"] ak sk s
 
@@ -76,8 +75,7 @@ public =
   , TestLabel "getTopTags" $ TestCase testGetTopTags
   , TestLabel "search" $ TestCase testSearch
   ]
-  where
-
+ where
   ak = APIKey "b25b959554ed76058ac220b7b2e0a026"
 
   testGetBuylinks = assert
