@@ -10,9 +10,10 @@ module Network.Lastfm.XML.Library
 #include "library.docs"
 
 import Network.Lastfm.Internal
+import Network.Lastfm.XML (xmlWrapper)
 import qualified Network.Lastfm.API.Library as API
 
-$(xml ["addAlbum", "addArtist", "addTrack", "getAlbums", "getArtists", "getTracks", "removeAlbum", "removeArtist", "removeScrobble", "removeTrack"])
+$(xmlWrapper ["addAlbum", "addArtist", "addTrack", "getAlbums", "getArtists", "getTracks", "removeAlbum", "removeArtist", "removeScrobble", "removeTrack"])
 
 __addAlbum__
 addAlbum ∷ Artist → Album → APIKey → SessionKey → Secret → Lastfm Response

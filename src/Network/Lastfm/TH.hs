@@ -1,30 +1,10 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE ViewPatterns #-}
 module Network.Lastfm.TH
-  ( ResponseType(..)
-  , xml, json
-  , instances, newtypes
+  ( instances, newtypes
   ) where
 
 import Language.Haskell.TH
-
-
--- Desired type of Lastfm response
-data ResponseType = XML | JSON
-
-
--- Construct XML wrapper to specified API function
-xml ∷ [String] → Q [Dec]
-xml = mapM func
-  where
-   func xs = funD (mkName xs) [clause [] (normalB $ appE (varE (mkName ("API." ++ xs))) [e| XML |]) []]
-
-
--- Construct JSON wrapper to specified API function
-json ∷ [String] → Q [Dec]
-json = mapM func
-  where
-   func xs = funD (mkName xs) [clause [] (normalB $ appE (varE (mkName ("API." ++ xs))) [e| JSON |]) []]
 
 
 instances ∷ String → [(String, String)] → Q [Dec]

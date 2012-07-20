@@ -11,9 +11,10 @@ module Network.Lastfm.JSON.Tasteometer
 import Prelude hiding (compare)
 
 import Network.Lastfm.Internal
+import Network.Lastfm.JSON (jsonWrapper)
 import qualified Network.Lastfm.API.Tasteometer as API
 
-$(json ["compare"])
+$(jsonWrapper ["compare"])
 
 __compare__
 compare ∷ Value → Value → Maybe Limit → APIKey → Lastfm Response

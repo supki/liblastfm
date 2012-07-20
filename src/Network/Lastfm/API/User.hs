@@ -8,7 +8,7 @@ module Network.Lastfm.API.User
 
 import Network.Lastfm.Internal
 
-getArtistTracks ∷ ResponseType → User → Artist → Maybe StartTimestamp → Maybe EndTimestamp → Maybe Page → APIKey → Lastfm Response
+getArtistTracks ∷ Format → User → Artist → Maybe StartTimestamp → Maybe EndTimestamp → Maybe Page → APIKey → Lastfm Response
 getArtistTracks t user artist startTimestamp endTimestamp page apiKey = callAPI t
   [ (#) (Method "user.getArtistTracks")
   , (#) user
@@ -19,7 +19,7 @@ getArtistTracks t user artist startTimestamp endTimestamp page apiKey = callAPI 
   , (#) apiKey
   ]
 
-getBannedTracks ∷ ResponseType → User → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getBannedTracks ∷ Format → User → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 getBannedTracks t user page limit apiKey = callAPI t
   [ (#) (Method "user.getBannedTracks")
   , (#) user
@@ -28,7 +28,7 @@ getBannedTracks t user page limit apiKey = callAPI t
   , (#) apiKey
   ]
 
-getEvents ∷ ResponseType → User → Maybe Page → Maybe Limit → Maybe FestivalsOnly → APIKey → Lastfm Response
+getEvents ∷ Format → User → Maybe Page → Maybe Limit → Maybe FestivalsOnly → APIKey → Lastfm Response
 getEvents t user page limit festivalsOnly apiKey = callAPI t
   [ (#) (Method "user.getEvents")
   , (#) user
@@ -38,7 +38,7 @@ getEvents t user page limit festivalsOnly apiKey = callAPI t
   , (#) apiKey
   ]
 
-getFriends ∷ ResponseType → User → Maybe RecentTracks → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getFriends ∷ Format → User → Maybe RecentTracks → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 getFriends t user recentTracks page limit apiKey = callAPI t
   [ (#) (Method "user.getFriends")
   , (#) user
@@ -48,14 +48,14 @@ getFriends t user recentTracks page limit apiKey = callAPI t
   , (#) apiKey
   ]
 
-getInfo ∷ ResponseType → Maybe User → APIKey → Lastfm Response
+getInfo ∷ Format → Maybe User → APIKey → Lastfm Response
 getInfo t user apiKey = callAPI t
   [ (#) (Method "user.getInfo")
   , (#) user
   , (#) apiKey
   ]
 
-getLovedTracks ∷ ResponseType → User → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getLovedTracks ∷ Format → User → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 getLovedTracks t user page limit apiKey = callAPI t
   [ (#) (Method "user.getLovedTracks")
   , (#) user
@@ -64,7 +64,7 @@ getLovedTracks t user page limit apiKey = callAPI t
   , (#) apiKey
   ]
 
-getNeighbours ∷ ResponseType → User → Maybe Limit → APIKey → Lastfm Response
+getNeighbours ∷ Format → User → Maybe Limit → APIKey → Lastfm Response
 getNeighbours t user limit apiKey = callAPI t
   [ (#) (Method "user.getNeighbours")
   , (#) user
@@ -72,7 +72,7 @@ getNeighbours t user limit apiKey = callAPI t
   , (#) apiKey
   ]
 
-getNewReleases ∷ ResponseType → User → Maybe UseRecs → APIKey → Lastfm Response
+getNewReleases ∷ Format → User → Maybe UseRecs → APIKey → Lastfm Response
 getNewReleases t user useRecs apiKey = callAPI t
   [ (#) (Method "user.getNewReleases")
   , (#) user
@@ -80,7 +80,7 @@ getNewReleases t user useRecs apiKey = callAPI t
   , (#) apiKey
   ]
 
-getPastEvents ∷ ResponseType → User → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getPastEvents ∷ Format → User → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 getPastEvents t user page limit apiKey = callAPI t
   [ (#) (Method "user.getPastEvents")
   , (#) user
@@ -89,7 +89,7 @@ getPastEvents t user page limit apiKey = callAPI t
   , (#) apiKey
   ]
 
-getPersonalTags ∷ ResponseType
+getPersonalTags ∷ Format
                 → User
                 → Tag
                 → TaggingType
@@ -107,14 +107,14 @@ getPersonalTags t user tag taggingType page limit apiKey = callAPI t
   , (#) apiKey
   ]
 
-getPlaylists ∷ ResponseType → User → APIKey → Lastfm Response
+getPlaylists ∷ Format → User → APIKey → Lastfm Response
 getPlaylists t user apiKey = callAPI t
   [ (#) (Method "user.getPlaylists")
   , (#) user
   , (#) apiKey
   ]
 
-getRecentStations ∷ ResponseType → User → Maybe Page → Maybe Limit → APIKey → SessionKey → Secret → Lastfm Response
+getRecentStations ∷ Format → User → Maybe Page → Maybe Limit → APIKey → SessionKey → Secret → Lastfm Response
 getRecentStations t user page limit apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "user.getRecentStations")
   , (#) user
@@ -124,7 +124,7 @@ getRecentStations t user page limit apiKey sessionKey secret = callAPIsigned t s
   , (#) sessionKey
   ]
 
-getRecentTracks ∷ ResponseType → User → Maybe Page → Maybe Limit → Maybe From → Maybe To → APIKey → Lastfm Response
+getRecentTracks ∷ Format → User → Maybe Page → Maybe Limit → Maybe From → Maybe To → APIKey → Lastfm Response
 getRecentTracks t user page limit from to apiKey = callAPI t
   [ (#) (Method "user.getRecentTracks")
   , (#) user
@@ -135,7 +135,7 @@ getRecentTracks t user page limit from to apiKey = callAPI t
   , (#) apiKey
   ]
 
-getRecommendedArtists ∷ ResponseType → Maybe Page → Maybe Limit → APIKey → SessionKey → Secret → Lastfm Response
+getRecommendedArtists ∷ Format → Maybe Page → Maybe Limit → APIKey → SessionKey → Secret → Lastfm Response
 getRecommendedArtists t page limit apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "user.getRecommendedArtists")
   , (#) page
@@ -144,7 +144,7 @@ getRecommendedArtists t page limit apiKey sessionKey secret = callAPIsigned t se
   , (#) sessionKey
   ]
 
-getRecommendedEvents ∷ ResponseType → Maybe Page → Maybe Limit → APIKey → SessionKey → Secret → Lastfm Response
+getRecommendedEvents ∷ Format → Maybe Page → Maybe Limit → APIKey → SessionKey → Secret → Lastfm Response
 getRecommendedEvents t page limit apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "user.getRecommendedEvents")
   , (#) page
@@ -153,7 +153,7 @@ getRecommendedEvents t page limit apiKey sessionKey secret = callAPIsigned t sec
   , (#) sessionKey
   ]
 
-getShouts ∷ ResponseType → User → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getShouts ∷ Format → User → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 getShouts t user page limit apiKey = callAPI t
   [ (#) (Method "user.getShouts")
   , (#) user
@@ -162,7 +162,7 @@ getShouts t user page limit apiKey = callAPI t
   , (#) apiKey
   ]
 
-getTopAlbums ∷ ResponseType → User → Maybe Period → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getTopAlbums ∷ Format → User → Maybe Period → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 getTopAlbums t user period page limit apiKey = callAPI t
   [ (#) (Method "user.getTopAlbums")
   , (#) user
@@ -172,7 +172,7 @@ getTopAlbums t user period page limit apiKey = callAPI t
   , (#) apiKey
   ]
 
-getTopArtists ∷ ResponseType → User → Maybe Period → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getTopArtists ∷ Format → User → Maybe Period → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 getTopArtists t user period page limit apiKey = callAPI t
   [ (#) (Method "user.getTopArtists")
   , (#) user
@@ -182,7 +182,7 @@ getTopArtists t user period page limit apiKey = callAPI t
   , (#) apiKey
   ]
 
-getTopTags ∷ ResponseType → User → Maybe Limit → APIKey → Lastfm Response
+getTopTags ∷ Format → User → Maybe Limit → APIKey → Lastfm Response
 getTopTags t user limit apiKey = callAPI t
   [ (#) (Method "user.getTopTags")
   , (#) user
@@ -190,7 +190,7 @@ getTopTags t user limit apiKey = callAPI t
   , (#) apiKey
   ]
 
-getTopTracks ∷ ResponseType → User → Maybe Period → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getTopTracks ∷ Format → User → Maybe Period → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 getTopTracks t user period page limit apiKey = callAPI t
   [ (#) (Method "user.getTopTracks")
   , (#) user
@@ -200,7 +200,7 @@ getTopTracks t user period page limit apiKey = callAPI t
   , (#) apiKey
   ]
 
-getWeeklyAlbumChart ∷ ResponseType → User → Maybe From → Maybe To → APIKey → Lastfm Response
+getWeeklyAlbumChart ∷ Format → User → Maybe From → Maybe To → APIKey → Lastfm Response
 getWeeklyAlbumChart t user from to apiKey = callAPI t
   [ (#) (Method "user.getWeeklyAlbumChart")
   , (#) user
@@ -209,7 +209,7 @@ getWeeklyAlbumChart t user from to apiKey = callAPI t
   , (#) apiKey
   ]
 
-getWeeklyArtistChart ∷ ResponseType → User → Maybe From → Maybe To → APIKey → Lastfm Response
+getWeeklyArtistChart ∷ Format → User → Maybe From → Maybe To → APIKey → Lastfm Response
 getWeeklyArtistChart t user from to apiKey = callAPI t
   [ (#) (Method "user.getWeeklyArtistChart")
   , (#) user
@@ -218,14 +218,14 @@ getWeeklyArtistChart t user from to apiKey = callAPI t
   , (#) apiKey
   ]
 
-getWeeklyChartList ∷ ResponseType → User → APIKey → Lastfm Response
+getWeeklyChartList ∷ Format → User → APIKey → Lastfm Response
 getWeeklyChartList t user apiKey = callAPI t
   [ (#) (Method "user.getWeeklyChartList")
   , (#) user
   , (#) apiKey
   ]
 
-getWeeklyTrackChart ∷ ResponseType → User → Maybe From → Maybe To → APIKey → Lastfm Response
+getWeeklyTrackChart ∷ Format → User → Maybe From → Maybe To → APIKey → Lastfm Response
 getWeeklyTrackChart t user from to apiKey = callAPI t
   [ (#) (Method "user.getWeeklyTrackChart")
   , (#) user
@@ -234,7 +234,7 @@ getWeeklyTrackChart t user from to apiKey = callAPI t
   , (#) apiKey
   ]
 
-shout ∷ ResponseType → User → Message → APIKey → SessionKey → Secret → Lastfm Response
+shout ∷ Format → User → Message → APIKey → SessionKey → Secret → Lastfm Response
 shout t user message apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "user.shout")
   , (#) user

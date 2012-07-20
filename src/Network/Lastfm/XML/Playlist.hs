@@ -9,9 +9,10 @@ module Network.Lastfm.XML.Playlist
 #include "playlist.docs"
 
 import Network.Lastfm.Internal
+import Network.Lastfm.XML (xmlWrapper)
 import qualified Network.Lastfm.API.Playlist as API
 
-$(xml ["addTrack", "create"])
+$(xmlWrapper ["addTrack", "create"])
 
 __addTrack__
 addTrack ∷ Playlist → Artist → Track → APIKey → SessionKey → Secret → Lastfm Response

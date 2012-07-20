@@ -10,9 +10,10 @@ module Network.Lastfm.JSON.Library
 #include "library.docs"
 
 import Network.Lastfm.Internal
+import Network.Lastfm.JSON (jsonWrapper)
 import qualified Network.Lastfm.API.Library as API
 
-$(json ["addAlbum", "addArtist", "addTrack", "getAlbums", "getArtists", "getTracks", "removeAlbum", "removeArtist", "removeScrobble", "removeTrack"])
+$(jsonWrapper ["addAlbum", "addArtist", "addTrack", "getAlbums", "getArtists", "getTracks", "removeAlbum", "removeArtist", "removeScrobble", "removeTrack"])
 
 __addAlbum__
 addAlbum ∷ Artist → Album → APIKey → SessionKey → Secret → Lastfm Response

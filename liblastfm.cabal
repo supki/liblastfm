@@ -61,6 +61,8 @@ library
   other-modules:   Network.Lastfm.Internal
                    Network.Lastfm.TH
                    Network.Lastfm.Error
+                   Network.Lastfm.JSON
+                   Network.Lastfm.XML
                    Network.Lastfm.API.Album
                    Network.Lastfm.API.Artist
                    Network.Lastfm.API.Auth

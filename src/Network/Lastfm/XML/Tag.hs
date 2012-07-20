@@ -10,9 +10,10 @@ module Network.Lastfm.XML.Tag
 #include "tag.docs"
 
 import Network.Lastfm.Internal
+import Network.Lastfm.XML (xmlWrapper)
 import qualified Network.Lastfm.API.Tag as API
 
-$(xml ["getInfo", "getSimilar", "getTopAlbums", "getTopArtists", "getTopTags", "getTopTracks", "getWeeklyArtistChart", "getWeeklyChartList", "search"])
+$(xmlWrapper ["getInfo", "getSimilar", "getTopAlbums", "getTopArtists", "getTopTags", "getTopTracks", "getWeeklyArtistChart", "getWeeklyChartList", "search"])
 
 __getInfo__
 getInfo ∷ Tag → Maybe Language → APIKey → Lastfm Response

@@ -11,9 +11,10 @@ module Network.Lastfm.JSON.Geo
 #include "geo.docs"
 
 import Network.Lastfm.Internal
+import Network.Lastfm.JSON (jsonWrapper)
 import qualified Network.Lastfm.API.Geo as API
 
-$(json ["getEvents", "getMetroArtistChart", "getMetroHypeArtistChart", "getMetroHypeTrackChart", "getMetroTrackChart", "getMetroUniqueArtistChart", "getMetroUniqueTrackChart", "getMetroWeeklyChartlist", "getMetros", "getTopArtists", "getTopTracks"])
+$(jsonWrapper ["getEvents", "getMetroArtistChart", "getMetroHypeArtistChart", "getMetroHypeTrackChart", "getMetroTrackChart", "getMetroUniqueArtistChart", "getMetroUniqueTrackChart", "getMetroWeeklyChartlist", "getMetros", "getTopArtists", "getTopTracks"])
 
 __getEvents__
 getEvents ∷ Maybe Latitude

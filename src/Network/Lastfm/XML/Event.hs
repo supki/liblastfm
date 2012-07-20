@@ -9,9 +9,10 @@ module Network.Lastfm.XML.Event
 #include "event.docs"
 
 import Network.Lastfm.Internal
+import Network.Lastfm.XML (xmlWrapper)
 import qualified Network.Lastfm.API.Event as API
 
-$(xml ["attend", "getAttendees", "getInfo", "getShouts", "share", "shout"])
+$(xmlWrapper ["attend", "getAttendees", "getInfo", "getShouts", "share", "shout"])
 
 __attend__
 attend ∷ Event → Status → APIKey → SessionKey → Secret → Lastfm Response

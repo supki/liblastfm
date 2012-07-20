@@ -9,9 +9,10 @@ module Network.Lastfm.XML.Radio
 #include "radio.docs"
 
 import Network.Lastfm.Internal
+import Network.Lastfm.XML (xmlWrapper)
 import qualified Network.Lastfm.API.Radio as API
 
-$(xml ["getPlaylist", "search", "tune"])
+$(xmlWrapper ["getPlaylist", "search", "tune"])
 
 __getPlaylist__
 getPlaylist ∷ Maybe Discovery

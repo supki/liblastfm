@@ -10,9 +10,10 @@ module Network.Lastfm.JSON.Chart
 #include "chart.docs"
 
 import Network.Lastfm.Internal
+import Network.Lastfm.JSON (jsonWrapper)
 import qualified Network.Lastfm.API.Chart as API
 
-$(json ["getHypedArtists", "getHypedTracks", "getLovedTracks", "getTopArtists", "getTopTags", "getTopTracks"])
+$(jsonWrapper ["getHypedArtists", "getHypedTracks", "getLovedTracks", "getTopArtists", "getTopTags", "getTopTracks"])
 
 __getHypedArtists__
 getHypedArtists ∷ Maybe Page → Maybe Limit → APIKey → Lastfm Response

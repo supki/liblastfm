@@ -9,9 +9,10 @@ module Network.Lastfm.XML.Group
 #include "group.docs"
 
 import Network.Lastfm.Internal
+import Network.Lastfm.XML (xmlWrapper)
 import qualified Network.Lastfm.API.Group as API
 
-$(xml ["getHype", "getMembers", "getWeeklyChartList", "getWeeklyAlbumChart", "getWeeklyArtistChart", "getWeeklyTrackChart"])
+$(xmlWrapper ["getHype", "getMembers", "getWeeklyChartList", "getWeeklyAlbumChart", "getWeeklyArtistChart", "getWeeklyTrackChart"])
 
 __getHype__
 getHype ∷ Group → APIKey → Lastfm Response

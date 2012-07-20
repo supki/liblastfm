@@ -10,9 +10,10 @@ module Network.Lastfm.XML.Chart
 #include "chart.docs"
 
 import Network.Lastfm.Internal
+import Network.Lastfm.XML (xmlWrapper)
 import qualified Network.Lastfm.API.Chart as API
 
-$(xml ["getHypedArtists", "getHypedTracks", "getLovedTracks", "getTopArtists", "getTopTags", "getTopTracks"])
+$(xmlWrapper ["getHypedArtists", "getHypedTracks", "getLovedTracks", "getTopArtists", "getTopTags", "getTopTracks"])
 
 __getHypedArtists__
 getHypedArtists ∷ Maybe Page → Maybe Limit → APIKey → Lastfm Response

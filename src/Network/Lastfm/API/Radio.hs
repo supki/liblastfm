@@ -4,7 +4,7 @@ module Network.Lastfm.API.Radio
 
 import Network.Lastfm.Internal
 
-getPlaylist ∷ ResponseType
+getPlaylist ∷ Format
             → Maybe Discovery
             → Maybe RTP
             → Maybe BuyLinks
@@ -25,14 +25,14 @@ getPlaylist t discovery rtp buylinks multiplier bitrate apiKey sessionKey secret
   , (#) sessionKey
   ]
 
-search ∷ ResponseType → Name → APIKey → Lastfm Response
+search ∷ Format → Name → APIKey → Lastfm Response
 search t name apiKey = callAPI t
   [ (#) (Method "radio.search")
   , (#) name
   , (#) apiKey
   ]
 
-tune ∷ ResponseType → Maybe Language → Station → APIKey → SessionKey → Secret → Lastfm Response
+tune ∷ Format → Maybe Language → Station → APIKey → SessionKey → Secret → Lastfm Response
 tune t language station apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "radio.tune")
   , (#) language

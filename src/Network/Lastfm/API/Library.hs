@@ -5,7 +5,7 @@ module Network.Lastfm.API.Library
 
 import Network.Lastfm.Internal
 
-addAlbum ∷ ResponseType → Artist → Album → APIKey → SessionKey → Secret → Lastfm Response
+addAlbum ∷ Format → Artist → Album → APIKey → SessionKey → Secret → Lastfm Response
 addAlbum t artist album apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "library.addAlbum")
   , (#) artist
@@ -14,7 +14,7 @@ addAlbum t artist album apiKey sessionKey secret = callAPIsigned t secret
   , (#) sessionKey
   ]
 
-addArtist ∷ ResponseType → Artist → APIKey → SessionKey → Secret → Lastfm Response
+addArtist ∷ Format → Artist → APIKey → SessionKey → Secret → Lastfm Response
 addArtist t artist apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "library.addArtist")
   , (#) artist
@@ -22,7 +22,7 @@ addArtist t artist apiKey sessionKey secret = callAPIsigned t secret
   , (#) sessionKey
   ]
 
-addTrack ∷ ResponseType → Artist → Track → APIKey → SessionKey → Secret → Lastfm Response
+addTrack ∷ Format → Artist → Track → APIKey → SessionKey → Secret → Lastfm Response
 addTrack t artist track apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "library.addTrack")
   , (#) artist
@@ -31,7 +31,7 @@ addTrack t artist track apiKey sessionKey secret = callAPIsigned t secret
   , (#) sessionKey
   ]
 
-getAlbums ∷ ResponseType → User → Maybe Artist → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getAlbums ∷ Format → User → Maybe Artist → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 getAlbums t user artist page limit apiKey = callAPI t
   [ (#) (Method "library.getAlbums")
   , (#) user
@@ -41,7 +41,7 @@ getAlbums t user artist page limit apiKey = callAPI t
   , (#) apiKey
   ]
 
-getArtists ∷ ResponseType → User → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getArtists ∷ Format → User → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 getArtists t user page limit apiKey = callAPI t
   [ (#) (Method "library.getArtists")
   , (#) user
@@ -50,7 +50,7 @@ getArtists t user page limit apiKey = callAPI t
   , (#) apiKey
   ]
 
-getTracks ∷ ResponseType → User → Maybe Artist → Maybe Album → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getTracks ∷ Format → User → Maybe Artist → Maybe Album → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 getTracks t user artist album page limit apiKey = callAPI t
   [ (#) (Method "library.getTracks")
   , (#) user
@@ -61,7 +61,7 @@ getTracks t user artist album page limit apiKey = callAPI t
   , (#) apiKey
   ]
 
-removeAlbum ∷ ResponseType → Artist → Album → APIKey → SessionKey → Secret → Lastfm Response
+removeAlbum ∷ Format → Artist → Album → APIKey → SessionKey → Secret → Lastfm Response
 removeAlbum t artist album apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "library.removeAlbum")
   , (#) artist
@@ -70,7 +70,7 @@ removeAlbum t artist album apiKey sessionKey secret = callAPIsigned t secret
   , (#) sessionKey
   ]
 
-removeArtist ∷ ResponseType → Artist → APIKey → SessionKey → Secret → Lastfm Response
+removeArtist ∷ Format → Artist → APIKey → SessionKey → Secret → Lastfm Response
 removeArtist t artist apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "library.removeArtist")
   , (#) artist
@@ -78,7 +78,7 @@ removeArtist t artist apiKey sessionKey secret = callAPIsigned t secret
   , (#) sessionKey
   ]
 
-removeScrobble ∷ ResponseType → Artist → Track → Timestamp → APIKey → SessionKey → Secret → Lastfm Response
+removeScrobble ∷ Format → Artist → Track → Timestamp → APIKey → SessionKey → Secret → Lastfm Response
 removeScrobble t artist track timestamp apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "library.removeScrobble")
   , (#) artist
@@ -88,7 +88,7 @@ removeScrobble t artist track timestamp apiKey sessionKey secret = callAPIsigned
   , (#) sessionKey
   ]
 
-removeTrack ∷ ResponseType → Artist → Track → APIKey → SessionKey → Secret → Lastfm Response
+removeTrack ∷ Format → Artist → Track → APIKey → SessionKey → Secret → Lastfm Response
 removeTrack t artist track apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "library.removeTrack")
   , (#) artist

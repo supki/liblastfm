@@ -13,9 +13,10 @@ module Network.Lastfm.JSON.User
 #include "user.docs"
 
 import Network.Lastfm.Internal
+import Network.Lastfm.JSON (jsonWrapper)
 import qualified Network.Lastfm.API.User as API
 
-$(json ["getArtistTracks", "getBannedTracks", "getEvents", "getFriends", "getInfo", "getLovedTracks", "getNeighbours", "getNewReleases", "getPastEvents", "getPersonalTags", "getPlaylists", "getRecentStations", "getRecentTracks", "getRecommendedArtists", "getRecommendedEvents", "getShouts", "getTopAlbums", "getTopArtists", "getTopTags", "getTopTracks", "getWeeklyAlbumChart", "getWeeklyArtistChart", "getWeeklyChartList", "getWeeklyTrackChart", "shout"])
+$(jsonWrapper ["getArtistTracks", "getBannedTracks", "getEvents", "getFriends", "getInfo", "getLovedTracks", "getNeighbours", "getNewReleases", "getPastEvents", "getPersonalTags", "getPlaylists", "getRecentStations", "getRecentTracks", "getRecommendedArtists", "getRecommendedEvents", "getShouts", "getTopAlbums", "getTopArtists", "getTopTags", "getTopTracks", "getWeeklyAlbumChart", "getWeeklyArtistChart", "getWeeklyChartList", "getWeeklyTrackChart", "shout"])
 
 __getArtistTracks__
 getArtistTracks ∷ User → Artist → Maybe StartTimestamp → Maybe EndTimestamp → Maybe Page → APIKey → Lastfm Response

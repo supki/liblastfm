@@ -7,7 +7,7 @@ module Network.Lastfm.API.Artist
 import Control.Arrow ((|||))
 import Network.Lastfm.Internal
 
-addTags ∷ ResponseType → Artist → [Tag] → APIKey → SessionKey → Secret → Lastfm Response
+addTags ∷ Format → Artist → [Tag] → APIKey → SessionKey → Secret → Lastfm Response
 addTags t artist tags apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "artist.addTags")
   , (#) artist
@@ -16,14 +16,14 @@ addTags t artist tags apiKey sessionKey secret = callAPIsigned t secret
   , (#) sessionKey
   ]
 
-getCorrection ∷ ResponseType → Artist → APIKey → Lastfm Response
+getCorrection ∷ Format → Artist → APIKey → Lastfm Response
 getCorrection t artist apiKey = callAPI t
   [ (#) (Method "artist.getCorrection")
   , (#) artist
   , (#) apiKey
   ]
 
-getEvents ∷ ResponseType → Either Artist Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → Maybe FestivalsOnly → APIKey → Lastfm Response
+getEvents ∷ Format → Either Artist Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → Maybe FestivalsOnly → APIKey → Lastfm Response
 getEvents t a autocorrect page limit festivalsOnly apiKey = callAPI t $
   target a ++
   [ (#) (Method "artist.getEvents")
@@ -34,7 +34,7 @@ getEvents t a autocorrect page limit festivalsOnly apiKey = callAPI t $
   , (#) apiKey
   ]
 
-getImages ∷ ResponseType → Either Artist Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → Maybe Order → APIKey → Lastfm Response
+getImages ∷ Format → Either Artist Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → Maybe Order → APIKey → Lastfm Response
 getImages t a autocorrect page limit order apiKey = callAPI t $
   target a ++
   [ (#) (Method "artist.getImages")
@@ -45,7 +45,7 @@ getImages t a autocorrect page limit order apiKey = callAPI t $
   , (#) apiKey
   ]
 
-getInfo ∷ ResponseType → Either Artist Mbid → Maybe Autocorrect → Maybe Language → Maybe Username → APIKey → Lastfm Response
+getInfo ∷ Format → Either Artist Mbid → Maybe Autocorrect → Maybe Language → Maybe Username → APIKey → Lastfm Response
 getInfo t a autocorrect language username apiKey = callAPI t $
   target a ++
   [ (#) (Method "artist.getInfo")
@@ -55,7 +55,7 @@ getInfo t a autocorrect language username apiKey = callAPI t $
   , (#) apiKey
   ]
 
-getPastEvents ∷ ResponseType → Either Artist Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getPastEvents ∷ Format → Either Artist Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 getPastEvents t a autocorrect page limit apiKey = callAPI t $
   target a ++
   [ (#) (Method "artist.getPastEvents")
@@ -65,7 +65,7 @@ getPastEvents t a autocorrect page limit apiKey = callAPI t $
   , (#) apiKey
   ]
 
-getPodcast ∷ ResponseType → Either Artist Mbid → Maybe Autocorrect → APIKey → Lastfm Response
+getPodcast ∷ Format → Either Artist Mbid → Maybe Autocorrect → APIKey → Lastfm Response
 getPodcast t a autocorrect apiKey = callAPI t $
   target a ++
   [ (#) (Method "artist.getPodcast")
@@ -73,7 +73,7 @@ getPodcast t a autocorrect apiKey = callAPI t $
   , (#) apiKey
   ]
 
-getShouts ∷ ResponseType → Either Artist Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getShouts ∷ Format → Either Artist Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 getShouts t a autocorrect page limit apiKey = callAPI t $
   target a ++
   [ (#) (Method "artist.getShouts")
@@ -83,7 +83,7 @@ getShouts t a autocorrect page limit apiKey = callAPI t $
   , (#) apiKey
   ]
 
-getSimilar ∷ ResponseType → Either Artist Mbid → Maybe Autocorrect → Maybe Limit → APIKey → Lastfm Response
+getSimilar ∷ Format → Either Artist Mbid → Maybe Autocorrect → Maybe Limit → APIKey → Lastfm Response
 getSimilar t a autocorrect limit apiKey = callAPI t $
   target a ++
   [ (#) (Method "artist.getSimilar")
@@ -92,7 +92,7 @@ getSimilar t a autocorrect limit apiKey = callAPI t $
   , (#) apiKey
   ]
 
-getTags ∷ ResponseType → Either Artist Mbid → Maybe Autocorrect → Either User (SessionKey, Secret) → APIKey → Lastfm Response
+getTags ∷ Format → Either Artist Mbid → Maybe Autocorrect → Either User (SessionKey, Secret) → APIKey → Lastfm Response
 getTags t a autocorrect b apiKey = case b of
   Left user → callAPI t $ target a ++ [(#) user] ++ args
   Right (sessionKey, secret) → callAPIsigned t secret $ target a ++ [(#) sessionKey] ++ args
@@ -102,7 +102,7 @@ getTags t a autocorrect b apiKey = case b of
           , (#) apiKey
           ]
 
-getTopAlbums ∷ ResponseType → Either Artist Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getTopAlbums ∷ Format → Either Artist Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 getTopAlbums t a autocorrect page limit apiKey = callAPI t $
   target a ++
   [ (#) (Method "artist.getTopAlbums")
@@ -112,7 +112,7 @@ getTopAlbums t a autocorrect page limit apiKey = callAPI t $
   , (#) apiKey
   ]
 
-getTopFans ∷ ResponseType → Either Artist Mbid → Maybe Autocorrect → APIKey → Lastfm Response
+getTopFans ∷ Format → Either Artist Mbid → Maybe Autocorrect → APIKey → Lastfm Response
 getTopFans t a autocorrect apiKey = callAPI t $
   target a ++
   [ (#) (Method "artist.getTopFans")
@@ -120,7 +120,7 @@ getTopFans t a autocorrect apiKey = callAPI t $
   , (#) apiKey
   ]
 
-getTopTags ∷ ResponseType → Either Artist Mbid → Maybe Autocorrect → APIKey → Lastfm Response
+getTopTags ∷ Format → Either Artist Mbid → Maybe Autocorrect → APIKey → Lastfm Response
 getTopTags t a autocorrect apiKey = callAPI t $
   target a ++
   [ (#) (Method "artist.getTopTags")
@@ -128,7 +128,7 @@ getTopTags t a autocorrect apiKey = callAPI t $
   , (#) apiKey
   ]
 
-getTopTracks ∷ ResponseType → Either Artist Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getTopTracks ∷ Format → Either Artist Mbid → Maybe Autocorrect → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 getTopTracks t a autocorrect page limit apiKey = callAPI t $
   target a ++
   [ (#) (Method "artist.getTopTracks")
@@ -138,7 +138,7 @@ getTopTracks t a autocorrect page limit apiKey = callAPI t $
   , (#) apiKey
   ]
 
-removeTag ∷ ResponseType → Artist → Tag → APIKey → SessionKey → Secret → Lastfm Response
+removeTag ∷ Format → Artist → Tag → APIKey → SessionKey → Secret → Lastfm Response
 removeTag t artist tag apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "artist.removeTag")
   , (#) artist
@@ -147,7 +147,7 @@ removeTag t artist tag apiKey sessionKey secret = callAPIsigned t secret
   , (#) sessionKey
   ]
 
-search ∷ ResponseType → Artist → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+search ∷ Format → Artist → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 search t artist page limit apiKey = callAPI t
   [ (#) (Method "artist.search")
   , (#) artist
@@ -156,7 +156,7 @@ search t artist page limit apiKey = callAPI t
   , (#) limit
   ]
 
-share ∷ ResponseType → Artist → Recipient → Maybe Message → Maybe Public → APIKey → SessionKey → Secret → Lastfm Response
+share ∷ Format → Artist → Recipient → Maybe Message → Maybe Public → APIKey → SessionKey → Secret → Lastfm Response
 share t artist recipient message public apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "artist.share")
   , (#) artist
@@ -167,7 +167,7 @@ share t artist recipient message public apiKey sessionKey secret = callAPIsigned
   , (#) message
   ]
 
-shout ∷ ResponseType → Artist → Message → APIKey → SessionKey → Secret → Lastfm Response
+shout ∷ Format → Artist → Message → APIKey → SessionKey → Secret → Lastfm Response
 shout t artist message apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "artist.shout")
   , (#) artist

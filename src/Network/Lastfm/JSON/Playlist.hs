@@ -9,9 +9,10 @@ module Network.Lastfm.JSON.Playlist
 #include "playlist.docs"
 
 import Network.Lastfm.Internal
+import Network.Lastfm.JSON (jsonWrapper)
 import qualified Network.Lastfm.API.Playlist as API
 
-$(json ["addTrack", "create"])
+$(jsonWrapper ["addTrack", "create"])
 
 __addTrack__
 addTrack ∷ Playlist → Artist → Track → APIKey → SessionKey → Secret → Lastfm Response

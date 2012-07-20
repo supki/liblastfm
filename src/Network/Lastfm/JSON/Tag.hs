@@ -10,9 +10,10 @@ module Network.Lastfm.JSON.Tag
 #include "tag.docs"
 
 import Network.Lastfm.Internal
+import Network.Lastfm.JSON (jsonWrapper)
 import qualified Network.Lastfm.API.Tag as API
 
-$(json ["getInfo", "getSimilar", "getTopAlbums", "getTopArtists", "getTopTags", "getTopTracks", "getWeeklyArtistChart", "getWeeklyChartList", "search"])
+$(jsonWrapper ["getInfo", "getSimilar", "getTopAlbums", "getTopArtists", "getTopTags", "getTopTracks", "getWeeklyArtistChart", "getWeeklyChartList", "search"])
 
 __getInfo__
 getInfo ∷ Tag → Maybe Language → APIKey → Lastfm Response

@@ -9,9 +9,10 @@ module Network.Lastfm.JSON.Radio
 #include "radio.docs"
 
 import Network.Lastfm.Internal
+import Network.Lastfm.JSON (jsonWrapper)
 import qualified Network.Lastfm.API.Radio as API
 
-$(json ["getPlaylist", "search", "tune"])
+$(jsonWrapper ["getPlaylist", "search", "tune"])
 
 __getPlaylist__
 getPlaylist ∷ Maybe Discovery

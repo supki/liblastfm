@@ -11,9 +11,10 @@ module Network.Lastfm.XML.Track
 #include "track.docs"
 
 import Network.Lastfm.Internal
+import Network.Lastfm.XML (xmlWrapper)
 import qualified Network.Lastfm.API.Track as API
 
-$(xml ["addTags", "ban", "getBuyLinks", "getCorrection", "getFingerprintMetadata", "getInfo", "getShouts", "getSimilar", "getTags", "getTopFans", "getTopTags", "love", "removeTag", "scrobble", "search", "share", "unban", "unlove", "updateNowPlaying"])
+$(xmlWrapper ["addTags", "ban", "getBuyLinks", "getCorrection", "getFingerprintMetadata", "getInfo", "getShouts", "getSimilar", "getTags", "getTopFans", "getTopTags", "love", "removeTag", "scrobble", "search", "share", "unban", "unlove", "updateNowPlaying"])
 
 __addTags__
 addTags ∷ Artist → Track → [Tag] → APIKey → SessionKey → Secret → Lastfm Response

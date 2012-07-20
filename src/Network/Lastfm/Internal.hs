@@ -2,8 +2,8 @@
 -- | Response module
 {-# OPTIONS_HADDOCK hide #-}
 module Network.Lastfm.Internal
-  ( ResponseType(..)
-  , callAPI, callAPIsigned, xml, json, (#)
+  ( Format(..)
+  , callAPI, callAPIsigned, (#)
   , module Network.Lastfm
   ) where
 
@@ -20,36 +20,26 @@ import Data.URLEncoded (urlEncode, export)
 import Network.Curl
 
 import Network.Lastfm
-import Network.Lastfm.Error
-import Network.Lastfm.TH
+
+
+-- Response format
+data Format = Format { errorParser ∷ Response → Maybe LastfmError, uriArgument ∷ (String, String) }
 
 
 -- Send POST query to Lastfm API
-callAPI ∷ ResponseType → [(String, String)] → Lastfm Response
-callAPI t = query (parseError t) . insertType t . map (second encodeString)
+callAPI ∷ Format → [(String, String)] → Lastfm Response
+callAPI Format {errorParser = e, uriArgument = arg} = query e . (arg:) . map (second encodeString)
 
 
 -- Send signed POST query to Lastfm API
-callAPIsigned ∷ ResponseType → Secret → [(String, String)] → Lastfm Response
-callAPIsigned t (Secret s) xs = query (parseError t) zs
+callAPIsigned ∷ Format → Secret → [(String, String)] → Lastfm Response
+callAPIsigned Format {errorParser = e, uriArgument = arg} (Secret s) xs = query e zs
  where
   ys = map (second encodeString) . filter (not . null . snd) $ xs
-  zs = insertType t $ ("api_sig", sign ys) : ys
+  zs = (arg :) $ ("api_sig", sign ys) : ys
 
   sign ∷ [(String, String)] → String
   sign = show . md5 . BS.pack . (++ s) . concatMap (uncurry (++)) . sortBy (compare `on` fst)
-
-
--- Insert desired response type into query
-insertType ∷ ResponseType → [(String, String)] → [(String, String)]
-insertType XML = id
-insertType JSON = (("format", "json") :)
-
-
--- Try to find error message in Lastfm response
-parseError ∷ ResponseType → ByteString → Maybe LastfmError
-parseError XML = xmlError
-parseError JSON = jsonError
 
 
 query ∷ (ByteString → Maybe LastfmError) → [(String, String)] → IO (Either LastfmError Response)

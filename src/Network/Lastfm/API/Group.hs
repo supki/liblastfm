@@ -4,14 +4,14 @@ module Network.Lastfm.API.Group
 
 import Network.Lastfm.Internal
 
-getHype ∷ ResponseType → Group → APIKey → Lastfm Response
+getHype ∷ Format → Group → APIKey → Lastfm Response
 getHype t group apiKey = callAPI t
   [ (#) (Method "group.getHype")
   , (#) group
   , (#) apiKey
   ]
 
-getMembers ∷ ResponseType → Group → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getMembers ∷ Format → Group → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 getMembers t group page limit apiKey = callAPI t
   [ (#) (Method "group.getMembers")
   , (#) group
@@ -20,14 +20,14 @@ getMembers t group page limit apiKey = callAPI t
   , (#) apiKey
   ]
 
-getWeeklyChartList ∷ ResponseType → Group → APIKey → Lastfm Response
+getWeeklyChartList ∷ Format → Group → APIKey → Lastfm Response
 getWeeklyChartList t group apiKey = callAPI t
   [ (#) (Method "group.getWeeklyChartList")
   , (#) group
   , (#) apiKey
   ]
 
-getWeeklyAlbumChart ∷ ResponseType → Group → Maybe From → Maybe To → APIKey → Lastfm Response
+getWeeklyAlbumChart ∷ Format → Group → Maybe From → Maybe To → APIKey → Lastfm Response
 getWeeklyAlbumChart t group from to apiKey = callAPI t
   [ (#) (Method "group.getWeeklyAlbumChart")
   , (#) group
@@ -36,7 +36,7 @@ getWeeklyAlbumChart t group from to apiKey = callAPI t
   , (#) apiKey
   ]
 
-getWeeklyArtistChart ∷ ResponseType → Group → Maybe From → Maybe To → APIKey → Lastfm Response
+getWeeklyArtistChart ∷ Format → Group → Maybe From → Maybe To → APIKey → Lastfm Response
 getWeeklyArtistChart t group from to apiKey = callAPI t
   [ (#) (Method "group.getWeeklyArtistChart")
   , (#) group
@@ -46,7 +46,7 @@ getWeeklyArtistChart t group from to apiKey = callAPI t
   ]
 
 
-getWeeklyTrackChart ∷ ResponseType → Group → Maybe From → Maybe To → APIKey → Lastfm Response
+getWeeklyTrackChart ∷ Format → Group → Maybe From → Maybe To → APIKey → Lastfm Response
 getWeeklyTrackChart t group from to apiKey = callAPI t
   [ (#) (Method "group.getWeeklyTrackChart")
   , (#) group

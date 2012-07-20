@@ -10,9 +10,10 @@ module Network.Lastfm.XML.Album
 #include "album.docs"
 
 import Network.Lastfm.Internal
+import Network.Lastfm.XML (xmlWrapper)
 import qualified Network.Lastfm.API.Album as API
 
-$(xml ["addTags", "getBuyLinks", "getInfo", "getShouts", "getTags", "getTopTags", "removeTag", "search", "share"])
+$(xmlWrapper ["addTags", "getBuyLinks", "getInfo", "getShouts", "getTags", "getTopTags", "removeTag", "search", "share"])
 
 __addTags__
 addTags ∷ (Artist, Album) → [Tag] → APIKey → SessionKey → Secret → Lastfm Response

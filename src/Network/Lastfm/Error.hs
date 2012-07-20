@@ -1,16 +1,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Network.Lastfm.Error
   ( LastfmError(..)
-  , jsonError, xmlError
+  , disambiguate
   ) where
 
-import Control.Applicative ((<$>), empty)
-import Control.Monad ((<=<))
-
-import Data.Aeson
-import Data.ByteString.Lazy.Char8 (ByteString)
 import Network.Curl (CurlCode)
-import Text.XML.Light
 
 
 data LastfmError
@@ -78,19 +72,6 @@ instance Show LastfmError where
     RateLimitExceeded      → ["RateLimitExceeded:",      "Your IP has made too many requests in a short period"]
     UnknownError n         → ["UnknownError:",           "Lastfm API specs say nothing about this particular error:", show n]
     CurlError s            → ["CurlError:", show s]
-
-
-instance FromJSON LastfmError where
-  parseJSON (Object v) = disambiguate <$> v .: "error"
-  parseJSON _ = empty
-
-
-xmlError ∷ ByteString → Maybe LastfmError
-xmlError r = disambiguate . read <$> (findAttr (unqual "code") <=< findChild (unqual "error") <=< parseXMLDoc) r
-
-
-jsonError ∷ ByteString → Maybe LastfmError
-jsonError = decode
 
 
 disambiguate ∷ Int → LastfmError

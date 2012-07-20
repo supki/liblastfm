@@ -4,7 +4,7 @@ module Network.Lastfm.API.Event
 
 import Network.Lastfm.Internal
 
-attend ∷ ResponseType → Event → Status → APIKey → SessionKey → Secret → Lastfm Response
+attend ∷ Format → Event → Status → APIKey → SessionKey → Secret → Lastfm Response
 attend t event status apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "event.attend")
   , (#) event
@@ -13,7 +13,7 @@ attend t event status apiKey sessionKey secret = callAPIsigned t secret
   , (#) sessionKey
   ]
 
-getAttendees ∷ ResponseType → Event → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getAttendees ∷ Format → Event → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 getAttendees t event page limit apiKey = callAPI t
   [ (#) (Method "event.getAttendees")
   , (#) event
@@ -22,14 +22,14 @@ getAttendees t event page limit apiKey = callAPI t
   , (#) apiKey
   ]
 
-getInfo ∷ ResponseType → Event → APIKey → Lastfm Response
+getInfo ∷ Format → Event → APIKey → Lastfm Response
 getInfo t event apiKey = callAPI t
   [ (#) (Method "event.getInfo")
   , (#) event
   , (#) apiKey
   ]
 
-getShouts ∷ ResponseType → Event → Maybe Page → Maybe Limit → APIKey → Lastfm Response
+getShouts ∷ Format → Event → Maybe Page → Maybe Limit → APIKey → Lastfm Response
 getShouts t event page limit apiKey = callAPI t
   [ (#) (Method "event.getShouts")
   , (#) event
@@ -38,7 +38,7 @@ getShouts t event page limit apiKey = callAPI t
   , (#) apiKey
   ]
 
-share ∷ ResponseType → Event → Recipient → Maybe Message → Maybe Public → APIKey → SessionKey → Secret → Lastfm Response
+share ∷ Format → Event → Recipient → Maybe Message → Maybe Public → APIKey → SessionKey → Secret → Lastfm Response
 share t event recipient message public apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "event.share")
   , (#) event
@@ -49,7 +49,7 @@ share t event recipient message public apiKey sessionKey secret = callAPIsigned 
   , (#) sessionKey
   ]
 
-shout ∷ ResponseType → Event → Message → APIKey → SessionKey → Secret → Lastfm Response
+shout ∷ Format → Event → Message → APIKey → SessionKey → Secret → Lastfm Response
 shout t event message apiKey sessionKey secret = callAPIsigned t secret
   [ (#) (Method "event.shout")
   , (#) event

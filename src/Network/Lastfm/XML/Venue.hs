@@ -9,9 +9,10 @@ module Network.Lastfm.XML.Venue
 #include "venue.docs"
 
 import Network.Lastfm.Internal
+import Network.Lastfm.XML (xmlWrapper)
 import qualified Network.Lastfm.API.Venue as API
 
-$(xml ["getEvents", "getPastEvents", "search"])
+$(xmlWrapper ["getEvents", "getPastEvents", "search"])
 
 __getEvents__
 getEvents ∷ Venue → Maybe FestivalsOnly → APIKey → Lastfm Response

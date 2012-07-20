@@ -9,9 +9,10 @@ module Network.Lastfm.JSON.Venue
 #include "venue.docs"
 
 import Network.Lastfm.Internal
+import Network.Lastfm.JSON (jsonWrapper)
 import qualified Network.Lastfm.API.Venue as API
 
-$(json ["getEvents", "getPastEvents", "search"])
+$(jsonWrapper ["getEvents", "getPastEvents", "search"])
 
 __getEvents__
 getEvents ∷ Venue → Maybe FestivalsOnly → APIKey → Lastfm Response

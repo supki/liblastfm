@@ -13,9 +13,10 @@ module Network.Lastfm.XML.User
 #include "user.docs"
 
 import Network.Lastfm.Internal
+import Network.Lastfm.XML (xmlWrapper)
 import qualified Network.Lastfm.API.User as API
 
-$(xml ["getArtistTracks", "getBannedTracks", "getEvents", "getFriends", "getInfo", "getLovedTracks", "getNeighbours", "getNewReleases", "getPastEvents", "getPersonalTags", "getPlaylists", "getRecentStations", "getRecentTracks", "getRecommendedArtists", "getRecommendedEvents", "getShouts", "getTopAlbums", "getTopArtists", "getTopTags", "getTopTracks", "getWeeklyAlbumChart", "getWeeklyArtistChart", "getWeeklyChartList", "getWeeklyTrackChart", "shout"])
+$(xmlWrapper ["getArtistTracks", "getBannedTracks", "getEvents", "getFriends", "getInfo", "getLovedTracks", "getNeighbours", "getNewReleases", "getPastEvents", "getPersonalTags", "getPlaylists", "getRecentStations", "getRecentTracks", "getRecommendedArtists", "getRecommendedEvents", "getShouts", "getTopAlbums", "getTopArtists", "getTopTags", "getTopTracks", "getWeeklyAlbumChart", "getWeeklyArtistChart", "getWeeklyChartList", "getWeeklyTrackChart", "shout"])
 
 __getArtistTracks__
 getArtistTracks ∷ User → Artist → Maybe StartTimestamp → Maybe EndTimestamp → Maybe Page → APIKey → Lastfm Response

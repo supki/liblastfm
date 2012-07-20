@@ -9,9 +9,10 @@ module Network.Lastfm.JSON.Event
 #include "event.docs"
 
 import Network.Lastfm.Internal
+import Network.Lastfm.JSON (jsonWrapper)
 import qualified Network.Lastfm.API.Event as API
 
-$(json ["attend", "getAttendees", "getInfo", "getShouts", "share", "shout"])
+$(jsonWrapper ["attend", "getAttendees", "getInfo", "getShouts", "share", "shout"])
 
 __attend__
 attend ∷ Event → Status → APIKey → SessionKey → Secret → Lastfm Response

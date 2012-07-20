@@ -9,9 +9,10 @@ module Network.Lastfm.JSON.Group
 #include "group.docs"
 
 import Network.Lastfm.Internal
+import Network.Lastfm.JSON (jsonWrapper)
 import qualified Network.Lastfm.API.Group as API
 
-$(json ["getHype", "getMembers", "getWeeklyChartList", "getWeeklyAlbumChart", "getWeeklyArtistChart", "getWeeklyTrackChart"])
+$(jsonWrapper ["getHype", "getMembers", "getWeeklyChartList", "getWeeklyAlbumChart", "getWeeklyArtistChart", "getWeeklyTrackChart"])
 
 __getHype__
 getHype ∷ Group → APIKey → Lastfm Response
