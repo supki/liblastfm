@@ -81,6 +81,7 @@ library
   extensions: UnicodeSyntax
   ghc-options: -Wall
                -fno-warn-unused-do-bind
+               -fno-warn-orphans
   cpp-options: -Idocs
 
 test-suite json-no-authentication
