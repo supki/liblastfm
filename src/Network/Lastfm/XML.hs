@@ -4,7 +4,7 @@ module Network.Lastfm.XML
   , xmlWrapper
   ) where
 
-import Control.Applicative ((<$>), empty)
+import Control.Applicative ((<$>))
 import Control.Monad ((<=<))
 
 import Data.ByteString.Lazy.Char8 (ByteString)

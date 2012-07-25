@@ -8,7 +8,6 @@ module Network.Lastfm.JSON
 import Control.Applicative ((<$>), empty)
 
 import Data.Aeson hiding (json)
-import Data.ByteString.Lazy.Char8 (ByteString)
 import Language.Haskell.TH
 
 import Network.Lastfm.Internal (Format(..))
