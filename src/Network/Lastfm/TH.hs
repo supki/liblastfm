@@ -21,4 +21,4 @@ instances f = mapM (instanceDeclaration "Argument")
 newtypes ∷ String → [String] → Q [Dec]
 newtypes (mkName → t) (map mkName → ns) = mapM newtypeDeclaration ns
   where
-   newtypeDeclaration n = newtypeD (cxt []) n [] (normalC n [strictType notStrict (conT t)]) []
+   newtypeDeclaration n = newtypeD (cxt []) n [] (normalC n [strictType notStrict (conT t)]) [mkName "Show"]

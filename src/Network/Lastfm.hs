@@ -85,7 +85,7 @@ type Lastfm a = IO (Either LastfmError a)
 type Response = ByteString
 
 
-newtype Secret = Secret String
+newtype Secret = Secret String deriving Show
 
 
 $(newtypes "String" ["Album", "AlbumArtist", "APIKey", "Artist", "AuthToken",
@@ -98,13 +98,13 @@ $(newtypes "Int" ["Distance", "Duration", "Event", "Limit", "Page", "Playlist", 
 $(newtypes "Integer" ["End", "EndTimestamp", "Fingerprint", "From", "Start", "StartTimestamp", "Timestamp", "To"])
 
 
-data Bitrate = B64 | B128
-data Multiplier = M1 | M2
-data Order = Popularity | DateAdded
-data Status = Yes | Maybe | No
+data Bitrate = B64 | B128 deriving Show
+data Multiplier = M1 | M2 deriving Show
+data Order = Popularity | DateAdded deriving Show
+data Status = Yes | Maybe | No deriving Show
 data Value = ValueUser User
            | ValueArtists [Artist]
-data Period = Week | Quater | HalfYear | Year | Overall
+data Period = Week | Quater | HalfYear | Year | Overall deriving Show
 
 
 instance Show Value where
