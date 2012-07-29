@@ -1,5 +1,5 @@
 name: liblastfm
-version: 0.0.3.3
+version: 0.0.3.4
 synopsis: Wrapper to Lastfm API
 license: MIT
 license-file: LICENSE
@@ -17,7 +17,7 @@ flag test-authentication
 
 library
   build-depends: base >= 3 && < 5,
-                 template-haskell >= 2.5 && < 2.8,
+                 template-haskell,
                  bytestring == 0.9.*,
                  mtl == 2.*,
                  curl == 1.3.7,
