@@ -1,5 +1,5 @@
 name: liblastfm
-version: 0.0.3.5
+version: 0.0.3.6
 synopsis: Wrapper to Lastfm API
 license: MIT
 license-file: LICENSE
