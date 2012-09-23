@@ -11,7 +11,6 @@ import Control.Applicative ((<$>))
 import Control.Arrow ((&&&), second)
 import Data.Function (on)
 import Data.List (sortBy)
-import Data.Maybe (maybe)
 
 import Codec.Binary.UTF8.String (encodeString)
 import Data.ByteString.Lazy.Char8 (ByteString)
