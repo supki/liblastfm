@@ -18,7 +18,7 @@ import Network.Lastfm.Internal (Format(..))
 xml ∷ Format
 xml = Format
         { errorParser = xmlErrorParser
-        , uriArgument = ("format","xml")
+        , uriArgument = Nothing
         }
 
 
