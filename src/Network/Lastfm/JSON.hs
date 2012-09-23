@@ -17,7 +17,7 @@ import Network.Lastfm.Error (LastfmError, disambiguate)
 json ∷ Format
 json = Format
         { errorParser = decode
-        , uriArgument = ("format","json")
+        , uriArgument = Just ("format","json")
         }
 
 

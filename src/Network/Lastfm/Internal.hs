@@ -11,6 +11,7 @@ import Control.Applicative ((<$>))
 import Control.Arrow ((&&&), second)
 import Data.Function (on)
 import Data.List (sortBy)
+import Data.Maybe (maybe)
 
 import Codec.Binary.UTF8.String (encodeString)
 import Data.ByteString.Lazy.Char8 (ByteString)
@@ -23,20 +24,19 @@ import Network.Lastfm
 
 
 -- Response format
-data Format = Format { errorParser ∷ Response → Maybe LastfmError, uriArgument ∷ (String, String) }
+data Format = Format { errorParser ∷ Response → Maybe LastfmError, uriArgument ∷ Maybe (String, String) }
 
 
 -- Send POST query to Lastfm API
 callAPI ∷ Format → [(String, String)] → Lastfm Response
-callAPI Format {errorParser = e, uriArgument = arg} = query e . (arg:) . map (second encodeString)
-
+callAPI Format {errorParser = e, uriArgument = arg} = query e . (maybe id (:) arg) . map (second encodeString)
 
 -- Send signed POST query to Lastfm API
 callAPIsigned ∷ Format → Secret → [(String, String)] → Lastfm Response
 callAPIsigned Format {errorParser = e, uriArgument = arg} (Secret s) xs = query e zs
  where
   ys = map (second encodeString) . filter (not . null . snd) $ xs
-  zs = (arg :) $ ("api_sig", sign ys) : ys
+  zs = maybe id (:) arg $ ("api_sig", sign ys) : ys
 
   sign ∷ [(String, String)] → String
   sign = show . md5 . BS.pack . (++ s) . concatMap (uncurry (++)) . sortBy (compare `on` fst)
