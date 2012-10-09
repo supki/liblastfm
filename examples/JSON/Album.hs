@@ -2,7 +2,6 @@
 module JSON.Album (private, public) where
 
 import Data.Maybe (isJust)
-import Prelude hiding (GT)
 
 import Data.Aeson
 import Data.Aeson.Types

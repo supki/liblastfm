@@ -2,7 +2,6 @@
 module JSON.Library (public, private) where
 
 import Data.Maybe (isJust)
-import Prelude hiding (GT)
 
 import Data.Aeson
 import Data.Aeson.Types
