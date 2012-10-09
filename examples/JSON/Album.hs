@@ -1,35 +1,49 @@
 {-# LANGUAGE FlexibleInstances #-}
 module JSON.Album (private, public) where
 
-import Control.Applicative ((<$>))
 import Data.Maybe (isJust)
 import Prelude hiding (GT)
 
 import Data.Aeson
-import Network.Lastfm
+import Data.Aeson.Types
+import qualified Data.Attoparsec.Lazy as AP
+import Data.ByteString.Lazy (ByteString)
+import Network.Lastfm hiding (Value)
 import Network.Lastfm.JSON.Album
 import Test.HUnit
 
 
+p ∷ (Value → Parser b) → ByteString → Maybe b
+p f xs = case AP.parse json xs of
+  AP.Done _ j → case parse f j of
+    Success v → Just v
+    _ → Nothing
+  _ → Nothing
+
+
+(..:) ∷ (Functor f, Functor g) ⇒ (a → b) → f (g a) → f (g b)
+(..:) = fmap . fmap
+
+
 instance Assertable (Either LastfmError Response) where
   assert = either (assertFailure . show) (const $ return ())
-instance FromJSON α ⇒ Assertable (Lastfm Response, Response → Maybe α) where
-  assert (α, β) = α >>= either (assertFailure . show) (assertBool "Cannot parse JSON" . isJust . β)
+instance Assertable (Either LastfmError (Maybe a)) where
+  assert α = either (assertFailure . show) (assertBool "Cannot parse JSON" . isJust) α
 
 
 private ∷ APIKey → SessionKey → Secret → [Test]
 private ak sk s =
   [ TestLabel "addTags" $ TestCase testAddTags
   , TestLabel "getTags-authenticated" $ TestCase testGetTagsAuth
-  , TestLabel "removeTag" $ TestCase testRemoveTag
+  , TestLabel "removTag" $ TestCase testRemoveTag
   , TestLabel "share" $ TestCase testShare
   ]
  where
   testAddTags = assert $
     addTags (Artist "Pink Floyd", Album "The Wall") [Tag "70s", Tag "awesome", Tag "classic"] ak sk s
 
-  testGetTagsAuth = assert
-    (getTags (Left (Artist "Pink Floyd", Album "The Wall")) Nothing (Right (sk, s)) ak, decode ∷ Response → Maybe GT)
+  testGetTagsAuth = assert $
+    p gt ..: getTags (Left (Artist "Pink Floyd", Album "The Wall")) Nothing (Right (sk, s)) ak
 
   testRemoveTag = assert $
     removeTag (Artist "Pink Floyd") (Album "The Wall") (Tag "awesome") ak sk s
@@ -48,44 +62,31 @@ public =
   , TestLabel "search" $ TestCase testSearch
   ]
  where
-  ak = APIKey "b25b959554ed76058ac220b7b2e0a026"
+  ak = APIKey "29effec263316a1f8a97f753caaa83e0"
 
-  testGetBuylinks = assert
-    (getBuyLinks (Left (Artist "Pink Floyd", Album "The Wall")) Nothing (Country "United Kingdom") ak, decode ∷ Response → Maybe GBL)
+  testGetBuylinks = assert $
+    p gbl ..: getBuyLinks (Left (Artist "Pink Floyd", Album "The Wall")) Nothing (Country "United Kingdom") ak
 
-  testGetInfo = assert
-    (getInfo (Left (Artist "Pink Floyd", Album "The Wall")) Nothing Nothing Nothing ak, decode ∷ Response → Maybe GI)
+  testGetInfo = assert $
+    p gi ..: getInfo (Left (Artist "Pink Floyd", Album "The Wall")) Nothing Nothing Nothing ak
 
-  testGetShouts = assert
-    (getShouts (Left (Artist "Pink Floyd", Album "The Wall")) Nothing Nothing (Just $ Limit 7) ak, decode ∷ Response → Maybe GS)
+  testGetShouts = assert $
+    p gs ..: getShouts (Left (Artist "Pink Floyd", Album "The Wall")) Nothing Nothing (Just $ Limit 7) ak
 
-  testGetTags = assert
-    (getTags (Left (Artist "Pink Floyd", Album "The Wall")) Nothing (Left $ User "liblastfm") ak, decode ∷ Response → Maybe GT)
+  testGetTags = assert $
+    p gt ..: getTags (Left (Artist "Pink Floyd", Album "The Wall")) Nothing (Left $ User "liblastfm") ak
 
-  testGetTopTags = assert
-    (getTopTags (Left (Artist "Pink Floyd", Album "The Wall")) Nothing ak, decode ∷ Response → Maybe GTT)
+  testGetTopTags = assert $
+    p gtt ..: getTopTags (Left (Artist "Pink Floyd", Album "The Wall")) Nothing ak
 
-  testSearch = assert
-    (search (Album "wall") Nothing (Just $ Limit 5) ak, decode ∷ Response → Maybe SE)
-
-
-newtype GBL = GBL [String] deriving Show
-newtype GI = GI [String] deriving Show
-newtype GS = GS [String] deriving Show
-newtype GT = GT [String] deriving Show
-newtype GTT = GTT [String] deriving Show
-newtype SE = SE [String] deriving Show
+  testSearch = assert $
+    p se ..: search (Album "wall") Nothing (Just $ Limit 5) ak
 
 
-instance FromJSON GBL where
-  parseJSON o = GBL <$> (parseJSON o >>= (.: "affiliations") >>= (.: "physicals") >>= (.: "affiliation") >>= mapM (.: "supplierName"))
-instance FromJSON GI where
-  parseJSON o = GI <$> (parseJSON o >>= (.: "album") >>= (.: "toptags") >>= (.: "tag") >>= mapM (.: "name"))
-instance FromJSON GS where
-  parseJSON o = GS <$> (parseJSON o >>= (.: "shouts") >>= (.: "shout") >>= mapM (.: "body"))
-instance FromJSON GT where
-  parseJSON o = GT <$> (parseJSON o >>= (.: "tags") >>= (.: "tag") >>= mapM (.: "name"))
-instance FromJSON GTT where
-  parseJSON o = GTT <$> (parseJSON o >>= (.: "toptags") >>= (.: "tag") >>= mapM (.: "count"))
-instance FromJSON SE where
-  parseJSON o = SE <$> (parseJSON o >>= (.: "results") >>= (.: "albummatches") >>= (.: "album") >>= mapM (.: "name"))
+gbl, gi, gs, gt, gtt, se ∷ Value → Parser [String]
+gbl o = parseJSON o >>= (.: "affiliations") >>= (.: "physicals") >>= (.: "affiliation") >>= mapM (.: "supplierName")
+gi o = parseJSON o >>= (.: "album") >>= (.: "toptags") >>= (.: "tag") >>= mapM (.: "name")
+gs o = parseJSON o >>= (.: "shouts") >>= (.: "shout") >>= mapM (.: "body")
+gt o = parseJSON o >>= (.: "tags") >>= (.: "tag") >>= mapM (.: "name")
+gtt o = parseJSON o >>= (.: "toptags") >>= (.: "tag") >>= mapM (.: "count")
+se o = parseJSON o >>= (.: "results") >>= (.: "albummatches") >>= (.: "album") >>= mapM (.: "name")

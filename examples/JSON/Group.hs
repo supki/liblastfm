@@ -6,13 +6,28 @@ import Data.Maybe (isJust)
 import Prelude hiding (GT)
 
 import Data.Aeson
-import Network.Lastfm
+import Data.Aeson.Types
+import qualified Data.Attoparsec.Lazy as AP
+import Data.ByteString.Lazy (ByteString)
+import Network.Lastfm hiding (Value)
 import Network.Lastfm.JSON.Group
 import Test.HUnit
 
 
-instance FromJSON α ⇒ Assertable (Lastfm Response, Response → Maybe α) where
-  assert (α, β) = α >>= either (assertFailure . show) (assertBool ("Cannot parse JSON") . isJust . β)
+p ∷ (Value → Parser b) → ByteString → Maybe b
+p f xs = case AP.parse json xs of
+  AP.Done _ j → case parse f j of
+    Success v → Just v
+    _ → Nothing
+  _ → Nothing
+
+
+(..:) ∷ (Functor f, Functor g) ⇒ (a → b) → f (g a) → f (g b)
+(..:) = fmap . fmap
+
+
+instance Assertable (Either LastfmError (Maybe a)) where
+  assert α = either (assertFailure . show) (assertBool "Cannot parse JSON" . isJust) α
 
 
 public ∷ [Test]
@@ -25,45 +40,33 @@ public =
   , TestLabel "getWeeklyTrackChart" $ TestCase testGetWeeklyTrackChart
   ]
  where
-  ak = APIKey "b25b959554ed76058ac220b7b2e0a026"
+  ak = APIKey "29effec263316a1f8a97f753caaa83e0"
   g = Group "People with no social lives that listen to more music than is healthy who are slightly scared of spiders and can never seem to find a pen"
 
-  testGetHype = assert
-    (getHype g ak, decode ∷ Response → Maybe GH)
+  testGetHype = assert $
+    p gh ..: getHype g ak
 
-  testGetMembers = assert
-    (getMembers g Nothing (Just $ Limit 10) ak, decode ∷ Response → Maybe GM)
+  testGetMembers = assert $
+    p gm ..: getMembers g Nothing (Just $ Limit 10) ak
 
-  testGetWeeklyAlbumChart = assert
-    (getWeeklyAlbumChart g Nothing Nothing ak, decode ∷ Response → Maybe GA)
+  testGetWeeklyAlbumChart = assert $
+    p ga ..: getWeeklyAlbumChart g Nothing Nothing ak
 
-  testGetWeeklyArtistChart = assert
-    (getWeeklyArtistChart g Nothing Nothing ak, decode ∷ Response → Maybe GAR)
+  testGetWeeklyArtistChart = assert $
+    p gar ..: getWeeklyArtistChart g Nothing Nothing ak
 
-  testGetWeeklyChartList = assert
-    (getWeeklyChartList g ak, decode ∷ Response → Maybe GC)
+  testGetWeeklyChartList = assert $
+    p gc ..: getWeeklyChartList g ak
 
-  testGetWeeklyTrackChart = assert
-    (getWeeklyTrackChart g Nothing Nothing ak, decode ∷ Response → Maybe GT)
-
-
-newtype GA = GA [String] deriving Show
-newtype GAR = GAR [String] deriving Show
-newtype GC = GC [(String,String)] deriving Show
-newtype GH = GH [String] deriving Show
-newtype GM = GM [String] deriving Show
-newtype GT = GT [String] deriving Show
+  testGetWeeklyTrackChart = assert $
+    p gt ..: getWeeklyTrackChart g Nothing Nothing ak
 
 
-instance FromJSON GA where
-  parseJSON o = GA <$> (parseJSON o >>= (.: "weeklyalbumchart") >>= (.: "album") >>= mapM (.: "playcount"))
-instance FromJSON GAR where
-  parseJSON o = GAR <$> (parseJSON o >>= (.: "weeklyartistchart") >>= (.: "artist") >>= mapM (.: "name"))
-instance FromJSON GC where
-  parseJSON o = GC <$> (parseJSON o >>= (.: "weeklychartlist") >>= (.: "chart") >>= mapM (\t → (,) <$> (t .: "from") <*> (t .: "to")))
-instance FromJSON GH where
-  parseJSON o = GH <$> (parseJSON o >>= (.: "weeklyartistchart") >>= (.: "artist") >>= mapM (.: "mbid"))
-instance FromJSON GM where
-  parseJSON o = GM <$> (parseJSON o >>= (.: "members") >>= (.: "user") >>= mapM (.: "name"))
-instance FromJSON GT where
-  parseJSON o = GT <$> (parseJSON o >>= (.: "weeklytrackchart") >>= (.: "track") >>= mapM (.: "url"))
+ga, gar, gh, gm, gt ∷ Value → Parser [String]
+gc ∷ Value → Parser [(String, String)]
+ga o = parseJSON o >>= (.: "weeklyalbumchart") >>= (.: "album") >>= mapM (.: "playcount")
+gar o = parseJSON o >>= (.: "weeklyartistchart") >>= (.: "artist") >>= mapM (.: "name")
+gc o = parseJSON o >>= (.: "weeklychartlist") >>= (.: "chart") >>= mapM (\t → (,) <$> (t .: "from") <*> (t .: "to"))
+gh o = parseJSON o >>= (.: "weeklyartistchart") >>= (.: "artist") >>= mapM (.: "mbid")
+gm o = parseJSON o >>= (.: "members") >>= (.: "user") >>= mapM (.: "name")
+gt o = parseJSON o >>= (.: "weeklytrackchart") >>= (.: "track") >>= mapM (.: "url")

@@ -6,13 +6,28 @@ import Data.Maybe (isJust)
 import Prelude hiding (GT)
 
 import Data.Aeson
-import Network.Lastfm
+import Data.Aeson.Types
+import qualified Data.Attoparsec.Lazy as AP
+import Data.ByteString.Lazy (ByteString)
+import Network.Lastfm hiding (Value)
 import Network.Lastfm.JSON.Geo
 import Test.HUnit
 
 
-instance FromJSON α ⇒ Assertable (Lastfm Response, Response → Maybe α) where
-  assert (α, β) = α >>= either (assertFailure . show) (assertBool "Cannot parse JSON" . isJust . β)
+p ∷ (Value → Parser b) → ByteString → Maybe b
+p f xs = case AP.parse json xs of
+  AP.Done _ j → case parse f j of
+    Success v → Just v
+    _ → Nothing
+  _ → Nothing
+
+
+(..:) ∷ (Functor f, Functor g) ⇒ (a → b) → f (g a) → f (g b)
+(..:) = fmap . fmap
+
+
+instance Assertable (Either LastfmError (Maybe a)) where
+  assert α = either (assertFailure . show) (assertBool "Cannot parse JSON" . isJust) α
 
 
 public ∷ [Test]
@@ -30,56 +45,46 @@ public =
   , TestLabel "getTopTracks" $ TestCase testGetTopTracks
   ]
  where
-  ak = APIKey "b25b959554ed76058ac220b7b2e0a026"
+  ak = APIKey "29effec263316a1f8a97f753caaa83e0"
 
-  testGetEvents = assert
-    (getEvents Nothing Nothing (Just $ Location "Moscow") Nothing Nothing (Just $ Limit 5) ak, decode ∷ Response → Maybe GE)
+  testGetEvents = assert $
+    p ge ..: getEvents Nothing Nothing (Just $ Location "Moscow") Nothing Nothing (Just $ Limit 5) ak
 
-  testGetMetroArtistChart = assert
-    (getMetroArtistChart (Country "Russia") (Metro "Saint Petersburg") Nothing Nothing ak, decode ∷ Response → Maybe GA)
+  testGetMetroArtistChart = assert $
+    p ga ..: getMetroArtistChart (Country "Russia") (Metro "Saint Petersburg") Nothing Nothing ak
 
-  testGetMetroHypeArtistChart = assert
-    (getMetroHypeArtistChart (Country "United States") (Metro "New York") Nothing Nothing ak, decode ∷ Response → Maybe GA)
+  testGetMetroHypeArtistChart = assert $
+    p ga ..: getMetroHypeArtistChart (Country "United States") (Metro "New York") Nothing Nothing ak
 
-  testGetMetroHypeTrackChart = assert
-    (getMetroHypeTrackChart (Country "Russia") (Metro "Ufa") Nothing Nothing ak, decode ∷ Response → Maybe GT)
+  testGetMetroHypeTrackChart = assert $
+    p gt ..: getMetroHypeTrackChart (Country "Russia") (Metro "Ufa") Nothing Nothing ak
 
-  testGetMetroTrackChart = assert
-    (getMetroTrackChart (Country "United States") (Metro "Boston") Nothing Nothing ak, decode ∷ Response → Maybe GT)
+  testGetMetroTrackChart = assert $
+    p gt ..: getMetroTrackChart (Country "United States") (Metro "Boston") Nothing Nothing ak
 
-  testGetMetroUniqueArtistChart = assert
-    (getMetroUniqueArtistChart (Country "Belarus") (Metro "Minsk") Nothing Nothing ak, decode ∷ Response → Maybe GA)
+  testGetMetroUniqueArtistChart = assert $
+    p ga ..: getMetroUniqueArtistChart (Country "Belarus") (Metro "Minsk") Nothing Nothing ak
 
-  testGetMetroUniqueTrackChart = assert
-    (getMetroUniqueTrackChart (Country "Russia") (Metro "Moscow") Nothing Nothing ak, decode ∷ Response → Maybe GT)
+  testGetMetroUniqueTrackChart = assert $
+    p gt ..: getMetroUniqueTrackChart (Country "Russia") (Metro "Moscow") Nothing Nothing ak
 
-  testGetMetroWeeklyChartlist = assert
-    (getMetroWeeklyChartlist (Metro "Moscow") ak, decode ∷ Response → Maybe GC)
+  testGetMetroWeeklyChartlist = assert $
+    p gc ..: getMetroWeeklyChartlist (Metro "Moscow") ak
 
-  testGetMetros = assert
-    (getMetros (Just $ Country "Russia") ak, decode ∷ Response → Maybe GM)
+  testGetMetros = assert $
+    p gm ..: getMetros (Just $ Country "Russia") ak
 
-  testGetTopArtists = assert
-    (getTopArtists (Country "Belarus") Nothing (Just $ Limit 3) ak, decode ∷ Response → Maybe GA)
+  testGetTopArtists = assert $
+    p ga ..: getTopArtists (Country "Belarus") Nothing (Just $ Limit 3) ak
 
-  testGetTopTracks = assert
-    (getTopTracks (Country "Ukraine") Nothing Nothing (Just $ Limit 2) ak, decode ∷ Response → Maybe GT)
-
-
-newtype GA = GA [String] deriving Show
-newtype GC = GC [(String,String)] deriving Show
-newtype GE = GE [String] deriving Show
-newtype GM = GM [String] deriving Show
-newtype GT = GT [String] deriving Show
+  testGetTopTracks = assert $
+    p gt ..: getTopTracks (Country "Ukraine") Nothing Nothing (Just $ Limit 2) ak
 
 
-instance FromJSON GA where
-  parseJSON o = GA <$> (parseJSON o >>= (.: "topartists") >>= (.: "artist") >>= mapM (.: "name"))
-instance FromJSON GC where
-  parseJSON o = GC <$> (parseJSON o >>= (.: "weeklychartlist") >>= (.: "chart") >>= mapM (\t → (,) <$> (t .: "from") <*> (t .: "to")))
-instance FromJSON GE where
-  parseJSON o = GE <$> (parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (.: "id"))
-instance FromJSON GM where
-  parseJSON o = GM <$> (parseJSON o >>= (.: "metros") >>= (.: "metro") >>= mapM (.: "name"))
-instance FromJSON GT where
-  parseJSON o = GT <$> (parseJSON o >>= (.: "toptracks") >>= (.: "track") >>= mapM (.: "name"))
+ga, ge, gm, gt ∷ Value → Parser [String]
+gc ∷ Value → Parser [(String, String)]
+ga o = parseJSON o >>= (.: "topartists") >>= (.: "artist") >>= mapM (.: "name")
+gc o = parseJSON o >>= (.: "weeklychartlist") >>= (.: "chart") >>= mapM (\t → (,) <$> (t .: "from") <*> (t .: "to"))
+ge o = parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (.: "id")
+gm o = parseJSON o >>= (.: "metros") >>= (.: "metro") >>= mapM (.: "name")
+gt o = parseJSON o >>= (.: "toptracks") >>= (.: "track") >>= mapM (.: "name")

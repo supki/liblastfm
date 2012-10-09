@@ -36,6 +36,7 @@ data LastfmError
   | SuspendedAPIKey
   | Deprecated
   | RateLimitExceeded
+  | TestAPIKeyDeprecated
   | UnknownError Int
   | CurlError CurlCode
 
@@ -70,6 +71,7 @@ instance Show LastfmError where
     SuspendedAPIKey        → ["SuspendedAPIKey:",        "Access for your account has been suspended, please contact Last.fm"]
     Deprecated             → ["Deprecated:",             "This type of request is no longer supported"]
     RateLimitExceeded      → ["RateLimitExceeded:",      "Your IP has made too many requests in a short period"]
+    TestAPIKeyDeprecated   → ["TestAPIKeyDeprecated:",   "The test API key has been deprecated."]
     UnknownError n         → ["UnknownError:",           "Lastfm API specs say nothing about this particular error:", show n]
     CurlError s            → ["CurlError:", show s]
 
@@ -103,5 +105,6 @@ disambiguate n = case n of
   25 → RadioNotFound
   26 → SuspendedAPIKey
   27 → Deprecated
-  28 → RateLimitExceeded
+  29 → RateLimitExceeded
+  30 → TestAPIKeyDeprecated
   _ → UnknownError n

@@ -17,9 +17,9 @@ import Network.Lastfm.Internal (Format(..))
 
 xml ∷ Format
 xml = Format
-        { errorParser = xmlErrorParser
-        , uriArgument = Nothing
-        }
+  { errorParser = xmlErrorParser
+  , uriArgument = Nothing
+  }
 
 
 xmlWrapper ∷ [String] → Q [Dec]

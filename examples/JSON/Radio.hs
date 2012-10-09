@@ -1,19 +1,32 @@
 {-# LANGUAGE FlexibleInstances #-}
 module JSON.Radio (private, public) where
 
-import Control.Applicative ((<$>))
 import Data.Maybe (isJust)
 
 import Data.Aeson
-import Network.Lastfm
+import Data.Aeson.Types
+import qualified Data.Attoparsec.Lazy as AP
+import Data.ByteString.Lazy (ByteString)
+import Network.Lastfm hiding (Value)
 import Network.Lastfm.JSON.Radio
 import Test.HUnit
 
 
-instance FromJSON α ⇒ Assertable (Lastfm Response, Response → Maybe α) where
-  assert (α, β) = α >>= either processError (assertBool "Cannot parse JSON" . isJust . β)
+p ∷ (Value → Parser b) → ByteString → Maybe b
+p f xs = case AP.parse json xs of
+  AP.Done _ j → case parse f j of
+    Success v → Just v
+    _ → Nothing
+  _ → Nothing
+
+
+(..:) ∷ (Functor f, Functor g) ⇒ (a → b) → f (g a) → f (g b)
+(..:) = fmap . fmap
+
+
+instance Assertable (Either LastfmError (Maybe a)) where
+  assert α = either processError (assertBool "Cannot parse JSON" . isJust) α
    where
-    processError ∷ LastfmError → Assertion
     processError AuthenticationFailed = return ()
     processError e = assertFailure $ show e
 
@@ -24,30 +37,24 @@ private ak sk s =
   , TestLabel "getPlaylist" $ TestCase testGetPlaylist
   ]
  where
-  testGetPlaylist = assert
-    (getPlaylist Nothing Nothing Nothing M2 B64 ak sk s, decode ∷ Response → Maybe GP)
+  testGetPlaylist = assert $
+    p gp ..: getPlaylist Nothing Nothing Nothing M2 B64 ak sk s
 
-  testTune = assert
-    (tune Nothing (Station "lastfm://artist/Merzbow/similarartists") ak sk s, decode ∷ Response → Maybe T)
+  testTune = assert $
+    p t ..: tune Nothing (Station "lastfm://artist/Merzbow/similarartists") ak sk s
 
 
 public ∷ [Test]
 public = return $ TestLabel "search" $ TestCase testSearch
  where
-  ak = APIKey "b25b959554ed76058ac220b7b2e0a026"
+  ak = APIKey "29effec263316a1f8a97f753caaa83e0"
 
-  testSearch = assert
-    (search (Name "dubstep") ak, decode ∷ Response → Maybe SE)
-
-
-newtype GP = GP [String]
-newtype SE = SE String
-newtype T = T String
+  testSearch = assert $
+    p se ..: search (Name "dubstep") ak
 
 
-instance FromJSON GP where
-  parseJSON o = GP <$> (parseJSON o >>= (.: "playlist") >>= (.: "trackList") >>= (.: "track") >>= mapM (.: "title"))
-instance FromJSON SE where
-  parseJSON o = SE <$> (parseJSON o >>= (.: "stations") >>= (.: "station") >>= (.: "name"))
-instance FromJSON T where
-  parseJSON o = T <$> (parseJSON o >>= (.: "station") >>= (.: "url"))
+gp ∷ Value → Parser [String]
+se, t ∷ Value → Parser String
+gp o = (parseJSON o >>= (.: "playlist") >>= (.: "trackList") >>= (.: "track") >>= mapM (.: "title"))
+se o = (parseJSON o >>= (.: "stations") >>= (.: "station") >>= (.: "name"))
+t o = (parseJSON o >>= (.: "station") >>= (.: "url"))

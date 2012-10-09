@@ -1,17 +1,31 @@
 {-# LANGUAGE FlexibleInstances #-}
 module JSON.Venue (public) where
 
-import Control.Applicative ((<$>))
 import Data.Maybe (isJust)
 
 import Data.Aeson
-import Network.Lastfm
+import Data.Aeson.Types
+import qualified Data.Attoparsec.Lazy as AP
+import Data.ByteString.Lazy (ByteString)
+import Network.Lastfm hiding (Value)
 import Network.Lastfm.JSON.Venue
 import Test.HUnit
 
 
-instance FromJSON α ⇒ Assertable (Lastfm Response, Response → Maybe α) where
-  assert (α, β) = α >>= either (assertFailure . show) (assertBool "Cannot parse JSON" . isJust . β)
+p ∷ (Value → Parser b) → ByteString → Maybe b
+p f xs = case AP.parse json xs of
+  AP.Done _ j → case parse f j of
+    Success v → Just v
+    _ → Nothing
+  _ → Nothing
+
+
+(..:) ∷ (Functor f, Functor g) ⇒ (a → b) → f (g a) → f (g b)
+(..:) = fmap . fmap
+
+
+instance Assertable (Either LastfmError (Maybe a)) where
+  assert α = either (assertFailure . show) (assertBool "Cannot parse JSON" . isJust) α
 
 
 public ∷ [Test]
@@ -21,26 +35,19 @@ public =
   , TestLabel "search" $ TestCase testSearch
   ]
  where
-  ak = APIKey "b25b959554ed76058ac220b7b2e0a026"
+  ak = APIKey "29effec263316a1f8a97f753caaa83e0"
 
-  testGetEvents = assert
-    (getEvents (Venue 9163107) Nothing ak, decode ∷ Response → Maybe GE)
+  testGetEvents = assert $
+    p ge ..: getEvents (Venue 9163107) Nothing ak
 
-  testGetPastEvents = assert
-    (getPastEvents (Venue 9163107) Nothing Nothing (Just $ Limit 2) ak, decode ∷ Response → Maybe GPE)
+  testGetPastEvents = assert $
+    p gpe ..: getPastEvents (Venue 9163107) Nothing Nothing (Just $ Limit 2) ak
 
-  testSearch = assert
-    (search (Venuename "Arena") Nothing Nothing Nothing ak, decode ∷ Response → Maybe SE)
-
-
-newtype GE = GE [String] deriving Show
-newtype GPE = GPE [String] deriving Show
-newtype SE = SE [String] deriving Show
+  testSearch = assert $
+    p se ..: search (Venuename "Arena") Nothing Nothing Nothing ak
 
 
-instance FromJSON GE where
-  parseJSON o = GE <$> (parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (\t → (t .: "venue") >>= (.: "name")))
-instance FromJSON GPE where
-  parseJSON o = GPE <$> (parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (\t → (t .: "artists") >>= (.: "artist")))
-instance FromJSON SE where
-  parseJSON o = SE <$> (parseJSON o >>= (.: "results") >>= (.: "venuematches") >>= (.: "venue") >>= mapM (.: "id"))
+ge, gpe, se ∷ Value → Parser [String]
+ge o = parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (\t → (t .: "venue") >>= (.: "name"))
+gpe o = parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (\t → (t .: "artists") >>= (.: "artist"))
+se o = parseJSON o >>= (.: "results") >>= (.: "venuematches") >>= (.: "venue") >>= mapM (.: "id")

@@ -1,20 +1,34 @@
 {-# LANGUAGE FlexibleInstances #-}
 module JSON.Library (public, private) where
 
-import Control.Applicative ((<$>))
 import Data.Maybe (isJust)
 import Prelude hiding (GT)
 
 import Data.Aeson
-import Network.Lastfm
+import Data.Aeson.Types
+import qualified Data.Attoparsec.Lazy as AP
+import Data.ByteString.Lazy (ByteString)
+import Network.Lastfm hiding (Value)
 import Network.Lastfm.JSON.Library
 import Test.HUnit
 
 
+p ∷ (Value → Parser b) → ByteString → Maybe b
+p f xs = case AP.parse json xs of
+  AP.Done _ j → case parse f j of
+    Success v → Just v
+    _ → Nothing
+  _ → Nothing
+
+
+(..:) ∷ (Functor f, Functor g) ⇒ (a → b) → f (g a) → f (g b)
+(..:) = fmap . fmap
+
+
 instance Assertable (Either LastfmError Response) where
   assert = either (assertFailure . show) (const $ return ())
-instance FromJSON α ⇒ Assertable (Lastfm Response, Response → Maybe α) where
-  assert (α, β) = α >>= either (assertFailure . show) (assertBool "Cannot parse JSON" . isJust . β)
+instance Assertable (Either LastfmError (Maybe a)) where
+  assert α = either (assertFailure . show) (assertBool "Cannot parse JSON" . isJust) α
 
 
 private ∷ APIKey → SessionKey → Secret → [Test]
@@ -57,26 +71,19 @@ public =
   , TestLabel "getTracks" $ TestCase testGetTracks
   ]
  where
-  ak = APIKey "b25b959554ed76058ac220b7b2e0a026"
+  ak = APIKey "29effec263316a1f8a97f753caaa83e0"
 
   testGetAlbums = assert $
-    (getAlbums (User "smpcln") (Just $ Artist "Burzum") Nothing (Just $ Limit 5) ak, decode ∷ Response → Maybe GA)
+    p ga ..: getAlbums (User "smpcln") (Just $ Artist "Burzum") Nothing (Just $ Limit 5) ak
 
   testGetArtists = assert $
-    (getArtists (User "smpcln") Nothing (Just $ Limit 7) ak, decode ∷ Response → Maybe GAR)
+    p gar ..: getArtists (User "smpcln") Nothing (Just $ Limit 7) ak
 
   testGetTracks = assert $
-    (getTracks (User "smpcln") (Just $ Artist "Burzum") Nothing Nothing (Just $ Limit 4) ak, decode ∷ Response → Maybe GT)
+    p gt ..: getTracks (User "smpcln") (Just $ Artist "Burzum") Nothing Nothing (Just $ Limit 4) ak
 
 
-newtype GA = GA [String] deriving Show
-newtype GAR = GAR [String] deriving Show
-newtype GT = GT [String] deriving Show
-
-
-instance FromJSON GA where
-  parseJSON o = GA <$> (parseJSON o >>= (.: "albums") >>= (.: "album") >>= mapM (.: "name"))
-instance FromJSON GAR where
-  parseJSON o = GAR <$> (parseJSON o >>= (.: "artists") >>= (.: "artist") >>= mapM (.: "name"))
-instance FromJSON GT where
-  parseJSON o = GT <$> (parseJSON o >>= (.: "tracks") >>= (.: "track") >>= mapM (.: "name"))
+ga, gar, gt ∷ Value → Parser [String]
+ga o = parseJSON o >>= (.: "albums") >>= (.: "album") >>= mapM (.: "name")
+gar o = parseJSON o >>= (.: "artists") >>= (.: "artist") >>= mapM (.: "name")
+gt o = parseJSON o >>= (.: "tracks") >>= (.: "track") >>= mapM (.: "name")

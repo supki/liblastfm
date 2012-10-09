@@ -5,15 +5,30 @@ import Control.Applicative ((<$>))
 import Data.Maybe (isJust)
 
 import Data.Aeson
-import Network.Lastfm
+import Data.Aeson.Types
+import qualified Data.Attoparsec.Lazy as AP
+import Data.ByteString.Lazy (ByteString)
+import Network.Lastfm hiding (Value)
 import Network.Lastfm.JSON.User
 import Test.HUnit
 
 
+p ∷ (Value → Parser b) → ByteString → Maybe b
+p f xs = case AP.parse json xs of
+  AP.Done _ j → case parse f j of
+    Success v → Just v
+    _ → Nothing
+  _ → Nothing
+
+
+(..:) ∷ (Functor f, Functor g) ⇒ (a → b) → f (g a) → f (g b)
+(..:) = fmap . fmap
+
+
 instance Assertable (Either LastfmError Response) where
   assert = either (assertFailure . show) (const $ return ())
-instance FromJSON α ⇒ Assertable (Lastfm Response, Response → Maybe α) where
-  assert (α, β) = α >>= either (assertFailure . show) (assertBool "Cannot parse JSON" . isJust . β)
+instance Assertable (Either LastfmError (Maybe a)) where
+  assert α = either (assertFailure . show) (assertBool "Cannot parse JSON" . isJust) α
 
 
 private ∷ APIKey → SessionKey → Secret → [Test]
@@ -24,14 +39,14 @@ private ak sk s =
   , TestLabel "shout" $ TestCase testShout
   ]
  where
-  testGetRecentStations = assert
-    (getRecentStations (User "liblastfm") Nothing (Just $ Limit 10) ak sk s, decode ∷ Response → Maybe GRS)
+  testGetRecentStations = assert $
+    p grs ..: getRecentStations (User "liblastfm") Nothing (Just $ Limit 10) ak sk s
 
-  testGetRecommendedArtists = assert
-    (getRecommendedArtists Nothing (Just $ Limit 10) ak sk s, decode ∷ Response → Maybe GRA)
+  testGetRecommendedArtists = assert $
+    p gra ..: getRecommendedArtists Nothing (Just $ Limit 10) ak sk s
 
-  testGetRecommendedEvents = assert
-    (getRecommendedEvents Nothing (Just $ Limit 10) ak sk s, decode ∷ Response → Maybe GRE)
+  testGetRecommendedEvents = assert $
+    p gre ..: getRecommendedEvents Nothing (Just $ Limit 10) ak sk s
 
   testShout = assert $
     shout (User "liblastfm") (Message "test message") ak sk s
@@ -62,143 +77,95 @@ public =
   , TestLabel "getWeeklyTrackChart" $ TestCase testGetWeeklyTrackChart
   ]
  where
-  ak = APIKey "b25b959554ed76058ac220b7b2e0a026"
+  ak = APIKey "29effec263316a1f8a97f753caaa83e0"
 
-  testGetArtistTracks = assert
-    (getArtistTracks (User "smpcln") (Artist "Dvar") Nothing Nothing Nothing ak, decode ∷ Response → Maybe GAT)
+  testGetArtistTracks = assert $
+    p gat ..: getArtistTracks (User "smpcln") (Artist "Dvar") Nothing Nothing Nothing ak
 
-  testGetBannedTracks = assert
-    (getBannedTracks (User "smpcln") Nothing (Just $ Limit 10) ak, decode ∷ Response → Maybe GBT)
+  testGetBannedTracks = assert $
+    p gbt ..: getBannedTracks (User "smpcln") Nothing (Just $ Limit 10) ak
 
-  testGetEvents = assert
-    (getEvents (User "chansonnier") Nothing (Just $ Limit 5) Nothing ak, decode ∷ Response → Maybe GE)
+  testGetEvents = assert $
+    p ge ..: getEvents (User "chansonnier") Nothing (Just $ Limit 5) Nothing ak
 
-  testGetFriends = assert
-    (getFriends (User "smpcln") Nothing Nothing (Just $ Limit 10) ak, decode ∷ Response → Maybe GF)
+  testGetFriends = assert $
+    p gf ..: getFriends (User "smpcln") Nothing Nothing (Just $ Limit 10) ak
 
-  testGetPlayCount = assert
-    (getInfo (Just (User "smpcln")) ak, decode ∷ Response → Maybe GPC)
+  testGetPlayCount = assert $
+    p gpc ..: getInfo (Just (User "smpcln")) ak
 
-  testGetLovedTracks = assert
-    (getLovedTracks (User "smpcln") Nothing (Just $ Limit 10) ak, decode ∷ Response → Maybe GLT)
+  testGetLovedTracks = assert $
+    p glt ..: getLovedTracks (User "smpcln") Nothing (Just $ Limit 10) ak
 
-  testGetNeighbours = assert
-    (getNeighbours (User "smpcln") (Just $ Limit 10) ak, decode ∷ Response → Maybe GN)
+  testGetNeighbours = assert $
+    p gn ..: getNeighbours (User "smpcln") (Just $ Limit 10) ak
 
-  testGetNewReleases = assert
-    (getNewReleases (User "smpcln") Nothing ak, decode ∷ Response → Maybe GNR)
+  testGetNewReleases = assert $
+    p gnr ..: getNewReleases (User "smpcln") Nothing ak
 
-  testGetPastEvents = assert
-    (getPastEvents (User "mokele") Nothing (Just $ Limit 5) ak, decode ∷ Response → Maybe GPE)
+  testGetPastEvents = assert $
+    p gpe ..: getPastEvents (User "mokele") Nothing (Just $ Limit 5) ak
 
-  testGetPersonalTags = assert
-    (getPersonalTags (User "crackedcore") (Tag "rhythmic noise") (TaggingType "artist") Nothing (Just $ Limit 10) ak, decode ∷ Response → Maybe GPT)
+  testGetPersonalTags = assert $
+    p gpt ..: getPersonalTags (User "crackedcore") (Tag "rhythmic noise") (TaggingType "artist") Nothing (Just $ Limit 10) ak
 
-  testGetPlaylists = assert
-    (getPlaylists (User "mokele") ak, decode ∷ Response → Maybe GP)
+  testGetPlaylists = assert $
+    p gp ..: getPlaylists (User "mokele") ak
 
-  testGetRecentTracks = assert
-    (getRecentTracks (User "smpcln") Nothing (Just $ Limit 10) Nothing Nothing ak, decode ∷ Response → Maybe GRT)
+  testGetRecentTracks = assert $
+    p grt ..: getRecentTracks (User "smpcln") Nothing (Just $ Limit 10) Nothing Nothing ak
 
-  testGetShouts = assert
-    (getShouts (User "smpcln") Nothing (Just $ Limit 2) ak, decode ∷ Response → Maybe GS)
+  testGetShouts = assert $
+    p gs ..: getShouts (User "smpcln") Nothing (Just $ Limit 2) ak
 
-  testGetTopAlbums = assert
-    (getTopAlbums (User "smpcln") Nothing Nothing (Just $ Limit 5) ak, decode ∷ Response → Maybe GTAL)
+  testGetTopAlbums = assert $
+    p gtal ..: getTopAlbums (User "smpcln") Nothing Nothing (Just $ Limit 5) ak
 
-  testGetTopArtists = assert
-    (getTopArtists (User "smpcln") Nothing Nothing (Just $ Limit 5) ak, decode ∷ Response → Maybe GTAR)
+  testGetTopArtists = assert $
+    p gtar ..: getTopArtists (User "smpcln") Nothing Nothing (Just $ Limit 5) ak
 
-  testGetTopTags = assert
-    (getTopTags (User "smpcln") (Just $ Limit 10) ak, decode ∷ Response → Maybe GTTA)
+  testGetTopTags = assert $
+    p gtta ..: getTopTags (User "smpcln") (Just $ Limit 10) ak
 
-  testGetTopTracks = assert
-    (getTopTracks (User "smpcln") Nothing Nothing (Just $ Limit 10) ak, decode ∷ Response → Maybe GTTR)
+  testGetTopTracks = assert $
+    p gttr ..: getTopTracks (User "smpcln") Nothing Nothing (Just $ Limit 10) ak
 
-  testGetWeeklyAlbumChart = assert
-    (getWeeklyAlbumChart (User "rj") Nothing Nothing ak, decode ∷ Response → Maybe GWALC)
+  testGetWeeklyAlbumChart = assert $
+    p gwalc ..: getWeeklyAlbumChart (User "rj") Nothing Nothing ak
 
-  testGetWeeklyArtistChart = assert
-    (getWeeklyArtistChart (User "rj") Nothing Nothing ak, decode ∷ Response → Maybe GWARC)
+  testGetWeeklyArtistChart = assert $
+    p gwarc ..: getWeeklyArtistChart (User "rj") Nothing Nothing ak
 
-  testGetWeeklyChartList = assert
-    (getWeeklyChartList (User "rj") ak, decode ∷ Response → Maybe GWCL)
+  testGetWeeklyChartList = assert $
+    p gwcl ..: getWeeklyChartList (User "rj") ak
 
-  testGetWeeklyTrackChart = assert
-    (getWeeklyTrackChart (User "rj") Nothing Nothing ak, decode ∷ Response → Maybe GWTC)
-
-
-newtype GAT = GAT [String] deriving Show
-newtype GBT = GBT [String] deriving Show
-newtype GE = GE [String] deriving Show
-newtype GF = GF [String] deriving Show
-newtype GLT = GLT [String] deriving Show
-newtype GN = GN [String] deriving Show
-newtype GNR = GNR [String] deriving Show
-newtype GP = GP [String] deriving Show
-newtype GPC = GPC String deriving Show
-newtype GPE = GPE [String] deriving Show
-newtype GPT = GPT [String] deriving Show
-newtype GRA = GRA [String] deriving Show
-newtype GRE = GRE [String] deriving Show
-newtype GRS = GRS [String] deriving Show
-newtype GRT = GRT [String] deriving Show
-newtype GS = GS [String] deriving Show
-newtype GTAL = GTAL [String] deriving Show
-newtype GTAR = GTAR [String] deriving Show
-newtype GTTA = GTTA [String] deriving Show
-newtype GTTR = GTTR [String] deriving Show
-newtype GWALC = GWALC [String] deriving Show
-newtype GWARC = GWARC [String] deriving Show
-newtype GWCL = GWCL [String] deriving Show
-newtype GWTC = GWTC [String] deriving Show
+  testGetWeeklyTrackChart = assert $
+    p gwtc ..: getWeeklyTrackChart (User "rj") Nothing Nothing ak
 
 
-instance FromJSON GAT where
-  parseJSON o = GAT <$> (parseJSON o >>= (.: "artisttracks") >>= (.: "track") >>= mapM (.: "name"))
-instance FromJSON GBT where
-  parseJSON o = GBT <$> (parseJSON o >>= (.: "bannedtracks") >>= (.: "track") >>= mapM (.: "name"))
-instance FromJSON GE where
-  parseJSON o = GE <$> (parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (.: "venue") >>= mapM (.: "url"))
-instance FromJSON GF where
-  parseJSON o = GF <$> (parseJSON o >>= (.: "friends") >>= (.: "user") >>= mapM (.: "name"))
-instance FromJSON GLT where
-  parseJSON o = GLT <$> (parseJSON o >>= (.: "lovedtracks") >>= (.: "track") >>= mapM (.: "name"))
-instance FromJSON GN where
-  parseJSON o = GN <$> (parseJSON o >>= (.: "neighbours") >>= (.: "user") >>= mapM (.: "name"))
-instance FromJSON GNR where
-  parseJSON o = GNR <$> (parseJSON o >>= (.: "albums") >>= (.: "album") >>= mapM (.: "url"))
-instance FromJSON GP where
-  parseJSON o = GP <$> (parseJSON o >>=  (.: "playlists") >>= (.: "playlist") >>= mapM (.: "title"))
-instance FromJSON GPC where
-  parseJSON o = GPC <$> (parseJSON o >>= (.: "user") >>= (.: "playcount"))
-instance FromJSON GPE where
-  parseJSON o = GPE <$> (parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (.: "url"))
-instance FromJSON GPT where
-  parseJSON o = GPT <$> (parseJSON o >>= (.: "taggings") >>= (.: "artists") >>= (.: "artist") >>= mapM (.: "name"))
-instance FromJSON GRA where
-  parseJSON o = GRA <$> (parseJSON o >>= (.: "recommendations") >>= (.: "artist") >>= mapM (.: "name"))
-instance FromJSON GRE where
-  parseJSON o = GRE <$> (parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (.: "url"))
-instance FromJSON GRS where
-  parseJSON o = GRS <$> (parseJSON o >>= (.: "recentstations") >>= (.: "station") >>= mapM (.: "name"))
-instance FromJSON GRT where
-  parseJSON o = GRT <$> (parseJSON o >>= (.: "recenttracks") >>= (.: "track") >>= mapM (.: "name"))
-instance FromJSON GS where
-  parseJSON o = GS <$> (parseJSON o >>= (.: "shouts") >>= (.: "shout") >>= mapM (.: "body"))
-instance FromJSON GTAL where
-  parseJSON o = GTAL <$> (parseJSON o >>= (.: "topalbums") >>= (.: "album") >>= mapM (.: "artist") >>= mapM (.: "name"))
-instance FromJSON GTAR where
-  parseJSON o = GTAR <$> (parseJSON o >>= (.: "topartists") >>= (.: "artist") >>= mapM (.: "name"))
-instance FromJSON GTTA where
-  parseJSON o = GTTA <$> (parseJSON o >>= (.: "toptags") >>= (.: "tag") >>= mapM (.: "name"))
-instance FromJSON GTTR where
-  parseJSON o = GTTR <$> (parseJSON o >>= (.: "toptracks") >>= (.: "track") >>= mapM (.: "url"))
-instance FromJSON GWALC where
-  parseJSON o = GWALC <$> (parseJSON o >>= (.: "weeklyalbumchart") >>= (.: "album") >>= mapM (.: "url"))
-instance FromJSON GWARC where
-  parseJSON o = GWARC <$> (parseJSON o >>= (.: "weeklyartistchart") >>= (.: "artist") >>= mapM (.: "url"))
-instance FromJSON GWCL where
-  parseJSON o = GWCL . take 5 <$> (parseJSON o >>= (.: "weeklychartlist") >>= (.: "chart") >>= mapM (.: "from"))
-instance FromJSON GWTC where
-  parseJSON o = GWTC <$> (parseJSON o >>= (.: "weeklytrackchart") >>= (.: "track") >>= mapM (.: "url"))
+gpc ∷ Value → Parser String
+gat, gbt, ge, gf, glt, gn, gnr, gp, gpe, gpt, gra, gre, grs, grt, gs, gtal, gtar, gtta, gttr, gwalc, gwarc, gwcl, gwtc ∷ Value → Parser [String]
+gat o = parseJSON o >>= (.: "artisttracks") >>= (.: "track") >>= mapM (.: "name")
+gbt o = parseJSON o >>= (.: "bannedtracks") >>= (.: "track") >>= mapM (.: "name")
+ge o = parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (.: "venue") >>= mapM (.: "url")
+gf o = parseJSON o >>= (.: "friends") >>= (.: "user") >>= mapM (.: "name")
+glt o = parseJSON o >>= (.: "lovedtracks") >>= (.: "track") >>= mapM (.: "name")
+gn o = parseJSON o >>= (.: "neighbours") >>= (.: "user") >>= mapM (.: "name")
+gnr o = parseJSON o >>= (.: "albums") >>= (.: "album") >>= mapM (.: "url")
+gp o = parseJSON o >>=  (.: "playlists") >>= (.: "playlist") >>= mapM (.: "title")
+gpc o = parseJSON o >>= (.: "user") >>= (.: "playcount")
+gpe o = parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (.: "url")
+gpt o = parseJSON o >>= (.: "taggings") >>= (.: "artists") >>= (.: "artist") >>= mapM (.: "name")
+gra o = parseJSON o >>= (.: "recommendations") >>= (.: "artist") >>= mapM (.: "name")
+gre o = parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (.: "url")
+grs o = parseJSON o >>= (.: "recentstations") >>= (.: "station") >>= mapM (.: "name")
+grt o = parseJSON o >>= (.: "recenttracks") >>= (.: "track") >>= mapM (.: "name")
+gs o = parseJSON o >>= (.: "shouts") >>= (.: "shout") >>= mapM (.: "body")
+gtal o = parseJSON o >>= (.: "topalbums") >>= (.: "album") >>= mapM (.: "artist") >>= mapM (.: "name")
+gtar o = parseJSON o >>= (.: "topartists") >>= (.: "artist") >>= mapM (.: "name")
+gtta o = parseJSON o >>= (.: "toptags") >>= (.: "tag") >>= mapM (.: "name")
+gttr o = parseJSON o >>= (.: "toptracks") >>= (.: "track") >>= mapM (.: "url")
+gwalc o = parseJSON o >>= (.: "weeklyalbumchart") >>= (.: "album") >>= mapM (.: "url")
+gwarc o = parseJSON o >>= (.: "weeklyartistchart") >>= (.: "artist") >>= mapM (.: "url")
+gwcl o = take 5 <$> (parseJSON o >>= (.: "weeklychartlist") >>= (.: "chart") >>= mapM (.: "from"))
+gwtc o = parseJSON o >>= (.: "weeklytrackchart") >>= (.: "track") >>= mapM (.: "url")

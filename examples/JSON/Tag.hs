@@ -5,13 +5,28 @@ import Control.Applicative ((<$>), (<*>))
 import Data.Maybe (isJust)
 
 import Data.Aeson
-import Network.Lastfm
+import Data.Aeson.Types
+import qualified Data.Attoparsec.Lazy as AP
+import Data.ByteString.Lazy (ByteString)
+import Network.Lastfm hiding (Value)
 import Network.Lastfm.JSON.Tag
 import Test.HUnit
 
 
-instance FromJSON α ⇒ Assertable (Lastfm Response, Response → Maybe α) where
-  assert (α, β) = α >>= either (assertFailure . show) (assertBool "Cannot parse JSON" . isJust . β)
+p ∷ (Value → Parser b) → ByteString → Maybe b
+p f xs = case AP.parse json xs of
+  AP.Done _ j → case parse f j of
+    Success v → Just v
+    _ → Nothing
+  _ → Nothing
+
+
+(..:) ∷ (Functor f, Functor g) ⇒ (a → b) → f (g a) → f (g b)
+(..:) = fmap . fmap
+
+
+instance Assertable (Either LastfmError (Maybe a)) where
+  assert α = either (assertFailure . show) (assertBool "Cannot parse JSON" . isJust) α
 
 
 public ∷ [Test]
@@ -27,62 +42,45 @@ public =
   , TestLabel "search" $ TestCase testSearch
   ]
  where
-  ak = APIKey "b25b959554ed76058ac220b7b2e0a026"
+  ak = APIKey "29effec263316a1f8a97f753caaa83e0"
 
-  testGetInfo = assert
-    (getInfo (Tag "depressive") Nothing ak, decode ∷ Response → Maybe GI)
+  testGetInfo = assert $
+    p gi ..: getInfo (Tag "depressive") Nothing ak
 
-  testGetSimilar = assert
-    (getSimilar (Tag "depressive") ak, decode ∷ Response → Maybe GS)
+  testGetSimilar = assert $
+    p gs ..: getSimilar (Tag "depressive") ak
 
-  testGetTopAlbums = assert
-    (getTopAlbums (Tag "depressive") Nothing (Just $ Limit 2) ak, decode ∷ Response → Maybe GTA)
+  testGetTopAlbums = assert $
+    p gta ..: getTopAlbums (Tag "depressive") Nothing (Just $ Limit 2) ak
 
-  testGetTopArtists = assert
-    (getTopArtists (Tag "depressive") Nothing (Just $ Limit 3) ak, decode ∷ Response → Maybe GTAR)
+  testGetTopArtists = assert $
+    p gtar ..: getTopArtists (Tag "depressive") Nothing (Just $ Limit 3) ak
 
-  testGetTopTags = assert
-    (getTopTags ak, decode ∷ Response → Maybe GTT)
+  testGetTopTags = assert $
+    p gtt ..: getTopTags ak
 
-  testGetTopTracks = assert
-    (getTopTracks (Tag "depressive") Nothing (Just $ Limit 2) ak, decode ∷ Response → Maybe GTTR)
+  testGetTopTracks = assert $
+    p gttr ..: getTopTracks (Tag "depressive") Nothing (Just $ Limit 2) ak
 
-  testGetWeeklyArtistChart = assert
-    (getWeeklyArtistChart (Tag "depressive") Nothing Nothing (Just $ Limit 3) ak, decode ∷ Response → Maybe GWAC)
+  testGetWeeklyArtistChart = assert $
+    p gwac ..: getWeeklyArtistChart (Tag "depressive") Nothing Nothing (Just $ Limit 3) ak
 
-  testGetWeeklyChartList = assert
-    (getWeeklyChartList (Tag "depressive") ak, decode ∷ Response → Maybe GC)
+  testGetWeeklyChartList = assert $
+    p gc ..: getWeeklyChartList (Tag "depressive") ak
 
-  testSearch = assert
-    (search (Tag "depressive") Nothing (Just $ Limit 3) ak, decode ∷ Response → Maybe SE)
-
-
-newtype GI = GI String deriving Show
-newtype GC = GC [(String,String)] deriving Show
-newtype GS = GS [String] deriving Show
-newtype GTA = GTA [String] deriving Show
-newtype GTAR = GTAR [String] deriving Show
-newtype GTT = GTT [String] deriving Show
-newtype GTTR = GTTR [String] deriving Show
-newtype GWAC = GWAC [String] deriving Show
-newtype SE = SE [String] deriving Show
+  testSearch = assert $
+    p se ..: search (Tag "depressive") Nothing (Just $ Limit 3) ak
 
 
-instance FromJSON GI where
-  parseJSON o = GI <$> (parseJSON o >>= (.: "tag") >>= (.: "taggings"))
-instance FromJSON GC where
-  parseJSON o = GC <$> (parseJSON o >>= (.: "weeklychartlist") >>= (.: "chart") >>= mapM (\t → (,) <$> (t .: "from") <*> (t .: "to")))
-instance FromJSON GS where
-  parseJSON o = GS <$> (parseJSON o >>= (.: "similartags") >>= (.: "tag") >>= mapM (.: "name"))
-instance FromJSON GTA where
-  parseJSON o = GTA <$> (parseJSON o >>= (.: "topalbums") >>= (.: "album") >>= mapM (.: "url"))
-instance FromJSON GTAR where
-  parseJSON o = GTAR <$> (parseJSON o >>= (.: "topartists") >>= (.: "artist") >>= mapM (.: "url"))
-instance FromJSON GTT where
-  parseJSON o = GTT <$> (parseJSON o >>= (.: "toptags") >>= (.: "tag") >>= mapM (.: "name"))
-instance FromJSON GTTR where
-  parseJSON o = GTTR <$> (parseJSON o >>= (.: "toptracks") >>= (.: "track") >>= mapM (.: "url"))
-instance FromJSON GWAC where
-  parseJSON o = GWAC <$> (parseJSON o >>= (.: "weeklyartistchart") >>= (.: "artist") >>= mapM (.: "name"))
-instance FromJSON SE where
-  parseJSON o = SE <$> (parseJSON o >>= (.: "results") >>= (.: "tagmatches") >>= (.: "tag") >>= mapM (.: "name"))
+gi ∷ Value → Parser String
+gs, gta, gtar, gtt, gttr, gwac, se ∷ Value → Parser [String]
+gc ∷ Value → Parser [(String, String)]
+gi o = parseJSON o >>= (.: "tag") >>= (.: "taggings")
+gc o = parseJSON o >>= (.: "weeklychartlist") >>= (.: "chart") >>= mapM (\t → (,) <$> (t .: "from") <*> (t .: "to"))
+gs o = parseJSON o >>= (.: "similartags") >>= (.: "tag") >>= mapM (.: "name")
+gta o = parseJSON o >>= (.: "topalbums") >>= (.: "album") >>= mapM (.: "url")
+gtar o = parseJSON o >>= (.: "topartists") >>= (.: "artist") >>= mapM (.: "url")
+gtt o = parseJSON o >>= (.: "toptags") >>= (.: "tag") >>= mapM (.: "name")
+gttr o = parseJSON o >>= (.: "toptracks") >>= (.: "track") >>= mapM (.: "url")
+gwac o = parseJSON o >>= (.: "weeklyartistchart") >>= (.: "artist") >>= mapM (.: "name")
+se o = parseJSON o >>= (.: "results") >>= (.: "tagmatches") >>= (.: "tag") >>= mapM (.: "name")
