@@ -34,7 +34,7 @@ private ∷ APIKey → SessionKey → Secret → [Test]
 private ak sk s =
   [ TestLabel "addTags" $ TestCase testAddTags
   , TestLabel "getTags-authenticated" $ TestCase testGetTagsAuth
-  , TestLabel "removTag" $ TestCase testRemoveTag
+  , TestLabel "removeTag" $ TestCase testRemoveTag
   , TestLabel "share" $ TestCase testShare
   ]
  where
