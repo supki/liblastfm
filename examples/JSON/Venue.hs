@@ -30,9 +30,9 @@ instance Assertable (Either LastfmError (Maybe a)) where
 
 public ∷ [Test]
 public =
-  [ TestLabel "getEvents" $ TestCase testGetEvents
-  , TestLabel "getPastEvents" $ TestCase testGetPastEvents
-  , TestLabel "search" $ TestCase testSearch
+  [ TestLabel "Venue.getEvents" $ TestCase testGetEvents
+  , TestLabel "Venue.getPastEvents" $ TestCase testGetPastEvents
+  , TestLabel "Venue.search" $ TestCase testSearch
   ]
  where
   ak = APIKey "29effec263316a1f8a97f753caaa83e0"
@@ -49,5 +49,5 @@ public =
 
 ge, gpe, se ∷ Value → Parser [String]
 ge o = parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (\t → (t .: "venue") >>= (.: "name"))
-gpe o = parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (\t → (t .: "artists") >>= (.: "artist"))
+gpe o = parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (.: "title")
 se o = parseJSON o >>= (.: "results") >>= (.: "venuematches") >>= (.: "venue") >>= mapM (.: "id")

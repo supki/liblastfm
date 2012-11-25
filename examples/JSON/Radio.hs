@@ -33,8 +33,8 @@ instance Assertable (Either LastfmError (Maybe a)) where
 
 private ∷ APIKey → SessionKey → Secret → [Test]
 private ak sk s =
-  [ TestLabel "tune" $ TestCase testTune
-  , TestLabel "getPlaylist" $ TestCase testGetPlaylist
+  [ TestLabel "Radio.tune" $ TestCase testTune
+  , TestLabel "Radio.getPlaylist" $ TestCase testGetPlaylist
   ]
  where
   testGetPlaylist = assert $
@@ -45,7 +45,7 @@ private ak sk s =
 
 
 public ∷ [Test]
-public = return $ TestLabel "search" $ TestCase testSearch
+public = return $ TestLabel "Radio.search" $ TestCase testSearch
  where
   ak = APIKey "29effec263316a1f8a97f753caaa83e0"
 

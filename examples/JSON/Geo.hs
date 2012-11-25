@@ -31,17 +31,17 @@ instance Assertable (Either LastfmError (Maybe a)) where
 
 public ∷ [Test]
 public =
-  [ TestLabel "getEvents" $ TestCase testGetEvents
-  , TestLabel "getMetroArtistChart" $ TestCase testGetMetroArtistChart
-  , TestLabel "getMetroHypeArtistChart" $ TestCase testGetMetroHypeArtistChart
-  , TestLabel "getMetroHypeTrackChart" $ TestCase testGetMetroHypeTrackChart
-  , TestLabel "getMetroTrackChart" $ TestCase testGetMetroTrackChart
-  , TestLabel "getMetroUniqueArtistChart" $ TestCase testGetMetroUniqueArtistChart
-  , TestLabel "getMetroUniqueTrackChart" $ TestCase testGetMetroUniqueTrackChart
-  , TestLabel "getMetroWeeklyChartlist" $ TestCase testGetMetroWeeklyChartlist
-  , TestLabel "getMetros" $ TestCase testGetMetros
-  , TestLabel "getTopArtists" $ TestCase testGetTopArtists
-  , TestLabel "getTopTracks" $ TestCase testGetTopTracks
+  [ TestLabel "Geo.getEvents" $ TestCase testGetEvents
+  , TestLabel "Geo.getMetroArtistChart" $ TestCase testGetMetroArtistChart
+  , TestLabel "Geo.getMetroHypeArtistChart" $ TestCase testGetMetroHypeArtistChart
+  , TestLabel "Geo.getMetroHypeTrackChart" $ TestCase testGetMetroHypeTrackChart
+  , TestLabel "Geo.getMetroTrackChart" $ TestCase testGetMetroTrackChart
+  , TestLabel "Geo.getMetroUniqueArtistChart" $ TestCase testGetMetroUniqueArtistChart
+  , TestLabel "Geo.getMetroUniqueTrackChart" $ TestCase testGetMetroUniqueTrackChart
+  , TestLabel "Geo.getMetroWeeklyChartlist" $ TestCase testGetMetroWeeklyChartlist
+  , TestLabel "Geo.getMetros" $ TestCase testGetMetros
+  , TestLabel "Geo.getTopArtists" $ TestCase testGetTopArtists
+  , TestLabel "Geo.getTopTracks" $ TestCase testGetTopTracks
   ]
  where
   ak = APIKey "29effec263316a1f8a97f753caaa83e0"

@@ -30,7 +30,7 @@ instance Assertable (Either LastfmError (Maybe a)) where
 
 
 public ∷ [Test]
-public = return $ TestLabel "compare" $ TestCase testCompare
+public = return $ TestLabel "Tasteometer.compare" $ TestCase testCompare
  where
   ak = APIKey "29effec263316a1f8a97f753caaa83e0"
 

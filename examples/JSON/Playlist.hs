@@ -16,8 +16,8 @@ instance Assertable (Either LastfmError Response) where
 
 private ∷ APIKey → SessionKey → Secret → [Test]
 private ak sk s =
-  [ TestLabel "create" $ TestCase testCreate -- Order matters.
-  , TestLabel "addTrack" $ TestCase testAddTrack
+  [ TestLabel "Playlist.create" $ TestCase testCreate -- Order matters.
+  , TestLabel "Playlist.addTrack" $ TestCase testAddTrack
   ]
  where
   testAddTrack =
