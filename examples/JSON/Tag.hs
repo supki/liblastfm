@@ -31,15 +31,15 @@ instance Assertable (Either LastfmError (Maybe a)) where
 
 public ∷ [Test]
 public =
-  [ TestLabel "getInfo" $ TestCase testGetInfo
-  , TestLabel "getSimilar" $ TestCase testGetSimilar
-  , TestLabel "getTopAlbums" $ TestCase testGetTopAlbums
-  , TestLabel "getTopArtists" $ TestCase testGetTopArtists
-  , TestLabel "getTopTags" $ TestCase testGetTopTags
-  , TestLabel "getTopTracks" $ TestCase testGetTopTracks
-  , TestLabel "getWeeklyArtistChart" $ TestCase testGetWeeklyArtistChart
-  , TestLabel "getWeeklyChartList" $ TestCase testGetWeeklyChartList
-  , TestLabel "search" $ TestCase testSearch
+  [ TestLabel "Tag.getInfo" $ TestCase testGetInfo
+  , TestLabel "Tag.getSimilar" $ TestCase testGetSimilar
+  , TestLabel "Tag.getTopAlbums" $ TestCase testGetTopAlbums
+  , TestLabel "Tag.getTopArtists" $ TestCase testGetTopArtists
+  , TestLabel "Tag.getTopTags" $ TestCase testGetTopTags
+  , TestLabel "Tag.getTopTracks" $ TestCase testGetTopTracks
+  , TestLabel "Tag.getWeeklyArtistChart" $ TestCase testGetWeeklyArtistChart
+  , TestLabel "Tag.getWeeklyChartList" $ TestCase testGetWeeklyChartList
+  , TestLabel "Tag.search" $ TestCase testSearch
   ]
  where
   ak = APIKey "29effec263316a1f8a97f753caaa83e0"

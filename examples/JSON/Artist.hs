@@ -32,10 +32,10 @@ instance Assertable (Either LastfmError (Maybe a)) where
 
 private ∷ APIKey → SessionKey → Secret → [Test]
 private ak sk s =
-  [ TestLabel "addTags" $ TestCase testAddTags
-  , TestLabel "getTags-authenticated" $ TestCase testGetTagsAuth
-  , TestLabel "removeTag" $ TestCase testRemoveTag
-  , TestLabel "share" $ TestCase testShare
+  [ TestLabel "Artist.addTags" $ TestCase testAddTags
+  , TestLabel "Artist.getTags-authenticated" $ TestCase testGetTagsAuth
+  , TestLabel "Artist.removeTag" $ TestCase testRemoveTag
+  , TestLabel "Artist.share" $ TestCase testShare
   ]
  where
   testGetTagsAuth = assert $
@@ -53,20 +53,20 @@ private ak sk s =
 
 public ∷ [Test]
 public =
-  [ TestLabel "getCorrection" $ TestCase testGetCorrection
-  , TestLabel "getEvents" $ TestCase testGetEvents
-  , TestLabel "getImages" $ TestCase testGetImages
-  , TestLabel "getInfo" $ TestCase testGetInfo
-  , TestLabel "getPastEvents" $ TestCase testGetPastEvents
-  , TestLabel "getPodcast" $ TestCase testGetPodcast
-  , TestLabel "getShouts" $ TestCase testGetShouts
-  , TestLabel "getSimilar" $ TestCase testGetSimilar
-  , TestLabel "getTags" $ TestCase testGetTags
-  , TestLabel "getTopAlbums" $ TestCase testGetTopAlbums
-  , TestLabel "getTopFans" $ TestCase testGetTopFans
-  , TestLabel "getTopTags" $ TestCase testGetTopTags
-  , TestLabel "getTopTracks" $ TestCase testGetTopTracks
-  , TestLabel "search" $ TestCase testSearch
+  [ TestLabel "Artist.getCorrection" $ TestCase testGetCorrection
+  , TestLabel "Artist.getEvents" $ TestCase testGetEvents
+  , TestLabel "Artist.getImages" $ TestCase testGetImages
+  , TestLabel "Artist.getInfo" $ TestCase testGetInfo
+  , TestLabel "Artist.getPastEvents" $ TestCase testGetPastEvents
+  , TestLabel "Artist.getPodcast" $ TestCase testGetPodcast
+  , TestLabel "Artist.getShouts" $ TestCase testGetShouts
+  , TestLabel "Artist.getSimilar" $ TestCase testGetSimilar
+  , TestLabel "Artist.getTags" $ TestCase testGetTags
+  , TestLabel "Artist.getTopAlbums" $ TestCase testGetTopAlbums
+  , TestLabel "Artist.getTopFans" $ TestCase testGetTopFans
+  , TestLabel "Artist.getTopTags" $ TestCase testGetTopTags
+  , TestLabel "Artist.getTopTracks" $ TestCase testGetTopTracks
+  , TestLabel "Artist.search" $ TestCase testSearch
   ]
  where
   ak = APIKey "29effec263316a1f8a97f753caaa83e0"

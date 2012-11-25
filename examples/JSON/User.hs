@@ -33,10 +33,10 @@ instance Assertable (Either LastfmError (Maybe a)) where
 
 private ∷ APIKey → SessionKey → Secret → [Test]
 private ak sk s =
-  [ TestLabel "getRecentStations" $ TestCase testGetRecentStations
-  , TestLabel "getRecommendedArtists" $ TestCase testGetRecommendedArtists
-  , TestLabel "getRecommendedEvents" $ TestCase testGetRecommendedEvents
-  , TestLabel "shout" $ TestCase testShout
+  [ TestLabel "User.getRecentStations" $ TestCase testGetRecentStations
+  , TestLabel "User.getRecommendedArtists" $ TestCase testGetRecommendedArtists
+  , TestLabel "User.getRecommendedEvents" $ TestCase testGetRecommendedEvents
+  , TestLabel "User.shout" $ TestCase testShout
   ]
  where
   testGetRecentStations = assert $
@@ -54,27 +54,27 @@ private ak sk s =
 
 public ∷ [Test]
 public =
-  [ TestLabel "getArtistTracks" $ TestCase testGetArtistTracks
-  , TestLabel "getBannedTracks" $ TestCase testGetBannedTracks
-  , TestLabel "getEvents" $ TestCase testGetEvents
-  , TestLabel "getFriends" $ TestCase testGetFriends
-  , TestLabel "getPlayCount" $ TestCase testGetPlayCount
-  , TestLabel "getGetLovedTracks" $ TestCase testGetLovedTracks
-  , TestLabel "getNeighbours" $ TestCase testGetNeighbours
-  , TestLabel "getNewReleases" $ TestCase testGetNewReleases
-  , TestLabel "getPastEvents" $ TestCase testGetPastEvents
-  , TestLabel "getPersonalTags" $ TestCase testGetPersonalTags
-  , TestLabel "getPlaylists" $ TestCase testGetPlaylists
-  , TestLabel "getRecentTracks" $ TestCase testGetRecentTracks
-  , TestLabel "getShouts" $ TestCase testGetShouts
-  , TestLabel "getTopAlbums" $ TestCase testGetTopAlbums
-  , TestLabel "getTopArtists" $ TestCase testGetTopArtists
-  , TestLabel "getTopTags" $ TestCase testGetTopTags
-  , TestLabel "getTopTracks" $ TestCase testGetTopTracks
-  , TestLabel "getWeeklyAlbumChart" $ TestCase testGetWeeklyAlbumChart
-  , TestLabel "getWeeklyArtistChart" $ TestCase testGetWeeklyArtistChart
-  , TestLabel "getWeeklyChartList" $ TestCase testGetWeeklyChartList
-  , TestLabel "getWeeklyTrackChart" $ TestCase testGetWeeklyTrackChart
+  [ TestLabel "User.getArtistTracks" $ TestCase testGetArtistTracks
+  , TestLabel "User.getBannedTracks" $ TestCase testGetBannedTracks
+  , TestLabel "User.getEvents" $ TestCase testGetEvents
+  , TestLabel "User.getFriends" $ TestCase testGetFriends
+  , TestLabel "User.getPlayCount" $ TestCase testGetPlayCount
+  , TestLabel "User.getGetLovedTracks" $ TestCase testGetLovedTracks
+  , TestLabel "User.getNeighbours" $ TestCase testGetNeighbours
+  , TestLabel "User.getNewReleases" $ TestCase testGetNewReleases
+  , TestLabel "User.getPastEvents" $ TestCase testGetPastEvents
+  , TestLabel "User.getPersonalTags" $ TestCase testGetPersonalTags
+  , TestLabel "User.getPlaylists" $ TestCase testGetPlaylists
+  , TestLabel "User.getRecentTracks" $ TestCase testGetRecentTracks
+  , TestLabel "User.getShouts" $ TestCase testGetShouts
+  , TestLabel "User.getTopAlbums" $ TestCase testGetTopAlbums
+  , TestLabel "User.getTopArtists" $ TestCase testGetTopArtists
+  , TestLabel "User.getTopTags" $ TestCase testGetTopTags
+  , TestLabel "User.getTopTracks" $ TestCase testGetTopTracks
+  , TestLabel "User.getWeeklyAlbumChart" $ TestCase testGetWeeklyAlbumChart
+  , TestLabel "User.getWeeklyArtistChart" $ TestCase testGetWeeklyArtistChart
+  , TestLabel "User.getWeeklyChartList" $ TestCase testGetWeeklyChartList
+  , TestLabel "User.getWeeklyTrackChart" $ TestCase testGetWeeklyTrackChart
   ]
  where
   ak = APIKey "29effec263316a1f8a97f753caaa83e0"

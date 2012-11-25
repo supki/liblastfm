@@ -32,10 +32,10 @@ instance Assertable (Either LastfmError (Maybe a)) where
 
 private ∷ APIKey → SessionKey → Secret → [Test]
 private ak sk s =
-  [ TestLabel "addTags" $ TestCase testAddTags
-  , TestLabel "getTags-authenticated" $ TestCase testGetTagsAuth
-  , TestLabel "removeTag" $ TestCase testRemoveTag
-  , TestLabel "share" $ TestCase testShare
+  [ TestLabel "Album.addTags" $ TestCase testAddTags
+  , TestLabel "Album.getTags-authenticated" $ TestCase testGetTagsAuth
+  , TestLabel "Album.removeTag" $ TestCase testRemoveTag
+  , TestLabel "Album.share" $ TestCase testShare
   ]
  where
   testAddTags = assert $
@@ -53,12 +53,12 @@ private ak sk s =
 
 public ∷ [Test]
 public =
-  [ TestLabel "getBuyLinks" $ TestCase testGetBuylinks
-  , TestLabel "getInfo" $ TestCase testGetInfo
-  , TestLabel "getShouts" $ TestCase testGetShouts
-  , TestLabel "getTags" $ TestCase testGetTags
-  , TestLabel "getTopTags" $ TestCase testGetTopTags
-  , TestLabel "search" $ TestCase testSearch
+  [ TestLabel "Album.getBuyLinks" $ TestCase testGetBuylinks
+  , TestLabel "Album.getInfo" $ TestCase testGetInfo
+  , TestLabel "Album.getShouts" $ TestCase testGetShouts
+  , TestLabel "Album.getTags" $ TestCase testGetTags
+  , TestLabel "Album.getTopTags" $ TestCase testGetTopTags
+  , TestLabel "Album.search" $ TestCase testSearch
   ]
  where
   ak = APIKey "29effec263316a1f8a97f753caaa83e0"

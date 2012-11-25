@@ -32,16 +32,16 @@ instance Assertable (Either LastfmError (Maybe a)) where
 
 private ∷ APIKey → SessionKey → Secret → [Test]
 private ak sk s =
-  [ TestLabel "addTags" $ TestCase testAddTags
-  , TestLabel "ban" $ TestCase testBan
-  , TestLabel "getTagsAuth" $ TestCase testGetTagsAuth
-  , TestLabel "love" $ TestCase testLove
-  , TestLabel "removeTag" $ TestCase testRemoveTag
-  , TestLabel "share" $ TestCase testShare
-  , TestLabel "unban" $ TestCase testUnban
-  , TestLabel "unlove" $ TestCase testUnlove
-  , TestLabel "scrobble" $ TestCase testScrobble
-  , TestLabel "updateNowPlaying" $ TestCase testUpdateNowPlaying
+  [ TestLabel "Track.addTags" $ TestCase testAddTags
+  , TestLabel "Track.ban" $ TestCase testBan
+  , TestLabel "Track.getTagsAuth" $ TestCase testGetTagsAuth
+  , TestLabel "Track.love" $ TestCase testLove
+  , TestLabel "Track.removeTag" $ TestCase testRemoveTag
+  , TestLabel "Track.share" $ TestCase testShare
+  , TestLabel "Track.unban" $ TestCase testUnban
+  , TestLabel "Track.unlove" $ TestCase testUnlove
+  , TestLabel "Track.scrobble" $ TestCase testScrobble
+  , TestLabel "Track.updateNowPlaying" $ TestCase testUpdateNowPlaying
   ]
  where
   testAddTags = assert $
@@ -77,16 +77,16 @@ private ak sk s =
 
 public ∷ [Test]
 public =
-  [ TestLabel "getBuylinks" $ TestCase testGetBuylinks
-  , TestLabel "getCorrection" $ TestCase testGetCorrection
-  , TestLabel "getFingerprintMetadata" $ TestCase testGetFingerprintMetadata
-  , TestLabel "getInfo" $ TestCase testGetInfo
-  , TestLabel "getShouts" $ TestCase testGetShouts
-  , TestLabel "getSimilar" $ TestCase testGetSimilar
-  , TestLabel "getTags" $ TestCase testGetTags
-  , TestLabel "getTopFans" $ TestCase testGetTopFans
-  , TestLabel "getTopTags" $ TestCase testGetTopTags
-  , TestLabel "search" $ TestCase testSearch
+  [ TestLabel "Track.getBuylinks" $ TestCase testGetBuylinks
+  , TestLabel "Track.getCorrection" $ TestCase testGetCorrection
+  , TestLabel "Track.getFingerprintMetadata" $ TestCase testGetFingerprintMetadata
+  , TestLabel "Track.getInfo" $ TestCase testGetInfo
+  , TestLabel "Track.getShouts" $ TestCase testGetShouts
+  , TestLabel "Track.getSimilar" $ TestCase testGetSimilar
+  , TestLabel "Track.getTags" $ TestCase testGetTags
+  , TestLabel "Track.getTopFans" $ TestCase testGetTopFans
+  , TestLabel "Track.getTopTags" $ TestCase testGetTopTags
+  , TestLabel "Track.search" $ TestCase testSearch
   ]
  where
   ak = APIKey "29effec263316a1f8a97f753caaa83e0"

@@ -32,8 +32,8 @@ instance Assertable (Either LastfmError (Maybe a)) where
 
 private ∷ APIKey → SessionKey → Secret → [Test]
 private ak sk s =
-  [ TestLabel "attend" $ TestCase testAttend
-  , TestLabel "share" $ TestCase testShare
+  [ TestLabel "Event.attend" $ TestCase testAttend
+  , TestLabel "Event.share" $ TestCase testShare
   ]
  where
   testAttend = assert $
@@ -45,9 +45,9 @@ private ak sk s =
 
 public ∷ [Test]
 public =
-  [ TestLabel "getAttendees" $ TestCase testGetAttendees
-  , TestLabel "getInfo" $ TestCase testGetInfo
-  , TestLabel "getShouts" $ TestCase testGetShouts
+  [ TestLabel "Event.getAttendees" $ TestCase testGetAttendees
+  , TestLabel "Event.getInfo" $ TestCase testGetInfo
+  , TestLabel "Event.getShouts" $ TestCase testGetShouts
   ]
  where
   ak = APIKey "29effec263316a1f8a97f753caaa83e0"

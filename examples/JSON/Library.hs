@@ -32,13 +32,13 @@ instance Assertable (Either LastfmError (Maybe a)) where
 
 private ∷ APIKey → SessionKey → Secret → [Test]
 private ak sk s =
-  [ TestLabel "addAlbum" $ TestCase testAddAlbum
-  , TestLabel "addArtist" $ TestCase testAddArtist
-  , TestLabel "addTrack" $ TestCase testAddTrack
-  , TestLabel "removeAlbum" $ TestCase testRemoveAlbum
-  , TestLabel "removeArtist" $ TestCase testRemoveArtist
-  , TestLabel "removeTrack" $ TestCase testRemoveTrack
-  , TestLabel "removeScrobble" $ TestCase testRemoveScrobble
+  [ TestLabel "Library.addAlbum" $ TestCase testAddAlbum
+  , TestLabel "Library.addArtist" $ TestCase testAddArtist
+  , TestLabel "Library.addTrack" $ TestCase testAddTrack
+  , TestLabel "Library.removeAlbum" $ TestCase testRemoveAlbum
+  , TestLabel "Library.removeArtist" $ TestCase testRemoveArtist
+  , TestLabel "Library.removeTrack" $ TestCase testRemoveTrack
+  , TestLabel "Library.removeScrobble" $ TestCase testRemoveScrobble
   ]
  where
   testAddAlbum = assert $
@@ -65,9 +65,9 @@ private ak sk s =
 
 public ∷ [Test]
 public =
-  [ TestLabel "getAlbums" $ TestCase testGetAlbums
-  , TestLabel "getArtists" $ TestCase testGetArtists
-  , TestLabel "getTracks" $ TestCase testGetTracks
+  [ TestLabel "Library.getAlbums" $ TestCase testGetAlbums
+  , TestLabel "Library.getArtists" $ TestCase testGetArtists
+  , TestLabel "Library.getTracks" $ TestCase testGetTracks
   ]
  where
   ak = APIKey "29effec263316a1f8a97f753caaa83e0"
