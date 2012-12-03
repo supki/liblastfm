@@ -6,19 +6,19 @@ license-file: LICENSE
 author: Matvey Aksenov, Dmitry Malikov
 maintainer: Matvey Aksenov <matvey.aksenov@gmail.com>
 category: Network APIs
-description: Simple but complete wrapper to Lastfm API. Can send some stuff and receive reponses from Lastfm. JSON/XML parsing is an exercise for the user.
+description: Simple but complete interface to Lastfm API. Can send some stuff and receive reponses from Lastfm. JSON/XML parsing is an exercise for the user.
 cabal-version: >= 1.9.2
 build-type: Simple
-extra-source-files: docs/*.docs
-
-flag test-authentication
-  description: Test authentication dependent LastFM API too.
-  default: False
 
 library
   build-depends: base >= 3 && < 5,
                  template-haskell >= 2.4 && < 2.9,
                  bytestring >= 0.9 && < 0.11,
+                 containers,
+                 text,
+                 lens,
+                 data-default,
+                 http-conduit,
                  mtl == 2.*,
                  curl >= 1.3.7,
                  pureMD5 == 2.1.*,
@@ -29,60 +29,13 @@ library
                  utf8-string == 0.3.*
   hs-source-dirs: src
   exposed-modules: Network.Lastfm
-                   Network.Lastfm.JSON.Album
-                   Network.Lastfm.JSON.Artist
-                   Network.Lastfm.JSON.Auth
-                   Network.Lastfm.JSON.Chart
-                   Network.Lastfm.JSON.Event
-                   Network.Lastfm.JSON.Geo
-                   Network.Lastfm.JSON.Group
-                   Network.Lastfm.JSON.Library
-                   Network.Lastfm.JSON.Playlist
-                   Network.Lastfm.JSON.Radio
-                   Network.Lastfm.JSON.Tag
-                   Network.Lastfm.JSON.Tasteometer
-                   Network.Lastfm.JSON.Track
-                   Network.Lastfm.JSON.User
-                   Network.Lastfm.JSON.Venue
-                   Network.Lastfm.XML.Album
-                   Network.Lastfm.XML.Artist
-                   Network.Lastfm.XML.Auth
-                   Network.Lastfm.XML.Chart
-                   Network.Lastfm.XML.Event
-                   Network.Lastfm.XML.Geo
-                   Network.Lastfm.XML.Group
-                   Network.Lastfm.XML.Library
-                   Network.Lastfm.XML.Playlist
-                   Network.Lastfm.XML.Radio
-                   Network.Lastfm.XML.Tag
-                   Network.Lastfm.XML.Tasteometer
-                   Network.Lastfm.XML.Track
-                   Network.Lastfm.XML.User
-                   Network.Lastfm.XML.Venue
-  other-modules:   Network.Lastfm.Internal
-                   Network.Lastfm.TH
-                   Network.Lastfm.Error
-                   Network.Lastfm.JSON
-                   Network.Lastfm.XML
-                   Network.Lastfm.API.Album
-                   Network.Lastfm.API.Artist
-                   Network.Lastfm.API.Auth
-                   Network.Lastfm.API.Chart
-                   Network.Lastfm.API.Event
-                   Network.Lastfm.API.Geo
-                   Network.Lastfm.API.Group
-                   Network.Lastfm.API.Library
-                   Network.Lastfm.API.Playlist
-                   Network.Lastfm.API.Radio
-                   Network.Lastfm.API.Tag
-                   Network.Lastfm.API.Tasteometer
-                   Network.Lastfm.API.Track
-                   Network.Lastfm.API.User
-                   Network.Lastfm.API.Venue
-  extensions: UnicodeSyntax
+                   Network.Lastfm.Album
+  other-modules:   Network.Lastfm.Request
+                   Network.Lastfm.Response
   ghc-options: -Wall
                -fno-warn-unused-do-bind
   include-dirs: docs
+
 
 test-suite json-no-authentication
   build-depends: base >= 3 && < 5,
@@ -90,31 +43,15 @@ test-suite json-no-authentication
                  attoparsec >= 0.10,
                  aeson == 0.6.*,
                  HUnit >= 1.2.4,
+                 text,
                  liblastfm
   type: exitcode-stdio-1.0
-  main-is: json-no-auth.hs
-  hs-source-dirs: examples
-  extensions: OverloadedStrings, UnicodeSyntax
+  main-is: json.hs
+  hs-source-dirs: tests
   ghc-options: -Wall
                -fno-warn-unused-do-bind
                -fno-warn-orphans
 
-test-suite json-authentication
-  build-depends: base >= 3 && < 5,
-                 bytestring >= 0.9 && < 0.11,
-                 attoparsec >= 0.10,
-                 aeson == 0.6.*,
-                 HUnit >= 1.2.4,
-                 liblastfm
-  type: exitcode-stdio-1.0
-  main-is: json-auth.hs
-  hs-source-dirs: examples
-  extensions: OverloadedStrings, UnicodeSyntax
-  ghc-options: -Wall
-               -fno-warn-unused-do-bind
-               -fno-warn-orphans
-  if !flag(test-authentication)
-     buildable: False
 
 source-repository head
   type:     git
