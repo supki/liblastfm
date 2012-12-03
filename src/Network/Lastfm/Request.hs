@@ -12,12 +12,12 @@ module Network.Lastfm.Request
     -- * Request parameters
   , Auth(..), Format(..)
     -- * Request major parameters
-  , api, json, xml, apiKey
+  , api, method, json, xml, apiKey
     -- * Request minor parameters
   , Artist, artist, Album, album, MBID, mbid
   , Country, country, Autocorrect, autocorrect
   , Language, language
-  , Tag, tags
+  , Tag, tags, tag
   , Recipient, recipient, Username, username, User, user
   , Public, public, Message, message, Page, page, Limit, limit
   ) where
@@ -67,8 +67,8 @@ data R (a ∷ Auth) (f ∷ Format) = R
 
 instance Default (R a JSON) where
   def = R
-    { _host = "http://ws.audioscrobbler.com/2.0/?"
-    , _method = mempty
+    { _host = "http://ws.audioscrobbler.com/2.0/"
+    , _method = "GET"
     , _query = mempty
     , _parse = \x → let (Just v) = decode x in v
     }
@@ -77,7 +77,7 @@ instance Default (R a JSON) where
 instance Default (R a XML) where
   def = R
     { _host = "http://ws.audioscrobbler.com/2.0/"
-    , _method = mempty
+    , _method = "GET"
     , _query = mempty
     , _parse = id
     }
@@ -102,6 +102,14 @@ unwrap = appEndo . getDual
 api ∷ Text → Request a f
 api m = wrap $ __query %~ M.insert "method" m
 {-# INLINE api #-}
+
+
+-- | Change html method
+--
+-- Primarily used in API call wrappers, not intended for usage by library user
+method ∷ Text → Request a f
+method m = wrap $ __method .~ m
+{-# INLINE method #-}
 
 
 -- | Change API response format to JSON
@@ -172,10 +180,16 @@ language l = wrap $ __query %~ M.insert "language" l
 type Tag = Text
 
 
--- | Add tag parameter
+-- | Add tags parameter
 tags ∷ [Tag] → Request a f
 tags ts = wrap $ __query %~ M.insert "tags" (T.intercalate "," ts)
 {-# INLINE tags #-}
+
+
+-- | Add tag parameter
+tag ∷ Tag → Request a f
+tag t = wrap $ __query %~ M.insert "tag" t
+{-# INLINE tag #-}
 
 
 type Autocorrect = Bool

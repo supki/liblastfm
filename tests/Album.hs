@@ -5,7 +5,6 @@
 module Album (auth, noauth) where
 
 import Control.Applicative
-import Data.Maybe (isJust)
 import Data.Monoid
 
 import Data.Aeson.Types
@@ -15,14 +14,9 @@ import Network.Lastfm.Album
 import Test.HUnit
 
 
-p ∷ (Value → Parser b) → Value → Maybe b
-p f j = case parse f j of
-  Success v → Just v
-  _ → Nothing
-
-
-instance Assertable (Maybe a) where
-  assert = assertBool "Cannot parse JSON" . isJust
+instance Assertable (Result a) where
+  assert (Success _) = assertBool "always success" True
+  assert _ = assertFailure "cannot parse JSON"
 
 
 auth ∷ Text → Text → Text → [Test]
@@ -33,17 +27,17 @@ auth ak sk s =
   , TestLabel "Album.share" $ TestCase testShare
   ]
  where
-  testAddTags = assert . Just . lastfm . sign sk s $
-    addTags "Pink Floyd" "The Wall" ["70s", "awesome", "classic"] <> apiKey ak <> json
+  testAddTags = assert $ parse ok <$> lastfm (sign sk s $
+    addTags "Pink Floyd" "The Wall" ["70s", "awesome", "classic"] <> apiKey ak <> json)
 
-  testGetTagsAuth = assert $
-    p gt <$> (lastfm . sign  sk s $ getTags <> artist "Pink Floyd" <> album "The Wall" <> apiKey ak <> json)
+  testGetTagsAuth = assert $ parse gt <$> lastfm (sign sk s $
+    getTags <> artist "Pink Floyd" <> album "The Wall" <> apiKey ak <> json)
 
-  testRemoveTag = assert . Just . lastfm . sign sk s $
-    removeTag "Pink Floyd" "The Wall" "awesome" <> apiKey ak <> json
+  testRemoveTag = assert $ parse ok <$> lastfm (sign sk s $
+    removeTag "Pink Floyd" "The Wall" "awesome" <> apiKey ak <> json)
 
-  testShare = assert . Just . lastfm . sign sk s $
-    share "Jerusalem" "Sleep" "liblastfm" <> message "Just listen!" <> apiKey ak <> json
+  testShare = assert $ parse ok <$> lastfm (sign sk s $
+    share "Jerusalem" "Sleep" "liblastfm" <> message "Just listen!" <> apiKey ak <> json)
 
 
 noauth ∷ [Test]
@@ -58,23 +52,23 @@ noauth =
  where
   ak = "29effec263316a1f8a97f753caaa83e0"
 
-  testGetBuylinks = assert $
-    p gbl <$> lastfm (getBuyLinks "United Kingdom" <> artist "Pink Floyd" <> album "The Wall" <> apiKey ak <> json)
+  testGetBuylinks = assert $ parse gbl <$>
+    lastfm (getBuyLinks "United Kingdom" <> artist "Pink Floyd" <> album "The Wall" <> apiKey ak <> json)
 
-  testGetInfo = assert $
-    p gi <$> lastfm (getInfo <> artist "Pink Floyd" <> album "The Wall" <> apiKey ak <> json)
+  testGetInfo = assert $ parse gi <$>
+    lastfm (getInfo <> artist "Pink Floyd" <> album "The Wall" <> apiKey ak <> json)
 
-  testGetShouts = assert $
-    p gs <$> lastfm (getShouts <> artist "Pink Floyd" <> album "The Wall" <> limit 7 <> apiKey ak <> json)
+  testGetShouts = assert $ parse gs <$>
+    lastfm (getShouts <> artist "Pink Floyd" <> album "The Wall" <> limit 7 <> apiKey ak <> json)
 
-  testGetTags = assert $
-    p gt <$> lastfm (getTags <> artist "Pink Floyd" <> album "The Wall" <> user "liblastfm" <> apiKey ak <> json)
+  testGetTags = assert $ parse gt <$>
+    lastfm (getTags <> artist "Pink Floyd" <> album "The Wall" <> user "liblastfm" <> apiKey ak <> json)
 
-  testGetTopTags = assert $
-    p gtt <$> lastfm (getTopTags <> artist "Pink Floyd" <> album "The Wall" <> apiKey ak <> json)
+  testGetTopTags = assert $ parse gtt <$>
+    lastfm (getTopTags <> artist "Pink Floyd" <> album "The Wall" <> apiKey ak <> json)
 
-  testSearch = assert $
-    p se <$> lastfm (search "wall" <> limit 5 <> apiKey ak <> json)
+  testSearch = assert $ parse se <$>
+    lastfm (search "wall" <> limit 5 <> apiKey ak <> json)
 
 
 gbl, gi, gs, gt, gtt, se ∷ Value → Parser [String]
@@ -84,3 +78,5 @@ gs o = parseJSON o >>= (.: "shouts") >>= (.: "shout") >>= mapM (.: "body")
 gt o = parseJSON o >>= (.: "tags") >>= (.: "tag") >>= mapM (.: "name")
 gtt o = parseJSON o >>= (.: "toptags") >>= (.: "tag") >>= mapM (.: "count")
 se o = parseJSON o >>= (.: "results") >>= (.: "albummatches") >>= (.: "album") >>= mapM (.: "name")
+ok ∷ Value → Parser String
+ok o = parseJSON o >>= (.: "status")

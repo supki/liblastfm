@@ -15,7 +15,7 @@ import Network.Lastfm.Request
 --
 -- <http://www.last.fm/api/show/album.addTags>
 addTags ∷ Artist → Album → [Tag] → Request RequireSign f
-addTags ar al ts = api "album.addTags" <> artist ar <> album al <> tags ts
+addTags ar al ts = api "album.addTags" <> artist ar <> album al <> tags ts <> method "POST"
 
 
 -- | Get a list of Buy Links for a particular Album. It is required that you supply either the artist and track params or the mbid parameter.
@@ -57,7 +57,7 @@ getTopTags = api "album.getTopTags"
 --
 -- <http://www.last.fm/api/show/album.removeTag>
 removeTag ∷ Artist → Album → Tag → Request RequireSign f
-removeTag ar al t = api "album.removeTag" <> artist ar <> album al <> tags [t]
+removeTag ar al t = api "album.removeTag" <> artist ar <> album al <> tag t <> method "POST"
 
 
 -- | Search for an album by name. Returns album matches sorted by relevance.
@@ -71,4 +71,4 @@ search al = api "album.search" <> album al
 --
 -- <http://www.last.fm/api/show/album.share>
 share ∷ Album → Artist → Recipient → Request RequireSign f
-share al ar r = api "album.share" <> album al <> artist ar <> recipient r
+share al ar r = api "album.share" <> album al <> artist ar <> recipient r <> method "POST"

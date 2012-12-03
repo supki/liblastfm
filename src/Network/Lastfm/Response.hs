@@ -2,7 +2,12 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
-module Network.Lastfm.Response where
+module Network.Lastfm.Response
+  ( -- * Prepare Request
+    sign
+    -- * Get Response
+  , lastfm
+  ) where
 
 import Control.Applicative
 import Data.Monoid
@@ -25,10 +30,13 @@ type Session = Text
 type Secret = Text
 
 
+-- | Sign Request making it ready for sending
+--
+-- Signing algorithm is described at <http://www.last.fm/api/authspec>, section 8
 sign ∷ Session → Secret → Request RequireSign f → Request Ready f
-sign sk s = (<> signature) . (<> wrap (__query %~ M.insert "session_key" sk)) . unsafeCoerce
+sign sk s = (<> signature) . (<> wrap (__query %~ M.insert "sk" sk)) . unsafeCoerce
  where
-  signature = wrap $ \r → __query %~ M.insert "api_sig" (signer (_query r)) $ r
+  signature = wrap $ \r → __query %~ M.insert "api_sig" (signer (M.delete "format" (_query r))) $ r
 
   signer = T.pack . show . md5 . T.encodeUtf8 . (<> s) . mconcat . map (uncurry (<>)) . M.toList
 
