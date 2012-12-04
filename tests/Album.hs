@@ -4,7 +4,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Album (auth, noauth) where
 
-import Control.Applicative
 import Data.Monoid
 
 import Data.Aeson.Types
@@ -14,9 +13,13 @@ import Network.Lastfm.Album
 import Test.HUnit
 
 
-instance Assertable (Result a) where
-  assert (Success _) = assertBool "always success" True
+instance Assertable (Maybe (Result a)) where
+  assert (Just (Success _)) = assertBool "always success" True
   assert _ = assertFailure "cannot parse JSON"
+
+
+(<:>) ∷ (Functor f, Functor g) ⇒ (a → b) → f (g a) → f (g b)
+(<:>) = fmap . fmap
 
 
 auth ∷ Text → Text → Text → [Test]
@@ -27,16 +30,16 @@ auth ak sk s =
   , TestLabel "Album.share" $ TestCase testShare
   ]
  where
-  testAddTags = assert $ parse ok <$> lastfm (sign sk s $
+  testAddTags = assert $ parse ok <:> lastfm (sign sk s $
     addTags "Pink Floyd" "The Wall" ["70s", "awesome", "classic"] <> apiKey ak <> json)
 
-  testGetTagsAuth = assert $ parse gt <$> lastfm (sign sk s $
+  testGetTagsAuth = assert $ parse gt <:> lastfm (sign sk s $
     getTags <> artist "Pink Floyd" <> album "The Wall" <> apiKey ak <> json)
 
-  testRemoveTag = assert $ parse ok <$> lastfm (sign sk s $
+  testRemoveTag = assert $ parse ok <:> lastfm (sign sk s $
     removeTag "Pink Floyd" "The Wall" "awesome" <> apiKey ak <> json)
 
-  testShare = assert $ parse ok <$> lastfm (sign sk s $
+  testShare = assert $ parse ok <:> lastfm (sign sk s $
     share "Jerusalem" "Sleep" "liblastfm" <> message "Just listen!" <> apiKey ak <> json)
 
 
@@ -52,22 +55,22 @@ noauth =
  where
   ak = "29effec263316a1f8a97f753caaa83e0"
 
-  testGetBuylinks = assert $ parse gbl <$>
+  testGetBuylinks = assert $ parse gbl <:>
     lastfm (getBuyLinks "United Kingdom" <> artist "Pink Floyd" <> album "The Wall" <> apiKey ak <> json)
 
-  testGetInfo = assert $ parse gi <$>
+  testGetInfo = assert $ parse gi <:>
     lastfm (getInfo <> artist "Pink Floyd" <> album "The Wall" <> apiKey ak <> json)
 
-  testGetShouts = assert $ parse gs <$>
+  testGetShouts = assert $ parse gs <:>
     lastfm (getShouts <> artist "Pink Floyd" <> album "The Wall" <> limit 7 <> apiKey ak <> json)
 
-  testGetTags = assert $ parse gt <$>
+  testGetTags = assert $ parse gt <:>
     lastfm (getTags <> artist "Pink Floyd" <> album "The Wall" <> user "liblastfm" <> apiKey ak <> json)
 
-  testGetTopTags = assert $ parse gtt <$>
+  testGetTopTags = assert $ parse gtt <:>
     lastfm (getTopTags <> artist "Pink Floyd" <> album "The Wall" <> apiKey ak <> json)
 
-  testSearch = assert $ parse se <$>
+  testSearch = assert $ parse se <:>
     lastfm (search "wall" <> limit 5 <> apiKey ak <> json)
 
 

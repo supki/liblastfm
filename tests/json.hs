@@ -14,7 +14,7 @@ import qualified Album as Album
 
 main ∷ IO ()
 main =
-  do keys ← B.readFile "examples/lastfm-keys.json"
+  do keys ← B.readFile "tests/lastfm-keys.json"
      case decode keys of
        Just (Keys ak sk s) →
          do rs ← mapM (runTestTT . TestList . \f → f ak sk s)

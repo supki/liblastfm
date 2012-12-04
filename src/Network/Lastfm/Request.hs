@@ -20,11 +20,12 @@ module Network.Lastfm.Request
   , Tag, tags, tag
   , Recipient, recipient, Username, username, User, user
   , Public, public, Message, message, Page, page, Limit, limit
+  , type', value
   ) where
 
-import Data.Monoid (mempty, Dual(..), Endo(..))
+import Data.Monoid ((<>), mempty, Dual(..), Endo(..))
 
-import           Control.Lens
+import           Control.Lens hiding (value)
 import           Data.Aeson (Value, decode)
 import           Data.ByteString.Lazy (ByteString)
 import           Data.Default
@@ -48,7 +49,7 @@ type Request a f = Dual (Endo (R a f))
 
 
 type family Response (f ∷ Format)
-type instance Response JSON = Value
+type instance Response JSON = Maybe Value
 type instance Response XML = ByteString
 
 
@@ -70,7 +71,7 @@ instance Default (R a JSON) where
     { _host = "http://ws.audioscrobbler.com/2.0/"
     , _method = "GET"
     , _query = mempty
-    , _parse = \x → let (Just v) = decode x in v
+    , _parse = decode
     }
 
 
@@ -262,3 +263,15 @@ type User = Text
 user ∷ User → Request a f
 user u = wrap $ __query %~ M.insert "user" u
 {-# INLINE user #-}
+
+
+-- | Add type parameter
+type' ∷ Int → Text → Request a f
+type' n t = wrap $ __query %~ M.insert ("type" <> T.pack (show n)) t
+{-# INLINE type' #-}
+
+
+-- | Add value parameter
+value ∷ Int → Text → Request a f
+value n v = wrap $ __query %~ M.insert ("value" <> T.pack (show n)) v
+{-# INLINE value #-}
