@@ -23,7 +23,7 @@ module Network.Lastfm.Request
   , type', value
   ) where
 
-import Data.Monoid ((<>), mempty, Dual(..), Endo(..))
+import Data.Monoid ((<>), Dual(..), Endo(..))
 
 import           Control.Lens hiding (value)
 import           Data.Aeson (Value, decode)
@@ -70,7 +70,7 @@ instance Default (R a JSON) where
   def = R
     { _host = "http://ws.audioscrobbler.com/2.0/"
     , _method = "GET"
-    , _query = mempty
+    , _query = M.fromList [("format", "json")]
     , _parse = decode
     }
 
@@ -79,7 +79,7 @@ instance Default (R a XML) where
   def = R
     { _host = "http://ws.audioscrobbler.com/2.0/"
     , _method = "GET"
-    , _query = mempty
+    , _query = M.fromList [("format", "xml")]
     , _parse = id
     }
 
@@ -114,14 +114,20 @@ method m = wrap $ __method .~ m
 
 
 -- | Change API response format to JSON
+--
+-- This is a little helper. It's actually enough
+-- to specialize Format manually
 json ∷ Request a JSON
-json = wrap $ __query %~ M.insert "format" "json"
+json = wrap id
 {-# INLINE json #-}
 
 
 -- | Change API response format to XML
+--
+-- This is a little helper. It's actually enough
+-- to specialize Format manually
 xml ∷ Request a XML
-xml = wrap $ __query %~ M.insert "format" "xml"
+xml = wrap id
 {-# INLINE xml #-}
 
 
