@@ -23,7 +23,7 @@ import qualified Data.Text.Lazy as T
 import qualified Data.Text.Lazy.Encoding as T
 import qualified Network.HTTP.Conduit as C
 
-import Network.Lastfm.Request
+import Network.Lastfm.Internal
 
 
 type Session = Text

@@ -29,6 +29,7 @@ library
                    Network.Lastfm.User
   other-modules:   Network.Lastfm.Request
                    Network.Lastfm.Response
+                   Network.Lastfm.Internal
   ghc-options: -Wall
                -fno-warn-unused-do-bind
   include-dirs: docs

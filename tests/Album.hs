@@ -6,7 +6,7 @@ module Album (auth, noauth) where
 
 import Data.Aeson.Types
 import Data.Text.Lazy (Text)
-import Network.Lastfm hiding (parse)
+import Network.Lastfm
 import Network.Lastfm.Album
 import Test.HUnit
 
