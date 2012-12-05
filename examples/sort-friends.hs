@@ -25,7 +25,6 @@ import Control.Monad (forM)
 import Data.Function (on)
 import Data.List (sortBy)
 import Data.Maybe (catMaybes, fromMaybe)
-import Data.Monoid ((<>))
 import Text.Read (readMaybe)
 
 import           Control.Lens
@@ -33,7 +32,7 @@ import           Data.Aeson (Value)
 import           Data.Aeson.Lens
 import           Data.Text.Lazy (Text)
 import qualified Data.Text.Lazy.IO as T
-import           Network.Lastfm
+import           Network.Lastfm hiding (query)
 import qualified Network.Lastfm.User as User
 import qualified Network.Lastfm.Tasteometer as Tasteometer
 

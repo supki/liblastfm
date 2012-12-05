@@ -4,8 +4,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Album (auth, noauth) where
 
-import Data.Monoid
-
 import Data.Aeson.Types
 import Data.Text.Lazy (Text)
 import Network.Lastfm hiding (parse)
