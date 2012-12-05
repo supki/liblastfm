@@ -1,0 +1,22 @@
+name: liblastfm-examples
+version: 0.1.0.0
+synopsis: Examples for liblastfm
+license: MIT
+license-file: LICENSE
+author: Matvey Aksenov
+maintainer: Matvey Aksenov <matvey.aksenov@gmail.com>
+category: Network APIs
+description: Haddock documentation isn't enough to get feeling of the library
+cabal-version: >= 1.8
+build-type: Simple
+
+executable sort-friends
+  build-depends: base >= 3 && < 5,
+                 liblastfm,
+                 text,
+                 aeson,
+                 lens,
+                 aeson-lens
+  main-is: sort-friends.hs
+  ghc-options: -Wall
+               -fno-warn-unused-do-bind
