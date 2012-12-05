@@ -101,7 +101,7 @@ unwrap = appEndo . getDual
 --
 -- Primarily used in API call wrappers, not intended for usage by library user
 api ∷ Text → Request a f
-api m = wrap $ query %~ M.insert "method" m
+api = add "method"
 {-# INLINE api #-}
 
 
@@ -143,7 +143,7 @@ xml = wrap id
 --
 -- Primarily used in API call wrappers, not intended for usage by library user
 apiKey ∷ Text → Request a f
-apiKey m = wrap $ query %~ M.insert "api_key" m
+apiKey = add "api_key"
 {-# INLINE apiKey #-}
 
 
@@ -152,7 +152,7 @@ type Artist = Text
 
 -- | Add artist parameter
 artist ∷ Artist → Request a f
-artist a = wrap $ query %~ M.insert "artist" a
+artist = add "artist"
 {-# INLINE artist #-}
 
 
@@ -161,7 +161,7 @@ type Album = Text
 
 -- | Add artist parameter
 album ∷ Album → Request a f
-album a = wrap $ query %~ M.insert "album" a
+album = add "album"
 {-# INLINE album #-}
 
 
@@ -170,7 +170,7 @@ type MBID = Text
 
 -- | Add MBID parameter
 mbid ∷ MBID → Request a f
-mbid a = wrap $ query %~ M.insert "mbid" a
+mbid = add "mbid"
 {-# INLINE mbid #-}
 
 
@@ -179,7 +179,7 @@ type Country = Text
 
 -- | Add country parameter
 country ∷ Country → Request a f
-country c = wrap $ query %~ M.insert "country" c
+country = add "country"
 {-# INLINE country #-}
 
 
@@ -188,7 +188,7 @@ type Language = Text
 
 -- | Add language parameter
 language ∷ Language → Request a f
-language l = wrap $ query %~ M.insert "language" l
+language = add "language"
 {-# INLINE language #-}
 
 
@@ -197,13 +197,13 @@ type Tag = Text
 
 -- | Add tags parameter
 tags ∷ [Tag] → Request a f
-tags ts = wrap $ query %~ M.insert "tags" (T.intercalate "," ts)
+tags = add "tags" . T.intercalate ","
 {-# INLINE tags #-}
 
 
 -- | Add tag parameter
 tag ∷ Tag → Request a f
-tag t = wrap $ query %~ M.insert "tag" t
+tag = add "tag"
 {-# INLINE tag #-}
 
 
@@ -212,7 +212,7 @@ type Autocorrect = Bool
 
 -- | Add autocorrect parameter
 autocorrect ∷ Autocorrect → Request a f
-autocorrect au = wrap $ query %~ M.insert "tags" (if au then "1" else "0")
+autocorrect au = add "tags" (if au then "1" else "0")
 {-# INLINE autocorrect #-}
 
 
@@ -221,7 +221,7 @@ type Page = Int
 
 -- | Add page parameter
 page ∷ Page → Request a f
-page p = wrap $ query %~ M.insert "page" (T.pack $ show p)
+page = add "page" . T.pack . show
 {-# INLINE page #-}
 
 
@@ -230,7 +230,7 @@ type Limit = Int
 
 -- | Add limit parameter
 limit ∷ Limit → Request a f
-limit l = wrap $ query %~ M.insert "limit" (T.pack $ show l)
+limit = add "limit" . T.pack . show
 {-# INLINE limit #-}
 
 
@@ -239,7 +239,7 @@ type Message = Text
 
 -- | Add message parameter
 message ∷ Message → Request a f
-message m = wrap $ query %~ M.insert "message" m
+message = add "message"
 {-# INLINE message #-}
 
 
@@ -248,7 +248,7 @@ type Public = Bool
 
 -- | Add public parameter
 public ∷ Public → Request a f
-public p = wrap $ query %~ M.insert "public" (if p then "1" else "0")
+public p = add "public" (if p then "1" else "0")
 {-# INLINE public #-}
 
 
@@ -257,7 +257,7 @@ type Recipient = Text
 
 -- | Add recipient parameter
 recipient ∷ Recipient → Request a f
-recipient r = wrap $ query %~ M.insert "recipient" r
+recipient = add "recipient"
 {-# INLINE recipient #-}
 
 
@@ -266,7 +266,7 @@ type Username = Text
 
 -- | Add username parameter
 username ∷ Username → Request a f
-username u = wrap $ query %~ M.insert "username" u
+username = add "username"
 {-# INLINE username #-}
 
 
@@ -275,17 +275,22 @@ type User = Text
 
 -- | Add user parameter
 user ∷ User → Request a f
-user u = wrap $ query %~ M.insert "user" u
+user = add "user"
 {-# INLINE user #-}
 
 
 -- | Add type parameter
 type' ∷ Int → Text → Request a f
-type' n t = wrap $ query %~ M.insert ("type" <> T.pack (show n)) t
+type' n = add ("type" <> T.pack (show n))
 {-# INLINE type' #-}
 
 
 -- | Add value parameter
 value ∷ Int → Text → Request a f
-value n v = wrap $ query %~ M.insert ("value" <> T.pack (show n)) v
+value n = add ("value" <> T.pack (show n))
 {-# INLINE value #-}
+
+
+add ∷ Text → Text → Request a f
+add k v = wrap $ query %~ M.insert k v
+{-# INLINE add #-}
