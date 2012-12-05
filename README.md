@@ -11,11 +11,14 @@
       instance Data.Default.Default (R a 'JSON)
         -- Defined at src/Network/Lastfm/Request.hs:69:10
 ```
-A: This error message indicates that you've forgotten to specify response type. 
-To fix it, add `<> json` or `<> xml` to offending `Request`. For example:
+A: This error message indicates that GHC cannot infer response format for that Request. 
+To fix it, add use `json` or `xml` helpers, depending on your needs:
 
 ```haskell
 wrong = lastfm (Album.getInfo <> artist "Pink Floyd" <> album "The Wall" <> apiKey "1234567890")
 right = lastfm (Album.getInfo <> artist "Pink Floyd" <> album "The Wall" <> apiKey "1234567890" <> json)
 ```
+Another way to solve the problem would be to add explicit type signature `right :: Request Ready JSON`.
+You probably will do that in applications, but `json` and `xml` are still useful in ghci.
+
 -
