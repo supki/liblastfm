@@ -34,7 +34,7 @@ type Secret = Text
 --
 -- Signing algorithm is described at <http://www.last.fm/api/authspec>, section 8
 sign ∷ Session → Secret → Request RequireSign f → Request Ready f
-sign sk s = (<> signature) . (<> wrap (__query %~ M.insert "sk" sk)) . unsafeCoerce
+sign sk s = approve . (<> signature) . (<> wrap (__query %~ M.insert "sk" sk))
  where
   signature = wrap $ \r → __query %~ M.insert "api_sig" (signer (M.delete "format" (_query r))) $ r
 
@@ -54,3 +54,7 @@ render R { _host = h, _query = q } =
   T.unpack $ mconcat [h, "?", argie q]
  where
   argie = T.intercalate "&" . M.foldrWithKey (\k v m → T.concat [k, "=", v] : m) mempty
+
+
+approve ∷ Request RequireSign f → Request Ready f
+approve = unsafeCoerce
