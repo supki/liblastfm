@@ -8,11 +8,11 @@
 module Network.Lastfm.Request
   ( -- * Request
     Request, R(..), wrap, unwrap, Response
-  , __method, __query
+  , method, query
     -- * Request parameters
   , Auth(..), Format(..)
     -- * Request major parameters
-  , api, method, json, xml, apiKey
+  , api, post, get, json, xml, apiKey
     -- * Request minor parameters
   , Artist, artist, Album, album, MBID, mbid
   , Country, country, Autocorrect, autocorrect
@@ -59,32 +59,32 @@ type instance Response XML = ByteString
 --
 -- @f@ is response format
 data R (a ∷ Auth) (f ∷ Format) = R
-  { _host ∷ Text
+  { host ∷ Text
   , _method ∷ Text
   , _query ∷ Map Text Text
-  , _parse ∷ ByteString → Response f
+  , parse ∷ ByteString → Response f
   }
 
 
 instance Default (R a JSON) where
   def = R
-    { _host = "http://ws.audioscrobbler.com/2.0/"
+    { host = "http://ws.audioscrobbler.com/2.0/"
     , _method = "GET"
     , _query = M.fromList [("format", "json")]
-    , _parse = decode
+    , parse = decode
     }
 
 
 instance Default (R a XML) where
   def = R
-    { _host = "http://ws.audioscrobbler.com/2.0/"
+    { host = "http://ws.audioscrobbler.com/2.0/"
     , _method = "GET"
     , _query = M.fromList [("format", "xml")]
-    , _parse = id
+    , parse = id
     }
 
 
-makeLensesFor [("_method", "__method"), ("_query", "__query")] ''R
+makeLenses ''R
 
 
 -- | Wrapping to interesting 'Monoid' ('R' -> 'R') instance
@@ -101,16 +101,24 @@ unwrap = appEndo . getDual
 --
 -- Primarily used in API call wrappers, not intended for usage by library user
 api ∷ Text → Request a f
-api m = wrap $ __query %~ M.insert "method" m
+api m = wrap $ query %~ M.insert "method" m
 {-# INLINE api #-}
 
 
--- | Change html method
+-- | Change html method to GET
 --
 -- Primarily used in API call wrappers, not intended for usage by library user
-method ∷ Text → Request a f
-method m = wrap $ __method .~ m
-{-# INLINE method #-}
+get ∷ Request a f
+get = wrap $ method .~ "GET"
+{-# INLINE get #-}
+
+
+-- | Change html method to POST
+--
+-- Primarily used in API call wrappers, not intended for usage by library user
+post ∷ Request a f
+post = wrap $ method .~ "POST"
+{-# INLINE post #-}
 
 
 -- | Change API response format to JSON
@@ -135,7 +143,7 @@ xml = wrap id
 --
 -- Primarily used in API call wrappers, not intended for usage by library user
 apiKey ∷ Text → Request a f
-apiKey m = wrap $ __query %~ M.insert "api_key" m
+apiKey m = wrap $ query %~ M.insert "api_key" m
 {-# INLINE apiKey #-}
 
 
@@ -144,7 +152,7 @@ type Artist = Text
 
 -- | Add artist parameter
 artist ∷ Artist → Request a f
-artist a = wrap $ __query %~ M.insert "artist" a
+artist a = wrap $ query %~ M.insert "artist" a
 {-# INLINE artist #-}
 
 
@@ -153,7 +161,7 @@ type Album = Text
 
 -- | Add artist parameter
 album ∷ Album → Request a f
-album a = wrap $ __query %~ M.insert "album" a
+album a = wrap $ query %~ M.insert "album" a
 {-# INLINE album #-}
 
 
@@ -162,7 +170,7 @@ type MBID = Text
 
 -- | Add MBID parameter
 mbid ∷ MBID → Request a f
-mbid a = wrap $ __query %~ M.insert "mbid" a
+mbid a = wrap $ query %~ M.insert "mbid" a
 {-# INLINE mbid #-}
 
 
@@ -171,7 +179,7 @@ type Country = Text
 
 -- | Add country parameter
 country ∷ Country → Request a f
-country c = wrap $ __query %~ M.insert "country" c
+country c = wrap $ query %~ M.insert "country" c
 {-# INLINE country #-}
 
 
@@ -180,7 +188,7 @@ type Language = Text
 
 -- | Add language parameter
 language ∷ Language → Request a f
-language l = wrap $ __query %~ M.insert "language" l
+language l = wrap $ query %~ M.insert "language" l
 {-# INLINE language #-}
 
 
@@ -189,13 +197,13 @@ type Tag = Text
 
 -- | Add tags parameter
 tags ∷ [Tag] → Request a f
-tags ts = wrap $ __query %~ M.insert "tags" (T.intercalate "," ts)
+tags ts = wrap $ query %~ M.insert "tags" (T.intercalate "," ts)
 {-# INLINE tags #-}
 
 
 -- | Add tag parameter
 tag ∷ Tag → Request a f
-tag t = wrap $ __query %~ M.insert "tag" t
+tag t = wrap $ query %~ M.insert "tag" t
 {-# INLINE tag #-}
 
 
@@ -204,7 +212,7 @@ type Autocorrect = Bool
 
 -- | Add autocorrect parameter
 autocorrect ∷ Autocorrect → Request a f
-autocorrect au = wrap $ __query %~ M.insert "tags" (if au then "1" else "0")
+autocorrect au = wrap $ query %~ M.insert "tags" (if au then "1" else "0")
 {-# INLINE autocorrect #-}
 
 
@@ -213,7 +221,7 @@ type Page = Int
 
 -- | Add page parameter
 page ∷ Page → Request a f
-page p = wrap $ __query %~ M.insert "page" (T.pack $ show p)
+page p = wrap $ query %~ M.insert "page" (T.pack $ show p)
 {-# INLINE page #-}
 
 
@@ -222,7 +230,7 @@ type Limit = Int
 
 -- | Add limit parameter
 limit ∷ Limit → Request a f
-limit l = wrap $ __query %~ M.insert "limit" (T.pack $ show l)
+limit l = wrap $ query %~ M.insert "limit" (T.pack $ show l)
 {-# INLINE limit #-}
 
 
@@ -231,7 +239,7 @@ type Message = Text
 
 -- | Add message parameter
 message ∷ Message → Request a f
-message m = wrap $ __query %~ M.insert "message" m
+message m = wrap $ query %~ M.insert "message" m
 {-# INLINE message #-}
 
 
@@ -240,7 +248,7 @@ type Public = Bool
 
 -- | Add public parameter
 public ∷ Public → Request a f
-public p = wrap $ __query %~ M.insert "public" (if p then "1" else "0")
+public p = wrap $ query %~ M.insert "public" (if p then "1" else "0")
 {-# INLINE public #-}
 
 
@@ -249,7 +257,7 @@ type Recipient = Text
 
 -- | Add recipient parameter
 recipient ∷ Recipient → Request a f
-recipient r = wrap $ __query %~ M.insert "recipient" r
+recipient r = wrap $ query %~ M.insert "recipient" r
 {-# INLINE recipient #-}
 
 
@@ -258,7 +266,7 @@ type Username = Text
 
 -- | Add username parameter
 username ∷ Username → Request a f
-username u = wrap $ __query %~ M.insert "username" u
+username u = wrap $ query %~ M.insert "username" u
 {-# INLINE username #-}
 
 
@@ -267,17 +275,17 @@ type User = Text
 
 -- | Add user parameter
 user ∷ User → Request a f
-user u = wrap $ __query %~ M.insert "user" u
+user u = wrap $ query %~ M.insert "user" u
 {-# INLINE user #-}
 
 
 -- | Add type parameter
 type' ∷ Int → Text → Request a f
-type' n t = wrap $ __query %~ M.insert ("type" <> T.pack (show n)) t
+type' n t = wrap $ query %~ M.insert ("type" <> T.pack (show n)) t
 {-# INLINE type' #-}
 
 
 -- | Add value parameter
 value ∷ Int → Text → Request a f
-value n v = wrap $ __query %~ M.insert ("value" <> T.pack (show n)) v
+value n v = wrap $ query %~ M.insert ("value" <> T.pack (show n)) v
 {-# INLINE value #-}

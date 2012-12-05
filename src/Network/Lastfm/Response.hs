@@ -34,9 +34,9 @@ type Secret = Text
 --
 -- Signing algorithm is described at <http://www.last.fm/api/authspec>, section 8
 sign ∷ Session → Secret → Request RequireSign f → Request Ready f
-sign sk s = approve . (<> signature) . (<> wrap (__query %~ M.insert "sk" sk))
+sign sk s = approve . (<> signature) . (<> wrap (query %~ M.insert "sk" sk))
  where
-  signature = wrap $ \r → __query %~ M.insert "api_sig" (signer (M.delete "format" (_query r))) $ r
+  signature = wrap $ \r → query %~ M.insert "api_sig" (signer (M.delete "format" (_query r))) $ r
 
   signer = T.pack . show . md5 . T.encodeUtf8 . (<> s) . mconcat . map (uncurry (<>)) . M.toList
 
@@ -45,12 +45,12 @@ sign sk s = approve . (<> signature) . (<> wrap (__query %~ M.insert "sk" sk))
 lastfm ∷ Default (R Ready f) ⇒ Request Ready f → IO (Response f)
 lastfm req = do
   let t = unwrap req def
-  _parse t <$> C.withManager (\m → C.parseUrl (render t) >>= \url →
+  parse t <$> C.withManager (\m → C.parseUrl (render t) >>= \url →
     C.responseBody <$> C.httpLbs (url { C.method = B.toStrict . T.encodeUtf8 $ _method t }) m)
 
 
 render ∷ R a f → String
-render R { _host = h, _query = q } =
+render R { host = h, _query = q } =
   T.unpack $ mconcat [h, "?", argie q]
  where
   argie = T.intercalate "&" . M.foldrWithKey (\k v m → T.concat [k, "=", v] : m) mempty
