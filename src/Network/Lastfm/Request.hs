@@ -4,9 +4,7 @@
 -- | Request construction
 module Network.Lastfm.Request
   ( -- * Request
-    Request, R, Response
-    -- * Request parameters
-  , Auth(..), Format(..)
+    Request, R, Auth(..), Format(..), Response
     -- * Request major parameters
   , api, post, get, json, xml, apiKey
     -- * Request minor parameters

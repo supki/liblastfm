@@ -5,12 +5,9 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UnicodeSyntax #-}
 module Network.Lastfm.Internal
-  ( -- * Request
-    Request, R(..), wrap, unwrap, add, Response
+  ( Request, R(..), wrap, unwrap, add, Response
   , method, query
-    -- * Request parameters
   , Auth(..), Format(..)
-    -- * Request major parameters
   , api, post, get, json, xml
   ) where
 
@@ -35,7 +32,7 @@ data Auth =
 data Format = JSON | XML
 
 
-type Request a f = Dual (Endo (R a f))
+type Request (a ∷ Auth) (f ∷ Format) = Dual (Endo (R a f))
 
 
 type family Response (f ∷ Format)
@@ -63,6 +60,7 @@ instance Default (R a JSON) where
     , _query = M.fromList [("format", "json")]
     , parse = decode
     }
+  {-# INLINE def #-}
 
 
 instance Default (R a XML) where
@@ -72,6 +70,7 @@ instance Default (R a XML) where
     , _query = M.fromList [("format", "xml")]
     , parse = id
     }
+  {-# INLINE def #-}
 
 
 makeLenses ''R
@@ -80,11 +79,13 @@ makeLenses ''R
 -- | Wrapping to interesting 'Monoid' ('R' -> 'R') instance
 wrap ∷ (R a f → R a f) → Request a f
 wrap = Dual . Endo
+{-# INLINE wrap #-}
 
 
 -- | Unwrapping from interesting 'Monoid' ('R' -> 'R') instance
 unwrap ∷ Request a f → (R a f → R a f)
 unwrap = appEndo . getDual
+{-# INLINE unwrap #-}
 
 
 -- | Change request API method
