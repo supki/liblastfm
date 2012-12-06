@@ -2,9 +2,11 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
+-- | Request sending and Response parsing
 module Network.Lastfm.Response
-  ( -- * Prepare Request
-    sign
+  ( -- * Sign Request
+    -- $sign
+    Session, Secret, sign
     -- * Get Response
   , lastfm
   ) where
@@ -26,13 +28,22 @@ import qualified Network.HTTP.Conduit as C
 import Network.Lastfm.Internal
 
 
+-- $sign
+--
+-- Signing is important part of every
+-- authentication requiring API request.
+-- Basically, every such request is appended
+-- with md5 footprint of its arguments as
+-- described at <http://www.last.fm/api/authspec#8>
+
+
+-- | Session key
 type Session = Text
+
+-- | Application secret
 type Secret = Text
 
-
--- | Sign Request making it ready for sending
---
--- Signing algorithm is described at <http://www.last.fm/api/authspec>, section 8
+-- | Sign 'Request' with 'Secret'
 sign ∷ Session → Secret → Request RequireSign f → Request Ready f
 sign sk s = approve . (<> signature) . (<> wrap (query %~ M.insert "sk" sk))
  where

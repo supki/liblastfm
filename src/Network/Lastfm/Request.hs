@@ -5,6 +5,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UnicodeSyntax #-}
+-- | Request construction
 module Network.Lastfm.Request
   ( -- * Request
     Request, R, Response
@@ -79,7 +80,7 @@ type Language = Text
 
 -- | Add language parameter
 language ∷ Language → Request a f
-language = add "language"
+language = add "lang"
 {-# INLINE language #-}
 
 

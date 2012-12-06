@@ -27,9 +27,9 @@ library
                    Network.Lastfm.Album
                    Network.Lastfm.Tasteometer
                    Network.Lastfm.User
-  other-modules:   Network.Lastfm.Request
+                   Network.Lastfm.Request
                    Network.Lastfm.Response
-                   Network.Lastfm.Internal
+  other-modules:   Network.Lastfm.Internal
   ghc-options: -Wall
                -fno-warn-unused-do-bind
   include-dirs: docs
