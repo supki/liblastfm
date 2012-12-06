@@ -32,7 +32,6 @@ library
   other-modules:   Network.Lastfm.Internal
   ghc-options: -Wall
                -fno-warn-unused-do-bind
-  include-dirs: docs
 
 
 test-suite json-no-authentication
