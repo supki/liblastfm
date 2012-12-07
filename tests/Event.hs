@@ -18,11 +18,11 @@ auth ak sk s =
   , TestLabel "Event.share" $ TestCase testShare
   ]
  where
-  testAttend = assert $ parse ok <:> lastfm (sign sk s $
-    attend 3142549 Attending <> apiKey ak <> json)
+  testAttend = assert $ parse ok <:> lastfm (sign s $
+    attend 3142549 Attending <> apiKey ak <> sessionKey sk <> json)
 
-  testShare = assert $ parse ok <:> lastfm (sign sk s $
-    share 3142549 "liblastfm" <> message "Just listen!" <> apiKey ak <> json)
+  testShare = assert $ parse ok <:> lastfm (sign s $
+    share 3142549 "liblastfm" <> message "Just listen!" <> sessionKey sk <> apiKey ak <> json)
 
 
 noauth ∷ [Test]

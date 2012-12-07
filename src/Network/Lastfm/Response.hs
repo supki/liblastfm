@@ -6,7 +6,7 @@
 module Network.Lastfm.Response
   ( -- * Sign Request
     -- $sign
-    Session, Secret, sign
+    Secret, sign
     -- * Get Response
   , lastfm
   ) where
@@ -37,15 +37,13 @@ import Network.Lastfm.Internal
 -- described at <http://www.last.fm/api/authspec#8>
 
 
--- | Session key
-type Session = Text
-
 -- | Application secret
 type Secret = Text
 
+
 -- | Sign 'Request' with 'Secret'
-sign ∷ Session → Secret → Request RequireSign f → Request Ready f
-sign sk s = approve . (<> signature) . (<> wrap (query %~ M.insert "sk" sk))
+sign ∷ Secret → Request RequireSign f → Request Ready f
+sign s = approve . (<> signature)
  where
   signature = wrap $ \r → query %~ M.insert "api_sig" (signer (M.delete "format" (_query r))) $ r
 
