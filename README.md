@@ -1,7 +1,7 @@
 ##FAQ
 **Q: I'm getting the following error. How do I fix it?**
 ```
-> getInfo <> artist "Pink Floyd" <> album "The Wall" <> apiKey "1234567890"
+> Album.getInfo <> artist "Pink Floyd" <> album "The Wall" <> apiKey "1234567890"
 
 <interactive>:8:27:
     Couldn't match type `[Char]' with `Data.Text.Lazy.Internal.Text'
@@ -9,10 +9,13 @@
       Actual type: [Char]
 ```
 A: This means you haven't `-XOverloadedStrings` extension enabled in current ghci session.
-To enable it type `:set -XOverloadedStrings`.
+To enable it type in `:set -XOverloadedStrings`.
 
 **Q: I'm getting the following error. How do I fix it?**
 ```
+> lastfm (Album.getInfo <> artist "Pink Floyd" <> album "The Wall" <> apiKey "1234567890")
+
+<interactive>:3:1:
     No instance for (Data.Default.Default (R 'Ready f0))
       arising from a use of `lastfm'
     The type variable `f0' is ambiguous
