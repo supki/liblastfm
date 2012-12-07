@@ -27,6 +27,7 @@ library
                    Network.Lastfm.Album
                    Network.Lastfm.Artist
                    Network.Lastfm.Chart
+                   Network.Lastfm.Event
                    Network.Lastfm.Tasteometer
                    Network.Lastfm.User
                    Network.Lastfm.Request

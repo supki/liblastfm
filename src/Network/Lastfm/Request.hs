@@ -10,6 +10,7 @@ module Network.Lastfm.Request
     -- * Request minor parameters
   , Artist, artist, Album, album, MBID, mbid
   , Country, country, Autocorrect, autocorrect
+  , Event, event, Status(..), status
   , Language, language
   , Tag, tags, tag
   , Recipient, recipient, Username, username, User, user
@@ -163,6 +164,25 @@ type User = Text
 user ∷ User → Request a f
 user = add "user"
 {-# INLINE user #-}
+
+
+data Status = Attending | Maybe | NotAttending deriving Show
+
+
+-- | Add status parameter
+status ∷ Status → Request a f
+status s = add "status" (case s of Attending → "0"; Maybe → "1"; _ → "2")
+{-# INLINE status #-}
+
+
+type Event = Int
+
+
+-- | Add event parameter
+event ∷ Event → Request a f
+event = add "event" . T.pack . show
+{-# INLINE event #-}
+
 
 
 -- | Add type parameter
