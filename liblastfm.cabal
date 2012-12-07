@@ -26,6 +26,7 @@ library
   exposed-modules: Network.Lastfm
                    Network.Lastfm.Album
                    Network.Lastfm.Artist
+                   Network.Lastfm.Chart
                    Network.Lastfm.Tasteometer
                    Network.Lastfm.User
                    Network.Lastfm.Request
