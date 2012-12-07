@@ -15,10 +15,10 @@ A: This error message indicates that GHC cannot infer response format for that R
 To fix it, add use `json` or `xml` helpers, depending on your needs:
 
 ```haskell
-wrong = lastfm (Album.getInfo <> artist "Pink Floyd" <> album "The Wall" <> apiKey "1234567890")
-right = lastfm (Album.getInfo <> artist "Pink Floyd" <> album "The Wall" <> apiKey "1234567890" <> json)
+wrong <- lastfm (Album.getInfo <> artist "Pink Floyd" <> album "The Wall" <> apiKey "1234567890")
+right <- lastfm (Album.getInfo <> artist "Pink Floyd" <> album "The Wall" <> apiKey "1234567890" <> json)
 ```
-Another way to solve the problem would be to add explicit type signature `right :: Request Ready JSON`.
-You probably will do that in applications, but `json` and `xml` are still useful in ghci.
+This problem should not arise while writing applications since hopefully you will have enough
+type annotations for inference to work out. But `json` and `xml` are still useful in ghci.
 
 -
