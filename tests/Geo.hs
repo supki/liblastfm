@@ -1,6 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
-{-# OPTIONS_GHC -fno-warn-orphans #-}
 module Geo (noauth) where
 
 import Control.Applicative ((<$>),(<*>))

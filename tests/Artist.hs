@@ -1,6 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
-{-# OPTIONS_GHC -fno-warn-orphans #-}
 module Artist (auth, noauth) where
 
 import Data.Aeson.Types
