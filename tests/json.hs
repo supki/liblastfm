@@ -11,6 +11,7 @@ import           Data.Text.Lazy (Text)
 import           Test.HUnit
 import qualified Album as Album
 import qualified Artist as Artist
+import qualified Chart as Chart
 
 
 main ∷ IO ()
@@ -25,6 +26,7 @@ main =
             rs' ← mapM (runTestTT . TestList)
               [ Album.noauth
               , Artist.noauth
+              , Chart.noauth
               ]
             let fs = sum (map failures rs) + sum (map failures rs')
             case fs of
