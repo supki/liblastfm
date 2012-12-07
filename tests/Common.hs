@@ -1,6 +1,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 module Common where
 
 import Data.Aeson.Types

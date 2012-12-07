@@ -8,10 +8,11 @@ module Network.Lastfm.Internal
   ( Request, R(..), wrap, unwrap, add, Response
   , method, query
   , Auth(..), Format(..)
+  , render
   , api, post, get, json, xml
   ) where
 
-import Data.Monoid (Dual(..), Endo(..))
+import Data.Monoid
 
 import           Control.Lens
 import           Data.Aeson (Value, decode)
@@ -20,6 +21,7 @@ import           Data.Default
 import           Data.Map (Map)
 import qualified Data.Map as M
 import           Data.Text.Lazy (Text)
+import qualified Data.Text.Lazy as T
 
 
 -- | Authentication method
@@ -55,7 +57,7 @@ data R (a ∷ Auth) (f ∷ Format) = R
 
 instance Default (R a JSON) where
   def = R
-    { host = "http://ws.audioscrobbler.com/2.0/"
+    { host = "https://ws.audioscrobbler.com/2.0/"
     , _method = "GET"
     , _query = M.fromList [("format", "json")]
     , parse = decode
@@ -65,12 +67,19 @@ instance Default (R a JSON) where
 
 instance Default (R a XML) where
   def = R
-    { host = "http://ws.audioscrobbler.com/2.0/"
+    { host = "https://ws.audioscrobbler.com/2.0/"
     , _method = "GET"
     , _query = M.fromList [("format", "xml")]
     , parse = id
     }
   {-# INLINE def #-}
+
+
+render ∷ R a f → String
+render R { host = h, _query = q } =
+  T.unpack $ mconcat [h, "?", argie q]
+ where
+  argie = T.intercalate "&" . M.foldrWithKey (\k v m → T.concat [k, "=", v] : m) mempty
 
 
 makeLenses ''R

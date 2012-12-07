@@ -6,8 +6,9 @@ module Network.Lastfm.Request
   ( -- * Request
     Request, R, Auth(..), Format(..), Response
     -- * Request major parameters
-  , api, post, get, json, xml, apiKey
+  , api, post, get, json, xml, apiKey, sessionKey
     -- * Request minor parameters
+  , Token, token, Callback, callback
   , Artist, artist, Album, album, MBID, mbid
   , Country, country, Autocorrect, autocorrect
   , Event, event, Status(..), status
@@ -17,7 +18,7 @@ module Network.Lastfm.Request
   , Start, start, End, end, FestivalsOnly, festivalsonly
   , Metro, metro
   , Tag, tags, tag
-  , Recipient, recipient, Username, username, User, user
+  , Recipient, recipient, Username, username, User, user, Password, password
   , Public, public, Message, message, Page, page, Limit, limit
   , type', value
   ) where
@@ -31,11 +32,33 @@ import Network.Lastfm.Internal
 
 
 -- | Change request API key
---
--- Primarily used in API call wrappers, not intended for usage by library user
 apiKey ∷ Text → Request a f
 apiKey = add "api_key"
 {-# INLINE apiKey #-}
+
+
+-- | Change request session key
+sessionKey ∷ Text → Request a f
+sessionKey = add "sk"
+{-# INLINE sessionKey #-}
+
+
+type Token = Text
+
+
+-- | Add token parameter
+token ∷ Token → Request a f
+token = add "token"
+{-# INLINE token #-}
+
+
+type Callback = Text
+
+
+-- | Add callback link parameter
+callback ∷ Callback → Request a f
+callback = add "cb"
+{-# INLINE callback #-}
 
 
 type Artist = Text
@@ -168,6 +191,15 @@ type User = Text
 user ∷ User → Request a f
 user = add "user"
 {-# INLINE user #-}
+
+
+type Password = Text
+
+
+-- | Add password parameter
+password ∷ Password → Request a f
+password = add "password"
+{-# INLINE password #-}
 
 
 data Status = Attending | Maybe | NotAttending deriving Show

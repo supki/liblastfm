@@ -20,17 +20,17 @@ auth ak sk s =
   , TestLabel "Artist.share" $ TestCase testShare
   ]
  where
-  testAddTags = assert $ parse ok <:> lastfm (sign sk s $
-    addTags "Егор Летов" ["russian", "black metal"] <> apiKey ak <> json)
+  testAddTags = assert $ parse ok <:> lastfm (sign s $
+    addTags "Егор Летов" ["russian", "black metal"] <> apiKey ak <> sessionKey sk <> json)
 
-  testGetTagsAuth = assert $ parse gt <:> lastfm (sign sk s $
-    getTags "Егор Летов" <> apiKey ak <> json)
+  testGetTagsAuth = assert $ parse gt <:> lastfm (sign s $
+    getTags "Егор Летов" <> apiKey ak <> sessionKey sk <> json)
 
-  testRemoveTag = assert $ parse ok <:> lastfm (sign sk s $
-    removeTag "Егор Летов" "russian" <> apiKey ak <> json)
+  testRemoveTag = assert $ parse ok <:> lastfm (sign s $
+    removeTag "Егор Летов" "russian" <> apiKey ak <> sessionKey sk <> json)
 
-  testShare = assert $ parse ok <:> lastfm (sign sk s $
-    share "Sleep" "liblastfm" <> message "Just listen!" <> apiKey ak <> json)
+  testShare = assert $ parse ok <:> lastfm (sign s $
+    share "Sleep" "liblastfm" <> message "Just listen!" <> apiKey ak <> sessionKey sk <> json)
 
 
 noauth ∷ [Test]

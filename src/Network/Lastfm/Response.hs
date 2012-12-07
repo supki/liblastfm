@@ -6,7 +6,7 @@
 module Network.Lastfm.Response
   ( -- * Sign Request
     -- $sign
-    Session, Secret, sign
+    Secret, sign
     -- * Get Response
   , lastfm
   ) where
@@ -37,15 +37,13 @@ import Network.Lastfm.Internal
 -- described at <http://www.last.fm/api/authspec#8>
 
 
--- | Session key
-type Session = Text
-
 -- | Application secret
 type Secret = Text
 
+
 -- | Sign 'Request' with 'Secret'
-sign ∷ Session → Secret → Request RequireSign f → Request Ready f
-sign sk s = approve . (<> signature) . (<> wrap (query %~ M.insert "sk" sk))
+sign ∷ Secret → Request RequireSign f → Request Ready f
+sign s = approve . (<> signature)
  where
   signature = wrap $ \r → query %~ M.insert "api_sig" (signer (M.delete "format" (_query r))) $ r
 
@@ -58,13 +56,6 @@ lastfm req = do
   let t = unwrap req def
   parse t <$> C.withManager (\m → C.parseUrl (render t) >>= \url →
     C.responseBody <$> C.httpLbs (url { C.method = B.toStrict . T.encodeUtf8 $ _method t }) m)
-
-
-render ∷ R a f → String
-render R { host = h, _query = q } =
-  T.unpack $ mconcat [h, "?", argie q]
- where
-  argie = T.intercalate "&" . M.foldrWithKey (\k v m → T.concat [k, "=", v] : m) mempty
 
 
 approve ∷ Request RequireSign f → Request Ready f
