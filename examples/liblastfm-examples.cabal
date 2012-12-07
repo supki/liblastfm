@@ -20,3 +20,14 @@ executable sort-friends
   main-is: sort-friends.hs
   ghc-options: -Wall
                -fno-warn-unused-do-bind
+
+executable web-authentication
+  build-depends: base >= 3 && < 5,
+                 liblastfm,
+                 happstack-server,
+                 transformers,
+                 lens,
+                 aeson-lens
+  main-is: web-authentication.hs
+  ghc-options: -Wall
+               -fno-warn-unused-do-bind
