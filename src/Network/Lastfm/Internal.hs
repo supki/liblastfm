@@ -57,7 +57,7 @@ data R (a ∷ Auth) (f ∷ Format) = R
 
 instance Default (R a JSON) where
   def = R
-    { host = "http://ws.audioscrobbler.com/2.0/"
+    { host = "https://ws.audioscrobbler.com/2.0/"
     , _method = "GET"
     , _query = M.fromList [("format", "json")]
     , parse = decode
@@ -67,7 +67,7 @@ instance Default (R a JSON) where
 
 instance Default (R a XML) where
   def = R
-    { host = "http://ws.audioscrobbler.com/2.0/"
+    { host = "https://ws.audioscrobbler.com/2.0/"
     , _method = "GET"
     , _query = M.fromList [("format", "xml")]
     , parse = id
