@@ -1,4 +1,3 @@
-{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
@@ -10,14 +9,7 @@ import Network.Lastfm
 import Network.Lastfm.Artist
 import Test.HUnit
 
-
-instance Assertable (Maybe (Result a)) where
-  assert (Just (Success _)) = assertBool "always success" True
-  assert _ = assertFailure "cannot parse JSON"
-
-
-(<:>) ∷ (Functor f, Functor g) ⇒ (a → b) → f (g a) → f (g b)
-(<:>) = fmap . fmap
+import Common
 
 
 auth ∷ Text → Text → Text → [Test]
@@ -115,6 +107,3 @@ gtf o = parseJSON o >>= (.: "topfans") >>= (.: "user") >>= mapM (.: "name")
 gtt o = parseJSON o >>= (.: "toptags") >>= (.: "tag") >>= mapM (.: "name")
 gttr o = parseJSON o >>= (.: "toptracks") >>= (.: "track") >>= mapM (.: "name")
 se o = parseJSON o >>= (.: "results") >>= (.: "artistmatches") >>= (.: "artist") >>= mapM (.: "name")
-
-ok ∷ Value → Parser String
-ok o = parseJSON o >>= (.: "status")
