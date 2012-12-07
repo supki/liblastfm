@@ -106,7 +106,7 @@ noauth =
     getTags "Егор Летов" <> user "liblastfm" <> apiKey ak <> json)
 
   testGetTags_mbid = assert $ parse gt <:> lastfm (
-    getTags_mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <> user "liblastfm" <> apiKey ak <> json)
+    getTags_mbid "cfb3d32e-d095-4d63-946d-9daf06932180" <> user "liblastfm" <> apiKey ak <> json)
 
   testGetTopAlbums = assert $ parse gta <:> lastfm (
     getTopAlbums "Meshuggah" <> limit 3 <> apiKey ak <> json)
