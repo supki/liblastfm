@@ -13,6 +13,7 @@ import qualified Album as Album
 import qualified Artist as Artist
 import qualified Chart as Chart
 import qualified Event as Event
+import qualified Geo as Geo
 
 
 main ∷ IO ()
@@ -30,6 +31,7 @@ main =
               , Artist.noauth
               , Chart.noauth
               , Event.noauth
+              , Geo.noauth
               ]
             let fs = sum (map failures rs) + sum (map failures rs')
             case fs of
