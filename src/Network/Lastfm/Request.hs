@@ -11,6 +11,7 @@ module Network.Lastfm.Request
   , Artist, artist, Album, album, MBID, mbid
   , Country, country, Autocorrect, autocorrect
   , Event, event, Status(..), status
+  , From, from, To, to
   , Language, language, Distance, distance
   , Longitude, longitude, Latitude, latitude, Location, location
   , Start, start, End, end, FestivalsOnly, festivalsonly
@@ -217,7 +218,7 @@ location = add "location"
 type Distance = Int
 
 
--- | Add location parameter
+-- | Add distance parameter
 distance ∷ Distance → Request a f
 distance = add "distance" . T.pack . show
 {-# INLINE distance #-}
@@ -257,6 +258,24 @@ type Metro = Text
 metro ∷ Metro → Request a f
 metro = add "metro"
 {-# INLINE metro #-}
+
+
+type From = Integer
+
+
+-- | Add from parameter
+from ∷ From → Request a f
+from = add "from" . T.pack . show
+{-# INLINE from #-}
+
+
+type To = Integer
+
+
+-- | Add to parameter
+to ∷ To → Request a f
+to = add "to" . T.pack . show
+{-# INLINE to #-}
 
 
 -- | Add type parameter
