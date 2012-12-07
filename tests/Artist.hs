@@ -21,7 +21,7 @@ auth ak sk s =
   ]
  where
   testAddTags = assert $ parse ok <:> lastfm (sign sk s $
-    addTags "Егор Летов" ["russian", "black metal"] <> apiKey ak  <> json)
+    addTags "Егор Летов" ["russian", "black metal"] <> apiKey ak <> json)
 
   testGetTagsAuth = assert $ parse gt <:> lastfm (sign sk s $
     getTags <> artist "Егор Летов" <> apiKey ak <> json)

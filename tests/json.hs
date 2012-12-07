@@ -12,6 +12,7 @@ import           Test.HUnit
 import qualified Album as Album
 import qualified Artist as Artist
 import qualified Chart as Chart
+import qualified Event as Event
 
 
 main ∷ IO ()
@@ -22,11 +23,13 @@ main =
          do rs ← mapM (runTestTT . TestList . \f → f ak sk s)
               [ Album.auth
               , Artist.auth
+              , Event.auth
               ]
             rs' ← mapM (runTestTT . TestList)
               [ Album.noauth
               , Artist.noauth
               , Chart.noauth
+              , Event.noauth
               ]
             let fs = sum (map failures rs) + sum (map failures rs')
             case fs of
