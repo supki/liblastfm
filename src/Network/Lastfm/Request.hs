@@ -11,7 +11,10 @@ module Network.Lastfm.Request
   , Artist, artist, Album, album, MBID, mbid
   , Country, country, Autocorrect, autocorrect
   , Event, event, Status(..), status
-  , Language, language
+  , Language, language, Distance, distance
+  , Longitude, longitude, Latitude, latitude, Location, location
+  , Start, start, End, end, FestivalsOnly, festivalsonly
+  , Metro, metro
   , Tag, tags, tag
   , Recipient, recipient, Username, username, User, user
   , Public, public, Message, message, Page, page, Limit, limit
@@ -183,6 +186,77 @@ event ∷ Event → Request a f
 event = add "event" . T.pack . show
 {-# INLINE event #-}
 
+
+type Longitude = Text
+
+
+-- | Add longitude parameter
+longitude ∷ Longitude → Request a f
+longitude = add "longitude"
+{-# INLINE longitude #-}
+
+
+type Latitude = Text
+
+
+-- | Add latitude parameter
+latitude ∷ Latitude → Request a f
+latitude = add "latitude"
+{-# INLINE latitude #-}
+
+
+type Location = Text
+
+
+-- | Add location parameter
+location ∷ Location → Request a f
+location = add "location"
+{-# INLINE location #-}
+
+
+type Distance = Int
+
+
+-- | Add location parameter
+distance ∷ Distance → Request a f
+distance = add "distance" . T.pack . show
+{-# INLINE distance #-}
+
+
+type FestivalsOnly = Bool
+
+
+-- | Add festivalsonly parameter
+festivalsonly ∷ FestivalsOnly → Request a f
+festivalsonly f = add "festivalsonly" (if f then "1" else "0")
+{-# INLINE festivalsonly #-}
+
+
+type Start = Integer
+
+
+-- | Add start parameter
+start ∷ Start → Request a f
+start = add "start" . T.pack . show
+{-# INLINE start #-}
+
+
+type End = Integer
+
+
+-- | Add end parameter
+end ∷ End → Request a f
+end = add "end" . T.pack . show
+{-# INLINE end #-}
+
+
+type Metro = Text
+
+
+-- | Add metro parameter
+metro ∷ Metro → Request a f
+metro = add "metro"
+{-# INLINE metro #-}
 
 
 -- | Add type parameter
