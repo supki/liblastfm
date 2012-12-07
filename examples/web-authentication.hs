@@ -1,5 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 -- | Web application authentication flow example
+--
+-- Please remember to substitute __YOUR_API_KEY__,
+-- __YOUR_SECRET__ and __YOUR_CALLBACK__ for real values
 module Main where
 
 import Control.Monad
@@ -18,7 +21,7 @@ main :: IO ()
 main = do
   sessions <- newIORef []
   simpleHTTP nullConf $ msum
-    [ dir "authenticate" $ seeOther (link $ apiKey ak <> callback __YOUR_CALLBACK__) ""
+    [ dir "authenticate" $ seeOther (link $ apiKey ak <> callback "__YOUR_CALLBACK__") ""
     , dir "save" $ do
         t <- lookText "token"
         r <- liftIO . lastfm . sign s $ getSession t <> apiKey ak <> json
@@ -29,5 +32,5 @@ main = do
     , dir "show" $ liftIO (readIORef sessions) >>= ok . show
     ]
  where
-  ak = __YOUR_API_KEY__
-  s = __YOUR_SECRET__
+  ak = "__YOUR_API_KEY__"
+  s = "__YOUR_SECRET__"

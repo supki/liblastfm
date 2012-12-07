@@ -31,3 +31,12 @@ executable web-authentication
   main-is: web-authentication.hs
   ghc-options: -Wall
                -fno-warn-unused-do-bind
+
+executable desktop-authentication
+  build-depends: base >= 3 && < 5,
+                 liblastfm,
+                 lens,
+                 aeson-lens
+  main-is: desktop-authentication.hs
+  ghc-options: -Wall
+               -fno-warn-unused-do-bind
