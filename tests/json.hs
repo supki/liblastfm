@@ -10,6 +10,7 @@ import           Data.Aeson
 import           Data.Text.Lazy (Text)
 import           Test.HUnit
 import qualified Album as Album
+import qualified Artist as Artist
 
 
 main ∷ IO ()
@@ -19,9 +20,11 @@ main =
        Just (Keys ak sk s) →
          do rs ← mapM (runTestTT . TestList . \f → f ak sk s)
               [ Album.auth
+              , Artist.auth
               ]
             rs' ← mapM (runTestTT . TestList)
               [ Album.noauth
+              , Artist.noauth
               ]
             let fs = sum (map failures rs) + sum (map failures rs')
             case fs of
