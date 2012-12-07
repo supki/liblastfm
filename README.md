@@ -1,6 +1,18 @@
 ##FAQ
 **Q: I'm getting the following error. How do I fix it?**
 ```
+> getInfo <> artist "Pink Floyd" <> album "The Wall" <> apiKey "1234567890"
+
+<interactive>:8:27:
+    Couldn't match type `[Char]' with `Data.Text.Lazy.Internal.Text'
+    Expected type: Artist
+      Actual type: [Char]
+```
+A: This means you haven't `-XOverloadedStrings` extension enabled in current ghci session.
+To enable it type `:set -XOverloadedStrings`.
+
+**Q: I'm getting the following error. How do I fix it?**
+```
     No instance for (Data.Default.Default (R 'Ready f0))
       arising from a use of `lastfm'
     The type variable `f0' is ambiguous
