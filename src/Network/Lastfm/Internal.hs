@@ -8,10 +8,11 @@ module Network.Lastfm.Internal
   ( Request, R(..), wrap, unwrap, add, Response
   , method, query
   , Auth(..), Format(..)
+  , render
   , api, post, get, json, xml
   ) where
 
-import Data.Monoid (Dual(..), Endo(..))
+import Data.Monoid
 
 import           Control.Lens
 import           Data.Aeson (Value, decode)
@@ -20,6 +21,7 @@ import           Data.Default
 import           Data.Map (Map)
 import qualified Data.Map as M
 import           Data.Text.Lazy (Text)
+import qualified Data.Text.Lazy as T
 
 
 -- | Authentication method
@@ -71,6 +73,13 @@ instance Default (R a XML) where
     , parse = id
     }
   {-# INLINE def #-}
+
+
+render ∷ R a f → String
+render R { host = h, _query = q } =
+  T.unpack $ mconcat [h, "?", argie q]
+ where
+  argie = T.intercalate "&" . M.foldrWithKey (\k v m → T.concat [k, "=", v] : m) mempty
 
 
 makeLenses ''R

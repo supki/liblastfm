@@ -60,12 +60,5 @@ lastfm req = do
     C.responseBody <$> C.httpLbs (url { C.method = B.toStrict . T.encodeUtf8 $ _method t }) m)
 
 
-render ∷ R a f → String
-render R { host = h, _query = q } =
-  T.unpack $ mconcat [h, "?", argie q]
- where
-  argie = T.intercalate "&" . M.foldrWithKey (\k v m → T.concat [k, "=", v] : m) mempty
-
-
 approve ∷ Request RequireSign f → Request Ready f
 approve = unsafeCoerce

@@ -8,6 +8,7 @@ module Network.Lastfm.Request
     -- * Request major parameters
   , api, post, get, json, xml, apiKey
     -- * Request minor parameters
+  , Token, token, Callback, callback
   , Artist, artist, Album, album, MBID, mbid
   , Country, country, Autocorrect, autocorrect
   , Event, event, Status(..), status
@@ -36,6 +37,24 @@ import Network.Lastfm.Internal
 apiKey ∷ Text → Request a f
 apiKey = add "api_key"
 {-# INLINE apiKey #-}
+
+
+type Token = Text
+
+
+-- | Add token parameter
+token ∷ Token → Request a f
+token = add "token"
+{-# INLINE token #-}
+
+
+type Callback = Text
+
+
+-- | Add callback link parameter
+callback ∷ Callback → Request a f
+callback = add "cb"
+{-# INLINE callback #-}
 
 
 type Artist = Text
