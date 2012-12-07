@@ -60,7 +60,7 @@ getPastEvents ∷ Request Ready f
 getPastEvents = api "artist.getPastEvents"
 
 
--- Get a podcast of free mp3s based on an artist
+-- | Get a podcast of free mp3s based on an artist
 --
 -- Optional: either 'mbid' or 'artist'; 'autocorrect'
 --
@@ -159,6 +159,6 @@ share ar r = api "artist.share" <> artist ar <> recipient r <> post
 
 -- | Shout in this artist's shoutbox
 --
--- <Yank http://www.last.fm/api/show/artist.shout>
+-- <http://www.last.fm/api/show/artist.shout>
 shout ∷ Artist → Message → Request RequireSign f
 shout ar m = api "artist.shout" <> artist ar <> message m <> post
