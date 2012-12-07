@@ -41,7 +41,7 @@ noauth =
     getInfo 3142549 <> apiKey ak <> json)
 
   testGetShouts = assert $ parse gs <:> lastfm (
-    getShouts 3142549 <> limit 2 <> apiKey ak <> json)
+    getShouts 3142549 <> limit 1 <> apiKey ak <> json)
 
 
 gi, gs ∷ Value → Parser String
