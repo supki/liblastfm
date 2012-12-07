@@ -33,7 +33,5 @@ To fix it, add use `json` or `xml` helpers, depending on your needs:
 wrong <- lastfm (Album.getInfo <> artist "Pink Floyd" <> album "The Wall" <> apiKey "1234567890")
 right <- lastfm (Album.getInfo <> artist "Pink Floyd" <> album "The Wall" <> apiKey "1234567890" <> json)
 ```
-This problem should not arise while writing applications since hopefully you will have enough
-type annotations for inference to work out. But `json` and `xml` are still useful in ghci.
 
 -
