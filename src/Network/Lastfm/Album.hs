@@ -9,8 +9,9 @@
 -- import qualified Network.Lastfm.Album as Album
 -- @
 module Network.Lastfm.Album
-  ( addTags, getBuyLinks, getInfo, getShouts, getTags
-  , getTopTags, removeTag, search, share
+  ( addTags, getBuyLinks, getBuyLinks_mbid, getInfo, getInfo_mbid, getShouts
+  , getShouts_mbid, getTags, getTags_mbid
+  , getTopTags, getTopTags_mbid, removeTag, search, share
   ) where
 
 import Data.Monoid ((<>))
@@ -22,59 +23,73 @@ import Network.Lastfm.Request
 --
 -- <http://www.last.fm/api/show/album.addTags>
 addTags ∷ Artist → Album → [Tag] → Request RequireSign f
-addTags ar al ts = api "album.addTags" <> artist ar <> album al <> tags ts <> post
+addTags ar al ts =
+  api "album.addTags" <> artist ar <> album al <> tags ts <> post
 
 
 -- | Get a list of Buy Links for a particular Album. It is required that you supply either the artist and track params or the mbid parameter.
 --
--- Optional: either 'mbid' or both 'artist' and 'album'; 'autocorrect'
+-- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/album.getBuylinks>
-getBuyLinks ∷ Country → Request Ready f
-getBuyLinks c = api "album.getBuyLinks" <> country c
+getBuyLinks ∷ Artist → Album → Country → Request Ready f
+getBuyLinks ar al c =
+  api "album.getBuyLinks" <> album al <> artist ar <> country c
 
+getBuyLinks_mbid ∷ MBID → Country → Request Ready f
+getBuyLinks_mbid m c = api "album.getBuyLinks" <> mbid m <> country c
 
 -- | Get the metadata for an album on Last.fm using the album name or a musicbrainz id. See playlist.fetch on how to get the album playlist.
 --
--- Optional: either 'mbid' or both 'artist' and 'album'; 'autocorrect', 'username', 'language'
+-- Optional: 'autocorrect', 'username', 'language'
 --
 -- <http://www.last.fm/api/show/album.getInfo>
-getInfo ∷ Request Ready f
-getInfo = api "album.getInfo"
+getInfo ∷ Artist → Album → Request Ready f
+getInfo ar al = api "album.getInfo" <> album al <> artist ar
+
+getInfo_mbid ∷ MBID → Request Ready f
+getInfo_mbid m = api "album.getInfo" <> mbid m
 
 
 -- | Get shouts for this album.
 --
--- Optional: either 'mbid' or both 'artist' and 'album'; 'autocorrect', 'limit', 'page'
+-- Optional: 'autocorrect', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/album.getShouts>
-getShouts ∷ Request Ready f
-getShouts = api "album.getShouts"
+getShouts ∷ Artist → Album → Request Ready f
+getShouts ar al = api "album.getShouts" <> album al <> artist ar
 
+getShouts_mbid ∷ MBID → Request Ready f
+getShouts_mbid m = api "album.getShouts" <> mbid m
 
 -- | Get the tags applied by an individual user to an album on Last.fm.
 --
--- Optional: either 'mbid' or both 'artist' and 'album'; 'autocorrect', 'user'
+-- Optional: 'autocorrect', 'user'
 --
 -- <http://www.last.fm/api/show/album.getTags>
-getTags ∷ Request a f
-getTags = api "album.getTags"
+getTags ∷ Artist → Album → Request a f
+getTags ar al = api "album.getTags" <> album al <> artist ar
 
+getTags_mbid ∷ MBID → Request a f
+getTags_mbid m = api "album.getTags" <> mbid m
 
 -- | Get the top tags for an album on Last.fm, ordered by popularity.
 --
--- Optional: either 'mbid' or both 'artist' and 'album'; 'autocorrect'
+-- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/album.getTopTags>
-getTopTags ∷ Request a f
-getTopTags = api "album.getTopTags"
+getTopTags ∷ Artist → Album → Request a f
+getTopTags ar al = api "album.getTopTags" <> album al <> artist ar
 
+getTopTags_mbid ∷ MBID → Request a f
+getTopTags_mbid m = api "album.getTopTags" <> mbid m
 
 -- | Remove a user's tag from an album.
 --
 -- <http://www.last.fm/api/show/album.removeTag>
 removeTag ∷ Artist → Album → Tag → Request RequireSign f
-removeTag ar al t = api "album.removeTag" <> artist ar <> album al <> tag t <> post
+removeTag ar al t =
+  api "album.removeTag" <> artist ar <> album al <> tag t <> post
 
 
 -- | Search for an album by name. Returns album matches sorted by relevance.
@@ -92,4 +107,5 @@ search al = api "album.search" <> album al
 --
 -- <http://www.last.fm/api/show/album.share>
 share ∷ Album → Artist → Recipient → Request RequireSign f
-share al ar r = api "album.share" <> album al <> artist ar <> recipient r <> post
+share al ar r =
+  api "album.share" <> album al <> artist ar <> recipient r <> post
