@@ -16,7 +16,8 @@ import Data.Monoid
 
 import           Control.Lens
 import           Data.Aeson (Value, decode)
-import           Data.ByteString.Lazy (ByteString)
+import qualified Data.ByteString.Lazy as Lazy
+import qualified Data.ByteString as Strict
 import           Data.Default
 import           Data.Map (Map)
 import qualified Data.Map as M
@@ -39,7 +40,7 @@ type Request (a ∷ Auth) (f ∷ Format) = Dual (Endo (R a f))
 
 type family Response (f ∷ Format)
 type instance Response JSON = Maybe Value
-type instance Response XML = ByteString
+type instance Response XML = Lazy.ByteString
 
 
 -- | Lastfm API request data type
@@ -49,9 +50,9 @@ type instance Response XML = ByteString
 -- @f@ is response format
 data R (a ∷ Auth) (f ∷ Format) = R
   { host ∷ Text
-  , _method ∷ Text
+  , _method ∷ Strict.ByteString
   , _query ∷ Map Text Text
-  , parse ∷ ByteString → Response f
+  , parse ∷ Lazy.ByteString → Response f
   }
 
 

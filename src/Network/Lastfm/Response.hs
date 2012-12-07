@@ -16,7 +16,6 @@ import Data.Monoid
 import Unsafe.Coerce (unsafeCoerce)
 
 import           Control.Lens
-import qualified Data.ByteString.Lazy as B
 import           Data.Default (Default(..))
 import           Data.Digest.Pure.MD5 (md5)
 import qualified Data.Map as M
@@ -55,7 +54,7 @@ lastfm ∷ Default (R Ready f) ⇒ Request Ready f → IO (Response f)
 lastfm req = do
   let t = unwrap req def
   parse t <$> C.withManager (\m → C.parseUrl (render t) >>= \url →
-    C.responseBody <$> C.httpLbs (url { C.method = B.toStrict . T.encodeUtf8 $ _method t }) m)
+    C.responseBody <$> C.httpLbs (url { C.method = _method t }) m)
 
 
 approve ∷ Request RequireSign f → Request Ready f
