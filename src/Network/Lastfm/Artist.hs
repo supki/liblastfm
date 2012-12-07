@@ -44,7 +44,7 @@ getEvents = api "artist.getEvents"
 
 -- | Get the metadata for an artist. Includes biography.
 --
--- Optional: either 'mbid' or 'artist'; 'lang', 'autocorrect', 'username'
+-- Optional: either 'mbid' or 'artist'; 'language', 'autocorrect', 'username'
 --
 -- <http://www.last.fm/api/show/artist.getInfo>
 getInfo ∷ Request Ready f

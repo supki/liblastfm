@@ -102,7 +102,7 @@ type Autocorrect = Bool
 
 -- | Add autocorrect parameter
 autocorrect ∷ Autocorrect → Request a f
-autocorrect au = add "tags" (if au then "1" else "0")
+autocorrect = add "tags" . boolToText
 {-# INLINE autocorrect #-}
 
 
@@ -138,7 +138,7 @@ type Public = Bool
 
 -- | Add public parameter
 public ∷ Public → Request a f
-public p = add "public" (if p then "1" else "0")
+public = add "public" . boolToText
 {-# INLINE public #-}
 
 
@@ -228,7 +228,7 @@ type FestivalsOnly = Bool
 
 -- | Add festivalsonly parameter
 festivalsonly ∷ FestivalsOnly → Request a f
-festivalsonly f = add "festivalsonly" (if f then "1" else "0")
+festivalsonly = add "festivalsonly" . boolToText
 {-# INLINE festivalsonly #-}
 
 
@@ -269,3 +269,7 @@ type' n = add ("type" <> T.pack (show n))
 value ∷ Int → Text → Request a f
 value n = add ("value" <> T.pack (show n))
 {-# INLINE value #-}
+
+
+boolToText ∷ Bool → Text
+boolToText b = (if b then "1" else "0")
