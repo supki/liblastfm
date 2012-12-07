@@ -25,6 +25,7 @@ library
   hs-source-dirs: src
   exposed-modules: Network.Lastfm
                    Network.Lastfm.Album
+                   Network.Lastfm.Artist
                    Network.Lastfm.Tasteometer
                    Network.Lastfm.User
                    Network.Lastfm.Request
