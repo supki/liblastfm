@@ -26,32 +26,32 @@ noauth =
  where
   ak = "29effec263316a1f8a97f753caaa83e0"
 
-  testGetInfo = assert $ parse gi <:> lastfm (
-    getInfo "depressive" <> apiKey ak <> json)
+  testGetInfo = check gi $
+    getInfo "depressive" <> apiKey ak
 
-  testGetSimilar = assert $ parse gs <:> lastfm (
-    getSimilar "depressive" <> apiKey ak <> json)
+  testGetSimilar = check gs $
+    getSimilar "depressive" <> apiKey ak
 
-  testGetTopAlbums = assert $ parse gta <:> lastfm (
-    getTopAlbums "depressive" <> limit 2 <> apiKey ak <> json)
+  testGetTopAlbums = check gta $
+    getTopAlbums "depressive" <> limit 2 <> apiKey ak
 
-  testGetTopArtists = assert $ parse gtar <:> lastfm (
-    getTopArtists "depressive" <> limit 3 <> apiKey ak <> json)
+  testGetTopArtists = check gtar $
+    getTopArtists "depressive" <> limit 3 <> apiKey ak
 
-  testGetTopTags = assert $ parse gtt <:> lastfm (
-    getTopTags <> apiKey ak <> json)
+  testGetTopTags = check gtt $
+    getTopTags <> apiKey ak
 
-  testGetTopTracks = assert $ parse gttr <:> lastfm (
-    getTopTracks "depressive" <> limit 2 <> apiKey ak <> json)
+  testGetTopTracks = check gttr $
+    getTopTracks "depressive" <> limit 2 <> apiKey ak
 
-  testGetWeeklyArtistChart = assert $ parse gwac <:> lastfm (
-    getWeeklyArtistChart "depressive" <> limit 3 <> apiKey ak <> json)
+  testGetWeeklyArtistChart = check gwac $
+    getWeeklyArtistChart "depressive" <> limit 3 <> apiKey ak
 
-  testGetWeeklyChartList = assert $ parse gc <:> lastfm (
-    getWeeklyChartList "depressive" <> apiKey ak <> json)
+  testGetWeeklyChartList = check gc $
+    getWeeklyChartList "depressive" <> apiKey ak
 
-  testSearch = assert $ parse se <:> lastfm (
-    search "depressive" <> limit 3 <> apiKey ak <> json)
+  testSearch = check se $
+    search "depressive" <> limit 3 <> apiKey ak
 
 
 gi ∷ Value → Parser String

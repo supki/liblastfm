@@ -19,17 +19,17 @@ auth ak sk s =
   , TestLabel "Album.share" $ TestCase testShare
   ]
  where
-  testAddTags = assert $ parse ok <:> lastfm (sign s $
-    addTags "Pink Floyd" "The Wall" ["70s", "awesome", "classic"] <> apiKey ak <> sessionKey sk <> json)
+  testAddTags = check ok . sign s $
+    addTags "Pink Floyd" "The Wall" ["70s", "awesome", "classic"] <> apiKey ak <> sessionKey sk
 
-  testGetTagsAuth = assert $ parse gt <:> lastfm (sign s $
-    getTags "Pink Floyd" "The Wall" <> apiKey ak <> sessionKey sk <> json)
+  testGetTagsAuth = check gt . sign s $
+    getTags "Pink Floyd" "The Wall" <> apiKey ak <> sessionKey sk
 
-  testRemoveTag = assert $ parse ok <:> lastfm (sign s $
-    removeTag "Pink Floyd" "The Wall" "awesome" <> apiKey ak <> sessionKey sk <> json)
+  testRemoveTag = check ok . sign s $
+    removeTag "Pink Floyd" "The Wall" "awesome" <> apiKey ak <> sessionKey sk
 
-  testShare = assert $ parse ok <:> lastfm (sign s $
-    share "Jerusalem" "Sleep" "liblastfm" <> message "Just listen!" <> apiKey ak <> sessionKey sk <> json)
+  testShare = check ok . sign s $
+    share "Jerusalem" "Sleep" "liblastfm" <> message "Just listen!" <> apiKey ak <> sessionKey sk
 
 
 noauth ∷ [Test]
@@ -49,38 +49,38 @@ noauth =
  where
   ak = "29effec263316a1f8a97f753caaa83e0"
 
-  testGetBuylinks = assert $ parse gbl <:>
-    lastfm (getBuyLinks "Pink Floyd" "The Wall" "United Kingdom" <> apiKey ak <> json)
+  testGetBuylinks = check gbl $
+    getBuyLinks "Pink Floyd" "The Wall" "United Kingdom" <> apiKey ak
 
-  testGetBuylinks_mbid = assert $ parse gbl <:>
-    lastfm (getBuyLinks_mbid "3a16c04b-922b-35c5-a29b-cbe9111fbe79" "United Kingdom" <> apiKey ak <> json)
+  testGetBuylinks_mbid = check gbl $
+    getBuyLinks_mbid "3a16c04b-922b-35c5-a29b-cbe9111fbe79" "United Kingdom" <> apiKey ak
 
-  testGetInfo = assert $ parse gi <:>
-    lastfm (getInfo "Pink Floyd" "The Wall" <> apiKey ak <> json)
+  testGetInfo = check gi $
+    getInfo "Pink Floyd" "The Wall" <> apiKey ak
 
-  testGetInfo_mbid = assert $ parse gi <:>
-    lastfm (getInfo_mbid "3a16c04b-922b-35c5-a29b-cbe9111fbe79" <> apiKey ak <> json)
+  testGetInfo_mbid = check gi $
+    getInfo_mbid "3a16c04b-922b-35c5-a29b-cbe9111fbe79" <> apiKey ak
 
-  testGetShouts = assert $ parse gs <:>
-    lastfm (getShouts "Pink Floyd" "The Wall" <> limit 7 <> apiKey ak <> json)
+  testGetShouts = check gs $
+    getShouts "Pink Floyd" "The Wall" <> limit 7 <> apiKey ak
 
-  testGetShouts_mbid = assert $ parse gs <:>
-    lastfm (getShouts_mbid "3a16c04b-922b-35c5-a29b-cbe9111fbe79" <> limit 7 <> apiKey ak <> json)
+  testGetShouts_mbid = check gs $
+    getShouts_mbid "3a16c04b-922b-35c5-a29b-cbe9111fbe79" <> limit 7 <> apiKey ak
 
-  testGetTags = assert $ parse gt <:>
-    lastfm (getTags "Pink Floyd" "The Wall" <> user "liblastfm" <> apiKey ak <> json)
+  testGetTags = check gt $
+    getTags "Pink Floyd" "The Wall" <> user "liblastfm" <> apiKey ak
 
-  testGetTags_mbid = assert $ parse gt <:>
-    lastfm (getTags_mbid "3a16c04b-922b-35c5-a29b-cbe9111fbe79" <> user "liblastfm" <> apiKey ak <> json)
+  testGetTags_mbid = check gt $
+    getTags_mbid "3a16c04b-922b-35c5-a29b-cbe9111fbe79" <> user "liblastfm" <> apiKey ak
 
-  testGetTopTags = assert $ parse gtt <:>
-    lastfm (getTopTags "Pink Floyd" "The Wall" <> apiKey ak <> json)
+  testGetTopTags = check gtt $
+    getTopTags "Pink Floyd" "The Wall" <> apiKey ak
 
-  testGetTopTags_mbid = assert $ parse gtt <:>
-    lastfm (getTopTags_mbid "3a16c04b-922b-35c5-a29b-cbe9111fbe79" <> apiKey ak <> json)
+  testGetTopTags_mbid = check gtt $
+    getTopTags_mbid "3a16c04b-922b-35c5-a29b-cbe9111fbe79" <> apiKey ak
 
-  testSearch = assert $ parse se <:>
-    lastfm (search "wall" <> limit 5 <> apiKey ak <> json)
+  testSearch = check se $
+    search "wall" <> limit 5 <> apiKey ak
 
 
 gbl, gi, gs, gt, gtt, se ∷ Value → Parser [String]

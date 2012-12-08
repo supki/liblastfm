@@ -22,23 +22,23 @@ noauth =
  where
   ak = "29effec263316a1f8a97f753caaa83e0"
 
-  testGetHypedArtists = assert $ parse ga <:> lastfm (
-    getHypedArtists <> limit 3 <> apiKey ak <> json)
+  testGetHypedArtists = check ga $
+    getHypedArtists <> limit 3 <> apiKey ak
 
-  testGetHypedTracks = assert $ parse gt <:> lastfm (
-    getHypedTracks <> limit 2 <> apiKey ak <> json)
+  testGetHypedTracks = check gt $
+    getHypedTracks <> limit 2 <> apiKey ak
 
-  testGetLovedTracks = assert $ parse gt <:> lastfm (
-    getLovedTracks <> limit 3 <> apiKey ak <> json)
+  testGetLovedTracks = check gt $
+    getLovedTracks <> limit 3 <> apiKey ak
 
-  testGetTopArtists = assert $ parse ga <:> lastfm (
-    getTopArtists <> limit 4 <> apiKey ak <> json)
+  testGetTopArtists = check ga $
+    getTopArtists <> limit 4 <> apiKey ak
 
-  testGetTopTags = assert $ parse gta <:> lastfm (
-    getTopTags <> limit 5 <> apiKey ak <> json)
+  testGetTopTags = check gta $
+    getTopTags <> limit 5 <> apiKey ak
 
-  testGetTopTracks = assert $ parse gt <:> lastfm (
-    getTopTracks <> limit 2 <> apiKey ak <> json)
+  testGetTopTracks = check gt $
+    getTopTracks <> limit 2 <> apiKey ak
 
 
 ga, gt, gta ∷ Value → Parser [String]

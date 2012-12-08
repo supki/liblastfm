@@ -17,11 +17,11 @@ auth ak sk s =
   , TestLabel "Event.share" $ TestCase testShare
   ]
  where
-  testAttend = assert $ parse ok <:> lastfm (sign s $
-    attend 3142549 Attending <> apiKey ak <> sessionKey sk <> json)
+  testAttend = check ok . sign s $
+    attend 3142549 Attending <> apiKey ak <> sessionKey sk
 
-  testShare = assert $ parse ok <:> lastfm (sign s $
-    share 3142549 "liblastfm" <> message "Just listen!" <> sessionKey sk <> apiKey ak <> json)
+  testShare = check ok . sign s $
+    share 3142549 "liblastfm" <> message "Just listen!" <> apiKey ak <> sessionKey sk
 
 
 noauth ∷ [Test]
@@ -33,14 +33,14 @@ noauth =
  where
   ak = "29effec263316a1f8a97f753caaa83e0"
 
-  testGetAttendees = assert $ parse ga <:> lastfm (
-    getAttendees 3142549 <> limit 2 <> apiKey ak <> json)
+  testGetAttendees = check ga $
+    getAttendees 3142549 <> limit 2 <> apiKey ak
 
-  testGetInfo = assert $ parse gi <:> lastfm (
-    getInfo 3142549 <> apiKey ak <> json)
+  testGetInfo = check gi $
+    getInfo 3142549 <> apiKey ak
 
-  testGetShouts = assert $ parse gs <:> lastfm (
-    getShouts 3142549 <> limit 1 <> apiKey ak <> json)
+  testGetShouts = check gs $
+    getShouts 3142549 <> limit 1 <> apiKey ak
 
 
 gi, gs ∷ Value → Parser String

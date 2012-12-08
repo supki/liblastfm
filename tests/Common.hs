@@ -1,20 +1,20 @@
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
-{-# OPTIONS_GHC -fno-warn-orphans #-}
 module Common where
 
 import Data.Aeson.Types
+import Network.Lastfm
 import Test.HUnit
 
 
-instance Assertable (Maybe (Result a)) where
-  assert (Just (Success _)) = assertBool "always success" True
-  assert _ = assertFailure "cannot parse JSON"
+check ∷ (Value → Parser a) → Request Ready JSON → Assertion
+check p q = do
+  r ← lastfm q
+  case parse p `fmap` r of
+    Just (Success _) → assertBool "success" True
+    _                → assertFailure $ "Got: " ++ show r
 
-
-(<:>) ∷ (Functor f, Functor g) ⇒ (a → b) → f (g a) → f (g b)
-(<:>) = fmap . fmap
 
 ok ∷ Value → Parser String
 ok o = parseJSON o >>= (.: "status")

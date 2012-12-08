@@ -19,17 +19,17 @@ auth ak sk s =
   , TestLabel "Artist.share" $ TestCase testShare
   ]
  where
-  testAddTags = assert $ parse ok <:> lastfm (sign s $
-    addTags "Егор Летов" ["russian", "black metal"] <> apiKey ak <> sessionKey sk <> json)
+  testAddTags = check ok . sign s $
+    addTags "Егор Летов" ["russian", "black metal"] <> apiKey ak <> sessionKey sk
 
-  testGetTagsAuth = assert $ parse gt <:> lastfm (sign s $
-    getTags "Егор Летов" <> apiKey ak <> sessionKey sk <> json)
+  testGetTagsAuth = check gt . sign s $
+    getTags "Егор Летов" <> apiKey ak <> sessionKey sk
 
-  testRemoveTag = assert $ parse ok <:> lastfm (sign s $
-    removeTag "Егор Летов" "russian" <> apiKey ak <> sessionKey sk <> json)
+  testRemoveTag = check ok . sign s $
+    removeTag "Егор Летов" "russian" <> apiKey ak <> sessionKey sk
 
-  testShare = assert $ parse ok <:> lastfm (sign s $
-    share "Sleep" "liblastfm" <> message "Just listen!" <> apiKey ak <> sessionKey sk <> json)
+  testShare = check ok . sign s $
+    share "Sleep" "liblastfm" <> message "Just listen!" <> apiKey ak <> sessionKey sk
 
 
 noauth ∷ [Test]
@@ -62,77 +62,77 @@ noauth =
  where
   ak = "29effec263316a1f8a97f753caaa83e0"
 
-  testGetCorrection = assert $ parse gc <:> lastfm (
-    getCorrection "Meshugah" <> apiKey ak <> json)
+  testGetCorrection = check gc $
+    getCorrection "Meshugah" <> apiKey ak
 
-  testGetEvents = assert $ parse ge <:> lastfm (
-    getEvents "Meshuggah" <> limit 2 <> apiKey ak <> json)
+  testGetEvents = check ge $
+    getEvents "Meshuggah" <> limit 2 <> apiKey ak
 
-  testGetEvents_mbid = assert $ parse ge <:> lastfm (
-    getEvents_mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <> limit 2 <> apiKey ak <> json)
+  testGetEvents_mbid = check ge $
+    getEvents_mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <> limit 2 <> apiKey ak
 
-  testGetInfo = assert $ parse gin <:> lastfm (
-    getInfo "Meshuggah" <> apiKey ak <> json)
+  testGetInfo = check gin $
+    getInfo "Meshuggah" <> apiKey ak
 
-  testGetInfo_mbid = assert $ parse gin <:> lastfm (
-    getInfo_mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <> apiKey ak <> json)
+  testGetInfo_mbid = check gin $
+    getInfo_mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <> apiKey ak
 
-  testGetPastEvents = assert $ parse gpe <:> lastfm (
-    getPastEvents "Meshuggah" <> autocorrect True <> apiKey ak <> json)
+  testGetPastEvents = check gpe $
+    getPastEvents "Meshuggah" <> autocorrect True <> apiKey ak
 
-  testGetPastEvents_mbid = assert $ parse gpe <:> lastfm (
-    getPastEvents_mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <> autocorrect True <> apiKey ak <> json)
+  testGetPastEvents_mbid = check gpe $
+    getPastEvents_mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <> autocorrect True <> apiKey ak
 
-  testGetPodcast = assert $ parse gp <:> lastfm (
-    getPodcast "Meshuggah" <> apiKey ak <> json)
+  testGetPodcast = check gp $
+    getPodcast "Meshuggah" <> apiKey ak
 
-  testGetPodcast_mbid = assert $ parse gp <:> lastfm (
-    getPodcast_mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <> apiKey ak <> json)
+  testGetPodcast_mbid = check gp $
+    getPodcast_mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <> apiKey ak
 
-  testGetShouts = assert $ parse gs <:> lastfm (
-    getShouts "Meshuggah" <> limit 5 <> apiKey ak <> json)
+  testGetShouts = check gs $
+    getShouts "Meshuggah" <> limit 5 <> apiKey ak
 
-  testGetShouts_mbid = assert $ parse gs <:> lastfm (
-    getShouts_mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <> limit 5 <> apiKey ak <> json)
+  testGetShouts_mbid = check gs $
+    getShouts_mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <> limit 5 <> apiKey ak
 
-  testGetSimilar = assert $ parse gsi <:> lastfm (
-    getSimilar "Meshuggah" <> limit 3 <> apiKey ak <> json)
+  testGetSimilar = check gsi $
+    getSimilar "Meshuggah" <> limit 3 <> apiKey ak
 
-  testGetSimilar_mbid = assert $ parse gsi <:> lastfm (
-    getSimilar_mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <> limit 3 <> apiKey ak <> json)
+  testGetSimilar_mbid = check gsi $
+    getSimilar_mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <> limit 3 <> apiKey ak
 
-  testGetTags = assert $ parse gt <:> lastfm (
-    getTags "Егор Летов" <> user "liblastfm" <> apiKey ak <> json)
+  testGetTags = check gt $
+    getTags "Егор Летов" <> user "liblastfm" <> apiKey ak
 
-  testGetTags_mbid = assert $ parse gt <:> lastfm (
-    getTags_mbid "cfb3d32e-d095-4d63-946d-9daf06932180" <> user "liblastfm" <> apiKey ak <> json)
+  testGetTags_mbid = check gt $
+    getTags_mbid "cfb3d32e-d095-4d63-946d-9daf06932180" <> user "liblastfm" <> apiKey ak
 
-  testGetTopAlbums = assert $ parse gta <:> lastfm (
-    getTopAlbums "Meshuggah" <> limit 3 <> apiKey ak <> json)
+  testGetTopAlbums = check gta $
+    getTopAlbums "Meshuggah" <> limit 3 <> apiKey ak
 
-  testGetTopAlbums_mbid = assert $ parse gta <:> lastfm (
-    getTopAlbums_mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <> limit 3 <> apiKey ak <> json)
+  testGetTopAlbums_mbid = check gta $
+    getTopAlbums_mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <> limit 3 <> apiKey ak
 
-  testGetTopFans = assert $ parse gtf <:> lastfm (
-    getTopFans "Meshuggah" <> apiKey ak <> json)
+  testGetTopFans = check gtf $
+    getTopFans "Meshuggah" <> apiKey ak
 
-  testGetTopFans_mbid = assert $ parse gtf <:> lastfm (
-    getTopFans_mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <> apiKey ak <> json)
+  testGetTopFans_mbid = check gtf $
+    getTopFans_mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <> apiKey ak
 
-  testGetTopTags = assert $ parse gtt <:> lastfm (
-    getTopTags "Meshuggah" <> apiKey ak <> json)
+  testGetTopTags = check gtt $
+    getTopTags "Meshuggah" <> apiKey ak
 
-  testGetTopTags_mbid = assert $ parse gtt <:> lastfm (
-    getTopTags_mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <> apiKey ak <> json)
+  testGetTopTags_mbid = check gtt $
+    getTopTags_mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <> apiKey ak
 
-  testGetTopTracks = assert $ parse gttr <:> lastfm (
-    getTopTracks "Meshuggah" <> limit 3 <> apiKey ak <> json)
+  testGetTopTracks = check gttr $
+    getTopTracks "Meshuggah" <> limit 3 <> apiKey ak
 
-  testGetTopTracks_mbid = assert $ parse gttr <:> lastfm (
-    getTopTracks_mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <> limit 3 <> apiKey ak <> json)
+  testGetTopTracks_mbid = check gttr $
+    getTopTracks_mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <> limit 3 <> apiKey ak
 
-  testSearch = assert $ parse se <:> lastfm (
-    search "Mesh" <> limit 3 <> apiKey ak <> json)
+  testSearch = check se $
+    search "Mesh" <> limit 3 <> apiKey ak
 
 
 gc, gin, gp ∷ Value → Parser String

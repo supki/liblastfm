@@ -28,38 +28,38 @@ noauth =
  where
   ak = "29effec263316a1f8a97f753caaa83e0"
 
-  testGetEvents = assert $ parse ge <:> lastfm (
-    getEvents <> location "Moscow" <> limit 5 <> apiKey ak <> json)
+  testGetEvents = check ge $
+    getEvents <> location "Moscow" <> limit 5 <> apiKey ak
 
-  testGetMetroArtistChart = assert $ parse ga <:> lastfm (
-    getMetroArtistChart "Saint Petersburg" "Russia" <> apiKey ak <> json)
+  testGetMetroArtistChart = check ga $
+    getMetroArtistChart "Saint Petersburg" "Russia" <> apiKey ak
 
-  testGetMetroHypeArtistChart = assert $ parse ga <:> lastfm (
-    getMetroHypeArtistChart "New York" "United States" <> apiKey ak <> json)
+  testGetMetroHypeArtistChart = check ga $
+    getMetroHypeArtistChart "New York" "United States" <> apiKey ak
 
-  testGetMetroHypeTrackChart = assert $ parse gt <:> lastfm (
-    getMetroHypeTrackChart "Ufa" "Russia" <> apiKey ak <> json)
+  testGetMetroHypeTrackChart = check gt $
+    getMetroHypeTrackChart "Ufa" "Russia" <> apiKey ak
 
-  testGetMetroTrackChart = assert $ parse gt <:> lastfm (
-    getMetroTrackChart "Boston" "United States" <> apiKey ak <> json)
+  testGetMetroTrackChart = check gt $
+    getMetroTrackChart "Boston" "United States" <> apiKey ak
 
-  testGetMetroUniqueArtistChart = assert $ parse ga <:> lastfm (
-    getMetroUniqueArtistChart "Minsk" "Belarus" <> apiKey ak <> json)
+  testGetMetroUniqueArtistChart = check ga $
+    getMetroUniqueArtistChart "Minsk" "Belarus" <> apiKey ak
 
-  testGetMetroUniqueTrackChart = assert $ parse gt <:> lastfm (
-    getMetroUniqueTrackChart "Moscow" "Russia" <> apiKey ak <> json)
+  testGetMetroUniqueTrackChart = check gt $
+    getMetroUniqueTrackChart "Moscow" "Russia" <> apiKey ak
 
-  testGetMetroWeeklyChartlist = assert $ parse gc <:> lastfm (
-    getMetroWeeklyChartlist "Moscow" <> apiKey ak <> json)
+  testGetMetroWeeklyChartlist = check gc $
+    getMetroWeeklyChartlist "Moscow" <> apiKey ak
 
-  testGetMetros = assert $ parse gm <:> lastfm (
-    getMetros <> country "Russia" <> apiKey ak <> json)
+  testGetMetros = check gm $
+    getMetros <> country "Russia" <> apiKey ak
 
-  testGetTopArtists = assert $ parse ga <:> lastfm (
-    getTopArtists "Belarus" <> limit 3 <> apiKey ak <> json)
+  testGetTopArtists = check ga $
+    getTopArtists "Belarus" <> limit 3 <> apiKey ak
 
-  testGetTopTracks = assert $ parse gt <:> lastfm (
-    getTopTracks "Ukraine" <> limit 2 <> apiKey ak <> json)
+  testGetTopTracks = check gt $
+    getTopTracks "Ukraine" <> limit 2 <> apiKey ak
 
 
 ga, ge, gm, gt ∷ Value → Parser [String]
