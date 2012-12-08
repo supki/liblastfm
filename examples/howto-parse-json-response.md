@@ -16,7 +16,7 @@ Then - `aeson-lens` and `lens` modules:
 
 You may construct your call to something like that using like (remember, `json` part is necessary):
 
-    search "russian-folk" <> limit 3 <> apiKey "29effec263316a1f8a97f753caaa83e0" <> json :: Request 'Ready 'JSON
+    search "russian-folk" <> limit 3 <> apiKey "29effec263316a1f8a97f753caaa83e0" <> json
 
 What will your api call looks like?
 
@@ -27,7 +27,7 @@ Btw, there is a nice package `aeson-pretty` to make such response more readable:
 
     ghci> import qualified Data.ByteString.Lazy.Char8 as BSC
     ghci> :m + Data.Aeson.Encode.Pretty
-    ghci> putStrLn =<< BSC.unpack . encodePretty <$> lastfm (search "russian-folk" <> limit 3 <> apiKey "29effec263316a1f8a97f753caaa83e0" <> json)
+    ghci> BSC.putStrLn =<< encodePretty <$> lastfm (search "russian-folk" <> limit 3 <> apiKey "29effec263316a1f8a97f753caaa83e0" <> json)
     {
         "results": {
             "tagmatches": {
