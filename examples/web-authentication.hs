@@ -11,7 +11,7 @@ import Data.IORef
 import Control.Lens
 import Control.Monad.IO.Class (liftIO)
 import Data.Aeson.Lens
-import Happstack.Server hiding (host, path)
+import Happstack.Server
 
 import Network.Lastfm
 import Network.Lastfm.Authentication
