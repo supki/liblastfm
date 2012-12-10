@@ -13,6 +13,7 @@ build-type: Simple
 executable sort-friends
   build-depends: base >= 3 && < 5,
                  liblastfm,
+                 async,
                  text,
                  aeson,
                  lens,

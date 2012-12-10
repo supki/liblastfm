@@ -17,16 +17,19 @@
  - nv0id: 0.86804795265198
  - QueenrXy: 0.5932799577713
  - GhostOsaka: 0.2875879406929
+ -
+ - Notice: you may want to adjust maximum open files limit
+ - if testing on users with relatively large friends count
  -}
 module Main where
 
 import Control.Applicative
-import Control.Monad (forM)
 import Data.Function (on)
 import Data.List (sortBy)
 import Data.Maybe (catMaybes, fromMaybe)
 import Text.Read (readMaybe)
 
+import           Control.Concurrent.Async
 import           Control.Lens
 import           Data.Aeson (Value)
 import           Data.Aeson.Lens
@@ -51,16 +54,20 @@ pages :: IO [Maybe Value]
 pages = do
   first <- query (User.getFriends target)
   let ps = fromMaybe 1 (readMaybe =<< first ^. total)
-  (first :) <$> forM [2..ps] (\p -> query (User.getFriends target <> page p))
+  (first :) <$> forConcurrently [2..ps] (\p -> query (User.getFriends target <> page p))
  where
   total = key "friends" . key "@attr" . key "totalPages"
 
 
 scores :: [User] -> IO [(User, Score)]
-scores xs = zip xs <$> forM xs (\x ->
+scores xs = zip xs <$> forConcurrently xs (\x ->
   fromMaybe "0" . view score <$> query (Tasteometer.compare target x))
  where
   score = key "comparison" . key "result" . key "score"
+
+
+forConcurrently :: [a] -> (a -> IO b) -> IO [b]
+forConcurrently = flip mapConcurrently
 
 
 pretty :: [(User, Score)] -> IO ()

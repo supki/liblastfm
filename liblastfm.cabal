@@ -37,6 +37,7 @@ library
   other-modules:   Network.Lastfm.Internal
   ghc-options: -Wall
                -fno-warn-unused-do-bind
+               -threaded
 
 
 test-suite json
