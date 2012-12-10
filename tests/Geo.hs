@@ -6,24 +6,25 @@ import Control.Applicative ((<$>),(<*>))
 import Data.Aeson.Types
 import Network.Lastfm
 import Network.Lastfm.Geo
-import Test.HUnit
+import Test.Framework
+import Test.Framework.Providers.HUnit
 
 import Common
 
 
 noauth ∷ [Test]
 noauth =
-  [ TestLabel "Geo.getEvents" $ TestCase testGetEvents
-  , TestLabel "Geo.getMetroArtistChart" $ TestCase testGetMetroArtistChart
-  , TestLabel "Geo.getMetroHypeArtistChart" $ TestCase testGetMetroHypeArtistChart
-  , TestLabel "Geo.getMetroHypeTrackChart" $ TestCase testGetMetroHypeTrackChart
-  , TestLabel "Geo.getMetroTrackChart" $ TestCase testGetMetroTrackChart
-  , TestLabel "Geo.getMetroUniqueArtistChart" $ TestCase testGetMetroUniqueArtistChart
-  , TestLabel "Geo.getMetroUniqueTrackChart" $ TestCase testGetMetroUniqueTrackChart
-  , TestLabel "Geo.getMetroWeeklyChartlist" $ TestCase testGetMetroWeeklyChartlist
-  , TestLabel "Geo.getMetros" $ TestCase testGetMetros
-  , TestLabel "Geo.getTopArtists" $ TestCase testGetTopArtists
-  , TestLabel "Geo.getTopTracks" $ TestCase testGetTopTracks
+  [ testCase "Geo.getEvents" testGetEvents
+  , testCase "Geo.getMetroArtistChart" testGetMetroArtistChart
+  , testCase "Geo.getMetroHypeArtistChart" testGetMetroHypeArtistChart
+  , testCase "Geo.getMetroHypeTrackChart" testGetMetroHypeTrackChart
+  , testCase "Geo.getMetroTrackChart" testGetMetroTrackChart
+  , testCase "Geo.getMetroUniqueArtistChart" testGetMetroUniqueArtistChart
+  , testCase "Geo.getMetroUniqueTrackChart" testGetMetroUniqueTrackChart
+  , testCase "Geo.getMetroWeeklyChartlist" testGetMetroWeeklyChartlist
+  , testCase "Geo.getMetros" testGetMetros
+  , testCase "Geo.getTopArtists" testGetTopArtists
+  , testCase "Geo.getTopTracks" testGetTopTracks
   ]
  where
   ak = "29effec263316a1f8a97f753caaa83e0"

@@ -6,22 +6,23 @@ import Control.Applicative ((<$>),(<*>))
 import Data.Aeson.Types
 import Network.Lastfm
 import Network.Lastfm.Tag
-import Test.HUnit
+import Test.Framework
+import Test.Framework.Providers.HUnit
 
 import Common
 
 
 noauth ∷ [Test]
 noauth =
-  [ TestLabel "Tag.getInfo" $ TestCase testGetInfo
-  , TestLabel "Tag.getSimilar" $ TestCase testGetSimilar
-  , TestLabel "Tag.getTopAlbums" $ TestCase testGetTopAlbums
-  , TestLabel "Tag.getTopArtists" $ TestCase testGetTopArtists
-  , TestLabel "Tag.getTopTags" $ TestCase testGetTopTags
-  , TestLabel "Tag.getTopTracks" $ TestCase testGetTopTracks
-  , TestLabel "Tag.getWeeklyArtistChart" $ TestCase testGetWeeklyArtistChart
-  , TestLabel "Tag.getWeeklyChartList" $ TestCase testGetWeeklyChartList
-  , TestLabel "Tag.search" $ TestCase testSearch
+  [ testCase "Tag.getInfo" testGetInfo
+  , testCase "Tag.getSimilar" testGetSimilar
+  , testCase "Tag.getTopAlbums" testGetTopAlbums
+  , testCase "Tag.getTopArtists" testGetTopArtists
+  , testCase "Tag.getTopTags" testGetTopTags
+  , testCase "Tag.getTopTracks" testGetTopTracks
+  , testCase "Tag.getWeeklyArtistChart" testGetWeeklyArtistChart
+  , testCase "Tag.getWeeklyChartList" testGetWeeklyChartList
+  , testCase "Tag.search" testSearch
   ]
  where
   ak = "29effec263316a1f8a97f753caaa83e0"

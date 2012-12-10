@@ -5,19 +5,20 @@ module Chart (noauth) where
 import Data.Aeson.Types
 import Network.Lastfm
 import Network.Lastfm.Chart
-import Test.HUnit
+import Test.Framework
+import Test.Framework.Providers.HUnit
 
 import Common
 
 
 noauth ∷ [Test]
 noauth =
-  [ TestLabel "Chart.getHypedArtists" $ TestCase testGetHypedArtists
-  , TestLabel "Chart.getHypedTracks" $ TestCase testGetHypedTracks
-  , TestLabel "Chart.getLovedTracks" $ TestCase testGetLovedTracks
-  , TestLabel "Chart.getTopArtists" $ TestCase testGetTopArtists
-  , TestLabel "Chart.getTopTags" $ TestCase testGetTopTags
-  , TestLabel "Chart.getTopTracks" $ TestCase testGetTopTracks
+  [ testCase "Chart.getHypedArtists" testGetHypedArtists
+  , testCase "Chart.getHypedTracks" testGetHypedTracks
+  , testCase "Chart.getLovedTracks" testGetLovedTracks
+  , testCase "Chart.getTopArtists" testGetTopArtists
+  , testCase "Chart.getTopTags" testGetTopTags
+  , testCase "Chart.getTopTracks" testGetTopTracks
   ]
  where
   ak = "29effec263316a1f8a97f753caaa83e0"

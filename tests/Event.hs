@@ -6,15 +6,16 @@ import Data.Aeson.Types
 import Data.Text.Lazy (Text)
 import Network.Lastfm
 import Network.Lastfm.Event
-import Test.HUnit
+import Test.Framework
+import Test.Framework.Providers.HUnit
 
 import Common
 
 
 auth ∷ Text → Text → Text → [Test]
 auth ak sk s =
-  [ TestLabel "Event.attend" $ TestCase testAttend
-  , TestLabel "Event.share" $ TestCase testShare
+  [ testCase "Event.attend" testAttend
+  , testCase "Event.share" testShare
   ]
  where
   testAttend = check ok . sign s $
@@ -26,9 +27,9 @@ auth ak sk s =
 
 noauth ∷ [Test]
 noauth =
-  [ TestLabel "Event.getAttendees" $ TestCase testGetAttendees
-  , TestLabel "Event.getInfo" $ TestCase testGetInfo
-  , TestLabel "Event.getShouts" $ TestCase testGetShouts
+  [ testCase "Event.getAttendees" testGetAttendees
+  , testCase "Event.getInfo" testGetInfo
+  , testCase "Event.getShouts" testGetShouts
   ]
  where
   ak = "29effec263316a1f8a97f753caaa83e0"

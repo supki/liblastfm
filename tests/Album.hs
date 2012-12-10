@@ -6,17 +6,18 @@ import Data.Aeson.Types
 import Data.Text.Lazy (Text)
 import Network.Lastfm
 import Network.Lastfm.Album
-import Test.HUnit
+import Test.Framework
+import Test.Framework.Providers.HUnit
 
 import Common
 
 
 auth ∷ Text → Text → Text → [Test]
 auth ak sk s =
-  [ TestLabel "Album.addTags" $ TestCase testAddTags
-  , TestLabel "Album.getTags-authenticated" $ TestCase testGetTagsAuth
-  , TestLabel "Album.removeTag" $ TestCase testRemoveTag
-  , TestLabel "Album.share" $ TestCase testShare
+  [ testCase "Album.addTags" testAddTags
+  , testCase "Album.getTags-authenticated" testGetTagsAuth
+  , testCase "Album.removeTag" testRemoveTag
+  , testCase "Album.share" testShare
   ]
  where
   testAddTags = check ok . sign s $
@@ -34,17 +35,17 @@ auth ak sk s =
 
 noauth ∷ [Test]
 noauth =
-  [ TestLabel "Album.getBuyLinks" $ TestCase testGetBuylinks
-  , TestLabel "Album.getBuyLinks_mbid" $ TestCase testGetBuylinks_mbid
-  , TestLabel "Album.getInfo" $ TestCase testGetInfo
-  , TestLabel "Album.getInfo_mbid" $ TestCase testGetInfo_mbid
-  , TestLabel "Album.getShouts" $ TestCase testGetShouts
-  , TestLabel "Album.getShouts_mbid" $ TestCase testGetShouts_mbid
-  , TestLabel "Album.getTags" $ TestCase testGetTags
-  , TestLabel "Album.getTags_mbid" $ TestCase testGetTags_mbid
-  , TestLabel "Album.getTopTags" $ TestCase testGetTopTags
-  , TestLabel "Album.getTopTags_mbid" $ TestCase testGetTopTags_mbid
-  , TestLabel "Album.search" $ TestCase testSearch
+  [ testCase "Album.getBuyLinks" testGetBuylinks
+  , testCase "Album.getBuyLinks_mbid" testGetBuylinks_mbid
+  , testCase "Album.getInfo" testGetInfo
+  , testCase "Album.getInfo_mbid" testGetInfo_mbid
+  , testCase "Album.getShouts" testGetShouts
+  , testCase "Album.getShouts_mbid" testGetShouts_mbid
+  , testCase "Album.getTags" testGetTags
+  , testCase "Album.getTags_mbid" testGetTags_mbid
+  , testCase "Album.getTopTags" testGetTopTags
+  , testCase "Album.getTopTags_mbid" testGetTopTags_mbid
+  , testCase "Album.search" testSearch
   ]
  where
   ak = "29effec263316a1f8a97f753caaa83e0"

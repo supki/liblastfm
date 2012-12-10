@@ -6,17 +6,18 @@ import Data.Aeson.Types
 import Data.Text.Lazy (Text)
 import Network.Lastfm
 import Network.Lastfm.Artist
-import Test.HUnit
+import Test.Framework
+import Test.Framework.Providers.HUnit
 
 import Common
 
 
 auth ∷ Text → Text → Text → [Test]
 auth ak sk s =
-  [ TestLabel "Artist.addTags" $ TestCase testAddTags
-  , TestLabel "Artist.getTags-authenticated" $ TestCase testGetTagsAuth
-  , TestLabel "Artist.removeTag" $ TestCase testRemoveTag
-  , TestLabel "Artist.share" $ TestCase testShare
+  [ testCase "Artist.addTags" testAddTags
+  , testCase "Artist.getTags-authenticated" testGetTagsAuth
+  , testCase "Artist.removeTag" testRemoveTag
+  , testCase "Artist.share" testShare
   ]
  where
   testAddTags = check ok . sign s $
@@ -34,30 +35,30 @@ auth ak sk s =
 
 noauth ∷ [Test]
 noauth =
-  [ TestLabel "Artist.getCorrection" $ TestCase testGetCorrection
-  , TestLabel "Artist.getEvents" $ TestCase testGetEvents
-  , TestLabel "Artist.getEvents_mbid" $ TestCase testGetEvents_mbid
-  , TestLabel "Artist.getInfo" $ TestCase testGetInfo
-  , TestLabel "Artist.getInfo_mbid" $ TestCase testGetInfo_mbid
-  , TestLabel "Artist.getPastEvents" $ TestCase testGetPastEvents
-  , TestLabel "Artist.getPastEvents_mbid" $ TestCase testGetPastEvents_mbid
-  , TestLabel "Artist.getPodcast" $ TestCase testGetPodcast
-  , TestLabel "Artist.getPodcast_mbid" $ TestCase testGetPodcast_mbid
-  , TestLabel "Artist.getShouts" $ TestCase testGetShouts
-  , TestLabel "Artist.getShouts_mbid" $ TestCase testGetShouts_mbid
-  , TestLabel "Artist.getSimilar" $ TestCase testGetSimilar
-  , TestLabel "Artist.getSimilar_mbid" $ TestCase testGetSimilar_mbid
-  , TestLabel "Artist.getTags" $ TestCase testGetTags
-  , TestLabel "Artist.getTags_mbid" $ TestCase testGetTags_mbid
-  , TestLabel "Artist.getTopAlbums" $ TestCase testGetTopAlbums
-  , TestLabel "Artist.getTopAlbums_mbid" $ TestCase testGetTopAlbums_mbid
-  , TestLabel "Artist.getTopFans" $ TestCase testGetTopFans
-  , TestLabel "Artist.getTopFans_mbid" $ TestCase testGetTopFans_mbid
-  , TestLabel "Artist.getTopTags" $ TestCase testGetTopTags
-  , TestLabel "Artist.getTopTags_mbid" $ TestCase testGetTopTags_mbid
-  , TestLabel "Artist.getTopTracks" $ TestCase testGetTopTracks
-  , TestLabel "Artist.getTopTracks_mbid" $ TestCase testGetTopTracks_mbid
-  , TestLabel "Artist.search" $ TestCase testSearch
+  [ testCase "Artist.getCorrection" testGetCorrection
+  , testCase "Artist.getEvents" testGetEvents
+  , testCase "Artist.getEvents_mbid" testGetEvents_mbid
+  , testCase "Artist.getInfo" testGetInfo
+  , testCase "Artist.getInfo_mbid" testGetInfo_mbid
+  , testCase "Artist.getPastEvents" testGetPastEvents
+  , testCase "Artist.getPastEvents_mbid" testGetPastEvents_mbid
+  , testCase "Artist.getPodcast" testGetPodcast
+  , testCase "Artist.getPodcast_mbid" testGetPodcast_mbid
+  , testCase "Artist.getShouts" testGetShouts
+  , testCase "Artist.getShouts_mbid" testGetShouts_mbid
+  , testCase "Artist.getSimilar" testGetSimilar
+  , testCase "Artist.getSimilar_mbid" testGetSimilar_mbid
+  , testCase "Artist.getTags" testGetTags
+  , testCase "Artist.getTags_mbid" testGetTags_mbid
+  , testCase "Artist.getTopAlbums" testGetTopAlbums
+  , testCase "Artist.getTopAlbums_mbid" testGetTopAlbums_mbid
+  , testCase "Artist.getTopFans" testGetTopFans
+  , testCase "Artist.getTopFans_mbid" testGetTopFans_mbid
+  , testCase "Artist.getTopTags" testGetTopTags
+  , testCase "Artist.getTopTags_mbid" testGetTopTags_mbid
+  , testCase "Artist.getTopTracks" testGetTopTracks
+  , testCase "Artist.getTopTracks_mbid" testGetTopTracks_mbid
+  , testCase "Artist.search" testSearch
   ]
  where
   ak = "29effec263316a1f8a97f753caaa83e0"

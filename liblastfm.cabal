@@ -44,7 +44,9 @@ test-suite json
                  bytestring >= 0.9 && < 0.11,
                  attoparsec >= 0.10,
                  aeson == 0.6.*,
-                 HUnit >= 1.2.4,
+                 HUnit,
+                 test-framework,
+                 test-framework-hunit,
                  text,
                  liblastfm
   type: exitcode-stdio-1.0
