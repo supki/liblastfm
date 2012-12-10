@@ -1,3 +1,6 @@
+#liblastfm
+[![Build Status](https://secure.travis-ci.org/supki/haskell-liblastfm.png?branch=develop)](http://travis-ci.org/supki/haskell-liblastfm)
+
 ##FAQ
 **Q: I'm getting the following error. How do I fix it?**
 ```
@@ -27,11 +30,6 @@ To enable it type in `:set -XOverloadedStrings`.
         -- Defined at src/Network/Lastfm/Request.hs:69:10
 ```
 A: This error message indicates that GHC cannot infer response format for that Request. 
-To fix it, add use `json` or `xml` helpers, depending on your needs:
-
-```haskell
-wrong <- lastfm (Album.getInfo <> artist "Pink Floyd" <> album "The Wall" <> apiKey "1234567890")
-right <- lastfm (Album.getInfo <> artist "Pink Floyd" <> album "The Wall" <> apiKey "1234567890" <> json)
-```
+To fix it, add use `json` or `xml` helpers, depending on your needs
 
 -
