@@ -3,7 +3,7 @@ version: 0.1.0.0
 synopsis: Examples for liblastfm
 license: MIT
 license-file: LICENSE
-author: Matvey Aksenov
+author: Matvey Aksenov, Dmitry Malikov
 maintainer: Matvey Aksenov <matvey.aksenov@gmail.com>
 category: Network APIs
 description: Haddock documentation isn't enough to get feeling of the library
@@ -19,6 +19,17 @@ executable sort-friends
                  lens,
                  aeson-lens
   main-is: sort-friends.hs
+  ghc-options: -Wall
+               -fno-warn-unused-do-bind
+               -threaded
+
+executable multitag-search
+  build-depends: base >= 3 && < 5,
+                 liblastfm,
+                 text,
+                 lens,
+                 aeson-lens
+  main-is: multitag-search.hs
   ghc-options: -Wall
                -fno-warn-unused-do-bind
 
