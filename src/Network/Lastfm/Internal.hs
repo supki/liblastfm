@@ -1,12 +1,10 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UnicodeSyntax #-}
 module Network.Lastfm.Internal
   ( Request, R(..), wrap, unwrap, add, Response
-  , method, query
   , Auth(..), Format(..)
   , render
   , api, post, get, json, xml
@@ -14,7 +12,6 @@ module Network.Lastfm.Internal
 
 import Data.Monoid
 
-import           Control.Lens
 import           Data.Aeson (Value, decode)
 import qualified Data.ByteString.Lazy as Lazy
 import qualified Data.ByteString as Strict
@@ -50,8 +47,8 @@ type instance Response XML = Lazy.ByteString
 -- @f@ is response format
 data R (a ∷ Auth) (f ∷ Format) = R
   { host ∷ Text
-  , _method ∷ Strict.ByteString
-  , _query ∷ Map Text Text
+  , method ∷ Strict.ByteString
+  , query ∷ Map Text Text
   , parse ∷ Lazy.ByteString → Response f
   }
 
@@ -59,8 +56,8 @@ data R (a ∷ Auth) (f ∷ Format) = R
 instance Default (R a JSON) where
   def = R
     { host = "https://ws.audioscrobbler.com/2.0/"
-    , _method = "GET"
-    , _query = M.fromList [("format", "json")]
+    , method = "GET"
+    , query = M.fromList [("format", "json")]
     , parse = decode
     }
   {-# INLINE def #-}
@@ -69,21 +66,18 @@ instance Default (R a JSON) where
 instance Default (R a XML) where
   def = R
     { host = "https://ws.audioscrobbler.com/2.0/"
-    , _method = "GET"
-    , _query = M.fromList [("format", "xml")]
+    , method = "GET"
+    , query = M.fromList [("format", "xml")]
     , parse = id
     }
   {-# INLINE def #-}
 
 
 render ∷ R a f → String
-render R { host = h, _query = q } =
+render R { host = h, query = q } =
   T.unpack $ mconcat [h, "?", argie q]
  where
   argie = T.intercalate "&" . M.foldrWithKey (\k v m → T.concat [k, "=", v] : m) mempty
-
-
-makeLenses ''R
 
 
 -- | Wrapping to interesting 'Monoid' ('R' -> 'R') instance
@@ -110,7 +104,7 @@ api = add "method"
 --
 -- Primarily used in API call wrappers, not intended for usage by library user
 get ∷ Request a f
-get = wrap $ method .~ "GET"
+get = wrap $ \r -> r { method = "GET" }
 {-# INLINE get #-}
 
 
@@ -118,7 +112,7 @@ get = wrap $ method .~ "GET"
 --
 -- Primarily used in API call wrappers, not intended for usage by library user
 post ∷ Request a f
-post = wrap $ method .~ "POST"
+post = wrap $ \r -> r { method = "POST" }
 {-# INLINE post #-}
 
 
@@ -141,5 +135,5 @@ xml = wrap id
 
 
 add ∷ Text → Text → Request a f
-add k v = wrap $ query %~ M.insert k v
+add k v = wrap $ \r@R { query = q } -> r { query = M.insert k v q }
 {-# INLINE add #-}

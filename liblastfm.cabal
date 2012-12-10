@@ -15,7 +15,6 @@ library
                  bytestring >= 0.9 && < 0.11,
                  containers,
                  text,
-                 lens,
                  data-default,
                  http-conduit,
                  mtl,

@@ -15,7 +15,6 @@ import Control.Applicative
 import Data.Monoid
 import Unsafe.Coerce (unsafeCoerce)
 
-import           Control.Lens
 import           Data.Default (Default(..))
 import           Data.Digest.Pure.MD5 (md5)
 import qualified Data.Map as M
@@ -44,7 +43,8 @@ type Secret = Text
 sign ∷ Secret → Request RequireSign f → Request Ready f
 sign s = approve . (<> signature)
  where
-  signature = wrap $ \r → query %~ M.insert "api_sig" (signer (M.delete "format" (_query r))) $ r
+  signature = wrap $ \r@R { query = q } →
+    r { query = M.insert "api_sig" (signer (M.delete "format" q)) q }
 
   signer = T.pack . show . md5 . T.encodeUtf8 . (<> s) . mconcat . map (uncurry (<>)) . M.toList
 
@@ -54,7 +54,7 @@ lastfm ∷ Default (R Ready f) ⇒ Request Ready f → IO (Response f)
 lastfm req = do
   let t = unwrap req def
   parse t <$> C.withManager (\m → C.parseUrl (render t) >>= \url →
-    C.responseBody <$> C.httpLbs (url { C.method = _method t }) m)
+    C.responseBody <$> C.httpLbs (url { C.method = method t }) m)
 
 
 approve ∷ Request RequireSign f → Request Ready f
