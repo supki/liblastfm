@@ -13,6 +13,7 @@ module Network.Lastfm.Internal
 import Data.Monoid
 
 import           Data.Aeson (Value, decode)
+import           Network.URI (escapeURIChar, isUnreserved)
 import qualified Data.ByteString.Lazy as Lazy
 import qualified Data.ByteString as Strict
 import           Data.Default
@@ -77,7 +78,9 @@ render ∷ R a f → String
 render R { host = h, query = q } =
   T.unpack $ mconcat [h, "?", argie q]
  where
-  argie = T.intercalate "&" . M.foldrWithKey (\k v m → T.concat [k, "=", v] : m) mempty
+  argie = T.intercalate "&" . M.foldrWithKey (\k v m → T.concat [escape k, "=", escape v] : m) []
+
+  escape = T.concatMap (T.pack . escapeURIChar isUnreserved)
 
 
 -- | Wrapping to interesting 'Monoid' ('R' -> 'R') instance

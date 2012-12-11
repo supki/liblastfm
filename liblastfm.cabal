@@ -19,6 +19,7 @@ library
                  http-conduit,
                  mtl,
                  pureMD5 == 2.1.*,
+                 network,
                  aeson == 0.6.*
   hs-source-dirs: src
   exposed-modules: Network.Lastfm
