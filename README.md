@@ -4,7 +4,7 @@
 ##FAQ
 **Q: I'm getting the following error. How do I fix it?**
 ```
-> Album.getInfo <> artist "Pink Floyd" <> album "The Wall" <> apiKey "1234567890"
+> Album.getInfo "Pink Floyd" "The Wall" <> apiKey "1234567890"
 
 <interactive>:8:27:
     Couldn't match type `[Char]' with `Data.Text.Lazy.Internal.Text'
@@ -16,7 +16,7 @@ To enable it type in `:set -XOverloadedStrings`.
 
 **Q: I'm getting the following error. How do I fix it?**
 ```
-> lastfm (Album.getInfo <> artist "Pink Floyd" <> album "The Wall" <> apiKey "1234567890")
+> lastfm (Album.getInfo "Pink Floyd" "The Wall" <> apiKey "1234567890")
 
 <interactive>:3:1:
     No instance for (Data.Default.Default (R 'Ready f0))
