@@ -23,7 +23,7 @@ main =
   do keys ← B.readFile "tests/lastfm-keys.json"
      case decode keys of
        Just (Keys ak sk s) →
-         defaultMainWithOpts (auth <> noauth) (mempty { ropt_threads = Just 120 })
+         defaultMainWithOpts (auth <> noauth) (mempty { ropt_threads = Just 20 })
           where
            auth = mconcat . map (\f -> f ak sk s) $
              [ Album.auth
