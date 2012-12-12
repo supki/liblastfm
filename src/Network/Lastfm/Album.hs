@@ -29,7 +29,8 @@ addTags ar al ts = api "album.addTags" <> artist ar <> album al <> tags ts <> po
 getBuyLinks ∷ Artist → Album → Country → Request Ready f
 getBuyLinks ar al c = api "album.getBuyLinks" <> album al <> artist ar <> country c
 
--- | Get a list of Buy Links for a particular Album. It is required that you supply either the artist and track params or the mbid parameter.
+-- | Get a list of Buy Links for a particular Album. It is
+-- required that you supply either the artist and track params or the mbid parameter.
 --
 -- Optional: 'autocorrect'
 --
@@ -41,7 +42,8 @@ getBuyLinks_mbid m c = api "album.getBuyLinks" <> mbid m <> country c
 getInfo ∷ Artist → Album → Request Ready f
 getInfo ar al = api "album.getInfo" <> album al <> artist ar
 
--- | Get the metadata for an album on Last.fm using the album name or a musicbrainz id. See playlist.fetch on how to get the album playlist.
+-- | Get the metadata for an album on Last.fm using the album name or
+-- a musicbrainz id. See playlist.fetch on how to get the album playlist.
 --
 -- Optional: 'autocorrect', 'username', 'language'
 --

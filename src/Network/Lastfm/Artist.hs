@@ -29,7 +29,8 @@ addTags ∷ Artist → [Tag] → Request RequireSign f
 addTags ar ts = api "artist.addTags" <> artist ar <> tags ts <> post
 
 
--- | Use the last.fm corrections data to check whether the supplied artist has a correction to a canonical artist
+-- | Use the last.fm corrections data to check whether the
+-- supplied artist has a correction to a canonical artist
 --
 -- <http://www.last.fm/api/show/artist.getCorrection>
 getCorrection ∷ Artist → Request Ready f
@@ -39,7 +40,8 @@ getCorrection ar = api "artist.getCorrection" <> artist ar
 getEvents ∷ Artist → Request Ready f
 getEvents ar = api "artist.getEvents" <> artist ar
 
--- | Get a list of upcoming events for this artist. Easily integratable into calendars, using the ical standard (see feeds section below).
+-- | Get a list of upcoming events for this artist. Easily
+-- integratable into calendars, using the ical standard (see feeds section below).
 --
 -- Optional: 'autocorrect', 'limit', 'pages', 'festivalsonly'
 --
@@ -111,7 +113,11 @@ getSimilar_mbid m = api "artist.getSimilar" <> mbid m
 getTags ∷ Artist → Request a f
 getTags ar = api "artist.getTags" <> artist ar
 
--- | Get the tags applied by an individual user to an artist on Last.fm. If accessed as an authenticated service /and/ you don't supply a user parameter then this service will return tags for the authenticated user. To retrieve the list of top tags applied to an artist by all users use artist.getTopTags.
+-- | Get the tags applied by an individual user to an artist on Last.fm.
+-- If accessed as an authenticated service /and/ you don't supply a
+-- user parameter then this service will return tags for
+-- the authenticated user. To retrieve the list of top tags applied
+-- to an artist by all users use 'Network.Lastfm.Artist.getTopTags'.
 --
 -- Optional: 'user', 'autocorrect'
 --

@@ -68,7 +68,8 @@ getTopTracks ∷ Tag → Request Ready f
 getTopTracks t = api "tag.getTopTracks" <> tag t
 
 
--- | Get an artist chart for a tag, for a given date range. If no date range is supplied, it will return the most recent artist chart for this tag.
+-- | Get an artist chart for a tag, for a given date range.
+-- If no date range is supplied, it will return the most recent artist chart for this tag.
 --
 -- Optional: 'from', 'to', 'limit'
 --
@@ -77,7 +78,8 @@ getWeeklyArtistChart ∷ Tag → Request Ready f
 getWeeklyArtistChart t = api "tag.getWeeklyArtistChart" <> tag t
 
 
--- | Get a list of available charts for this tag, expressed as date ranges which can be sent to the chart services.
+-- | Get a list of available charts for this tag, expressed as
+-- date ranges which can be sent to the chart services.
 --
 -- <http://www.last.fm/api/show/tag.getWeeklyChartList>
 getWeeklyChartList ∷ Tag → Request Ready f

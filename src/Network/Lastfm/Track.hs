@@ -193,7 +193,8 @@ unlove ∷ Artist → Track → Request RequireSign f
 unlove a t = api "track.unlove" <> artist a <> track t <> post
 
 
--- | Used to notify Last.fm that a user has started listening to a track. Parameter names are case sensitive.
+-- | Used to notify Last.fm that a user has started listening
+-- to a track. Parameter names are case sensitive.
 --
 -- Optional: 'album', 'albumArtist', 'context',
 -- 'duration', 'mbid', 'trackNumber'

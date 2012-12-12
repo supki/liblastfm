@@ -83,7 +83,8 @@ getMetroUniqueTrackChart ∷ Metro → Country → Request Ready f
 getMetroUniqueTrackChart m c = api "geo.getMetroUniqueTrackChart" <> metro m <> country c
 
 
--- | Get a list of available chart periods for this metro, expressed as date ranges which can be sent to the chart services.
+-- | Get a list of available chart periods for this metro,
+-- expressed as date ranges which can be sent to the chart services.
 --
 -- <http://www.last.fm/api/show/geo.getMetroWeeklyChartlist>
 getMetroWeeklyChartlist ∷ Metro → Request Ready f
