@@ -25,20 +25,22 @@ import Network.Lastfm.Request
 --
 -- <http://www.last.fm/api/show/track.addTags>
 addTags ∷ Artist → Track → [Tag] → Request RequireSign f
-addTags a t ts = api "track.addTags" <> artist a <> track t <> tags ts
+addTags a t ts = api "track.addTags" <> artist a <> track t <> tags ts <> post
 
 
 -- | Ban a track for a given user profile.
 --
 -- <http://www.last.fm/api/show/track.ban>
 ban ∷ Artist → Track → Request RequireSign f
-ban a t = api "track.ban" <> artist a <> track t
+ban a t = api "track.ban" <> artist a <> track t <> post
 
 
 getBuyLinks ∷ Artist → Track → Country → Request Ready f
 getBuyLinks a t c = api "track.getBuyLinks" <> artist a <> track t <> country c
 
 -- | Get a list of Buy Links for a particular track.
+--
+-- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/track.getBuylinks>
 getBuyLinks_mbid ∷ MBID → Country → Request Ready f
@@ -65,8 +67,9 @@ getFingerprintMetadata f = api "track.getFingerprintMetadata" <> fingerprint f
 getInfo ∷ Artist → Track → Request Ready f
 getInfo a t = api "track.getInfo" <> artist a <> track t
 
-
 -- | Get the metadata for a track on Last.fm.
+--
+-- Optional: 'autocorrect', 'username'
 --
 -- <http://www.last.fm/api/show/track.getInfo>
 getInfo_mbid ∷ MBID → Request Ready f
@@ -76,8 +79,9 @@ getInfo_mbid m = api "track.getInfo" <> mbid m
 getShouts ∷ Artist → Track → Request Ready f
 getShouts a t = api "track.getShouts" <> artist a <> track t
 
-
 -- | Get shouts for this track. Also available as an rss feed.
+--
+-- Optional: 'autocorrect', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/track.getShouts>
 getShouts_mbid ∷ MBID → Request Ready f
@@ -87,8 +91,9 @@ getShouts_mbid m = api "track.getShouts" <> mbid m
 getSimilar ∷ Artist → Track → Request Ready f
 getSimilar a t = api "track.getSimilar" <> artist a <> track t
 
-
 -- | Get the similar tracks for this track on Last.fm, based on listening data.
+--
+-- Optional: 'autocorrect', 'limit'
 --
 -- <http://www.last.fm/api/show/track.getSimilar>
 getSimilar_mbid ∷ MBID → Request Ready f
@@ -96,6 +101,8 @@ getSimilar_mbid m = api "track.getSimilar" <> mbid m
 
 
 -- | Get the tags applied by an individual user to a track on Last.fm.
+--
+-- Optional: 'autocorrect', 'user'
 --
 -- <http://www.last.fm/api/show/track.getTags>
 getTags_mbid ∷ MBID → User → Request Ready f
@@ -109,8 +116,9 @@ getTags a t u = api "track.getTags" <> artist a <> track t <> user u
 getTopFans ∷ Artist → Track → Request Ready f
 getTopFans a t = api "track.getTopFans" <> artist a <> track t
 
-
 -- | Get the top fans for this track on Last.fm, based on listening data.
+--
+-- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/track.getTopFans>
 getTopFans_mbid ∷ MBID → Request Ready f
@@ -120,8 +128,9 @@ getTopFans_mbid m = api "track.getTopFans" <> mbid m
 getTopTags ∷ Artist → Track → Request Ready f
 getTopTags a t = api "track.getTopTags" <> artist a <> track t
 
-
 -- | Get the top tags for this track on Last.fm, ordered by tag count.
+--
+-- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/track.getTopTags>
 getTopTags_mbid ∷ MBID → Request Ready f
@@ -132,24 +141,29 @@ getTopTags_mbid m = api "track.getTopTags" <> mbid m
 --
 -- <http://www.last.fm/api/show/track.love>
 love ∷ Artist → Track → Request RequireSign f
-love a t = api "track.love" <> artist a <> track t
+love a t = api "track.love" <> artist a <> track t <> post
 
 
 -- | Remove a user's tag from a track.
 --
 -- <http://www.last.fm/api/show/track.removeTag>
 removeTag ∷ Artist → Track → Tag → Request RequireSign f
-removeTag a tr t = api "track.removeTag" <> artist a <> track tr <> tag t
+removeTag a tr t = api "track.removeTag" <> artist a <> track tr <> tag t <> post
 
 
 -- | Used to add a track-play to a user's profile.
 --
+-- Optional: 'album', 'albumArtist', 'chosenByUser', 'context',
+-- 'duration', 'mbid', 'streamId', 'trackNumber'
+--
 -- <http://www.last.fm/api/show/track.scrobble>
 scrobble ∷ Artist → Track → Timestamp → Request RequireSign f
-scrobble a tr ts = api "track.scrobble" <> artist a <> track tr <> timestamp ts
+scrobble a tr ts = api "track.scrobble" <> artist a <> track tr <> timestamp ts <> post
 
 
 -- | Search for a track by track name. Returns track matches sorted by relevance.
+--
+-- Optional: 'artist', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/track.search>
 search ∷ Track → Request Ready f
@@ -158,27 +172,32 @@ search t = api "track.search" <> track t
 
 -- | Share a track twith one or more Last.fm users or other friends.
 --
+-- Optional: 'public', 'message', 'recipient'
+--
 -- <http://www.last.fm/api/show/track.share>
 share ∷ Artist → Track → Recipient → Request RequireSign f
-share a t r = api "track.share" <> artist a <> track t <> recipient r
+share a t r = api "track.share" <> artist a <> track t <> recipient r <> post
 
 
 -- | Unban a track for a user profile.
 --
 -- <http://www.last.fm/api/show/track.unban>
 unban ∷ Artist → Track → Request RequireSign f
-unban a t = api "track.unban" <> artist a <> track t
+unban a t = api "track.unban" <> artist a <> track t <> post
 
 
 -- | Unlove a track for a user profile.
 --
 -- <http://www.last.fm/api/show/track.unlove>
 unlove ∷ Artist → Track → Request RequireSign f
-unlove a t = api "track.unlove" <> artist a <> track t
+unlove a t = api "track.unlove" <> artist a <> track t <> post
 
 
 -- | Used to notify Last.fm that a user has started listening to a track. Parameter names are case sensitive.
 --
+-- Optional: 'album', 'albumArtist', 'context',
+-- 'duration', 'mbid', 'trackNumber'
+--
 -- <http://www.last.fm/api/show/track.updateNowPlaying>
 updateNowPlaying ∷ Artist → Track → Request RequireSign f
-updateNowPlaying a t = api "track.updateNowPlaying" <> artist a <> track t
+updateNowPlaying a t = api "track.updateNowPlaying" <> artist a <> track t <> post

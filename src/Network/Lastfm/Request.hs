@@ -17,6 +17,8 @@ module Network.Lastfm.Request
   , Longitude, longitude, Latitude, latitude, Location, location
   , Start, start, End, end, FestivalsOnly, festivalsonly
   , Metro, metro, Tag, tags, tag, Track, track, Timestamp , timestamp, Fingerprint, fingerprint
+  , AlbumArtist, albumArtist, Duration, duration, TrackNumber, trackNumber
+  , ChosenByUser, chosenByUser, Context, context, StreamId, streamId
   , Recipient, recipient, Username, username, User, user, Password, password
   , Public, public, Message, message, Page, page, Limit, limit
   , type', value
@@ -352,6 +354,60 @@ type Fingerprint = Text
 fingerprint ∷ Fingerprint → Request a f
 fingerprint = add "fingerprint"
 {-# INLINE fingerprint #-}
+
+
+type AlbumArtist = Text
+
+
+-- | Add albumArtist parameter
+albumArtist ∷ AlbumArtist → Request a f
+albumArtist = add "albumArtist"
+{-# INLINE albumArtist #-}
+
+
+type Context = Text
+
+
+-- | Add context parameter
+context ∷ Context → Request a f
+context = add "context"
+{-# INLINE context #-}
+
+
+type StreamId = Int64
+
+
+-- | Add streamId parameter
+streamId ∷ StreamId → Request a f
+streamId = add "streamId" . T.toLazyText . T.decimal
+{-# INLINE streamId #-}
+
+
+type Duration = Int64
+
+
+-- | Add duration parameter
+duration ∷ Duration → Request a f
+duration = add "duration" . T.toLazyText . T.decimal
+{-# INLINE duration #-}
+
+
+type TrackNumber = Int64
+
+
+-- | Add trackNumber parameter
+trackNumber ∷ TrackNumber → Request a f
+trackNumber = add "trackNumber" . T.toLazyText . T.decimal
+{-# INLINE trackNumber #-}
+
+
+type ChosenByUser = Bool
+
+
+-- | Add chosenByUser parameter
+chosenByUser ∷ ChosenByUser → Request a f
+chosenByUser = add "chosenByUser" . boolToText
+{-# INLINE chosenByUser #-}
 
 
 boolToText ∷ Bool → Text
