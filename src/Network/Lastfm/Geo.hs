@@ -44,8 +44,7 @@ getMetroArtistChart m c = api "geo.getMetroArtistChart" <> metro m <> country c
 --
 -- <http://www.last.fm/api/show/geo.getMetroHypeArtistChart>
 getMetroHypeArtistChart ∷ Metro → Country → Request Ready f
-getMetroHypeArtistChart m c =
-  api "geo.getMetroHypeArtistChart" <> metro m <> country c
+getMetroHypeArtistChart m c = api "geo.getMetroHypeArtistChart" <> metro m <> country c
 
 
 -- | Get a chart of tracks for a metro
@@ -54,8 +53,7 @@ getMetroHypeArtistChart m c =
 --
 -- <http://www.last.fm/api/show/geo.getMetroHypeTrackChart>
 getMetroHypeTrackChart ∷ Metro → Country → Request Ready f
-getMetroHypeTrackChart m c =
-  api "geo.getMetroHypeTrackChart" <> metro m <> country c
+getMetroHypeTrackChart m c = api "geo.getMetroHypeTrackChart" <> metro m <> country c
 
 
 -- | Get a chart of tracks for a metro
@@ -64,8 +62,7 @@ getMetroHypeTrackChart m c =
 --
 -- <http://www.last.fm/api/show/geo.getMetroTrackChart>
 getMetroTrackChart ∷ Metro → Country → Request Ready f
-getMetroTrackChart m c =
-  api "geo.getMetroTrackChart" <> metro m <> country c
+getMetroTrackChart m c = api "geo.getMetroTrackChart" <> metro m <> country c
 
 
 -- | Get a chart of the artists which make that metro unique
@@ -74,8 +71,7 @@ getMetroTrackChart m c =
 --
 -- <http://www.last.fm/api/show/geo.getMetroUniqueArtistChart>
 getMetroUniqueArtistChart ∷ Metro → Country → Request Ready f
-getMetroUniqueArtistChart m c =
-  api "geo.getMetroUniqueArtistChart" <> metro m <> country c
+getMetroUniqueArtistChart m c = api "geo.getMetroUniqueArtistChart" <> metro m <> country c
 
 
 -- | Get a chart of tracks for a metro
@@ -84,8 +80,7 @@ getMetroUniqueArtistChart m c =
 --
 -- <http://www.last.fm/api/show/geo.getMetroUniqueTrackChart>
 getMetroUniqueTrackChart ∷ Metro → Country → Request Ready f
-getMetroUniqueTrackChart m c =
-  api "geo.getMetroUniqueTrackChart" <> metro m <> country c
+getMetroUniqueTrackChart m c = api "geo.getMetroUniqueTrackChart" <> metro m <> country c
 
 
 -- | Get a list of available chart periods for this metro, expressed as date ranges which can be sent to the chart services.
