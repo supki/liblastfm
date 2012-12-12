@@ -31,6 +31,7 @@ library
                    Network.Lastfm.Geo
                    Network.Lastfm.Tag
                    Network.Lastfm.Tasteometer
+                   Network.Lastfm.Track
                    Network.Lastfm.User
                    Network.Lastfm.Request
                    Network.Lastfm.Response

@@ -16,8 +16,7 @@ module Network.Lastfm.Request
   , Language, language, Distance, distance
   , Longitude, longitude, Latitude, latitude, Location, location
   , Start, start, End, end, FestivalsOnly, festivalsonly
-  , Metro, metro
-  , Tag, tags, tag
+  , Metro, metro, Tag, tags, tag, Track, track, Timestamp , timestamp, Fingerprint, fingerprint
   , Recipient, recipient, Username, username, User, user, Password, password
   , Public, public, Message, message, Page, page, Limit, limit
   , type', value
@@ -326,6 +325,33 @@ type' n = add ("type" <> T.toLazyText (T.decimal n))
 value ∷ Int64 → Text → Request a f
 value n = add ("value" <> T.toLazyText (T.decimal n))
 {-# INLINE value #-}
+
+
+type Track = Text
+
+
+-- | Add track parameter
+track ∷ Track → Request a f
+track = add "track"
+{-# INLINE track #-}
+
+
+type Timestamp = Text
+
+
+-- | Add timestamp parameter
+timestamp ∷ Timestamp → Request a f
+timestamp = add "timestamp"
+{-# INLINE timestamp #-}
+
+
+type Fingerprint = Text
+
+
+-- | Add fingerprint parameter
+fingerprint ∷ Fingerprint → Request a f
+fingerprint = add "fingerprint"
+{-# INLINE fingerprint #-}
 
 
 boolToText ∷ Bool → Text
