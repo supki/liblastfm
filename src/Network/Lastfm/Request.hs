@@ -338,21 +338,21 @@ track = add "track"
 {-# INLINE track #-}
 
 
-type Timestamp = Text
+type Timestamp = Int64
 
 
 -- | Add timestamp parameter
 timestamp ∷ Timestamp → Request a f
-timestamp = add "timestamp"
+timestamp = add "timestamp" . T.toLazyText . T.decimal
 {-# INLINE timestamp #-}
 
 
-type Fingerprint = Text
+type Fingerprint = Int64
 
 
 -- | Add fingerprint parameter
 fingerprint ∷ Fingerprint → Request a f
-fingerprint = add "fingerprint"
+fingerprint = add "fingerprintid" . T.toLazyText . T.decimal
 {-# INLINE fingerprint #-}
 
 

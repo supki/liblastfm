@@ -100,6 +100,9 @@ getSimilar_mbid ∷ MBID → Request Ready f
 getSimilar_mbid m = api "track.getSimilar" <> mbid m
 
 
+getTags ∷ Artist → Track → User → Request Ready f
+getTags a t u = api "track.getTags" <> artist a <> track t <> user u
+
 -- | Get the tags applied by an individual user to a track on Last.fm.
 --
 -- Optional: 'autocorrect', 'user'
@@ -107,10 +110,6 @@ getSimilar_mbid m = api "track.getSimilar" <> mbid m
 -- <http://www.last.fm/api/show/track.getTags>
 getTags_mbid ∷ MBID → User → Request Ready f
 getTags_mbid m u = api "track.getTags" <> mbid m <> user u
-
-
-getTags ∷ Artist → Track → User → Request Ready f
-getTags a t u = api "track.getTags" <> artist a <> track t <> user u
 
 
 getTopFans ∷ Artist → Track → Request Ready f
