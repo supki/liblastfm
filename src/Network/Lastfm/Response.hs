@@ -44,7 +44,7 @@ sign ∷ Secret → Request RequireSign f → Request Ready f
 sign s = approve . (<> signature)
  where
   signature = wrap $ \r@R { query = q } →
-    r { query = M.insert "api_sig" (signer (M.delete "format" q)) q }
+    r { query = M.insert "api_sig" (signer (foldr M.delete q ["format", "callback"])) q }
 
   signer = T.pack . show . md5 . T.encodeUtf8 . (<> s) . mconcat . map (uncurry (<>)) . M.toList
 
