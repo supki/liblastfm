@@ -23,10 +23,13 @@ module Network.Lastfm.Request
   , type', value
   ) where
 
+import Data.Int (Int64)
 import Data.Monoid ((<>))
 
 import           Data.Text.Lazy (Text)
 import qualified Data.Text.Lazy as T
+import qualified Data.Text.Lazy.Builder as T
+import qualified Data.Text.Lazy.Builder.Int as T
 
 import Network.Lastfm.Internal
 
@@ -130,21 +133,21 @@ autocorrect = add "tags" . boolToText
 {-# INLINE autocorrect #-}
 
 
-type Page = Int
+type Page = Int64
 
 
 -- | Add page parameter
 page ∷ Page → Request a f
-page = add "page" . T.pack . show
+page = add "page" . T.toLazyText . T.decimal
 {-# INLINE page #-}
 
 
-type Limit = Int
+type Limit = Int64
 
 
 -- | Add limit parameter
 limit ∷ Limit → Request a f
-limit = add "limit" . T.pack . show
+limit = add "limit" . T.toLazyText . T.decimal
 {-# INLINE limit #-}
 
 
@@ -202,21 +205,24 @@ password = add "password"
 {-# INLINE password #-}
 
 
-data Status = Attending | Maybe | NotAttending deriving Show
+data Status = Attending | Maybe | NotAttending
 
 
 -- | Add status parameter
 status ∷ Status → Request a f
-status s = add "status" (case s of Attending → "0"; Maybe → "1"; _ → "2")
+status = add "status" . \s -> case s of
+  Attending → "0"
+  Maybe     → "1"
+  _         → "2"
 {-# INLINE status #-}
 
 
-type Event = Int
+type Event = Int64
 
 
 -- | Add event parameter
 event ∷ Event → Request a f
-event = add "event" . T.pack . show
+event = add "event" . T.toLazyText . T.decimal
 {-# INLINE event #-}
 
 
@@ -247,12 +253,12 @@ location = add "location"
 {-# INLINE location #-}
 
 
-type Distance = Int
+type Distance = Int64
 
 
 -- | Add distance parameter
 distance ∷ Distance → Request a f
-distance = add "distance" . T.pack . show
+distance = add "distance" . T.toLazyText . T.decimal
 {-# INLINE distance #-}
 
 
@@ -265,21 +271,21 @@ festivalsonly = add "festivalsonly" . boolToText
 {-# INLINE festivalsonly #-}
 
 
-type Start = Integer
+type Start = Int64
 
 
 -- | Add start parameter
 start ∷ Start → Request a f
-start = add "start" . T.pack . show
+start = add "start" . T.toLazyText . T.decimal
 {-# INLINE start #-}
 
 
-type End = Integer
+type End = Int64
 
 
 -- | Add end parameter
 end ∷ End → Request a f
-end = add "end" . T.pack . show
+end = add "end" . T.toLazyText . T.decimal
 {-# INLINE end #-}
 
 
@@ -292,35 +298,36 @@ metro = add "metro"
 {-# INLINE metro #-}
 
 
-type From = Integer
+type From = Int64
 
 
 -- | Add from parameter
 from ∷ From → Request a f
-from = add "from" . T.pack . show
+from = add "from" . T.toLazyText . T.decimal
 {-# INLINE from #-}
 
 
-type To = Integer
+type To = Int64
 
 
 -- | Add to parameter
 to ∷ To → Request a f
-to = add "to" . T.pack . show
+to = add "to" . T.toLazyText . T.decimal
 {-# INLINE to #-}
 
 
 -- | Add type parameter
-type' ∷ Int → Text → Request a f
-type' n = add ("type" <> T.pack (show n))
+type' ∷ Int64 → Text → Request a f
+type' n = add ("type" <> T.toLazyText (T.decimal n))
 {-# INLINE type' #-}
 
 
 -- | Add value parameter
-value ∷ Int → Text → Request a f
-value n = add ("value" <> T.pack (show n))
+value ∷ Int64 → Text → Request a f
+value n = add ("value" <> T.toLazyText (T.decimal n))
 {-# INLINE value #-}
 
 
 boolToText ∷ Bool → Text
-boolToText b = (if b then "1" else "0")
+boolToText b = if b then "1" else "0"
+{-# INLINE boolToText #-}

@@ -2,6 +2,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
+{-# LANGUAGE ViewPatterns #-}
 -- | Request sending and Response parsing
 module Network.Lastfm.Response
   ( -- * Sign Request
@@ -46,15 +47,14 @@ sign s = approve . (<> signature)
   signature = wrap $ \r@R { query = q } →
     r { query = M.insert "api_sig" (signer (foldr M.delete q ["format", "callback"])) q }
 
-  signer = T.pack . show . md5 . T.encodeUtf8 . (<> s) . mconcat . map (uncurry (<>)) . M.toList
+  signer = T.pack . show . md5 . T.encodeUtf8 . M.foldrWithKey(\k v xs → k <> v <> xs) s
 
 
 -- | Send Request and parse Response
 lastfm ∷ Default (R Ready f) ⇒ Request Ready f → IO (Response f)
-lastfm req = do
-  let t = unwrap req def
-  parse t <$> C.withManager (\m → C.parseUrl (render t) >>= \url →
-    C.responseBody <$> C.httpLbs (url { C.method = method t }) m)
+lastfm (($ def) . unwrap → request) =
+  parse request <$> C.withManager (\m → C.parseUrl (render request) >>= \url →
+    C.responseBody <$> C.httpLbs (url { C.method = method request }) m)
 
 
 approve ∷ Request RequireSign f → Request Ready f
