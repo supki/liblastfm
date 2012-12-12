@@ -16,11 +16,14 @@ module Network.Lastfm.Request
   , Language, language, Distance, distance
   , Longitude, longitude, Latitude, latitude, Location, location
   , Start, start, End, end, FestivalsOnly, festivalsonly
+  , StartTimestamp, startTimestamp, EndTimestamp, endTimestamp
   , Metro, metro, Tag, tags, tag, Track, track, Timestamp , timestamp, Fingerprint, fingerprint
   , AlbumArtist, albumArtist, Duration, duration, TrackNumber, trackNumber
   , ChosenByUser, chosenByUser, Context, context, StreamId, streamId
+  , RecentTracks, recentTracks
   , Recipient, recipient, Username, username, User, user, Password, password
   , Public, public, Message, message, Page, page, Limit, limit
+  , TaggingType, taggingType, UseRecs, useRecs
   , type', value
   ) where
 
@@ -290,6 +293,24 @@ end = add "end" . T.toLazyText . T.decimal
 {-# INLINE end #-}
 
 
+type StartTimestamp = Int64
+
+
+-- | Add startTimestamp parameter
+startTimestamp ∷ StartTimestamp → Request a f
+startTimestamp = add "startTimestamp" . T.toLazyText . T.decimal
+{-# INLINE startTimestamp #-}
+
+
+type EndTimestamp = Int64
+
+
+-- | Add endTimestamp parameter
+endTimestamp ∷ EndTimestamp → Request a f
+endTimestamp = add "endTimestamp" . T.toLazyText . T.decimal
+{-# INLINE endTimestamp #-}
+
+
 type Metro = Text
 
 
@@ -408,6 +429,33 @@ type ChosenByUser = Bool
 chosenByUser ∷ ChosenByUser → Request a f
 chosenByUser = add "chosenByUser" . boolToText
 {-# INLINE chosenByUser #-}
+
+
+type TaggingType = Text
+
+
+-- | Add taggingType parameter
+taggingType ∷ TaggingType → Request a f
+taggingType = add "taggingtype"
+{-# INLINE taggingType #-}
+
+
+type RecentTracks = Bool
+
+
+-- | Add recentTracks parameter
+recentTracks ∷ RecentTracks → Request a f
+recentTracks = add "recentTracks" . boolToText
+{-# INLINE recentTracks #-}
+
+
+type UseRecs = Bool
+
+
+-- | Add useRecs parameter
+useRecs ∷ UseRecs → Request a f
+useRecs = add "useRecs" . boolToText
+{-# INLINE useRecs #-}
 
 
 boolToText ∷ Bool → Text

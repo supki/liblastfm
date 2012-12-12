@@ -17,6 +17,7 @@ import qualified Event as Event
 import qualified Geo as Geo
 import qualified Tag as Tag
 import qualified Track as Track
+import qualified User as User
 
 
 main ∷ IO ()
@@ -31,6 +32,7 @@ main =
              , Artist.auth
              , Event.auth
              , Track.auth
+             , User.auth
              ]
            noauth = mconcat
              [ Album.noauth
@@ -40,6 +42,7 @@ main =
              , Geo.noauth
              , Tag.noauth
              , Track.noauth
+             , User.noauth
              ]
        Nothing → exitWith (ExitFailure 1)
 
