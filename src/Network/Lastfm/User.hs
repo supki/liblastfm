@@ -1,6 +1,13 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
+-- | Lastfm user API
+--
+-- This module is intended to be imported qualified:
+--
+-- @
+-- import qualified Network.Lastfm.User as User
+-- @
 module Network.Lastfm.User
   ( getArtistTracks, getBannedTracks, getEvents, getFriends, getInfo, getLovedTracks, getNeighbours, getNewReleases, getPastEvents, getPersonalTags, getPlaylists, getRecentStations, getRecentTracks, getRecommendedArtists, getRecommendedEvents, getShouts, getTopAlbums, getTopArtists, getTopTags, getTopTracks, getWeeklyAlbumChart, getWeeklyArtistChart, getWeeklyChartList, getWeeklyTrackChart, shout
   ) where

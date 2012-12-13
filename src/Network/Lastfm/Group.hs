@@ -1,6 +1,13 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
+-- | Lastfm group API
+--
+-- This module is intended to be imported qualified:
+--
+-- @
+-- import qualified Network.Lastfm.Group as Group
+-- @
 module Network.Lastfm.Group
   ( getHype, getMembers, getWeeklyAlbumChart, getWeeklyArtistChart, getWeeklyChartList, getWeeklyTrackChart
   ) where
