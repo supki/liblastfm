@@ -224,4 +224,4 @@ getWeeklyTrackChart u = api "user.getWeeklyTrackChart" <> user u
 --
 -- <http://www.last.fm/api/show/user.shout>
 shout ∷ User → Message → Request RequireSign f
-shout u m = api "user.shout" <> user u <> message m
+shout u m = api "user.shout" <> user u <> message m <> post

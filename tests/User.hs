@@ -17,7 +17,7 @@ auth ak sk s =
   [ testCase "User.getRecentStations" testGetRecentStations
   , testCase "User.getRecommendedArtists" testGetRecommendedArtists
   , testCase "User.getRecommendedEvents" testGetRecommendedEvents
-  -- , testCase "User.shout" testShout
+  , testCase "User.shout" testShout
   ]
  where
   testGetRecentStations = check grs . sign s $
