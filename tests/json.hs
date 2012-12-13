@@ -16,6 +16,7 @@ import qualified Chart as Chart
 import qualified Event as Event
 import qualified Geo as Geo
 import qualified Group as Group
+import qualified Library as Library
 import qualified Tag as Tag
 import qualified Track as Track
 import qualified User as User
@@ -32,6 +33,7 @@ main =
              [ Album.auth
              , Artist.auth
              , Event.auth
+             , Library.auth
              , Track.auth
              , User.auth
              ]
@@ -42,6 +44,7 @@ main =
              , Event.noauth
              , Geo.noauth
              , Group.noauth
+             , Library.noauth
              , Tag.noauth
              , Track.noauth
              , User.noauth

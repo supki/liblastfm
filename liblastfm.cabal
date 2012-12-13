@@ -30,6 +30,7 @@ library
                    Network.Lastfm.Event
                    Network.Lastfm.Geo
                    Network.Lastfm.Group
+                   Network.Lastfm.Library
                    Network.Lastfm.Tag
                    Network.Lastfm.Tasteometer
                    Network.Lastfm.Track
