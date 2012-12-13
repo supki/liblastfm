@@ -10,6 +10,7 @@ import qualified Data.ByteString.Lazy as B
 import           Data.Aeson
 import           Data.Text.Lazy (Text)
 import           Test.Framework
+
 import qualified Album as Album
 import qualified Artist as Artist
 import qualified Chart as Chart
@@ -20,6 +21,7 @@ import qualified Library as Library
 import qualified Tag as Tag
 import qualified Track as Track
 import qualified User as User
+import qualified Venue as Venue
 
 
 main ∷ IO ()
@@ -48,6 +50,7 @@ main =
              , Tag.noauth
              , Track.noauth
              , User.noauth
+             , Venue.noauth
              ]
        Nothing → exitWith (ExitFailure 1)
 

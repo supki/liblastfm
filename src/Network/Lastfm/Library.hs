@@ -1,6 +1,13 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
+-- | Lastfm library API
+--
+-- This module is intended to be imported qualified:
+--
+-- @
+-- import qualified Network.Lastfm.Library as Library
+-- @
 module Network.Lastfm.Library
   ( addAlbum, addArtist, addTrack, getAlbums, getArtists, getTracks, removeAlbum, removeArtist, removeScrobble, removeTrack
   ) where

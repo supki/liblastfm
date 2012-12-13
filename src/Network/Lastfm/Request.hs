@@ -23,7 +23,7 @@ module Network.Lastfm.Request
   , RecentTracks, recentTracks
   , Recipient, recipient, Username, username, User, user, Password, password
   , Public, public, Message, message, Page, page, Limit, limit
-  , TaggingType, taggingType, UseRecs, useRecs
+  , TaggingType, taggingType, UseRecs, useRecs, Venue, venue, VenueName, venueName
   , type', value
   ) where
 
@@ -465,6 +465,24 @@ type Group = Text
 group ∷ Group → Request a f
 group = add "group"
 {-# INLINE group #-}
+
+
+type Venue = Int64
+
+
+-- | Add venue parameter
+venue ∷ Venue → Request a f
+venue = add "venue" . T.toLazyText . T.decimal
+{-# INLINE venue #-}
+
+
+type VenueName = Text
+
+
+-- | Add venue parameter
+venueName ∷ VenueName → Request a f
+venueName = add "venue"
+{-# INLINE venueName #-}
 
 
 boolToText ∷ Bool → Text
