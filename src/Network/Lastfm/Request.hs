@@ -12,7 +12,7 @@ module Network.Lastfm.Request
   , Artist, artist, Album, album, MBID, mbid
   , Country, country, Autocorrect, autocorrect
   , Event, event, Status(..), status
-  , From, from, To, to
+  , From, from, To, to, Group, group
   , Language, language, Distance, distance
   , Longitude, longitude, Latitude, latitude, Location, location
   , Start, start, End, end, FestivalsOnly, festivalsonly
@@ -456,6 +456,15 @@ type UseRecs = Bool
 useRecs ∷ UseRecs → Request a f
 useRecs = add "useRecs" . boolToText
 {-# INLINE useRecs #-}
+
+
+type Group = Text
+
+
+-- | Add group parameter
+group ∷ Group → Request a f
+group = add "group"
+{-# INLINE group #-}
 
 
 boolToText ∷ Bool → Text

@@ -15,6 +15,7 @@ import qualified Artist as Artist
 import qualified Chart as Chart
 import qualified Event as Event
 import qualified Geo as Geo
+import qualified Group as Group
 import qualified Tag as Tag
 import qualified Track as Track
 import qualified User as User
@@ -40,6 +41,7 @@ main =
              , Chart.noauth
              , Event.noauth
              , Geo.noauth
+             , Group.noauth
              , Tag.noauth
              , Track.noauth
              , User.noauth
