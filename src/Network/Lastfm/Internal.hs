@@ -33,7 +33,7 @@ data Auth =
 data Format = JSON | XML
 
 
-type Request (a ∷ Auth) (f ∷ Format) = Dual (Endo (R a f))
+type Request (f ∷ Format) (a ∷ Auth) = Dual (Endo (R f a))
 
 
 type family Response (f ∷ Format)
@@ -46,7 +46,7 @@ type instance Response XML = Lazy.ByteString
 -- @a@ is authentication method
 --
 -- @f@ is response format
-data R (a ∷ Auth) (f ∷ Format) = R
+data R (f ∷ Format) (a ∷ Auth) = R
   { host ∷ Text
   , method ∷ Strict.ByteString
   , query ∷ Map Text Text
@@ -54,7 +54,7 @@ data R (a ∷ Auth) (f ∷ Format) = R
   }
 
 
-instance Default (R a JSON) where
+instance Default (R JSON a) where
   def = R
     { host = "https://ws.audioscrobbler.com/2.0/"
     , method = "GET"
@@ -64,7 +64,7 @@ instance Default (R a JSON) where
   {-# INLINE def #-}
 
 
-instance Default (R a XML) where
+instance Default (R XML a) where
   def = R
     { host = "https://ws.audioscrobbler.com/2.0/"
     , method = "GET"
@@ -74,7 +74,7 @@ instance Default (R a XML) where
   {-# INLINE def #-}
 
 
-render ∷ R a f → String
+render ∷ R f a → String
 render R { host = h, query = q } =
   T.unpack $ mconcat [h, "?", argie q]
  where
@@ -84,13 +84,13 @@ render R { host = h, query = q } =
 
 
 -- | Wrapping to interesting 'Monoid' ('R' -> 'R') instance
-wrap ∷ (R a f → R a f) → Request a f
+wrap ∷ (R f a → R f a) → Request f a
 wrap = Dual . Endo
 {-# INLINE wrap #-}
 
 
 -- | Unwrapping from interesting 'Monoid' ('R' -> 'R') instance
-unwrap ∷ Request a f → (R a f → R a f)
+unwrap ∷ Request f a → (R f a → R f a)
 unwrap = appEndo . getDual
 {-# INLINE unwrap #-}
 
@@ -98,7 +98,7 @@ unwrap = appEndo . getDual
 -- | Change request API method
 --
 -- Primarily used in API call wrappers, not intended for usage by library user
-api ∷ Text → Request a f
+api ∷ Text → Request f a
 api = add "method"
 {-# INLINE api #-}
 
@@ -106,7 +106,7 @@ api = add "method"
 -- | Change html method to GET
 --
 -- Primarily used in API call wrappers, not intended for usage by library user
-get ∷ Request a f
+get ∷ Request f a
 get = wrap $ \r -> r { method = "GET" }
 {-# INLINE get #-}
 
@@ -114,7 +114,7 @@ get = wrap $ \r -> r { method = "GET" }
 -- | Change html method to POST
 --
 -- Primarily used in API call wrappers, not intended for usage by library user
-post ∷ Request a f
+post ∷ Request f a
 post = wrap $ \r -> r { method = "POST" }
 {-# INLINE post #-}
 
@@ -123,7 +123,7 @@ post = wrap $ \r -> r { method = "POST" }
 --
 -- This is a little helper. It's actually enough
 -- to specialize Format manually
-json ∷ Request a JSON
+json ∷ Request JSON a
 json = wrap id
 {-# INLINE json #-}
 
@@ -132,11 +132,11 @@ json = wrap id
 --
 -- This is a little helper. It's actually enough
 -- to specialize Format manually
-xml ∷ Request a XML
+xml ∷ Request XML a
 xml = wrap id
 {-# INLINE xml #-}
 
 
-add ∷ Text → Text → Request a f
+add ∷ Text → Text → Request f a
 add k v = wrap $ \r@R { query = q } -> r { query = M.insert k v q }
 {-# INLINE add #-}

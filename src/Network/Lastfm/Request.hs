@@ -39,13 +39,13 @@ import Network.Lastfm.Internal
 
 
 -- | Change request API key
-apiKey ∷ Text → Request a f
+apiKey ∷ Text → Request f a
 apiKey = add "api_key"
 {-# INLINE apiKey #-}
 
 
 -- | Change request session key
-sessionKey ∷ Text → Request a f
+sessionKey ∷ Text → Request f a
 sessionKey = add "sk"
 {-# INLINE sessionKey #-}
 
@@ -54,7 +54,7 @@ type Token = Text
 
 
 -- | Add token parameter
-token ∷ Token → Request a f
+token ∷ Token → Request f a
 token = add "token"
 {-# INLINE token #-}
 
@@ -63,7 +63,7 @@ type Callback = Text
 
 
 -- | Add callback link parameter
-callback ∷ Callback → Request a f
+callback ∷ Callback → Request f a
 callback = add "cb"
 {-# INLINE callback #-}
 
@@ -72,7 +72,7 @@ type Artist = Text
 
 
 -- | Add artist parameter
-artist ∷ Artist → Request a f
+artist ∷ Artist → Request f a
 artist = add "artist"
 {-# INLINE artist #-}
 
@@ -81,7 +81,7 @@ type Album = Text
 
 
 -- | Add artist parameter
-album ∷ Album → Request a f
+album ∷ Album → Request f a
 album = add "album"
 {-# INLINE album #-}
 
@@ -90,7 +90,7 @@ type MBID = Text
 
 
 -- | Add MBID parameter
-mbid ∷ MBID → Request a f
+mbid ∷ MBID → Request f a
 mbid = add "mbid"
 {-# INLINE mbid #-}
 
@@ -99,7 +99,7 @@ type Country = Text
 
 
 -- | Add country parameter
-country ∷ Country → Request a f
+country ∷ Country → Request f a
 country = add "country"
 {-# INLINE country #-}
 
@@ -108,7 +108,7 @@ type Language = Text
 
 
 -- | Add language parameter
-language ∷ Language → Request a f
+language ∷ Language → Request f a
 language = add "lang"
 {-# INLINE language #-}
 
@@ -117,13 +117,13 @@ type Tag = Text
 
 
 -- | Add tags parameter
-tags ∷ [Tag] → Request a f
+tags ∷ [Tag] → Request f a
 tags = add "tags" . T.intercalate ","
 {-# INLINE tags #-}
 
 
 -- | Add tag parameter
-tag ∷ Tag → Request a f
+tag ∷ Tag → Request f a
 tag = add "tag"
 {-# INLINE tag #-}
 
@@ -132,7 +132,7 @@ type Autocorrect = Bool
 
 
 -- | Add autocorrect parameter
-autocorrect ∷ Autocorrect → Request a f
+autocorrect ∷ Autocorrect → Request f a
 autocorrect = add "tags" . boolToText
 {-# INLINE autocorrect #-}
 
@@ -141,7 +141,7 @@ type Page = Int64
 
 
 -- | Add page parameter
-page ∷ Page → Request a f
+page ∷ Page → Request f a
 page = add "page" . T.toLazyText . T.decimal
 {-# INLINE page #-}
 
@@ -150,7 +150,7 @@ type Limit = Int64
 
 
 -- | Add limit parameter
-limit ∷ Limit → Request a f
+limit ∷ Limit → Request f a
 limit = add "limit" . T.toLazyText . T.decimal
 {-# INLINE limit #-}
 
@@ -159,7 +159,7 @@ type Message = Text
 
 
 -- | Add message parameter
-message ∷ Message → Request a f
+message ∷ Message → Request f a
 message = add "message"
 {-# INLINE message #-}
 
@@ -168,7 +168,7 @@ type Public = Bool
 
 
 -- | Add public parameter
-public ∷ Public → Request a f
+public ∷ Public → Request f a
 public = add "public" . boolToText
 {-# INLINE public #-}
 
@@ -177,7 +177,7 @@ type Recipient = Text
 
 
 -- | Add recipient parameter
-recipient ∷ Recipient → Request a f
+recipient ∷ Recipient → Request f a
 recipient = add "recipient"
 {-# INLINE recipient #-}
 
@@ -186,7 +186,7 @@ type Username = Text
 
 
 -- | Add username parameter
-username ∷ Username → Request a f
+username ∷ Username → Request f a
 username = add "username"
 {-# INLINE username #-}
 
@@ -195,7 +195,7 @@ type User = Text
 
 
 -- | Add user parameter
-user ∷ User → Request a f
+user ∷ User → Request f a
 user = add "user"
 {-# INLINE user #-}
 
@@ -204,7 +204,7 @@ type Password = Text
 
 
 -- | Add password parameter
-password ∷ Password → Request a f
+password ∷ Password → Request f a
 password = add "password"
 {-# INLINE password #-}
 
@@ -213,7 +213,7 @@ data Status = Attending | Maybe | NotAttending
 
 
 -- | Add status parameter
-status ∷ Status → Request a f
+status ∷ Status → Request f a
 status = add "status" . \s -> case s of
   Attending → "0"
   Maybe     → "1"
@@ -225,7 +225,7 @@ type Event = Int64
 
 
 -- | Add event parameter
-event ∷ Event → Request a f
+event ∷ Event → Request f a
 event = add "event" . T.toLazyText . T.decimal
 {-# INLINE event #-}
 
@@ -234,7 +234,7 @@ type Longitude = Text
 
 
 -- | Add longitude parameter
-longitude ∷ Longitude → Request a f
+longitude ∷ Longitude → Request f a
 longitude = add "longitude"
 {-# INLINE longitude #-}
 
@@ -243,7 +243,7 @@ type Latitude = Text
 
 
 -- | Add latitude parameter
-latitude ∷ Latitude → Request a f
+latitude ∷ Latitude → Request f a
 latitude = add "latitude"
 {-# INLINE latitude #-}
 
@@ -252,7 +252,7 @@ type Location = Text
 
 
 -- | Add location parameter
-location ∷ Location → Request a f
+location ∷ Location → Request f a
 location = add "location"
 {-# INLINE location #-}
 
@@ -261,7 +261,7 @@ type Distance = Int64
 
 
 -- | Add distance parameter
-distance ∷ Distance → Request a f
+distance ∷ Distance → Request f a
 distance = add "distance" . T.toLazyText . T.decimal
 {-# INLINE distance #-}
 
@@ -270,7 +270,7 @@ type FestivalsOnly = Bool
 
 
 -- | Add festivalsonly parameter
-festivalsonly ∷ FestivalsOnly → Request a f
+festivalsonly ∷ FestivalsOnly → Request f a
 festivalsonly = add "festivalsonly" . boolToText
 {-# INLINE festivalsonly #-}
 
@@ -279,7 +279,7 @@ type Start = Int64
 
 
 -- | Add start parameter
-start ∷ Start → Request a f
+start ∷ Start → Request f a
 start = add "start" . T.toLazyText . T.decimal
 {-# INLINE start #-}
 
@@ -288,7 +288,7 @@ type End = Int64
 
 
 -- | Add end parameter
-end ∷ End → Request a f
+end ∷ End → Request f a
 end = add "end" . T.toLazyText . T.decimal
 {-# INLINE end #-}
 
@@ -297,7 +297,7 @@ type StartTimestamp = Int64
 
 
 -- | Add startTimestamp parameter
-startTimestamp ∷ StartTimestamp → Request a f
+startTimestamp ∷ StartTimestamp → Request f a
 startTimestamp = add "startTimestamp" . T.toLazyText . T.decimal
 {-# INLINE startTimestamp #-}
 
@@ -306,7 +306,7 @@ type EndTimestamp = Int64
 
 
 -- | Add endTimestamp parameter
-endTimestamp ∷ EndTimestamp → Request a f
+endTimestamp ∷ EndTimestamp → Request f a
 endTimestamp = add "endTimestamp" . T.toLazyText . T.decimal
 {-# INLINE endTimestamp #-}
 
@@ -315,7 +315,7 @@ type Metro = Text
 
 
 -- | Add metro parameter
-metro ∷ Metro → Request a f
+metro ∷ Metro → Request f a
 metro = add "metro"
 {-# INLINE metro #-}
 
@@ -324,7 +324,7 @@ type From = Int64
 
 
 -- | Add from parameter
-from ∷ From → Request a f
+from ∷ From → Request f a
 from = add "from" . T.toLazyText . T.decimal
 {-# INLINE from #-}
 
@@ -333,19 +333,19 @@ type To = Int64
 
 
 -- | Add to parameter
-to ∷ To → Request a f
+to ∷ To → Request f a
 to = add "to" . T.toLazyText . T.decimal
 {-# INLINE to #-}
 
 
 -- | Add type parameter
-type' ∷ Int64 → Text → Request a f
+type' ∷ Int64 → Text → Request f a
 type' n = add ("type" <> T.toLazyText (T.decimal n))
 {-# INLINE type' #-}
 
 
 -- | Add value parameter
-value ∷ Int64 → Text → Request a f
+value ∷ Int64 → Text → Request f a
 value n = add ("value" <> T.toLazyText (T.decimal n))
 {-# INLINE value #-}
 
@@ -354,7 +354,7 @@ type Track = Text
 
 
 -- | Add track parameter
-track ∷ Track → Request a f
+track ∷ Track → Request f a
 track = add "track"
 {-# INLINE track #-}
 
@@ -363,7 +363,7 @@ type Timestamp = Int64
 
 
 -- | Add timestamp parameter
-timestamp ∷ Timestamp → Request a f
+timestamp ∷ Timestamp → Request f a
 timestamp = add "timestamp" . T.toLazyText . T.decimal
 {-# INLINE timestamp #-}
 
@@ -372,7 +372,7 @@ type Fingerprint = Int64
 
 
 -- | Add fingerprint parameter
-fingerprint ∷ Fingerprint → Request a f
+fingerprint ∷ Fingerprint → Request f a
 fingerprint = add "fingerprintid" . T.toLazyText . T.decimal
 {-# INLINE fingerprint #-}
 
@@ -381,7 +381,7 @@ type AlbumArtist = Text
 
 
 -- | Add albumArtist parameter
-albumArtist ∷ AlbumArtist → Request a f
+albumArtist ∷ AlbumArtist → Request f a
 albumArtist = add "albumArtist"
 {-# INLINE albumArtist #-}
 
@@ -390,7 +390,7 @@ type Context = Text
 
 
 -- | Add context parameter
-context ∷ Context → Request a f
+context ∷ Context → Request f a
 context = add "context"
 {-# INLINE context #-}
 
@@ -399,7 +399,7 @@ type StreamId = Int64
 
 
 -- | Add streamId parameter
-streamId ∷ StreamId → Request a f
+streamId ∷ StreamId → Request f a
 streamId = add "streamId" . T.toLazyText . T.decimal
 {-# INLINE streamId #-}
 
@@ -408,7 +408,7 @@ type Duration = Int64
 
 
 -- | Add duration parameter
-duration ∷ Duration → Request a f
+duration ∷ Duration → Request f a
 duration = add "duration" . T.toLazyText . T.decimal
 {-# INLINE duration #-}
 
@@ -417,7 +417,7 @@ type TrackNumber = Int64
 
 
 -- | Add trackNumber parameter
-trackNumber ∷ TrackNumber → Request a f
+trackNumber ∷ TrackNumber → Request f a
 trackNumber = add "trackNumber" . T.toLazyText . T.decimal
 {-# INLINE trackNumber #-}
 
@@ -426,7 +426,7 @@ type ChosenByUser = Bool
 
 
 -- | Add chosenByUser parameter
-chosenByUser ∷ ChosenByUser → Request a f
+chosenByUser ∷ ChosenByUser → Request f a
 chosenByUser = add "chosenByUser" . boolToText
 {-# INLINE chosenByUser #-}
 
@@ -435,7 +435,7 @@ type TaggingType = Text
 
 
 -- | Add taggingType parameter
-taggingType ∷ TaggingType → Request a f
+taggingType ∷ TaggingType → Request f a
 taggingType = add "taggingtype"
 {-# INLINE taggingType #-}
 
@@ -444,7 +444,7 @@ type RecentTracks = Bool
 
 
 -- | Add recentTracks parameter
-recentTracks ∷ RecentTracks → Request a f
+recentTracks ∷ RecentTracks → Request f a
 recentTracks = add "recentTracks" . boolToText
 {-# INLINE recentTracks #-}
 
@@ -453,7 +453,7 @@ type UseRecs = Bool
 
 
 -- | Add useRecs parameter
-useRecs ∷ UseRecs → Request a f
+useRecs ∷ UseRecs → Request f a
 useRecs = add "useRecs" . boolToText
 {-# INLINE useRecs #-}
 
@@ -462,7 +462,7 @@ type Group = Text
 
 
 -- | Add group parameter
-group ∷ Group → Request a f
+group ∷ Group → Request f a
 group = add "group"
 {-# INLINE group #-}
 
@@ -471,7 +471,7 @@ type Venue = Int64
 
 
 -- | Add venue parameter
-venue ∷ Venue → Request a f
+venue ∷ Venue → Request f a
 venue = add "venue" . T.toLazyText . T.decimal
 {-# INLINE venue #-}
 
@@ -480,7 +480,7 @@ type VenueName = Text
 
 
 -- | Add venue parameter
-venueName ∷ VenueName → Request a f
+venueName ∷ VenueName → Request f a
 venueName = add "venue"
 {-# INLINE venueName #-}
 

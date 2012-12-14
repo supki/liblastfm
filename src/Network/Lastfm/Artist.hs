@@ -25,7 +25,7 @@ import Network.Lastfm.Request
 -- | Tag an artist with one or more user supplied tags.
 --
 -- <http://www.last.fm/api/show/artist.addTags>
-addTags ∷ Artist → [Tag] → Request RequireSign f
+addTags ∷ Artist → [Tag] → Request f RequireSign
 addTags ar ts = api "artist.addTags" <> artist ar <> tags ts <> post
 
 
@@ -33,11 +33,11 @@ addTags ar ts = api "artist.addTags" <> artist ar <> tags ts <> post
 -- supplied artist has a correction to a canonical artist
 --
 -- <http://www.last.fm/api/show/artist.getCorrection>
-getCorrection ∷ Artist → Request Ready f
+getCorrection ∷ Artist → Request f Ready
 getCorrection ar = api "artist.getCorrection" <> artist ar
 
 
-getEvents ∷ Artist → Request Ready f
+getEvents ∷ Artist → Request f Ready
 getEvents ar = api "artist.getEvents" <> artist ar
 
 -- | Get a list of upcoming events for this artist. Easily
@@ -46,11 +46,11 @@ getEvents ar = api "artist.getEvents" <> artist ar
 -- Optional: 'autocorrect', 'limit', 'pages', 'festivalsonly'
 --
 -- <http://www.last.fm/api/show/artist.getEvents>
-getEvents_mbid ∷ MBID → Request Ready f
+getEvents_mbid ∷ MBID → Request f Ready
 getEvents_mbid m = api "artist.getEvents" <> mbid m
 
 
-getInfo ∷ Artist → Request Ready f
+getInfo ∷ Artist → Request f Ready
 getInfo ar = api "artist.getInfo" <> artist ar
 
 -- | Get the metadata for an artist. Includes biography.
@@ -58,11 +58,11 @@ getInfo ar = api "artist.getInfo" <> artist ar
 -- Optional: 'language', 'autocorrect', 'username'
 --
 -- <http://www.last.fm/api/show/artist.getInfo>
-getInfo_mbid ∷ MBID → Request Ready f
+getInfo_mbid ∷ MBID → Request f Ready
 getInfo_mbid m = api "artist.getInfo" <> mbid m
 
 
-getPastEvents ∷ Artist → Request Ready f
+getPastEvents ∷ Artist → Request f Ready
 getPastEvents ar = api "artist.getPastEvents" <> artist ar
 
 -- | Get a paginated list of all the events this artist has played at in the past.
@@ -70,11 +70,11 @@ getPastEvents ar = api "artist.getPastEvents" <> artist ar
 -- Optional: 'page', 'autocorrect', 'limit'
 --
 -- <http://www.last.fm/api/show/artist.getPastEvents>
-getPastEvents_mbid ∷ MBID → Request Ready f
+getPastEvents_mbid ∷ MBID → Request f Ready
 getPastEvents_mbid m = api "artist.getPastEvents" <> mbid m
 
 
-getPodcast ∷ Artist → Request Ready f
+getPodcast ∷ Artist → Request f Ready
 getPodcast ar = api "artist.getPodcast" <> artist ar
 
 -- | Get a podcast of free mp3s based on an artist
@@ -82,11 +82,11 @@ getPodcast ar = api "artist.getPodcast" <> artist ar
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/artist.getPodcast>
-getPodcast_mbid ∷ MBID → Request Ready f
+getPodcast_mbid ∷ MBID → Request f Ready
 getPodcast_mbid m = api "artist.getPodcast" <> mbid m
 
 
-getShouts ∷ Artist → Request Ready f
+getShouts ∷ Artist → Request f Ready
 getShouts ar = api "artist.getShouts" <> artist ar
 
 -- | Get shouts for this artist. Also available as an rss feed.
@@ -94,11 +94,11 @@ getShouts ar = api "artist.getShouts" <> artist ar
 -- Optional:'autocorrect', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/artist.getShouts>
-getShouts_mbid ∷ MBID → Request Ready f
+getShouts_mbid ∷ MBID → Request f Ready
 getShouts_mbid m = api "artist.getShouts" <> mbid m
 
 
-getSimilar ∷ Artist → Request Ready f
+getSimilar ∷ Artist → Request f Ready
 getSimilar ar = api "artist.getSimilar" <> artist ar
 
 -- | Get all the artists similar to this artist
@@ -106,11 +106,11 @@ getSimilar ar = api "artist.getSimilar" <> artist ar
 -- Optional: 'limit', 'autocorrect'
 --
 -- <http://www.last.fm/api/show/artist.getSimilar>
-getSimilar_mbid ∷ MBID → Request Ready f
+getSimilar_mbid ∷ MBID → Request f Ready
 getSimilar_mbid m = api "artist.getSimilar" <> mbid m
 
 
-getTags ∷ Artist → Request a f
+getTags ∷ Artist → Request f a
 getTags ar = api "artist.getTags" <> artist ar
 
 -- | Get the tags applied by an individual user to an artist on Last.fm.
@@ -122,11 +122,11 @@ getTags ar = api "artist.getTags" <> artist ar
 -- Optional: 'user', 'autocorrect'
 --
 -- <http://www.last.fm/api/show/artist.getTags>
-getTags_mbid ∷ MBID → Request a f
+getTags_mbid ∷ MBID → Request f a
 getTags_mbid m = api "artist.getTags" <> mbid m
 
 
-getTopAlbums ∷ Artist → Request Ready f
+getTopAlbums ∷ Artist → Request f Ready
 getTopAlbums ar = api "artist.getTopAlbums" <> artist ar
 
 -- | Get the top albums for an artist on Last.fm, ordered by popularity.
@@ -134,11 +134,11 @@ getTopAlbums ar = api "artist.getTopAlbums" <> artist ar
 -- Optional: 'autocorrect', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/artist.getTopAlbums>
-getTopAlbums_mbid ∷ MBID → Request Ready f
+getTopAlbums_mbid ∷ MBID → Request f Ready
 getTopAlbums_mbid m = api "artist.getTopAlbums" <> mbid m
 
 
-getTopFans ∷ Artist → Request Ready f
+getTopFans ∷ Artist → Request f Ready
 getTopFans ar = api "artist.getTopFans" <> artist ar
 
 -- | Get the top fans for an artist on Last.fm, based on listening data.
@@ -146,11 +146,11 @@ getTopFans ar = api "artist.getTopFans" <> artist ar
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/artist.getTopFans>
-getTopFans_mbid ∷ MBID → Request Ready f
+getTopFans_mbid ∷ MBID → Request f Ready
 getTopFans_mbid m = api "artist.getTopFans" <> mbid m
 
 
-getTopTags ∷ Artist → Request Ready f
+getTopTags ∷ Artist → Request f Ready
 getTopTags ar = api "artist.getTopTags" <> artist ar
 
 -- | Get the top tags for an artist on Last.fm, ordered by popularity.
@@ -158,11 +158,11 @@ getTopTags ar = api "artist.getTopTags" <> artist ar
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/artist.getTopTags>
-getTopTags_mbid ∷ MBID → Request Ready f
+getTopTags_mbid ∷ MBID → Request f Ready
 getTopTags_mbid m = api "artist.getTopTags" <> mbid m
 
 
-getTopTracks ∷ Artist → Request Ready f
+getTopTracks ∷ Artist → Request f Ready
 getTopTracks ar = api "artist.getTopTracks" <> artist ar
 
 -- | Get the top tracks by an artist on Last.fm, ordered by popularity
@@ -170,14 +170,14 @@ getTopTracks ar = api "artist.getTopTracks" <> artist ar
 -- Optional: 'autocorrect', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/artist.getTopTracks>
-getTopTracks_mbid ∷ MBID → Request Ready f
+getTopTracks_mbid ∷ MBID → Request f Ready
 getTopTracks_mbid m = api "artist.getTopTracks" <> mbid m
 
 
 -- | Remove a user's tag from an artist.
 --
 -- <http://www.last.fm/api/show/artist.removeTag>
-removeTag ∷ Artist → Tag → Request RequireSign f
+removeTag ∷ Artist → Tag → Request f RequireSign
 removeTag ar t = api "artist.removeTag" <> artist ar <> tag t <> post
 
 
@@ -186,7 +186,7 @@ removeTag ar t = api "artist.removeTag" <> artist ar <> tag t <> post
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/artist.search>
-search ∷ Artist → Request Ready f
+search ∷ Artist → Request f Ready
 search ar = api "artist.search" <> artist ar
 
 
@@ -195,12 +195,12 @@ search ar = api "artist.search" <> artist ar
 -- Optional: 'message', 'public'
 --
 -- <http://www.last.fm/api/show/artist.share>
-share ∷ Artist → Recipient → Request RequireSign f
+share ∷ Artist → Recipient → Request f RequireSign
 share ar r = api "artist.share" <> artist ar <> recipient r <> post
 
 
 -- | Shout in this artist's shoutbox
 --
 -- <http://www.last.fm/api/show/artist.shout>
-shout ∷ Artist → Message → Request RequireSign f
+shout ∷ Artist → Message → Request f RequireSign
 shout ar m = api "artist.shout" <> artist ar <> message m <> post

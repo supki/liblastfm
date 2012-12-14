@@ -26,25 +26,25 @@ import Network.Lastfm.Request
 
 
 -- | Get authorization token
-getToken ∷ Request Ready f
+getToken ∷ Request f Ready
 getToken = api "auth.getToken"
 {-# INLINE getToken #-}
 
 
 -- | Get session key
-getMobileSession ∷ Username → Password → Request RequireSign f
+getMobileSession ∷ Username → Password → Request f RequireSign
 getMobileSession u p = api "auth.getMobileSession" <> username u <> password p
 {-# INLINE getMobileSession #-}
 
 
 -- | Get session key
-getSession ∷ Token → Request RequireSign f
+getSession ∷ Token → Request f RequireSign
 getSession t = api "auth.getSession" <> token t
 {-# INLINE getSession #-}
 
 
 -- | Construct link user should follow to approve application
-link ∷ Request a f → String
+link ∷ Request f a → String
 link q = render . unwrap q $ R
   { host = "http://www.last.fm/api/auth/"
   , method = mempty

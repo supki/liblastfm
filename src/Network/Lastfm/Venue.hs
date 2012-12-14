@@ -22,7 +22,7 @@ import Network.Lastfm.Request
 -- Optional: 'festivalsonly'
 --
 -- <http://www.last.fm/api/show/venue.getEvents>
-getEvents ∷ Venue → Request Ready f
+getEvents ∷ Venue → Request f Ready
 getEvents v = api "venue.getEvents" <> venue v
 
 
@@ -31,7 +31,7 @@ getEvents v = api "venue.getEvents" <> venue v
 -- Optional: 'festivalsonly', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/venue.getPastEvents>
-getPastEvents ∷ Venue → Request Ready f
+getPastEvents ∷ Venue → Request f Ready
 getPastEvents v = api "venue.getPastEvents" <> venue v
 
 
@@ -40,5 +40,5 @@ getPastEvents v = api "venue.getPastEvents" <> venue v
 -- Optional: 'page', 'limit', 'country'
 --
 -- <http://www.last.fm/api/show/venue.search>
-search ∷ VenueName → Request Ready f
+search ∷ VenueName → Request f Ready
 search v = api "venue.search" <> venueName v

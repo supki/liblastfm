@@ -20,7 +20,7 @@ import Network.Lastfm.Request
 -- | Get the hype list for a group
 --
 -- <http://www.last.fm/api/show/group.getHype>
-getHype ∷ Group → Request Ready f
+getHype ∷ Group → Request f Ready
 getHype g = api "group.getHype" <> group g
 
 
@@ -29,7 +29,7 @@ getHype g = api "group.getHype" <> group g
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/group.getMembers>
-getMembers ∷ Group → Request Ready f
+getMembers ∷ Group → Request f Ready
 getMembers g = api "group.getMembers" <> group g
 
 
@@ -38,7 +38,7 @@ getMembers g = api "group.getMembers" <> group g
 -- Optional: 'from', 'to'
 --
 -- <http://www.last.fm/api/show/group.getWeeklyAlbumChart>
-getWeeklyAlbumChart ∷ Group → Request Ready f
+getWeeklyAlbumChart ∷ Group → Request f Ready
 getWeeklyAlbumChart g = api "group.getWeeklyAlbumChart" <> group g
 
 
@@ -47,14 +47,14 @@ getWeeklyAlbumChart g = api "group.getWeeklyAlbumChart" <> group g
 -- Optional: 'from', 'to'
 --
 -- <http://www.last.fm/api/show/group.getWeeklyArtistChart>
-getWeeklyArtistChart ∷ Group → Request Ready f
+getWeeklyArtistChart ∷ Group → Request f Ready
 getWeeklyArtistChart g = api "group.getWeeklyArtistChart" <> group g
 
 
 -- | Get a list of available charts for this group, expressed as date ranges which can be sent to the chart services.
 --
 -- <http://www.last.fm/api/show/group.getWeeklyChartList>
-getWeeklyChartList ∷ Group → Request Ready f
+getWeeklyChartList ∷ Group → Request f Ready
 getWeeklyChartList g = api "group.getWeeklyChartList" <> group g
 
 
@@ -63,6 +63,6 @@ getWeeklyChartList g = api "group.getWeeklyChartList" <> group g
 -- Optional: 'from', 'to'
 --
 -- <http://www.last.fm/api/show/group.getWeeklyTrackChart>
-getWeeklyTrackChart ∷ Group → Request Ready f
+getWeeklyTrackChart ∷ Group → Request f Ready
 getWeeklyTrackChart g = api "group.getWeeklyTrackChart" <> group g
 

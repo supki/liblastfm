@@ -20,7 +20,7 @@ import Network.Lastfm.Request
 -- | Set a user's attendance status for an event.
 --
 -- <http://www.last.fm/api/show/event.attend>
-attend ∷ Event → Status → Request RequireSign f
+attend ∷ Event → Status → Request f RequireSign
 attend e s = api "event.attend" <> event e <> status s <> post
 
 
@@ -29,14 +29,14 @@ attend e s = api "event.attend" <> event e <> status s <> post
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/event.getAttendees>
-getAttendees ∷ Event → Request Ready f
+getAttendees ∷ Event → Request f Ready
 getAttendees e = api "event.getAttendees" <> event e
 
 
 -- | Get the metadata for an event on Last.fm. Includes attendance and lineup information.
 --
 -- <http://www.last.fm/api/show/event.getInfo>
-getInfo ∷ Event → Request Ready f
+getInfo ∷ Event → Request f Ready
 getInfo e = api "event.getInfo" <> event e
 
 
@@ -45,7 +45,7 @@ getInfo e = api "event.getInfo" <> event e
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/event.getShouts>
-getShouts ∷ Event → Request Ready f
+getShouts ∷ Event → Request f Ready
 getShouts e = api "event.getShouts" <> event e
 
 
@@ -54,12 +54,12 @@ getShouts e = api "event.getShouts" <> event e
 -- Optional: 'public', 'message'
 --
 -- <http://www.last.fm/api/show/event.share>
-share ∷ Event → Recipient → Request RequireSign f
+share ∷ Event → Recipient → Request f RequireSign
 share e r = api "event.share" <> event e <> recipient r <> post
 
 
 -- | Shout in this event's shoutbox
 --
 -- <http://www.last.fm/api/show/event.shout>
-shout ∷ Event → Message → Request RequireSign f
+shout ∷ Event → Message → Request f RequireSign
 shout e m = api "event.shout" <> event e <> message m <> post
