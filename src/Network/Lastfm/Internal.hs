@@ -23,24 +23,6 @@ import           Data.Text.Lazy (Text)
 import qualified Data.Text.Lazy as T
 
 
--- | Authentication method
-data Auth =
-    Ready       -- ^ Public API. Doesn't require anything special besides API key
-  | RequireSign -- ^ Private API. Requires Session key and Secret as well as API key
-
-
--- | Response format: either JSON or XML
-data Format = JSON | XML
-
-
-type Request (f ∷ Format) (a ∷ Auth) = Dual (Endo (R f a))
-
-
-type family Response (f ∷ Format)
-type instance Response JSON = Maybe Value
-type instance Response XML = Lazy.ByteString
-
-
 -- | Lastfm API request data type
 --
 -- @a@ is authentication method
@@ -53,6 +35,13 @@ data R (f ∷ Format) (a ∷ Auth) = R
   , parse ∷ Lazy.ByteString → Response f
   }
 
+-- | Response format: either JSON or XML
+data Format = JSON | XML
+
+-- | Authentication method
+data Auth =
+    Ready       -- ^ Public API. Doesn't require anything special besides API key
+  | RequireSign -- ^ Private API. Requires Session key and Secret as well as API key
 
 instance Default (R JSON a) where
   def = R
@@ -63,7 +52,6 @@ instance Default (R JSON a) where
     }
   {-# INLINE def #-}
 
-
 instance Default (R XML a) where
   def = R
     { host = "https://ws.audioscrobbler.com/2.0/"
@@ -72,6 +60,14 @@ instance Default (R XML a) where
     , parse = id
     }
   {-# INLINE def #-}
+
+
+type Request (f ∷ Format) (a ∷ Auth) = Dual (Endo (R f a))
+
+
+type family Response (f ∷ Format)
+type instance Response JSON = Maybe Value
+type instance Response XML = Lazy.ByteString
 
 
 render ∷ R f a → String
