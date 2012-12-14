@@ -14,7 +14,6 @@ module Network.Lastfm.Response
 
 import Control.Applicative
 import Data.Monoid
-import Unsafe.Coerce (unsafeCoerce)
 
 import           Data.Default (Default(..))
 import           Data.Digest.Pure.MD5 (md5)
@@ -58,4 +57,4 @@ lastfm (($ def) . unwrap → request) =
 
 
 approve ∷ Request f RequireSign → Request f Ready
-approve = unsafeCoerce
+approve = coerce

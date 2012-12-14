@@ -6,7 +6,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UnicodeSyntax #-}
 module Network.Lastfm.Internal
-  ( Request(..), R(..), wrap, unwrap, add, Response
+  ( Coercing(..), Request(..), R(..), wrap, unwrap, add, Response
   , Auth(..), Format(..)
   , render
   , api, post, get, json, xml
@@ -73,6 +73,9 @@ instance Default (R XML a) where
 
 newtype Request (f ∷ Format) (a ∷ Auth) = Request { unRequest ∷ Dual (Endo (R f a)) }
     deriving (Monoid)
+
+instance Coercing (Request f) where
+  coerce q = wrap $ coerce . unwrap q . coerce
 
 
 type family Response (f ∷ Format)
