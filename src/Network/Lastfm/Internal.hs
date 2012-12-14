@@ -1,6 +1,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE PolyKinds #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UnicodeSyntax #-}
 module Network.Lastfm.Internal
@@ -23,6 +24,10 @@ import           Data.Text.Lazy (Text)
 import qualified Data.Text.Lazy as T
 
 
+class Coercing t where
+  coerce ∷ t a → t b
+
+
 -- | Lastfm API request data type
 --
 -- @a@ is authentication method
@@ -42,6 +47,9 @@ data Format = JSON | XML
 data Auth =
     Ready       -- ^ Public API. Doesn't require anything special besides API key
   | RequireSign -- ^ Private API. Requires Session key and Secret as well as API key
+
+instance Coercing (R f) where
+  coerce R { host = h, method = m, query = q, parse = p } = R { host = h, method = m, query = q, parse = p }
 
 instance Default (R JSON a) where
   def = R
