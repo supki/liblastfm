@@ -1,11 +1,12 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PolyKinds #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UnicodeSyntax #-}
 module Network.Lastfm.Internal
-  ( Request, R(..), wrap, unwrap, add, Response
+  ( Request(..), R(..), wrap, unwrap, add, Response
   , Auth(..), Format(..)
   , render
   , api, post, get, json, xml
@@ -70,7 +71,8 @@ instance Default (R XML a) where
   {-# INLINE def #-}
 
 
-type Request (f ∷ Format) (a ∷ Auth) = Dual (Endo (R f a))
+newtype Request (f ∷ Format) (a ∷ Auth) = Request { unRequest ∷ Dual (Endo (R f a)) }
+    deriving (Monoid)
 
 
 type family Response (f ∷ Format)
@@ -89,13 +91,13 @@ render R { host = h, query = q } =
 
 -- | Wrapping to interesting 'Monoid' ('R' -> 'R') instance
 wrap ∷ (R f a → R f a) → Request f a
-wrap = Dual . Endo
+wrap = Request . Dual . Endo
 {-# INLINE wrap #-}
 
 
 -- | Unwrapping from interesting 'Monoid' ('R' -> 'R') instance
 unwrap ∷ Request f a → (R f a → R f a)
-unwrap = appEndo . getDual
+unwrap = appEndo . getDual . unRequest
 {-# INLINE unwrap #-}
 
 
