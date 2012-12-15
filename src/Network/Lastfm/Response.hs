@@ -58,3 +58,4 @@ lastfm (($ def) . unwrap → request) =
 
 approve ∷ Request f RequireSign → Request f Ready
 approve = coerce
+{-# INLINE approve #-}

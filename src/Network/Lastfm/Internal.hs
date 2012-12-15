@@ -1,6 +1,5 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PolyKinds #-}
 {-# LANGUAGE TypeFamilies #-}
@@ -51,6 +50,7 @@ data Auth =
 
 instance Coercing (R f) where
   coerce R { host = h, method = m, query = q, parse = p } = R { host = h, method = m, query = q, parse = p }
+  {-# INLINE coerce #-}
 
 instance Default (R JSON a) where
   def = R
@@ -71,11 +71,15 @@ instance Default (R XML a) where
   {-# INLINE def #-}
 
 
-newtype Request (f ∷ Format) (a ∷ Auth) = Request { unRequest ∷ Dual (Endo (R f a)) }
-    deriving (Monoid)
+newtype Request f a = Request { unRequest ∷ Dual (Endo (R f a)) }
+
+instance Monoid (Request f a) where
+  mempty = Request mempty
+  Request s `mappend` Request t = Request $ s `mappend` t
 
 instance Coercing (Request f) where
   coerce q = wrap $ coerce . unwrap q . coerce
+  {-# INLINE coerce #-}
 
 
 type family Response (f ∷ Format)
@@ -116,7 +120,7 @@ api = add "method"
 --
 -- Primarily used in API call wrappers, not intended for usage by library user
 get ∷ Request f a
-get = wrap $ \r -> r { method = "GET" }
+get = wrap $ \r → r { method = "GET" }
 {-# INLINE get #-}
 
 
@@ -124,7 +128,7 @@ get = wrap $ \r -> r { method = "GET" }
 --
 -- Primarily used in API call wrappers, not intended for usage by library user
 post ∷ Request f a
-post = wrap $ \r -> r { method = "POST" }
+post = wrap $ \r → r { method = "POST" }
 {-# INLINE post #-}
 
 
@@ -147,5 +151,5 @@ xml = wrap id
 
 
 add ∷ Text → Text → Request f a
-add k v = wrap $ \r@R { query = q } -> r { query = M.insert k v q }
+add k v = wrap $ \r@R { query = q } → r { query = M.insert k v q }
 {-# INLINE add #-}
