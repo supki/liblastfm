@@ -8,7 +8,7 @@ import Network.Lastfm
 import Test.HUnit
 
 
-check ∷ (Value → Parser a) → Request JSON Ready → Assertion
+check ∷ (Value → Parser a) → Request JSON Ready t → Assertion
 check p q = do
   r ← lastfm q
   case parse p `fmap` r of

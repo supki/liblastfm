@@ -21,7 +21,7 @@ import Network.Lastfm.Request
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/chart.getHypedArtists>
-getHypedArtists ∷ Request f Ready
+getHypedArtists ∷ Request f Ready t
 getHypedArtists = api "chart.getHypedArtists"
 
 
@@ -30,7 +30,7 @@ getHypedArtists = api "chart.getHypedArtists"
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/chart.getHypedTracks>
-getHypedTracks ∷ Request f Ready
+getHypedTracks ∷ Request f Ready t
 getHypedTracks = api "chart.getHypedTracks"
 
 
@@ -39,7 +39,7 @@ getHypedTracks = api "chart.getHypedTracks"
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/chart.getLovedTracks>
-getLovedTracks ∷ Request f Ready
+getLovedTracks ∷ Request f Ready t
 getLovedTracks = api "chart.getLovedTracks"
 
 
@@ -48,7 +48,7 @@ getLovedTracks = api "chart.getLovedTracks"
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/chart.getTopArtists>
-getTopArtists ∷ Request f Ready
+getTopArtists ∷ Request f Ready t
 getTopArtists = api "chart.getTopArtists"
 
 
@@ -57,7 +57,7 @@ getTopArtists = api "chart.getTopArtists"
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/chart.getTopTags>
-getTopTags ∷ Request f Ready
+getTopTags ∷ Request f Ready t
 getTopTags = api "chart.getTopTags"
 
 
@@ -66,5 +66,5 @@ getTopTags = api "chart.getTopTags"
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/chart.getTopTracks>
-getTopTracks ∷ Request f Ready
+getTopTracks ∷ Request f Ready t
 getTopTracks = api "chart.getTopTracks"

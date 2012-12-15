@@ -25,7 +25,7 @@ import qualified Data.Text.Lazy as T
 
 
 class Coercing t where
-  coerce ∷ t a → t b
+  coerce ∷ t a b → t c d
 
 
 -- | Lastfm API request data type
@@ -33,7 +33,7 @@ class Coercing t where
 -- @a@ is authentication method
 --
 -- @f@ is response format
-data R (f ∷ Format) (a ∷ Auth) = R
+data R (f ∷ Format) (a ∷ Auth) t = R
   { host ∷ Text
   , method ∷ Strict.ByteString
   , query ∷ Map Text Text
@@ -52,7 +52,7 @@ instance Coercing (R f) where
   coerce R { host = h, method = m, query = q, parse = p } = R { host = h, method = m, query = q, parse = p }
   {-# INLINE coerce #-}
 
-instance Default (R JSON a) where
+instance Default (R JSON a t) where
   def = R
     { host = "https://ws.audioscrobbler.com/2.0/"
     , method = "GET"
@@ -61,7 +61,7 @@ instance Default (R JSON a) where
     }
   {-# INLINE def #-}
 
-instance Default (R XML a) where
+instance Default (R XML a t) where
   def = R
     { host = "https://ws.audioscrobbler.com/2.0/"
     , method = "GET"
@@ -71,9 +71,9 @@ instance Default (R XML a) where
   {-# INLINE def #-}
 
 
-newtype Request f a = Request { unRequest ∷ Dual (Endo (R f a)) }
+newtype Request f a t = Request { unRequest ∷ Dual (Endo (R f a t)) }
 
-instance Monoid (Request f a) where
+instance Monoid (Request f a t) where
   mempty = Request mempty
   Request s `mappend` Request t = Request $ s `mappend` t
 
@@ -87,7 +87,7 @@ type instance Response JSON = Maybe Value
 type instance Response XML = Lazy.ByteString
 
 
-render ∷ R f a → String
+render ∷ R f a t → String
 render R { host = h, query = q } =
   T.unpack $ mconcat [h, "?", argie q]
  where
@@ -97,13 +97,13 @@ render R { host = h, query = q } =
 
 
 -- | Wrapping to interesting 'Monoid' ('R' -> 'R') instance
-wrap ∷ (R f a → R f a) → Request f a
+wrap ∷ (R f a t → R f a t) → Request f a t
 wrap = Request . Dual . Endo
 {-# INLINE wrap #-}
 
 
 -- | Unwrapping from interesting 'Monoid' ('R' -> 'R') instance
-unwrap ∷ Request f a → (R f a → R f a)
+unwrap ∷ Request f a t → (R f a t → R f a t)
 unwrap = appEndo . getDual . unRequest
 {-# INLINE unwrap #-}
 
@@ -111,7 +111,7 @@ unwrap = appEndo . getDual . unRequest
 -- | Change request API method
 --
 -- Primarily used in API call wrappers, not intended for usage by library user
-api ∷ Text → Request f a
+api ∷ Text → Request f a t
 api = add "method"
 {-# INLINE api #-}
 
@@ -119,7 +119,7 @@ api = add "method"
 -- | Change html method to GET
 --
 -- Primarily used in API call wrappers, not intended for usage by library user
-get ∷ Request f a
+get ∷ Request f a t
 get = wrap $ \r → r { method = "GET" }
 {-# INLINE get #-}
 
@@ -127,7 +127,7 @@ get = wrap $ \r → r { method = "GET" }
 -- | Change html method to POST
 --
 -- Primarily used in API call wrappers, not intended for usage by library user
-post ∷ Request f a
+post ∷ Request f a t
 post = wrap $ \r → r { method = "POST" }
 {-# INLINE post #-}
 
@@ -136,7 +136,7 @@ post = wrap $ \r → r { method = "POST" }
 --
 -- This is a little helper. It's actually enough
 -- to specialize Format manually
-json ∷ Request JSON a
+json ∷ Request JSON a t
 json = wrap id
 {-# INLINE json #-}
 
@@ -145,11 +145,11 @@ json = wrap id
 --
 -- This is a little helper. It's actually enough
 -- to specialize Format manually
-xml ∷ Request XML a
+xml ∷ Request XML a t
 xml = wrap id
 {-# INLINE xml #-}
 
 
-add ∷ Text → Text → Request f a
+add ∷ Text → Text → Request f a t
 add k v = wrap $ \r@R { query = q } → r { query = M.insert k v q }
 {-# INLINE add #-}

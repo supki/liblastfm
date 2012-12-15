@@ -40,7 +40,7 @@ type Secret = Text
 
 
 -- | Sign 'Request' with 'Secret'
-sign ∷ Secret → Request f RequireSign → Request f Ready
+sign ∷ Secret → Request f RequireSign t → Request f Ready t
 sign s = approve . (<> signature)
  where
   signature = wrap $ \r@R { query = q } →
@@ -50,12 +50,12 @@ sign s = approve . (<> signature)
 
 
 -- | Send Request and parse Response
-lastfm ∷ Default (R f Ready) ⇒ Request f Ready → IO (Response f)
+lastfm ∷ Default (R f Ready t) ⇒ Request f Ready t → IO (Response f)
 lastfm (($ def) . unwrap → request) =
   parse request <$> C.withManager (\m → C.parseUrl (render request) >>= \url →
     C.responseBody <$> C.httpLbs (url { C.method = method request }) m)
 
 
-approve ∷ Request f RequireSign → Request f Ready
+approve ∷ Request f RequireSign t → Request f Ready t
 approve = coerce
 {-# INLINE approve #-}
