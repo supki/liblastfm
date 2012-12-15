@@ -73,143 +73,115 @@ callback = add "cb"
 {-# INLINE callback #-}
 
 
-type Artist = Text
+data Artist
+data Album
+data MBID
+data Country
+data Language
+data Tag
+data Autocorrect
+data Page
+data Limit
+data Message
+data Public
+data Recipient
+data Username
+data User
+data Password
 
 
 -- | Add artist parameter
-artist ∷ Artist → Request f a t
+artist ∷ Text → Request f a Artist
 artist = add "artist"
 {-# INLINE artist #-}
 
 
-type Album = Text
-
-
 -- | Add artist parameter
-album ∷ Album → Request f a t
+album ∷ Text → Request f a Album
 album = add "album"
 {-# INLINE album #-}
 
 
-type MBID = Text
-
-
 -- | Add MBID parameter
-mbid ∷ MBID → Request f a t
+mbid ∷ Text → Request f a MBID
 mbid = add "mbid"
 {-# INLINE mbid #-}
 
 
-type Country = Text
-
-
 -- | Add country parameter
-country ∷ Country → Request f a t
+country ∷ Text → Request f a Country
 country = add "country"
 {-# INLINE country #-}
 
 
-type Language = Text
-
-
 -- | Add language parameter
-language ∷ Language → Request f a t
+language ∷ Text → Request f a Language
 language = add "lang"
 {-# INLINE language #-}
 
 
-type Tag = Text
-
-
 -- | Add tags parameter
-tags ∷ [Tag] → Request f a t
+tags ∷ [Text] → Request f a [Tag]
 tags = add "tags" . T.intercalate ","
 {-# INLINE tags #-}
 
 
 -- | Add tag parameter
-tag ∷ Tag → Request f a t
+tag ∷ Text → Request f a Tag
 tag = add "tag"
 {-# INLINE tag #-}
 
 
-type Autocorrect = Bool
-
-
 -- | Add autocorrect parameter
-autocorrect ∷ Autocorrect → Request f a t
+autocorrect ∷ Bool → Request f a Autocorrect
 autocorrect = add "tags" . boolToText
 {-# INLINE autocorrect #-}
 
 
-type Page = Int64
-
-
 -- | Add page parameter
-page ∷ Page → Request f a t
+page ∷ Int64 → Request f a Page
 page = add "page" . T.toLazyText . T.decimal
 {-# INLINE page #-}
 
 
-type Limit = Int64
-
-
 -- | Add limit parameter
-limit ∷ Limit → Request f a t
+limit ∷ Int64 → Request f a Limit
 limit = add "limit" . T.toLazyText . T.decimal
 {-# INLINE limit #-}
 
 
-type Message = Text
-
-
 -- | Add message parameter
-message ∷ Message → Request f a t
+message ∷ Text → Request f a Message
 message = add "message"
 {-# INLINE message #-}
 
 
-type Public = Bool
-
-
 -- | Add public parameter
-public ∷ Public → Request f a t
+public ∷ Bool → Request f a Public
 public = add "public" . boolToText
 {-# INLINE public #-}
 
 
-type Recipient = Text
-
-
 -- | Add recipient parameter
-recipient ∷ Recipient → Request f a t
+recipient ∷ Text → Request f a Recipient
 recipient = add "recipient"
 {-# INLINE recipient #-}
 
 
-type Username = Text
-
-
 -- | Add username parameter
-username ∷ Username → Request f a t
+username ∷ Text → Request f a Username
 username = add "username"
 {-# INLINE username #-}
 
 
-type User = Text
-
-
 -- | Add user parameter
-user ∷ User → Request f a t
+user ∷ Text → Request f a User
 user = add "user"
 {-# INLINE user #-}
 
 
-type Password = Text
-
-
 -- | Add password parameter
-password ∷ Password → Request f a t
+password ∷ Text → Request f a Password
 password = add "password"
 {-# INLINE password #-}
 

@@ -19,6 +19,7 @@ import           Data.Default (Default(..))
 import           Data.Digest.Pure.MD5 (md5)
 import qualified Data.Map as M
 import           Data.Text.Lazy (Text)
+import           Data.Void (Void)
 import qualified Data.Text.Lazy as T
 import qualified Data.Text.Lazy.Encoding as T
 import qualified Network.HTTP.Conduit as C
@@ -40,7 +41,7 @@ type Secret = Text
 
 
 -- | Sign 'Request' with 'Secret'
-sign ∷ Secret → Request f RequireSign t → Request f Ready t
+sign ∷ Secret → Request f RequireSign Void → Request f Ready Void
 sign s = approve . (<> signature)
  where
   signature = wrap $ \r@R { query = q } →
@@ -56,6 +57,6 @@ lastfm (($ def) . unwrap → request) =
     C.responseBody <$> C.httpLbs (url { C.method = method request }) m)
 
 
-approve ∷ Request f RequireSign t → Request f Ready t
+approve ∷ Request f RequireSign Void → Request f Ready Void
 approve = coerce
 {-# INLINE approve #-}
