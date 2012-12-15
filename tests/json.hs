@@ -12,16 +12,16 @@ import           Data.Text.Lazy (Text)
 import           Test.Framework
 
 import qualified Album as Album
-import qualified Artist as Artist
-import qualified Chart as Chart
-import qualified Event as Event
-import qualified Geo as Geo
-import qualified Group as Group
-import qualified Library as Library
-import qualified Tag as Tag
-import qualified Track as Track
-import qualified User as User
-import qualified Venue as Venue
+--import qualified Artist as Artist
+--import qualified Chart as Chart
+--import qualified Event as Event
+--import qualified Geo as Geo
+--import qualified Group as Group
+--import qualified Library as Library
+--import qualified Tag as Tag
+--import qualified Track as Track
+--import qualified User as User
+--import qualified Venue as Venue
 
 
 main ∷ IO ()
@@ -33,24 +33,24 @@ main =
           where
            auth = mconcat . map (\f -> f ak sk s) $
              [ Album.auth
-             , Artist.auth
-             , Event.auth
-             , Library.auth
-             , Track.auth
-             , User.auth
+             --, Artist.auth
+             --, Event.auth
+             --, Library.auth
+             --, Track.auth
+             --, User.auth
              ]
            noauth = mconcat
              [ Album.noauth
-             , Artist.noauth
-             , Chart.noauth
-             , Event.noauth
-             , Geo.noauth
-             , Group.noauth
-             , Library.noauth
-             , Tag.noauth
-             , Track.noauth
-             , User.noauth
-             , Venue.noauth
+             --, Artist.noauth
+             --, Chart.noauth
+             --, Event.noauth
+             --, Geo.noauth
+             --, Group.noauth
+             --, Library.noauth
+             --, Tag.noauth
+             --, Track.noauth
+             --, User.noauth
+             --, Venue.noauth
              ]
        Nothing → exitWith (ExitFailure 1)
 
