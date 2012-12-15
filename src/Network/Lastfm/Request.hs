@@ -1,4 +1,5 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE EmptyDataDecls #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
 -- | Request construction
@@ -6,7 +7,7 @@ module Network.Lastfm.Request
   ( -- * Request
     Request, R, Auth(..), Format(..), Response
     -- * Request major parameters
-  , api, post, get, json, xml, apiKey, sessionKey
+  , api, post, get, json, xml, APIKey, apiKey, SessionKey, sessionKey
     -- * Request minor parameters
   , Token, token, Callback, callback
   , Artist, artist, Album, album, MBID, mbid
@@ -38,14 +39,18 @@ import qualified Data.Text.Lazy.Builder.Int as T
 import Network.Lastfm.Internal
 
 
+data APIKey
+data SessionKey
+
+
 -- | Change request API key
-apiKey ∷ Text → Request f a t
+apiKey ∷ Text → Request f a APIKey
 apiKey = add "api_key"
 {-# INLINE apiKey #-}
 
 
 -- | Change request session key
-sessionKey ∷ Text → Request f a t
+sessionKey ∷ Text → Request f RequireSign SessionKey
 sessionKey = add "sk"
 {-# INLINE sessionKey #-}
 

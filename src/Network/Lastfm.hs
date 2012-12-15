@@ -1,10 +1,10 @@
 module Network.Lastfm
-  ( -- * Data.Monoid is re-exported for convenience
-    module Data.Monoid
+  ( -- * Control.Applicative is re-exported for convenience
+    module Control.Applicative
   , module L
   ) where
 
-import Data.Monoid
+import Control.Applicative
 
 import Network.Lastfm.Request as L
 import Network.Lastfm.Response as L

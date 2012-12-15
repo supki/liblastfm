@@ -14,7 +14,8 @@ module Network.Lastfm.Album
   , getTopTags, getTopTags_mbid, removeTag, search, share
   ) where
 
-import Data.Monoid ((<>))
+import Control.Applicative
+import Data.Void (Void)
 
 import Network.Lastfm.Request
 
@@ -22,12 +23,12 @@ import Network.Lastfm.Request
 -- | Tag an album using a list of user supplied tags.
 --
 -- <http://www.last.fm/api/show/album.addTags>
-addTags ∷ Artist → Album → [Tag] → Request f RequireSign t
-addTags ar al ts = api "album.addTags" <> artist ar <> album al <> tags ts <> post
+addTags ∷ Request f RequireSign (Artist → Album → [Tag] → APIKey → SessionKey → Void)
+addTags = api "album.addTags" <* post
 
 
-getBuyLinks ∷ Artist → Album → Country → Request f Ready t
-getBuyLinks ar al c = api "album.getBuyLinks" <> album al <> artist ar <> country c
+getBuyLinks ∷ Request f Ready (Artist → Album → Country → APIKey → Void)
+getBuyLinks = api "album.getBuyLinks"
 
 -- | Get a list of Buy Links for a particular Album. It is
 -- required that you supply either the artist and track params or the mbid parameter.
@@ -35,12 +36,12 @@ getBuyLinks ar al c = api "album.getBuyLinks" <> album al <> artist ar <> countr
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/album.getBuylinks>
-getBuyLinks_mbid ∷ MBID → Country → Request f Ready t
-getBuyLinks_mbid m c = api "album.getBuyLinks" <> mbid m <> country c
+getBuyLinks_mbid ∷ Request f Ready (MBID → Country → APIKey → Void)
+getBuyLinks_mbid = api "album.getBuyLinks"
 
 
-getInfo ∷ Artist → Album → Request f Ready t
-getInfo ar al = api "album.getInfo" <> album al <> artist ar
+getInfo ∷ Request f Ready (Artist → Album → APIKey → Void)
+getInfo = api "album.getInfo"
 
 -- | Get the metadata for an album on Last.fm using the album name or
 -- a musicbrainz id. See playlist.fetch on how to get the album playlist.
@@ -48,51 +49,51 @@ getInfo ar al = api "album.getInfo" <> album al <> artist ar
 -- Optional: 'autocorrect', 'username', 'language'
 --
 -- <http://www.last.fm/api/show/album.getInfo>
-getInfo_mbid ∷ MBID → Request f Ready t
-getInfo_mbid m = api "album.getInfo" <> mbid m
+getInfo_mbid ∷ Request f Ready (MBID → APIKey → Void)
+getInfo_mbid = api "album.getInfo"
 
 
-getShouts ∷ Artist → Album → Request f Ready t
-getShouts ar al = api "album.getShouts" <> album al <> artist ar
+getShouts ∷ Request f Ready (Artist → Album → APIKey → Void)
+getShouts = api "album.getShouts"
 
 -- | Get shouts for this album.
 --
 -- Optional: 'autocorrect', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/album.getShouts>
-getShouts_mbid ∷ MBID → Request f Ready t
-getShouts_mbid m = api "album.getShouts" <> mbid m
+getShouts_mbid ∷ Request f Ready (MBID → APIKey → Void)
+getShouts_mbid = api "album.getShouts"
 
 
-getTags ∷ Artist → Album → Request f a t
-getTags ar al = api "album.getTags" <> album al <> artist ar
+getTags ∷ Request f a (Artist → Album → APIKey → Void)
+getTags = api "album.getTags"
 
 -- | Get the tags applied by an individual user to an album on Last.fm.
 --
 -- Optional: 'autocorrect', 'user'
 --
 -- <http://www.last.fm/api/show/album.getTags>
-getTags_mbid ∷ MBID → Request f a t
-getTags_mbid m = api "album.getTags" <> mbid m
+getTags_mbid ∷ Request f a (MBID → APIKey → Void)
+getTags_mbid = api "album.getTags"
 
 
-getTopTags ∷ Artist → Album → Request f a t
-getTopTags ar al = api "album.getTopTags" <> album al <> artist ar
+getTopTags ∷ Request f Ready (Artist → Album → APIKey → Void)
+getTopTags = api "album.getTopTags"
 
 -- | Get the top tags for an album on Last.fm, ordered by popularity.
 --
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/album.getTopTags>
-getTopTags_mbid ∷ MBID → Request f a t
-getTopTags_mbid m = api "album.getTopTags" <> mbid m
+getTopTags_mbid ∷ Request f Ready (MBID → APIKey → Void)
+getTopTags_mbid = api "album.getTopTags"
 
 
 -- | Remove a user's tag from an album.
 --
 -- <http://www.last.fm/api/show/album.removeTag>
-removeTag ∷ Artist → Album → Tag → Request f RequireSign t
-removeTag ar al t = api "album.removeTag" <> artist ar <> album al <> tag t <> post
+removeTag ∷ Request f RequireSign (Artist → Album → Tag → APIKey → SessionKey → Void)
+removeTag = api "album.removeTag" <* post
 
 
 -- | Search for an album by name. Returns album matches sorted by relevance.
@@ -100,8 +101,8 @@ removeTag ar al t = api "album.removeTag" <> artist ar <> album al <> tag t <> p
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/album.search>
-search ∷ Album → Request f Ready t
-search al = api "album.search" <> album al
+search ∷ Request f Ready (Album → APIKey → Void)
+search = api "album.search"
 
 
 -- | Share an album with one or more Last.fm users or other friends.
@@ -109,5 +110,5 @@ search al = api "album.search" <> album al
 -- Optional: 'public', 'message', 'recipient'
 --
 -- <http://www.last.fm/api/show/album.share>
-share ∷ Album → Artist → Recipient → Request f RequireSign t
-share al ar r = api "album.share" <> album al <> artist ar <> recipient r <> post
+share ∷ Request f RequireSign (Album → Artist → Recipient → APIKey → SessionKey → Void)
+share = api "album.share" <* post
