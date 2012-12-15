@@ -1,7 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE PolyKinds #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UnicodeSyntax #-}
 module Network.Lastfm.Internal
@@ -26,7 +25,7 @@ import qualified Data.Text.Lazy as T
 
 
 class Coercing t where
-  coerce ∷ t a b → t c d
+  coerce ∷ t (a ∷ Auth) b → t c d
 
 
 -- | Lastfm API request data type
