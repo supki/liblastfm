@@ -11,6 +11,7 @@ module Network.Lastfm.Internal
   , api, post, get, json, xml
   ) where
 
+import Control.Applicative (Applicative(..))
 import Data.Monoid
 
 import           Data.Aeson (Value, decode)
@@ -80,6 +81,15 @@ instance Monoid (Request f a t) where
 instance Coercing (Request f) where
   coerce q = wrap $ coerce . unwrap q . coerce
   {-# INLINE coerce #-}
+
+instance Functor (Request f a) where
+  fmap _ = coerce
+  {-# INLINE fmap #-}
+
+instance Applicative (Request f a) where
+  pure _ = wrap id
+  f <*> x = coerce f <> coerce x
+  {-# INLINE (<*>) #-}
 
 
 type family Response (f ∷ Format)
