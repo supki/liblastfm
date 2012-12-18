@@ -18,7 +18,7 @@ import qualified Album as Album
 --import qualified Geo as Geo
 --import qualified Group as Group
 --import qualified Library as Library
---import qualified Tag as Tag
+import qualified Tag as Tag
 --import qualified Track as Track
 --import qualified User as User
 --import qualified Venue as Venue
@@ -47,7 +47,7 @@ main =
              --, Geo.noauth
              --, Group.noauth
              --, Library.noauth
-             --, Tag.noauth
+             , Tag.noauth
              --, Track.noauth
              --, User.noauth
              --, Venue.noauth

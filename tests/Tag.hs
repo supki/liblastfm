@@ -2,7 +2,6 @@
 {-# LANGUAGE UnicodeSyntax #-}
 module Tag (noauth) where
 
-import Control.Applicative ((<$>),(<*>))
 import Data.Aeson.Types
 import Network.Lastfm
 import Network.Lastfm.Tag
@@ -28,31 +27,31 @@ noauth =
   ak = "29effec263316a1f8a97f753caaa83e0"
 
   testGetInfo = check gi $
-    getInfo "depressive" <> apiKey ak
+    getInfo <*> tag "depressive" <*> apiKey ak
 
   testGetSimilar = check gs $
-    getSimilar "depressive" <> apiKey ak
+    getSimilar <*> tag "depressive" <*> apiKey ak
 
   testGetTopAlbums = check gta $
-    getTopAlbums "depressive" <> limit 2 <> apiKey ak
+    getTopAlbums <*> tag "depressive" <* limit 2 <*> apiKey ak
 
   testGetTopArtists = check gtar $
-    getTopArtists "depressive" <> limit 3 <> apiKey ak
+    getTopArtists <*> tag "depressive" <* limit 3 <*> apiKey ak
 
   testGetTopTags = check gtt $
-    getTopTags <> apiKey ak
+    getTopTags <*> apiKey ak
 
   testGetTopTracks = check gttr $
-    getTopTracks "depressive" <> limit 2 <> apiKey ak
+    getTopTracks <*> tag "depressive" <* limit 2 <*> apiKey ak
 
   testGetWeeklyArtistChart = check gwac $
-    getWeeklyArtistChart "depressive" <> limit 3 <> apiKey ak
+    getWeeklyArtistChart <*> tag "depressive" <* limit 3 <*> apiKey ak
 
   testGetWeeklyChartList = check gc $
-    getWeeklyChartList "depressive" <> apiKey ak
+    getWeeklyChartList <*> tag "depressive" <*> apiKey ak
 
   testSearch = check se $
-    search "depressive" <> limit 3 <> apiKey ak
+    search <*> tag "depressive" <* limit 3 <*> apiKey ak
 
 
 gi ∷ Value → Parser String
