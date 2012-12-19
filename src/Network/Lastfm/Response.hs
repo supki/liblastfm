@@ -51,7 +51,7 @@ sign s = approve . (<> signature)
 
 
 -- | Send Request and parse Response
-lastfm ∷ Default (R f Ready t) ⇒ Request f Ready t → IO (Response f)
+lastfm ∷ Default (R f Ready Void) ⇒ Request f Ready Void → IO (Response f)
 lastfm (($ def) . unwrap → request) =
   parse request <$> C.withManager (\m → C.parseUrl (render request) >>= \url →
     C.responseBody <$> C.httpLbs (url { C.method = method request, C.responseTimeout = Just 10000000 }) m)

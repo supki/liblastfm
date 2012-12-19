@@ -76,7 +76,7 @@ noauth =
       <*> apiKey ak
 
   testGetEvents_mbid = check ge $
-    getEvents_mbid <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 2
+    getEvents <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 2
       <*> apiKey ak
 
   testGetInfo = check gin $
@@ -84,7 +84,7 @@ noauth =
       <*> apiKey ak
 
   testGetInfo_mbid = check gin $
-    getInfo_mbid <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413"
+    getInfo <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413"
       <*> apiKey ak
 
   testGetPastEvents = check gpe $
@@ -92,7 +92,7 @@ noauth =
       <*> apiKey ak
 
   testGetPastEvents_mbid = check gpe $
-    getPastEvents_mbid <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* autocorrect True
+    getPastEvents <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* autocorrect True
       <*> apiKey ak
 
   testGetPodcast = check gp $
@@ -100,7 +100,7 @@ noauth =
       <*> apiKey ak
 
   testGetPodcast_mbid = check gp $
-    getPodcast_mbid <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413"
+    getPodcast <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413"
       <*> apiKey ak
 
   testGetShouts = check gs $
@@ -108,7 +108,7 @@ noauth =
       <*> apiKey ak
 
   testGetShouts_mbid = check gs $
-    getShouts_mbid <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 5
+    getShouts <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 5
       <*> apiKey ak
 
   testGetSimilar = check gsi $
@@ -116,7 +116,7 @@ noauth =
       <*> apiKey ak
 
   testGetSimilar_mbid = check gsi $
-    getSimilar_mbid <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 3
+    getSimilar <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 3
       <*> apiKey ak
 
   testGetTags = check gt $
@@ -124,7 +124,7 @@ noauth =
       <*> apiKey ak
 
   testGetTags_mbid = check gt $
-    getTags_mbid <*> mbid "cfb3d32e-d095-4d63-946d-9daf06932180" <* user "liblastfm"
+    getTags <*> mbid "cfb3d32e-d095-4d63-946d-9daf06932180" <* user "liblastfm"
       <*> apiKey ak
 
   testGetTopAlbums = check gta $
@@ -132,7 +132,7 @@ noauth =
       <*> apiKey ak
 
   testGetTopAlbums_mbid = check gta $
-    getTopAlbums_mbid <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 3
+    getTopAlbums <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 3
       <*> apiKey ak
 
   testGetTopFans = check gtf $
@@ -140,7 +140,7 @@ noauth =
       <*> apiKey ak
 
   testGetTopFans_mbid = check gtf $
-    getTopFans_mbid <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413"
+    getTopFans <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413"
       <*> apiKey ak
 
   testGetTopTags = check gtt $
@@ -148,7 +148,7 @@ noauth =
       <*> apiKey ak
 
   testGetTopTags_mbid = check gtt $
-    getTopTags_mbid <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413"
+    getTopTags <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413"
       <*> apiKey ak
 
   testGetTopTracks = check gttr $
@@ -156,7 +156,7 @@ noauth =
       <*> apiKey ak
 
   testGetTopTracks_mbid = check gttr $
-    getTopTracks_mbid <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 3
+    getTopTracks <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 3
       <*> apiKey ak
 
   testSearch = check se $

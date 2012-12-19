@@ -76,6 +76,8 @@ newtype Request f a t = Request { unRequest ∷ Dual (Endo (R f a t)) }
 instance Monoid (Request f a t) where
   mempty = Request mempty
   Request s `mappend` Request t = Request $ s `mappend` t
+  {-# INLINE mappend #-}
+
 
 instance Coercing (Request f) where
   coerce q = wrap $ coerce . unwrap q . coerce

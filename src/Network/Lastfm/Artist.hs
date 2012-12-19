@@ -9,12 +9,11 @@
 -- import qualified Network.Lastfm.Artist as Artist
 -- @
 module Network.Lastfm.Artist
-  ( addTags, getCorrection, getEvents, getEvents_mbid, getInfo, getInfo_mbid
-  , getPastEvents, getPastEvents_mbid, getPodcast, getPodcast_mbid, getShouts
-  , getShouts_mbid, getSimilar, getSimilar_mbid, getTags, getTags_mbid
-  , getTopAlbums, getTopAlbums_mbid, getTopFans, getTopFans_mbid, getTopTags
-  , getTopTags_mbid, getTopTracks, getTopTracks_mbid, removeTag, search, share
-  , shout
+  ( addTags, getCorrection, getEvents, getInfo
+  , getPastEvents, getPodcast, getShouts
+  , getSimilar, getTags, getTopAlbums
+  , getTopFans, getTopTags, getTopTracks
+  , removeTag, search, share, shout
   ) where
 
 import Control.Applicative
@@ -38,81 +37,60 @@ getCorrection ∷ Request f Ready (Artist → APIKey → Void)
 getCorrection = api "artist.getCorrection"
 
 
-getEvents ∷ Request f Ready (Artist → APIKey → Void)
-getEvents = api "artist.getEvents"
-
 -- | Get a list of upcoming events for this artist. Easily
 -- integratable into calendars, using the ical standard (see feeds section below).
 --
 -- Optional: 'autocorrect', 'limit', 'pages', 'festivalsonly'
 --
 -- <http://www.last.fm/api/show/artist.getEvents>
-getEvents_mbid ∷ Request f Ready (MBID → APIKey → Void)
-getEvents_mbid = api "artist.getEvents"
+getEvents ∷ ArtistOrMBID t ⇒ Request f Ready (t → APIKey → Void)
+getEvents = api "artist.getEvents"
 
-
-getInfo ∷ Request f Ready (Artist → APIKey → Void)
-getInfo = api "artist.getInfo"
 
 -- | Get the metadata for an artist. Includes biography.
 --
 -- Optional: 'language', 'autocorrect', 'username'
 --
 -- <http://www.last.fm/api/show/artist.getInfo>
-getInfo_mbid ∷ Request f Ready (MBID → APIKey → Void)
-getInfo_mbid = api "artist.getInfo"
+getInfo ∷ ArtistOrMBID t ⇒ Request f Ready (t → APIKey → Void)
+getInfo = api "artist.getInfo"
 
-
-getPastEvents ∷ Request f Ready (Artist → APIKey → Void)
-getPastEvents = api "artist.getPastEvents"
 
 -- | Get a paginated list of all the events this artist has played at in the past.
 --
 -- Optional: 'page', 'autocorrect', 'limit'
 --
 -- <http://www.last.fm/api/show/artist.getPastEvents>
-getPastEvents_mbid ∷ Request f Ready (MBID → APIKey → Void)
-getPastEvents_mbid = api "artist.getPastEvents"
+getPastEvents ∷ ArtistOrMBID t ⇒ Request f Ready (t → APIKey → Void)
+getPastEvents = api "artist.getPastEvents"
 
-
-getPodcast ∷ Request f Ready (Artist → APIKey → Void)
-getPodcast = api "artist.getPodcast"
 
 -- | Get a podcast of free mp3s based on an artist
 --
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/artist.getPodcast>
-getPodcast_mbid ∷ Request f Ready (MBID → APIKey → Void)
-getPodcast_mbid = api "artist.getPodcast"
+getPodcast ∷ ArtistOrMBID t ⇒ Request f Ready (t → APIKey → Void)
+getPodcast = api "artist.getPodcast"
 
-
-getShouts ∷ Request f Ready (Artist → APIKey → Void)
-getShouts = api "artist.getShouts"
 
 -- | Get shouts for this artist. Also available as an rss feed.
 --
 -- Optional:'autocorrect', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/artist.getShouts>
-getShouts_mbid ∷ Request f Ready (MBID → APIKey → Void)
-getShouts_mbid = api "artist.getShouts"
+getShouts ∷ ArtistOrMBID t ⇒ Request f Ready (t → APIKey → Void)
+getShouts = api "artist.getShouts"
 
-
-getSimilar ∷ Request f Ready (Artist → APIKey → Void)
-getSimilar = api "artist.getSimilar"
 
 -- | Get all the artists similar to this artist
 --
 -- Optional: 'limit', 'autocorrect'
 --
 -- <http://www.last.fm/api/show/artist.getSimilar>
-getSimilar_mbid ∷ Request f Ready (MBID → APIKey → Void)
-getSimilar_mbid = api "artist.getSimilar"
+getSimilar ∷ ArtistOrMBID t ⇒ Request f Ready (t → APIKey → Void)
+getSimilar = api "artist.getSimilar"
 
-
-getTags ∷ Request f a (Artist → APIKey → Void)
-getTags = api "artist.getTags"
 
 -- | Get the tags applied by an individual user to an artist on Last.fm.
 -- If accessed as an authenticated service /and/ you don't supply a
@@ -123,56 +101,44 @@ getTags = api "artist.getTags"
 -- Optional: 'user', 'autocorrect'
 --
 -- <http://www.last.fm/api/show/artist.getTags>
-getTags_mbid ∷ Request f a (MBID → APIKey → Void)
-getTags_mbid = api "artist.getTags"
+getTags ∷ ArtistOrMBID t ⇒ Request f a (t → APIKey → Void)
+getTags = api "artist.getTags"
 
-
-getTopAlbums ∷ Request f Ready (Artist → APIKey → Void)
-getTopAlbums = api "artist.getTopAlbums"
 
 -- | Get the top albums for an artist on Last.fm, ordered by popularity.
 --
 -- Optional: 'autocorrect', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/artist.getTopAlbums>
-getTopAlbums_mbid ∷ Request f Ready (MBID → APIKey → Void)
-getTopAlbums_mbid = api "artist.getTopAlbums"
+getTopAlbums ∷ ArtistOrMBID t ⇒ Request f Ready (t → APIKey → Void)
+getTopAlbums = api "artist.getTopAlbums"
 
-
-getTopFans ∷ Request f Ready (Artist → APIKey → Void)
-getTopFans = api "artist.getTopFans"
 
 -- | Get the top fans for an artist on Last.fm, based on listening data.
 --
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/artist.getTopFans>
-getTopFans_mbid ∷ Request f Ready (MBID → APIKey → Void)
-getTopFans_mbid = api "artist.getTopFans"
+getTopFans ∷ ArtistOrMBID t ⇒ Request f Ready (t → APIKey → Void)
+getTopFans = api "artist.getTopFans"
 
-
-getTopTags ∷ Request f Ready (Artist → APIKey → Void)
-getTopTags = api "artist.getTopTags"
 
 -- | Get the top tags for an artist on Last.fm, ordered by popularity.
 --
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/artist.getTopTags>
-getTopTags_mbid ∷ Request f Ready (MBID → APIKey → Void)
-getTopTags_mbid = api "artist.getTopTags"
+getTopTags ∷ ArtistOrMBID t ⇒ Request f Ready (t → APIKey → Void)
+getTopTags = api "artist.getTopTags"
 
-
-getTopTracks ∷ Request f Ready (Artist → APIKey → Void)
-getTopTracks = api "artist.getTopTracks"
 
 -- | Get the top tracks by an artist on Last.fm, ordered by popularity
 --
 -- Optional: 'autocorrect', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/artist.getTopTracks>
-getTopTracks_mbid ∷ Request f Ready (MBID → APIKey → Void)
-getTopTracks_mbid = api "artist.getTopTracks"
+getTopTracks ∷ ArtistOrMBID t ⇒ Request f Ready (t → APIKey → Void)
+getTopTracks = api "artist.getTopTracks"
 
 
 -- | Remove a user's tag from an artist.

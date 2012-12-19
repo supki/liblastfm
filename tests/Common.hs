@@ -4,11 +4,12 @@
 module Common where
 
 import Data.Aeson.Types
+import Data.Void (Void)
 import Network.Lastfm
 import Test.HUnit
 
 
-check ∷ (Value → Parser a) → Request JSON Ready t → Assertion
+check ∷ (Value → Parser a) → Request JSON Ready Void → Assertion
 check p q = do
   r ← lastfm q
   case parse p `fmap` r of
