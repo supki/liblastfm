@@ -22,7 +22,7 @@ import Network.Lastfm.Request
 -- Optional: 'startTimestamp', 'page', 'endTimestamp'
 --
 -- <http://www.last.fm/api/show/user.getArtistTracks>
-getArtistTracks ∷ User → Artist → Request f Ready t
+getArtistTracks ∷ User → Artist → Request f Send t
 getArtistTracks u a = api "user.getArtistTracks" <> user u <> artist a
 
 
@@ -31,7 +31,7 @@ getArtistTracks u a = api "user.getArtistTracks" <> user u <> artist a
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/user.getBannedTracks>
-getBannedTracks ∷ User → Request f Ready t
+getBannedTracks ∷ User → Request f Send t
 getBannedTracks u = api "user.getBannedTracks" <> user u
 
 
@@ -40,7 +40,7 @@ getBannedTracks u = api "user.getBannedTracks" <> user u
 -- Optional: 'page', 'festivalsonly', 'limit'
 --
 -- <http://www.last.fm/api/show/user.getEvents>
-getEvents ∷ User → Request f Ready t
+getEvents ∷ User → Request f Send t
 getEvents u = api "user.getEvents" <> user u
 
 
@@ -49,14 +49,14 @@ getEvents u = api "user.getEvents" <> user u
 -- Optional: 'recenttracks', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/user.getFriends>
-getFriends ∷ User → Request f Ready t
+getFriends ∷ User → Request f Send t
 getFriends u = api "user.getFriends" <> user u
 
 
 -- | Get information about a user profile.
 --
 -- <http://www.last.fm/api/show/user.getInfo>
-getInfo ∷ User → Request f Ready t
+getInfo ∷ User → Request f Send t
 getInfo u = api "user.getInfo" <> user u
 
 
@@ -65,7 +65,7 @@ getInfo u = api "user.getInfo" <> user u
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/user.getLovedTracks>
-getLovedTracks ∷ User → Request f Ready t
+getLovedTracks ∷ User → Request f Send t
 getLovedTracks u = api "user.getLovedTracks" <> user u
 
 
@@ -74,7 +74,7 @@ getLovedTracks u = api "user.getLovedTracks" <> user u
 -- Optional: 'limit'
 --
 -- <http://www.last.fm/api/show/user.getNeighbours>
-getNeighbours ∷ User → Request f Ready t
+getNeighbours ∷ User → Request f Send t
 getNeighbours u = api "user.getNeighbours" <> user u
 
 
@@ -83,7 +83,7 @@ getNeighbours u = api "user.getNeighbours" <> user u
 -- Optional: 'userecs'
 --
 -- <http://www.last.fm/api/show/user.getNewReleases>
-getNewReleases ∷ User → Request f Ready t
+getNewReleases ∷ User → Request f Send t
 getNewReleases u = api "user.getNewReleases" <> user u
 
 
@@ -92,7 +92,7 @@ getNewReleases u = api "user.getNewReleases" <> user u
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/user.getPastEvents>
-getPastEvents ∷ User → Request f Ready t
+getPastEvents ∷ User → Request f Send t
 getPastEvents u = api "user.getPastEvents" <> user u
 
 
@@ -101,14 +101,14 @@ getPastEvents u = api "user.getPastEvents" <> user u
 -- Optional: 'taggingtype', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/user.getPersonalTags>
-getPersonalTags ∷ User → Tag → TaggingType → Request f Ready t
+getPersonalTags ∷ User → Tag → TaggingType → Request f Send t
 getPersonalTags u t tt = api "user.getPersonalTags" <> user u <> tag t <> taggingType tt
 
 
 -- | Get a list of a user's playlists on Last.fm.
 --
 -- <http://www.last.fm/api/show/user.getPlaylists>
-getPlaylists ∷ User → Request f Ready t
+getPlaylists ∷ User → Request f Send t
 getPlaylists u = api "user.getPlaylists" <> user u
 
 
@@ -117,7 +117,7 @@ getPlaylists u = api "user.getPlaylists" <> user u
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/user.getRecentStations>
-getRecentStations ∷ User → Request f RequireSign t
+getRecentStations ∷ User → Request f Sign t
 getRecentStations u = api "user.getRecentStations" <> user u
 
 
@@ -126,7 +126,7 @@ getRecentStations u = api "user.getRecentStations" <> user u
 -- Optional: 'limit', 'page', 'from', 'extended', 'to'
 --
 -- <http://www.last.fm/api/show/user.getRecentTracks>
-getRecentTracks ∷ User → Request f Ready t
+getRecentTracks ∷ User → Request f Send t
 getRecentTracks u = api "user.getRecentTracks" <> user u
 
 
@@ -135,7 +135,7 @@ getRecentTracks u = api "user.getRecentTracks" <> user u
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/user.getRecommendedArtists>
-getRecommendedArtists ∷ Request f RequireSign t
+getRecommendedArtists ∷ Request f Sign t
 getRecommendedArtists = api "user.getRecommendedArtists"
 
 
@@ -144,7 +144,7 @@ getRecommendedArtists = api "user.getRecommendedArtists"
 -- Optional: 'limit', 'page', 'latitude', 'longitude', 'festivalsonly', 'country'
 --
 -- <http://www.last.fm/api/show/user.getRecommendedEvents>
-getRecommendedEvents ∷ Request f RequireSign t
+getRecommendedEvents ∷ Request f Sign t
 getRecommendedEvents = api "user.getRecommendedEvents"
 
 
@@ -153,7 +153,7 @@ getRecommendedEvents = api "user.getRecommendedEvents"
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/user.getShouts>
-getShouts ∷ User → Request f Ready t
+getShouts ∷ User → Request f Send t
 getShouts u = api "user.getShouts" <> user u
 
 
@@ -162,7 +162,7 @@ getShouts u = api "user.getShouts" <> user u
 -- Optional: 'period', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/user.getTopAlbums>
-getTopAlbums ∷ User → Request f Ready t
+getTopAlbums ∷ User → Request f Send t
 getTopAlbums u = api "user.getTopAlbums" <> user u
 
 
@@ -171,7 +171,7 @@ getTopAlbums u = api "user.getTopAlbums" <> user u
 -- Optional: 'period', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/user.getTopArtists>
-getTopArtists ∷ User → Request f Ready t
+getTopArtists ∷ User → Request f Send t
 getTopArtists u = api "user.getTopArtists" <> user u
 
 
@@ -180,7 +180,7 @@ getTopArtists u = api "user.getTopArtists" <> user u
 -- Optional: 'limit'
 --
 -- <http://www.last.fm/api/show/user.getTopTags>
-getTopTags ∷ User → Request f Ready t
+getTopTags ∷ User → Request f Send t
 getTopTags u = api "user.getTopTags" <> user u
 
 
@@ -189,7 +189,7 @@ getTopTags u = api "user.getTopTags" <> user u
 -- Optional: 'period', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/user.getTopTracks>
-getTopTracks ∷ User → Request f Ready t
+getTopTracks ∷ User → Request f Send t
 getTopTracks u = api "user.getTopTracks" <> user u
 
 
@@ -198,7 +198,7 @@ getTopTracks u = api "user.getTopTracks" <> user u
 -- Optional: 'from', 'to'
 --
 -- <http://www.last.fm/api/show/user.getWeeklyAlbumChart>
-getWeeklyAlbumChart ∷ User → Request f Ready t
+getWeeklyAlbumChart ∷ User → Request f Send t
 getWeeklyAlbumChart u = api "user.getWeeklyAlbumChart" <> user u
 
 
@@ -207,14 +207,14 @@ getWeeklyAlbumChart u = api "user.getWeeklyAlbumChart" <> user u
 -- Optional: 'from', 'to'
 --
 -- <http://www.last.fm/api/show/user.getWeeklyArtistChart>
-getWeeklyArtistChart ∷ User → Request f Ready t
+getWeeklyArtistChart ∷ User → Request f Send t
 getWeeklyArtistChart u = api "user.getWeeklyArtistChart" <> user u
 
 
 -- | Get a list of available charts for this user, expressed as date ranges which can be sent to the chart services.
 --
 -- <http://www.last.fm/api/show/user.getWeeklyChartList>
-getWeeklyChartList ∷ User → Request f Ready t
+getWeeklyChartList ∷ User → Request f Send t
 getWeeklyChartList u = api "user.getWeeklyChartList" <> user u
 
 
@@ -223,12 +223,12 @@ getWeeklyChartList u = api "user.getWeeklyChartList" <> user u
 -- Optional: 'from', 'to'
 --
 -- <http://www.last.fm/api/show/user.getWeeklyTrackChart>
-getWeeklyTrackChart ∷ User → Request f Ready t
+getWeeklyTrackChart ∷ User → Request f Send t
 getWeeklyTrackChart u = api "user.getWeeklyTrackChart" <> user u
 
 
 -- | Shout on this user's shoutbox
 --
 -- <http://www.last.fm/api/show/user.shout>
-shout ∷ User → Message → Request f RequireSign t
+shout ∷ User → Message → Request f Sign t
 shout u m = api "user.shout" <> user u <> message m <> post

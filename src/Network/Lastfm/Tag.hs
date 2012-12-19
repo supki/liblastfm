@@ -13,8 +13,6 @@ module Network.Lastfm.Tag
   , getWeeklyArtistChart, getWeeklyChartList, search
   ) where
 
-import Data.Void (Void)
-
 import Network.Lastfm.Request
 
 
@@ -23,14 +21,14 @@ import Network.Lastfm.Request
 -- Optional: language
 --
 -- <http://www.last.fm/api/show/tag.getInfo>
-getInfo ∷ Request f Ready (Tag → APIKey → Void)
+getInfo ∷ Request f Send (Tag → APIKey → Ready)
 getInfo = api "tag.getInfo"
 
 
 -- | Search for tags similar to this one. Returns tags ranked by similarity, based on listening data.
 --
 -- <http://www.last.fm/api/show/tag.getSimilar>
-getSimilar ∷ Request f Ready (Tag → APIKey → Void)
+getSimilar ∷ Request f Send (Tag → APIKey → Ready)
 getSimilar = api "tag.getSimilar"
 
 
@@ -39,7 +37,7 @@ getSimilar = api "tag.getSimilar"
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/tag.getTopAlbums>
-getTopAlbums ∷ Request f Ready (Tag → APIKey → Void)
+getTopAlbums ∷ Request f Send (Tag → APIKey → Ready)
 getTopAlbums = api "tag.getTopAlbums"
 
 
@@ -48,14 +46,14 @@ getTopAlbums = api "tag.getTopAlbums"
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/tag.getTopArtists>
-getTopArtists ∷ Request f Ready (Tag → APIKey → Void)
+getTopArtists ∷ Request f Send (Tag → APIKey → Ready)
 getTopArtists = api "tag.getTopArtists"
 
 
 -- | Fetches the top global tags on Last.fm, sorted by popularity (number of times used)
 --
 -- <http://www.last.fm/api/show/tag.getTopTags>
-getTopTags ∷ Request f Ready (APIKey → Void)
+getTopTags ∷ Request f Send (APIKey → Ready)
 getTopTags = api "tag.getTopTags"
 
 
@@ -64,7 +62,7 @@ getTopTags = api "tag.getTopTags"
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/tag.getTopTracks>
-getTopTracks ∷ Request f Ready (Tag → APIKey → Void)
+getTopTracks ∷ Request f Send (Tag → APIKey → Ready)
 getTopTracks = api "tag.getTopTracks"
 
 
@@ -74,7 +72,7 @@ getTopTracks = api "tag.getTopTracks"
 -- Optional: 'from', 'to', 'limit'
 --
 -- <http://www.last.fm/api/show/tag.getWeeklyArtistChart>
-getWeeklyArtistChart ∷ Request f Ready (Tag → APIKey → Void)
+getWeeklyArtistChart ∷ Request f Send (Tag → APIKey → Ready)
 getWeeklyArtistChart = api "tag.getWeeklyArtistChart"
 
 
@@ -82,7 +80,7 @@ getWeeklyArtistChart = api "tag.getWeeklyArtistChart"
 -- date ranges which can be sent to the chart services.
 --
 -- <http://www.last.fm/api/show/tag.getWeeklyChartList>
-getWeeklyChartList ∷ Request f Ready (Tag → APIKey → Void)
+getWeeklyChartList ∷ Request f Send (Tag → APIKey → Ready)
 getWeeklyChartList = api "tag.getWeeklyChartList"
 
 
@@ -91,5 +89,5 @@ getWeeklyChartList = api "tag.getWeeklyChartList"
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/tag.search>
-search ∷ Request f Ready (Tag → APIKey → Void)
+search ∷ Request f Send (Tag → APIKey → Ready)
 search = api "tag.search"

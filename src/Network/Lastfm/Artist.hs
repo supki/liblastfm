@@ -17,7 +17,6 @@ module Network.Lastfm.Artist
   ) where
 
 import Control.Applicative
-import Data.Void (Void)
 
 import Network.Lastfm.Request
 
@@ -25,7 +24,7 @@ import Network.Lastfm.Request
 -- | Tag an artist with one or more user supplied tags.
 --
 -- <http://www.last.fm/api/show/artist.addTags>
-addTags ∷ Request f RequireSign (Artist → [Tag] → APIKey → SessionKey → Void)
+addTags ∷ Request f Sign (Artist → [Tag] → APIKey → SessionKey → Ready)
 addTags = api "artist.addTags" <* post
 
 
@@ -33,7 +32,7 @@ addTags = api "artist.addTags" <* post
 -- supplied artist has a correction to a canonical artist
 --
 -- <http://www.last.fm/api/show/artist.getCorrection>
-getCorrection ∷ Request f Ready (Artist → APIKey → Void)
+getCorrection ∷ Request f Send (Artist → APIKey → Ready)
 getCorrection = api "artist.getCorrection"
 
 
@@ -43,7 +42,7 @@ getCorrection = api "artist.getCorrection"
 -- Optional: 'autocorrect', 'limit', 'pages', 'festivalsonly'
 --
 -- <http://www.last.fm/api/show/artist.getEvents>
-getEvents ∷ ArtistOrMBID t ⇒ Request f Ready (t → APIKey → Void)
+getEvents ∷ ArtistOrMBID t ⇒ Request f Send (t → APIKey → Ready)
 getEvents = api "artist.getEvents"
 
 
@@ -52,7 +51,7 @@ getEvents = api "artist.getEvents"
 -- Optional: 'language', 'autocorrect', 'username'
 --
 -- <http://www.last.fm/api/show/artist.getInfo>
-getInfo ∷ ArtistOrMBID t ⇒ Request f Ready (t → APIKey → Void)
+getInfo ∷ ArtistOrMBID t ⇒ Request f Send (t → APIKey → Ready)
 getInfo = api "artist.getInfo"
 
 
@@ -61,7 +60,7 @@ getInfo = api "artist.getInfo"
 -- Optional: 'page', 'autocorrect', 'limit'
 --
 -- <http://www.last.fm/api/show/artist.getPastEvents>
-getPastEvents ∷ ArtistOrMBID t ⇒ Request f Ready (t → APIKey → Void)
+getPastEvents ∷ ArtistOrMBID t ⇒ Request f Send (t → APIKey → Ready)
 getPastEvents = api "artist.getPastEvents"
 
 
@@ -70,7 +69,7 @@ getPastEvents = api "artist.getPastEvents"
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/artist.getPodcast>
-getPodcast ∷ ArtistOrMBID t ⇒ Request f Ready (t → APIKey → Void)
+getPodcast ∷ ArtistOrMBID t ⇒ Request f Send (t → APIKey → Ready)
 getPodcast = api "artist.getPodcast"
 
 
@@ -79,7 +78,7 @@ getPodcast = api "artist.getPodcast"
 -- Optional:'autocorrect', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/artist.getShouts>
-getShouts ∷ ArtistOrMBID t ⇒ Request f Ready (t → APIKey → Void)
+getShouts ∷ ArtistOrMBID t ⇒ Request f Send (t → APIKey → Ready)
 getShouts = api "artist.getShouts"
 
 
@@ -88,7 +87,7 @@ getShouts = api "artist.getShouts"
 -- Optional: 'limit', 'autocorrect'
 --
 -- <http://www.last.fm/api/show/artist.getSimilar>
-getSimilar ∷ ArtistOrMBID t ⇒ Request f Ready (t → APIKey → Void)
+getSimilar ∷ ArtistOrMBID t ⇒ Request f Send (t → APIKey → Ready)
 getSimilar = api "artist.getSimilar"
 
 
@@ -101,7 +100,7 @@ getSimilar = api "artist.getSimilar"
 -- Optional: 'user', 'autocorrect'
 --
 -- <http://www.last.fm/api/show/artist.getTags>
-getTags ∷ ArtistOrMBID t ⇒ Request f a (t → APIKey → Void)
+getTags ∷ ArtistOrMBID t ⇒ Request f a (t → APIKey → Ready)
 getTags = api "artist.getTags"
 
 
@@ -110,7 +109,7 @@ getTags = api "artist.getTags"
 -- Optional: 'autocorrect', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/artist.getTopAlbums>
-getTopAlbums ∷ ArtistOrMBID t ⇒ Request f Ready (t → APIKey → Void)
+getTopAlbums ∷ ArtistOrMBID t ⇒ Request f Send (t → APIKey → Ready)
 getTopAlbums = api "artist.getTopAlbums"
 
 
@@ -119,7 +118,7 @@ getTopAlbums = api "artist.getTopAlbums"
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/artist.getTopFans>
-getTopFans ∷ ArtistOrMBID t ⇒ Request f Ready (t → APIKey → Void)
+getTopFans ∷ ArtistOrMBID t ⇒ Request f Send (t → APIKey → Ready)
 getTopFans = api "artist.getTopFans"
 
 
@@ -128,7 +127,7 @@ getTopFans = api "artist.getTopFans"
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/artist.getTopTags>
-getTopTags ∷ ArtistOrMBID t ⇒ Request f Ready (t → APIKey → Void)
+getTopTags ∷ ArtistOrMBID t ⇒ Request f Send (t → APIKey → Ready)
 getTopTags = api "artist.getTopTags"
 
 
@@ -137,14 +136,14 @@ getTopTags = api "artist.getTopTags"
 -- Optional: 'autocorrect', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/artist.getTopTracks>
-getTopTracks ∷ ArtistOrMBID t ⇒ Request f Ready (t → APIKey → Void)
+getTopTracks ∷ ArtistOrMBID t ⇒ Request f Send (t → APIKey → Ready)
 getTopTracks = api "artist.getTopTracks"
 
 
 -- | Remove a user's tag from an artist.
 --
 -- <http://www.last.fm/api/show/artist.removeTag>
-removeTag ∷ Request f RequireSign (Artist → Tag → APIKey → SessionKey → Void)
+removeTag ∷ Request f Sign (Artist → Tag → APIKey → SessionKey → Ready)
 removeTag = api "artist.removeTag" <* post
 
 
@@ -153,7 +152,7 @@ removeTag = api "artist.removeTag" <* post
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/artist.search>
-search ∷ Request f Ready (Artist → APIKey → Void)
+search ∷ Request f Send (Artist → APIKey → Ready)
 search = api "artist.search"
 
 
@@ -162,12 +161,12 @@ search = api "artist.search"
 -- Optional: 'message', 'public'
 --
 -- <http://www.last.fm/api/show/artist.share>
-share ∷ Request f RequireSign (Artist → Recipient → APIKey → SessionKey → Void)
+share ∷ Request f Sign (Artist → Recipient → APIKey → SessionKey → Ready)
 share = api "artist.share" <* post
 
 
 -- | Shout in this artist's shoutbox
 --
 -- <http://www.last.fm/api/show/artist.shout>
-shout ∷ Request f RequireSign (Artist → Message → APIKey → SessionKey → Void)
+shout ∷ Request f Sign (Artist → Message → APIKey → SessionKey → Ready)
 shout = api "artist.shout" <* post

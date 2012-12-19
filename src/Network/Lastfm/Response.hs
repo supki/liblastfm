@@ -19,12 +19,12 @@ import           Data.Default (Default(..))
 import           Data.Digest.Pure.MD5 (md5)
 import qualified Data.Map as M
 import           Data.Text.Lazy (Text)
-import           Data.Void (Void)
 import qualified Data.Text.Lazy as T
 import qualified Data.Text.Lazy.Encoding as T
 import qualified Network.HTTP.Conduit as C
 
 import Network.Lastfm.Internal
+import Network.Lastfm.Request
 
 
 -- $sign
@@ -41,7 +41,7 @@ type Secret = Text
 
 
 -- | Sign 'Request' with 'Secret'
-sign ∷ Secret → Request f RequireSign Void → Request f Ready Void
+sign ∷ Secret → Request f Sign Ready → Request f Send Ready
 sign s = approve . (<> signature)
  where
   signature = wrap $ \r@R { query = q } →
@@ -51,12 +51,12 @@ sign s = approve . (<> signature)
 
 
 -- | Send Request and parse Response
-lastfm ∷ Default (R f Ready Void) ⇒ Request f Ready Void → IO (Response f)
+lastfm ∷ Default (R f Send Ready) ⇒ Request f Send Ready → IO (Response f)
 lastfm (($ def) . unwrap → request) =
   parse request <$> C.withManager (\m → C.parseUrl (render request) >>= \url →
     C.responseBody <$> C.httpLbs (url { C.method = method request, C.responseTimeout = Just 10000000 }) m)
 
 
-approve ∷ Request f RequireSign Void → Request f Ready Void
+approve ∷ Request f Sign Ready → Request f Send Ready
 approve = coerce
 {-# INLINE approve #-}

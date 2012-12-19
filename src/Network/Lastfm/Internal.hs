@@ -45,8 +45,8 @@ data Format = JSON | XML
 
 -- | Authentication method
 data Auth =
-    Ready       -- ^ Public API. Doesn't require anything special besides API key
-  | RequireSign -- ^ Private API. Requires Session key and Secret as well as API key
+    Send -- ^ Public API. Doesn't require anything special besides API key
+  | Sign -- ^ Private API. Requires Session key and Secret as well as API key
 
 instance Coercing (R f) where
   coerce R { host = h, method = m, query = q, parse = p } = R { host = h, method = m, query = q, parse = p }

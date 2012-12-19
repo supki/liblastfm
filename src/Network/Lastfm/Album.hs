@@ -14,7 +14,6 @@ module Network.Lastfm.Album
   ) where
 
 import Control.Applicative
-import Data.Void (Void)
 
 import Network.Lastfm.Request
 
@@ -22,7 +21,7 @@ import Network.Lastfm.Request
 -- | Tag an album using a list of user supplied tags.
 --
 -- <http://www.last.fm/api/show/album.addTags>
-addTags ∷ Request f RequireSign (Artist → Album → [Tag] → APIKey → SessionKey → Void)
+addTags ∷ Request f Sign (Artist → Album → [Tag] → APIKey → SessionKey → Ready)
 addTags = api "album.addTags" <* post
 
 
@@ -32,7 +31,7 @@ addTags = api "album.addTags" <* post
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/album.getBuylinks>
-getBuyLinks ∷ ArtistAlbumOrMBID t ⇒ Request f Ready (Country → t → APIKey → Void)
+getBuyLinks ∷ ArtistAlbumOrMBID t ⇒ Request f Send (Country → t → APIKey → Ready)
 getBuyLinks = api "album.getBuyLinks"
 
 
@@ -42,7 +41,7 @@ getBuyLinks = api "album.getBuyLinks"
 -- Optional: 'autocorrect', 'username', 'language'
 --
 -- <http://www.last.fm/api/show/album.getInfo>
-getInfo ∷ ArtistAlbumOrMBID t ⇒ Request f Ready (t → APIKey → Void)
+getInfo ∷ ArtistAlbumOrMBID t ⇒ Request f Send (t → APIKey → Ready)
 getInfo = api "album.getInfo"
 
 
@@ -51,7 +50,7 @@ getInfo = api "album.getInfo"
 -- Optional: 'autocorrect', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/album.getShouts>
-getShouts ∷ ArtistAlbumOrMBID t ⇒ Request f Ready (t → APIKey → Void)
+getShouts ∷ ArtistAlbumOrMBID t ⇒ Request f Send (t → APIKey → Ready)
 getShouts = api "album.getShouts"
 
 
@@ -60,7 +59,7 @@ getShouts = api "album.getShouts"
 -- Optional: 'autocorrect', 'user'
 --
 -- <http://www.last.fm/api/show/album.getTags>
-getTags ∷ ArtistAlbumOrMBID t ⇒ Request f a (t → APIKey → Void)
+getTags ∷ ArtistAlbumOrMBID t ⇒ Request f a (t → APIKey → Ready)
 getTags = api "album.getTags"
 
 
@@ -69,14 +68,14 @@ getTags = api "album.getTags"
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/album.getTopTags>
-getTopTags ∷ ArtistAlbumOrMBID t ⇒ Request f Ready (t → APIKey → Void)
+getTopTags ∷ ArtistAlbumOrMBID t ⇒ Request f Send (t → APIKey → Ready)
 getTopTags = api "album.getTopTags"
 
 
 -- | Remove a user's tag from an album.
 --
 -- <http://www.last.fm/api/show/album.removeTag>
-removeTag ∷ Request f RequireSign (Artist → Album → Tag → APIKey → SessionKey → Void)
+removeTag ∷ Request f Sign (Artist → Album → Tag → APIKey → SessionKey → Ready)
 removeTag = api "album.removeTag" <* post
 
 
@@ -85,7 +84,7 @@ removeTag = api "album.removeTag" <* post
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/album.search>
-search ∷ Request f Ready (Album → APIKey → Void)
+search ∷ Request f Send (Album → APIKey → Ready)
 search = api "album.search"
 
 
@@ -94,5 +93,5 @@ search = api "album.search"
 -- Optional: 'public', 'message', 'recipient'
 --
 -- <http://www.last.fm/api/show/album.share>
-share ∷ Request f RequireSign (Album → Artist → Recipient → APIKey → SessionKey → Void)
+share ∷ Request f Sign (Album → Artist → Recipient → APIKey → SessionKey → Ready)
 share = api "album.share" <* post

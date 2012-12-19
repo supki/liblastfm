@@ -8,7 +8,7 @@ module Network.Lastfm.Request
   ( -- * Request
     Request, R, Auth(..), Format(..), Response
     -- * Request major parameters
-  , api, post, get, json, xml, APIKey, apiKey, SessionKey, sessionKey
+  , api, post, get, json, xml, Ready, APIKey, apiKey, SessionKey, sessionKey
     -- * Request minor parameters
   , ArtistAlbumOrMBID, ArtistOrMBID
   , Token, token, Callback, callback
@@ -53,6 +53,7 @@ instance ArtistOrMBID MBID
 instance ArtistOrMBID Artist
 
 
+data Ready
 data APIKey
 data SessionKey
 
@@ -64,7 +65,7 @@ apiKey = add "api_key"
 
 
 -- | Change request session key
-sessionKey ∷ Text → Request f RequireSign SessionKey
+sessionKey ∷ Text → Request f Sign SessionKey
 sessionKey = add "sk"
 {-# INLINE sessionKey #-}
 

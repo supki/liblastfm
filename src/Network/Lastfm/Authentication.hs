@@ -20,26 +20,25 @@ module Network.Lastfm.Authentication
   ) where
 
 import Data.Monoid
-import Data.Void (Void)
 
 import Network.Lastfm.Internal
 import Network.Lastfm.Request
 
 
 -- | Get authorization token
-getToken ∷ Request f Ready (APIKey → Void)
+getToken ∷ Request f Send (APIKey → Ready)
 getToken = api "auth.getToken"
 {-# INLINE getToken #-}
 
 
 -- | Get session key
-getMobileSession ∷ Request f RequireSign (Username → Password → APIKey → Void)
+getMobileSession ∷ Request f Sign (Username → Password → APIKey → Ready)
 getMobileSession = api "auth.getMobileSession"
 {-# INLINE getMobileSession #-}
 
 
 -- | Get session key
-getSession ∷ Request f RequireSign (Token → APIKey → Void)
+getSession ∷ Request f Sign (Token → APIKey → Ready)
 getSession = api "auth.getSession"
 {-# INLINE getSession #-}
 

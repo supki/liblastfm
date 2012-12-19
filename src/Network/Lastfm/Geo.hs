@@ -15,8 +15,6 @@ module Network.Lastfm.Geo
   , getTopArtists, getTopTracks
   ) where
 
-import Data.Void (Void)
-
 import Network.Lastfm.Request
 
 
@@ -25,7 +23,7 @@ import Network.Lastfm.Request
 -- Optional: 'longitude', 'latitude', 'location', 'distance', 'page', 'tag', 'festivalsonly', 'limit'
 --
 -- <http://www.last.fm/api/show/geo.getEvents>
-getEvents ∷ Request f Ready (APIKey → Void)
+getEvents ∷ Request f Send (APIKey → Ready)
 getEvents = api "geo.getEvents"
 
 
@@ -34,7 +32,7 @@ getEvents = api "geo.getEvents"
 -- Optional: 'start', 'end', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/geo.getMetroArtistChart>
-getMetroArtistChart ∷ Request f Ready (Metro → Country → APIKey → Void)
+getMetroArtistChart ∷ Request f Send (Metro → Country → APIKey → Ready)
 getMetroArtistChart = api "geo.getMetroArtistChart"
 
 
@@ -43,7 +41,7 @@ getMetroArtistChart = api "geo.getMetroArtistChart"
 -- Optional: 'start', 'end', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/geo.getMetroHypeArtistChart>
-getMetroHypeArtistChart ∷ Request f Ready (Metro → Country → APIKey → Void)
+getMetroHypeArtistChart ∷ Request f Send (Metro → Country → APIKey → Ready)
 getMetroHypeArtistChart = api "geo.getMetroHypeArtistChart"
 
 
@@ -52,7 +50,7 @@ getMetroHypeArtistChart = api "geo.getMetroHypeArtistChart"
 -- Optional: 'start', 'end', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/geo.getMetroHypeTrackChart>
-getMetroHypeTrackChart ∷ Request f Ready (Metro → Country → APIKey → Void)
+getMetroHypeTrackChart ∷ Request f Send (Metro → Country → APIKey → Ready)
 getMetroHypeTrackChart = api "geo.getMetroHypeTrackChart"
 
 
@@ -61,7 +59,7 @@ getMetroHypeTrackChart = api "geo.getMetroHypeTrackChart"
 -- Optional: 'start', 'end', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/geo.getMetroTrackChart>
-getMetroTrackChart ∷ Request f Ready (Metro → Country → APIKey → Void)
+getMetroTrackChart ∷ Request f Send (Metro → Country → APIKey → Ready)
 getMetroTrackChart = api "geo.getMetroTrackChart"
 
 
@@ -70,7 +68,7 @@ getMetroTrackChart = api "geo.getMetroTrackChart"
 -- Optional: 'start', 'end', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/geo.getMetroUniqueArtistChart>
-getMetroUniqueArtistChart ∷ Request f Ready (Metro → Country → APIKey → Void)
+getMetroUniqueArtistChart ∷ Request f Send (Metro → Country → APIKey → Ready)
 getMetroUniqueArtistChart = api "geo.getMetroUniqueArtistChart"
 
 
@@ -79,7 +77,7 @@ getMetroUniqueArtistChart = api "geo.getMetroUniqueArtistChart"
 -- Optional: 'start', 'end', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/geo.getMetroUniqueTrackChart>
-getMetroUniqueTrackChart ∷ Request f Ready (Metro → Country → APIKey → Void)
+getMetroUniqueTrackChart ∷ Request f Send (Metro → Country → APIKey → Ready)
 getMetroUniqueTrackChart = api "geo.getMetroUniqueTrackChart"
 
 
@@ -87,7 +85,7 @@ getMetroUniqueTrackChart = api "geo.getMetroUniqueTrackChart"
 -- expressed as date ranges which can be sent to the chart services.
 --
 -- <http://www.last.fm/api/show/geo.getMetroWeeklyChartlist>
-getMetroWeeklyChartlist ∷ Request f Ready (Metro → APIKey → Void)
+getMetroWeeklyChartlist ∷ Request f Send (Metro → APIKey → Ready)
 getMetroWeeklyChartlist = api "geo.getMetroWeeklyChartlist"
 
 
@@ -96,7 +94,7 @@ getMetroWeeklyChartlist = api "geo.getMetroWeeklyChartlist"
 -- Optional: 'country'
 --
 -- <http://www.last.fm/api/show/geo.getMetros>
-getMetros ∷ Request f Ready (APIKey → Void)
+getMetros ∷ Request f Send (APIKey → Ready)
 getMetros = api "geo.getMetros"
 
 
@@ -105,7 +103,7 @@ getMetros = api "geo.getMetros"
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/geo.getTopArtists>
-getTopArtists ∷ Request f Ready (Country → APIKey → Void)
+getTopArtists ∷ Request f Send (Country → APIKey → Ready)
 getTopArtists = api "geo.getTopArtists"
 
 
@@ -114,5 +112,5 @@ getTopArtists = api "geo.getTopArtists"
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/geo.getTopTracks>
-getTopTracks ∷ Request f Ready (Country → APIKey → Void)
+getTopTracks ∷ Request f Send (Country → APIKey → Ready)
 getTopTracks = api "geo.getTopTracks"

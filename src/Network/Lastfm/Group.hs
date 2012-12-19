@@ -12,14 +12,13 @@ module Network.Lastfm.Group
   ( getHype, getMembers, getWeeklyAlbumChart, getWeeklyArtistChart, getWeeklyChartList, getWeeklyTrackChart
   ) where
 
-import Data.Void (Void)
 import Network.Lastfm.Request
 
 
 -- | Get the hype list for a group
 --
 -- <http://www.last.fm/api/show/group.getHype>
-getHype ∷ Request f Ready (Group → APIKey → Void)
+getHype ∷ Request f Send (Group → APIKey → Ready)
 getHype = api "group.getHype"
 
 
@@ -28,7 +27,7 @@ getHype = api "group.getHype"
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/group.getMembers>
-getMembers ∷ Request f Ready (Group → APIKey → Void)
+getMembers ∷ Request f Send (Group → APIKey → Ready)
 getMembers = api "group.getMembers"
 
 
@@ -38,7 +37,7 @@ getMembers = api "group.getMembers"
 -- Optional: 'from', 'to'
 --
 -- <http://www.last.fm/api/show/group.getWeeklyAlbumChart>
-getWeeklyAlbumChart ∷ Request f Ready (Group → APIKey → Void)
+getWeeklyAlbumChart ∷ Request f Send (Group → APIKey → Ready)
 getWeeklyAlbumChart = api "group.getWeeklyAlbumChart"
 
 
@@ -48,7 +47,7 @@ getWeeklyAlbumChart = api "group.getWeeklyAlbumChart"
 -- Optional: 'from', 'to'
 --
 -- <http://www.last.fm/api/show/group.getWeeklyArtistChart>
-getWeeklyArtistChart ∷ Request f Ready (Group → APIKey → Void)
+getWeeklyArtistChart ∷ Request f Send (Group → APIKey → Ready)
 getWeeklyArtistChart = api "group.getWeeklyArtistChart"
 
 
@@ -56,7 +55,7 @@ getWeeklyArtistChart = api "group.getWeeklyArtistChart"
 -- date ranges which can be sent to the chart services.
 --
 -- <http://www.last.fm/api/show/group.getWeeklyChartList>
-getWeeklyChartList ∷ Request f Ready (Group → APIKey → Void)
+getWeeklyChartList ∷ Request f Send (Group → APIKey → Ready)
 getWeeklyChartList = api "group.getWeeklyChartList"
 
 
@@ -66,5 +65,5 @@ getWeeklyChartList = api "group.getWeeklyChartList"
 -- Optional: 'from', 'to'
 --
 -- <http://www.last.fm/api/show/group.getWeeklyTrackChart>
-getWeeklyTrackChart ∷ Request f Ready (Group → APIKey → Void)
+getWeeklyTrackChart ∷ Request f Send (Group → APIKey → Ready)
 getWeeklyTrackChart = api "group.getWeeklyTrackChart"

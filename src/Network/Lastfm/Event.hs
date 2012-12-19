@@ -13,7 +13,6 @@ module Network.Lastfm.Event
   ) where
 
 import Control.Applicative
-import Data.Void (Void)
 
 import Network.Lastfm.Request
 
@@ -21,7 +20,7 @@ import Network.Lastfm.Request
 -- | Set a user's attendance status for an event.
 --
 -- <http://www.last.fm/api/show/event.attend>
-attend ∷ Request f RequireSign (Event → Status → APIKey → SessionKey → Void)
+attend ∷ Request f Sign (Event → Status → APIKey → SessionKey → Ready)
 attend = api "event.attend" <* post
 
 
@@ -30,14 +29,14 @@ attend = api "event.attend" <* post
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/event.getAttendees>
-getAttendees ∷ Request f Ready (Event → APIKey → Void)
+getAttendees ∷ Request f Send (Event → APIKey → Ready)
 getAttendees = api "event.getAttendees"
 
 
 -- | Get the metadata for an event on Last.fm. Includes attendance and lineup information.
 --
 -- <http://www.last.fm/api/show/event.getInfo>
-getInfo ∷ Request f Ready (Event → APIKey → Void)
+getInfo ∷ Request f Send (Event → APIKey → Ready)
 getInfo = api "event.getInfo"
 
 
@@ -46,7 +45,7 @@ getInfo = api "event.getInfo"
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/event.getShouts>
-getShouts ∷ Request f Ready (Event → APIKey → Void)
+getShouts ∷ Request f Send (Event → APIKey → Ready)
 getShouts = api "event.getShouts"
 
 
@@ -55,12 +54,12 @@ getShouts = api "event.getShouts"
 -- Optional: 'public', 'message'
 --
 -- <http://www.last.fm/api/show/event.share>
-share ∷ Request f RequireSign (Event → Recipient → APIKey → SessionKey → Void)
+share ∷ Request f Sign (Event → Recipient → APIKey → SessionKey → Ready)
 share = api "event.share" <* post
 
 
 -- | Shout in this event's shoutbox
 --
 -- <http://www.last.fm/api/show/event.shout>
-shout ∷ Request f RequireSign (Event → Message → APIKey → SessionKey → Void)
+shout ∷ Request f Sign (Event → Message → APIKey → SessionKey → Ready)
 shout = api "event.shout" <* post
