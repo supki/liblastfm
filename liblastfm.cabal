@@ -26,9 +26,9 @@ library
   exposed-modules: Network.Lastfm
                    Network.Lastfm.Authentication
                    Network.Lastfm.Album
-                   --Network.Lastfm.Artist
-                   --Network.Lastfm.Chart
-                   --Network.Lastfm.Event
+                   Network.Lastfm.Artist
+                   Network.Lastfm.Chart
+                   Network.Lastfm.Event
                    --Network.Lastfm.Geo
                    --Network.Lastfm.Group
                    --Network.Lastfm.Library

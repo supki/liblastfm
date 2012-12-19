@@ -19,10 +19,12 @@ auth ak sk s =
   ]
  where
   testAttend = check ok . sign s $
-    attend 3142549 Attending <> apiKey ak <> sessionKey sk
+    attend <*> event 3142549 <*> status Attending <*>
+      apiKey ak <*> sessionKey sk
 
   testShare = check ok . sign s $
-    share 3142549 "liblastfm" <> message "Just listen!" <> apiKey ak <> sessionKey sk
+    share <*> event 3142549 <*> recipient "liblastfm" <* message "Just listen!"
+      <*> apiKey ak <*> sessionKey sk
 
 
 noauth ∷ [Test]
@@ -35,13 +37,13 @@ noauth =
   ak = "29effec263316a1f8a97f753caaa83e0"
 
   testGetAttendees = check ga $
-    getAttendees 3142549 <> limit 2 <> apiKey ak
+    getAttendees <*> event 3142549 <* limit 2 <*> apiKey ak
 
   testGetInfo = check gi $
-    getInfo 3142549 <> apiKey ak
+    getInfo <*> event 3142549 <*> apiKey ak
 
   testGetShouts = check gs $
-    getShouts 3142549 <> limit 1 <> apiKey ak
+    getShouts <*> event 3142549 <* limit 1 <*> apiKey ak
 
 
 gi, gs ∷ Value → Parser String

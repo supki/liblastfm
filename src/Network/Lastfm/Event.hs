@@ -12,7 +12,8 @@ module Network.Lastfm.Event
   ( attend, getAttendees, getInfo, getShouts, share, shout
   ) where
 
-import Data.Monoid ((<>))
+import Control.Applicative
+import Data.Void (Void)
 
 import Network.Lastfm.Request
 
@@ -20,8 +21,8 @@ import Network.Lastfm.Request
 -- | Set a user's attendance status for an event.
 --
 -- <http://www.last.fm/api/show/event.attend>
-attend ∷ Event → Status → Request f RequireSign t
-attend e s = api "event.attend" <> event e <> status s <> post
+attend ∷ Request f RequireSign (Event → Status → APIKey → SessionKey → Void)
+attend = api "event.attend" <* post
 
 
 -- | Get a list of attendees for an event.
@@ -29,15 +30,15 @@ attend e s = api "event.attend" <> event e <> status s <> post
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/event.getAttendees>
-getAttendees ∷ Event → Request f Ready t
-getAttendees e = api "event.getAttendees" <> event e
+getAttendees ∷ Request f Ready (Event → APIKey → Void)
+getAttendees = api "event.getAttendees"
 
 
 -- | Get the metadata for an event on Last.fm. Includes attendance and lineup information.
 --
 -- <http://www.last.fm/api/show/event.getInfo>
-getInfo ∷ Event → Request f Ready t
-getInfo e = api "event.getInfo" <> event e
+getInfo ∷ Request f Ready (Event → APIKey → Void)
+getInfo = api "event.getInfo"
 
 
 -- | Get shouts for this event. Also available as an rss feed.
@@ -45,8 +46,8 @@ getInfo e = api "event.getInfo" <> event e
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/event.getShouts>
-getShouts ∷ Event → Request f Ready t
-getShouts e = api "event.getShouts" <> event e
+getShouts ∷ Request f Ready (Event → APIKey → Void)
+getShouts = api "event.getShouts"
 
 
 -- | Share an event with one or more Last.fm users or other friends.
@@ -54,12 +55,12 @@ getShouts e = api "event.getShouts" <> event e
 -- Optional: 'public', 'message'
 --
 -- <http://www.last.fm/api/show/event.share>
-share ∷ Event → Recipient → Request f RequireSign t
-share e r = api "event.share" <> event e <> recipient r <> post
+share ∷ Request f RequireSign (Event → Recipient → APIKey → SessionKey → Void)
+share = api "event.share" <* post
 
 
 -- | Shout in this event's shoutbox
 --
 -- <http://www.last.fm/api/show/event.shout>
-shout ∷ Event → Message → Request f RequireSign t
-shout e m = api "event.shout" <> event e <> message m <> post
+shout ∷ Request f RequireSign (Event → Message → APIKey → SessionKey → Void)
+shout = api "event.shout" <* post

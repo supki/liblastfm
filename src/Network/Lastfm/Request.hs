@@ -16,7 +16,7 @@ module Network.Lastfm.Request
   , From, from, To, to, Group, group
   , Language, language, Distance, distance
   , Longitude, longitude, Latitude, latitude, Location, location
-  , Start, start, End, end, FestivalsOnly, festivalsonly
+  , Start, start, End, end, Festivals, festivalsonly
   , StartTimestamp, startTimestamp, EndTimestamp, endTimestamp
   , Metro, metro, Tag, tags, tag, Track, track, Timestamp , timestamp, Fingerprint, fingerprint
   , AlbumArtist, albumArtist, Duration, duration, TrackNumber, trackNumber
@@ -88,6 +88,9 @@ data Recipient
 data Username
 data User
 data Password
+data Status = Attending | Maybe | NotAttending
+data Event
+data Festivals
 
 
 -- | Add artist parameter
@@ -186,11 +189,8 @@ password = add "password"
 {-# INLINE password #-}
 
 
-data Status = Attending | Maybe | NotAttending
-
-
 -- | Add status parameter
-status ∷ Status → Request f a t
+status ∷ Status → Request f a Status
 status = add "status" . \s -> case s of
   Attending → "0"
   Maybe     → "1"
@@ -198,13 +198,16 @@ status = add "status" . \s -> case s of
 {-# INLINE status #-}
 
 
-type Event = Int64
-
-
 -- | Add event parameter
-event ∷ Event → Request f a t
+event ∷ Int64 → Request f a Event
 event = add "event" . T.toLazyText . T.decimal
 {-# INLINE event #-}
+
+
+-- | Add festivalsonly parameter
+festivalsonly ∷ Bool → Request f a Festivals
+festivalsonly = add "festivalsonly" . boolToText
+{-# INLINE festivalsonly #-}
 
 
 type Longitude = Text
@@ -241,15 +244,6 @@ type Distance = Int64
 distance ∷ Distance → Request f a t
 distance = add "distance" . T.toLazyText . T.decimal
 {-# INLINE distance #-}
-
-
-type FestivalsOnly = Bool
-
-
--- | Add festivalsonly parameter
-festivalsonly ∷ FestivalsOnly → Request f a t
-festivalsonly = add "festivalsonly" . boolToText
-{-# INLINE festivalsonly #-}
 
 
 type Start = Int64
