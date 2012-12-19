@@ -9,10 +9,14 @@
 -- import qualified Network.Lastfm.Library as Library
 -- @
 module Network.Lastfm.Library
-  ( addAlbum, addArtist, addTrack, getAlbums, getArtists, getTracks, removeAlbum, removeArtist, removeScrobble, removeTrack
+  ( addAlbum, addArtist, addTrack
+  , getAlbums, getArtists, getTracks
+  , removeAlbum, removeArtist, removeScrobble, removeTrack
   ) where
 
-import Data.Monoid ((<>))
+import Control.Applicative
+
+import Data.Void (Void)
 
 import Network.Lastfm.Request
 
@@ -20,22 +24,22 @@ import Network.Lastfm.Request
 -- | Add an album or collection of albums to a user's Last.fm library
 --
 -- <http://www.last.fm/api/show/library.addAlbum>
-addAlbum ∷ Artist → Album → Request f RequireSign t
-addAlbum ar al = api "library.addAlbum" <> artist ar <> album al <> post
+addAlbum ∷ Request f RequireSign (Artist → Album → APIKey → SessionKey → Void)
+addAlbum = api "library.addAlbum" <* post
 
 
 -- | Add an artist to a user's Last.fm library
 --
 -- <http://www.last.fm/api/show/library.addArtist>
-addArtist ∷ Artist → Request f RequireSign t
-addArtist a = api "library.addArtist" <> artist a <> post
+addArtist ∷ Request f RequireSign (Artist → APIKey → SessionKey → Void)
+addArtist = api "library.addArtist" <* post
 
 
 -- | Add a track to a user's Last.fm library
 --
 -- <http://www.last.fm/api/show/library.addTrack>
-addTrack ∷ Artist → Track → Request f RequireSign t
-addTrack a t = api "library.addTrack" <> artist a <> track t <> post
+addTrack ∷ Request f RequireSign (Artist → Track → APIKey → SessionKey → Void)
+addTrack = api "library.addTrack" <* post
 
 
 -- | A paginated list of all the albums in a user's library, with play counts and tag counts.
@@ -43,8 +47,8 @@ addTrack a t = api "library.addTrack" <> artist a <> track t <> post
 -- Optional: 'artist', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/library.getAlbums>
-getAlbums ∷ User → Request f Ready t
-getAlbums u = api "library.getAlbums" <> user u
+getAlbums ∷ Request f Ready (User → APIKey → Void)
+getAlbums = api "library.getAlbums"
 
 
 -- | A paginated list of all the artists in a user's library, with play counts and tag counts.
@@ -52,8 +56,8 @@ getAlbums u = api "library.getAlbums" <> user u
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/library.getArtists>
-getArtists ∷ User → Request f Ready t
-getArtists u = api "library.getArtists" <> user u
+getArtists ∷ Request f Ready (User → APIKey → Void)
+getArtists = api "library.getArtists"
 
 
 -- | A paginated list of all the tracks in a user's library, with play counts and tag counts.
@@ -61,33 +65,33 @@ getArtists u = api "library.getArtists" <> user u
 -- Optional: 'artist', 'album', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/library.getTracks>
-getTracks ∷ User → Request f Ready t
-getTracks u = api "library.getTracks" <> user u
+getTracks ∷ Request f Ready (User → APIKey → Void)
+getTracks = api "library.getTracks"
 
 
 -- | Remove an album from a user's Last.fm library
 --
 -- <http://www.last.fm/api/show/library.removeAlbum>
-removeAlbum ∷ Artist → Album → Request f RequireSign t
-removeAlbum ar al = api "library.removeAlbum" <> artist ar <> album al <> post
+removeAlbum ∷ Request f RequireSign (Artist → Album → APIKey → SessionKey → Void)
+removeAlbum = api "library.removeAlbum" <* post
 
 
 -- | Remove an artist from a user's Last.fm library
 --
 -- <http://www.last.fm/api/show/library.removeArtist>
-removeArtist ∷ Artist → Request f RequireSign t
-removeArtist a = api "library.removeArtist" <> artist a <> post
+removeArtist ∷ Request f RequireSign (Artist → APIKey → SessionKey → Void)
+removeArtist = api "library.removeArtist" <* post
 
 
 -- | Remove a scrobble from a user's Last.fm library
 --
 -- <http://www.last.fm/api/show/library.removeScrobble>
-removeScrobble ∷ Artist → Track → Timestamp → Request f RequireSign t
-removeScrobble a tr ts = api "library.removeScrobble" <> artist a <> track tr <> timestamp ts <> post
+removeScrobble ∷ Request f RequireSign (Artist → Track → Timestamp → APIKey → SessionKey → Void)
+removeScrobble = api "library.removeScrobble" <* post
 
 
 -- | Remove a track from a user's Last.fm library
 --
 -- <http://www.last.fm/api/show/library.removeTrack>
-removeTrack ∷ Artist → Track → Request f RequireSign t
-removeTrack a t = api "library.removeTrack" <> artist a <> track t <> post
+removeTrack ∷ Request f RequireSign (Artist → Track → APIKey → SessionKey → Void)
+removeTrack = api "library.removeTrack" <* post

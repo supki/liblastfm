@@ -24,25 +24,32 @@ auth ak sk s =
   ]
  where
   testAddAlbum = check ok . sign s $
-    addAlbum "Franz Ferdinand" "Franz Ferdinand" <> apiKey ak <> sessionKey sk
+    addAlbum <*> artist "Franz Ferdinand" <*> album "Franz Ferdinand"
+      <*> apiKey ak <*> sessionKey sk
 
   testAddArtist = check ok . sign s $
-    addArtist "Mobthrow" <> apiKey ak <> sessionKey sk
+    addArtist <*> artist "Mobthrow"
+      <*> apiKey ak <*> sessionKey sk
 
   testAddTrack = check ok . sign s $
-    addTrack "Eminem" "Kim" <> apiKey ak <> sessionKey sk
+    addTrack <*> artist "Eminem" <*> track "Kim"
+      <*> apiKey ak <*> sessionKey sk
 
   testRemoveAlbum = check ok . sign s $
-    removeAlbum "Franz Ferdinand" "Franz Ferdinand" <> apiKey ak <> sessionKey sk
+    removeAlbum <*> artist "Franz Ferdinand" <*> album "Franz Ferdinand"
+      <*> apiKey ak <*> sessionKey sk
 
   testRemoveArtist = check ok . sign s $
-    removeArtist "Burzum" <> apiKey ak <> sessionKey sk
+    removeArtist <*> artist "Burzum"
+      <*> apiKey ak <*> sessionKey sk
 
   testRemoveTrack = check ok . sign s $
-    removeTrack "Eminem" "Kim" <> apiKey ak <> sessionKey sk
+    removeTrack <*> artist "Eminem" <*> track "Kim"
+      <*> apiKey ak <*> sessionKey sk
 
   testRemoveScrobble = check ok . sign s $
-    removeScrobble "Gojira" "Ocean" 1328905590 <> apiKey ak <> sessionKey sk
+    removeScrobble <*> artist "Gojira" <*> track "Ocean" <*> timestamp 1328905590
+      <*> apiKey ak <*> sessionKey sk
 
 
 noauth ∷ [Test]
@@ -55,13 +62,13 @@ noauth =
   ak = "29effec263316a1f8a97f753caaa83e0"
 
   testGetAlbums = check ga $
-    getAlbums "smpcln" <> artist "Burzum" <> limit 5 <> apiKey ak
+    getAlbums <*> user "smpcln" <* artist "Burzum" <* limit 5 <*> apiKey ak
 
   testGetArtists = check gar $
-    getArtists "smpcln" <> limit 7 <> apiKey ak
+    getArtists <*> user "smpcln" <* limit 7 <*> apiKey ak
 
   testGetTracks = check gt $
-    getTracks "smpcln" <> artist "Burzum" <> limit 4 <> apiKey ak
+    getTracks <*> user "smpcln" <* artist "Burzum" <* limit 4 <*> apiKey ak
 
 
 ga, gar, gt ∷ Value → Parser [String]

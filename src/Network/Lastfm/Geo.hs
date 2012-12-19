@@ -15,7 +15,7 @@ module Network.Lastfm.Geo
   , getTopArtists, getTopTracks
   ) where
 
-import Data.Monoid ((<>))
+import Data.Void (Void)
 
 import Network.Lastfm.Request
 
@@ -25,7 +25,7 @@ import Network.Lastfm.Request
 -- Optional: 'longitude', 'latitude', 'location', 'distance', 'page', 'tag', 'festivalsonly', 'limit'
 --
 -- <http://www.last.fm/api/show/geo.getEvents>
-getEvents ∷ Request f Ready t
+getEvents ∷ Request f Ready (APIKey → Void)
 getEvents = api "geo.getEvents"
 
 
@@ -34,8 +34,8 @@ getEvents = api "geo.getEvents"
 -- Optional: 'start', 'end', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/geo.getMetroArtistChart>
-getMetroArtistChart ∷ Metro → Country → Request f Ready t
-getMetroArtistChart m c = api "geo.getMetroArtistChart" <> metro m <> country c
+getMetroArtistChart ∷ Request f Ready (Metro → Country → APIKey → Void)
+getMetroArtistChart = api "geo.getMetroArtistChart"
 
 
 -- | Get a chart of hyped (up and coming) artists for a metro
@@ -43,8 +43,8 @@ getMetroArtistChart m c = api "geo.getMetroArtistChart" <> metro m <> country c
 -- Optional: 'start', 'end', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/geo.getMetroHypeArtistChart>
-getMetroHypeArtistChart ∷ Metro → Country → Request f Ready t
-getMetroHypeArtistChart m c = api "geo.getMetroHypeArtistChart" <> metro m <> country c
+getMetroHypeArtistChart ∷ Request f Ready (Metro → Country → APIKey → Void)
+getMetroHypeArtistChart = api "geo.getMetroHypeArtistChart"
 
 
 -- | Get a chart of tracks for a metro
@@ -52,8 +52,8 @@ getMetroHypeArtistChart m c = api "geo.getMetroHypeArtistChart" <> metro m <> co
 -- Optional: 'start', 'end', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/geo.getMetroHypeTrackChart>
-getMetroHypeTrackChart ∷ Metro → Country → Request f Ready t
-getMetroHypeTrackChart m c = api "geo.getMetroHypeTrackChart" <> metro m <> country c
+getMetroHypeTrackChart ∷ Request f Ready (Metro → Country → APIKey → Void)
+getMetroHypeTrackChart = api "geo.getMetroHypeTrackChart"
 
 
 -- | Get a chart of tracks for a metro
@@ -61,8 +61,8 @@ getMetroHypeTrackChart m c = api "geo.getMetroHypeTrackChart" <> metro m <> coun
 -- Optional: 'start', 'end', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/geo.getMetroTrackChart>
-getMetroTrackChart ∷ Metro → Country → Request f Ready t
-getMetroTrackChart m c = api "geo.getMetroTrackChart" <> metro m <> country c
+getMetroTrackChart ∷ Request f Ready (Metro → Country → APIKey → Void)
+getMetroTrackChart = api "geo.getMetroTrackChart"
 
 
 -- | Get a chart of the artists which make that metro unique
@@ -70,8 +70,8 @@ getMetroTrackChart m c = api "geo.getMetroTrackChart" <> metro m <> country c
 -- Optional: 'start', 'end', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/geo.getMetroUniqueArtistChart>
-getMetroUniqueArtistChart ∷ Metro → Country → Request f Ready t
-getMetroUniqueArtistChart m c = api "geo.getMetroUniqueArtistChart" <> metro m <> country c
+getMetroUniqueArtistChart ∷ Request f Ready (Metro → Country → APIKey → Void)
+getMetroUniqueArtistChart = api "geo.getMetroUniqueArtistChart"
 
 
 -- | Get a chart of tracks for a metro
@@ -79,16 +79,16 @@ getMetroUniqueArtistChart m c = api "geo.getMetroUniqueArtistChart" <> metro m <
 -- Optional: 'start', 'end', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/geo.getMetroUniqueTrackChart>
-getMetroUniqueTrackChart ∷ Metro → Country → Request f Ready t
-getMetroUniqueTrackChart m c = api "geo.getMetroUniqueTrackChart" <> metro m <> country c
+getMetroUniqueTrackChart ∷ Request f Ready (Metro → Country → APIKey → Void)
+getMetroUniqueTrackChart = api "geo.getMetroUniqueTrackChart"
 
 
 -- | Get a list of available chart periods for this metro,
 -- expressed as date ranges which can be sent to the chart services.
 --
 -- <http://www.last.fm/api/show/geo.getMetroWeeklyChartlist>
-getMetroWeeklyChartlist ∷ Metro → Request f Ready t
-getMetroWeeklyChartlist m = api "geo.getMetroWeeklyChartlist" <> metro m
+getMetroWeeklyChartlist ∷ Request f Ready (Metro → APIKey → Void)
+getMetroWeeklyChartlist = api "geo.getMetroWeeklyChartlist"
 
 
 -- | Get a list of valid countries and metros for use in the other webservices
@@ -96,7 +96,7 @@ getMetroWeeklyChartlist m = api "geo.getMetroWeeklyChartlist" <> metro m
 -- Optional: 'country'
 --
 -- <http://www.last.fm/api/show/geo.getMetros>
-getMetros ∷ Request f Ready t
+getMetros ∷ Request f Ready (APIKey → Void)
 getMetros = api "geo.getMetros"
 
 
@@ -105,8 +105,8 @@ getMetros = api "geo.getMetros"
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/geo.getTopArtists>
-getTopArtists ∷ Country → Request f Ready t
-getTopArtists c = api "geo.getTopArtists" <> country c
+getTopArtists ∷ Request f Ready (Country → APIKey → Void)
+getTopArtists = api "geo.getTopArtists"
 
 
 -- | Get the most popular tracks on Last.fm last week by country
@@ -114,5 +114,5 @@ getTopArtists c = api "geo.getTopArtists" <> country c
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/geo.getTopTracks>
-getTopTracks ∷ Country → Request f Ready t
-getTopTracks c = api "geo.getTopTracks" <> country c
+getTopTracks ∷ Request f Ready (Country → APIKey → Void)
+getTopTracks = api "geo.getTopTracks"

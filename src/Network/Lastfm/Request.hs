@@ -105,6 +105,19 @@ data Password
 data Status = Attending | Maybe | NotAttending
 data Event
 data Festivals
+data Longitude
+data Latitude
+data Location
+data Distance
+data Metro
+data Start
+data End
+data StartTimestamp
+data EndTimestamp
+data From
+data To
+data Venue
+data VenueName
 
 
 -- | Add artist parameter
@@ -224,101 +237,80 @@ festivalsonly = add "festivalsonly" . boolToText
 {-# INLINE festivalsonly #-}
 
 
-type Longitude = Text
-
-
 -- | Add longitude parameter
-longitude ∷ Longitude → Request f a t
+longitude ∷ Text → Request f a Longitude
 longitude = add "longitude"
 {-# INLINE longitude #-}
 
 
-type Latitude = Text
-
-
 -- | Add latitude parameter
-latitude ∷ Latitude → Request f a t
+latitude ∷ Text → Request f a Latitude
 latitude = add "latitude"
 {-# INLINE latitude #-}
 
 
-type Location = Text
-
-
 -- | Add location parameter
-location ∷ Location → Request f a t
+location ∷ Text → Request f a Location
 location = add "location"
 {-# INLINE location #-}
 
 
-type Distance = Int64
-
-
 -- | Add distance parameter
-distance ∷ Distance → Request f a t
+distance ∷ Int64 → Request f a Distance
 distance = add "distance" . T.toLazyText . T.decimal
 {-# INLINE distance #-}
 
 
-type Start = Int64
+-- | Add venue parameter
+venue ∷ Int64 → Request f a Venue
+venue = add "venue" . T.toLazyText . T.decimal
+{-# INLINE venue #-}
 
 
--- | Add start parameter
-start ∷ Start → Request f a t
-start = add "start" . T.toLazyText . T.decimal
-{-# INLINE start #-}
-
-
-type End = Int64
-
-
--- | Add end parameter
-end ∷ End → Request f a t
-end = add "end" . T.toLazyText . T.decimal
-{-# INLINE end #-}
-
-
-type StartTimestamp = Int64
-
-
--- | Add startTimestamp parameter
-startTimestamp ∷ StartTimestamp → Request f a t
-startTimestamp = add "startTimestamp" . T.toLazyText . T.decimal
-{-# INLINE startTimestamp #-}
-
-
-type EndTimestamp = Int64
-
-
--- | Add endTimestamp parameter
-endTimestamp ∷ EndTimestamp → Request f a t
-endTimestamp = add "endTimestamp" . T.toLazyText . T.decimal
-{-# INLINE endTimestamp #-}
-
-
-type Metro = Text
+-- | Add venue parameter
+venueName ∷ Text → Request f a VenueName
+venueName = add "venue"
+{-# INLINE venueName #-}
 
 
 -- | Add metro parameter
-metro ∷ Metro → Request f a t
+metro ∷ Text → Request f a Metro
 metro = add "metro"
 {-# INLINE metro #-}
 
 
-type From = Int64
+-- | Add start parameter
+start ∷ Int64 → Request f a Start
+start = add "start" . T.toLazyText . T.decimal
+{-# INLINE start #-}
+
+
+-- | Add end parameter
+end ∷ Int64 → Request f a End
+end = add "end" . T.toLazyText . T.decimal
+{-# INLINE end #-}
+
+
+-- | Add startTimestamp parameter
+startTimestamp ∷ Int64 → Request f a StartTimestamp
+startTimestamp = add "startTimestamp" . T.toLazyText . T.decimal
+{-# INLINE startTimestamp #-}
+
+
+-- | Add endTimestamp parameter
+endTimestamp ∷ Int64 → Request f a EndTimestamp
+endTimestamp = add "endTimestamp" . T.toLazyText . T.decimal
+{-# INLINE endTimestamp #-}
 
 
 -- | Add from parameter
-from ∷ From → Request f a t
+from ∷ Int64 → Request f a From
 from = add "from" . T.toLazyText . T.decimal
 {-# INLINE from #-}
 
 
-type To = Int64
-
-
 -- | Add to parameter
-to ∷ To → Request f a t
+to ∷ Int64 → Request f a To
 to = add "to" . T.toLazyText . T.decimal
 {-# INLINE to #-}
 
@@ -450,24 +442,6 @@ type Group = Text
 group ∷ Group → Request f a t
 group = add "group"
 {-# INLINE group #-}
-
-
-type Venue = Int64
-
-
--- | Add venue parameter
-venue ∷ Venue → Request f a t
-venue = add "venue" . T.toLazyText . T.decimal
-{-# INLINE venue #-}
-
-
-type VenueName = Text
-
-
--- | Add venue parameter
-venueName ∷ VenueName → Request f a t
-venueName = add "venue"
-{-# INLINE venueName #-}
 
 
 boolToText ∷ Bool → Text

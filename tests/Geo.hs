@@ -2,7 +2,6 @@
 {-# LANGUAGE UnicodeSyntax #-}
 module Geo (noauth) where
 
-import Control.Applicative ((<$>),(<*>))
 import Data.Aeson.Types
 import Network.Lastfm
 import Network.Lastfm.Geo
@@ -30,37 +29,37 @@ noauth =
   ak = "29effec263316a1f8a97f753caaa83e0"
 
   testGetEvents = check ge $
-    getEvents <> location "Moscow" <> limit 5 <> apiKey ak
+    getEvents <* location "Moscow" <* limit 5 <*> apiKey ak
 
   testGetMetroArtistChart = check ga $
-    getMetroArtistChart "Saint Petersburg" "Russia" <> apiKey ak
+    getMetroArtistChart <*> metro "Saint Petersburg" <*> country "Russia" <*> apiKey ak
 
   testGetMetroHypeArtistChart = check ga $
-    getMetroHypeArtistChart "New York" "United States" <> apiKey ak
+    getMetroHypeArtistChart <*> metro "New York" <*> country "United States" <*> apiKey ak
 
   testGetMetroHypeTrackChart = check gt $
-    getMetroHypeTrackChart "Ufa" "Russia" <> apiKey ak
+    getMetroHypeTrackChart <*> metro "Ufa" <*> country "Russia" <*> apiKey ak
 
   testGetMetroTrackChart = check gt $
-    getMetroTrackChart "Boston" "United States" <> apiKey ak
+    getMetroTrackChart <*> metro "Boston" <*> country "United States" <*> apiKey ak
 
   testGetMetroUniqueArtistChart = check ga $
-    getMetroUniqueArtistChart "Minsk" "Belarus" <> apiKey ak
+    getMetroUniqueArtistChart <*> metro "Minsk" <*> country "Belarus" <*> apiKey ak
 
   testGetMetroUniqueTrackChart = check gt $
-    getMetroUniqueTrackChart "Moscow" "Russia" <> apiKey ak
+    getMetroUniqueTrackChart <*> metro "Moscow" <*> country "Russia" <*> apiKey ak
 
   testGetMetroWeeklyChartlist = check gc $
-    getMetroWeeklyChartlist "Moscow" <> apiKey ak
+    getMetroWeeklyChartlist <*> metro "Moscow" <*> apiKey ak
 
   testGetMetros = check gm $
-    getMetros <> country "Russia" <> apiKey ak
+    getMetros <* country "Russia" <*> apiKey ak
 
   testGetTopArtists = check ga $
-    getTopArtists "Belarus" <> limit 3 <> apiKey ak
+    getTopArtists <*> country "Belarus" <* limit 3 <*> apiKey ak
 
   testGetTopTracks = check gt $
-    getTopTracks "Ukraine" <> limit 2 <> apiKey ak
+    getTopTracks <*> country "Ukraine" <* limit 2 <*> apiKey ak
 
 
 ga, ge, gm, gt ∷ Value → Parser [String]

@@ -29,14 +29,14 @@ library
                    Network.Lastfm.Artist
                    Network.Lastfm.Chart
                    Network.Lastfm.Event
-                   --Network.Lastfm.Geo
-                   --Network.Lastfm.Group
-                   --Network.Lastfm.Library
+                   Network.Lastfm.Geo
+                   Network.Lastfm.Group
+                   Network.Lastfm.Library
                    Network.Lastfm.Tag
                    --Network.Lastfm.Tasteometer
                    --Network.Lastfm.Track
                    --Network.Lastfm.User
-                   --Network.Lastfm.Venue
+                   Network.Lastfm.Venue
                    Network.Lastfm.Request
                    Network.Lastfm.Response
   other-modules:   Network.Lastfm.Internal

@@ -12,16 +12,15 @@ module Network.Lastfm.Group
   ( getHype, getMembers, getWeeklyAlbumChart, getWeeklyArtistChart, getWeeklyChartList, getWeeklyTrackChart
   ) where
 
-import Data.Monoid ((<>))
-
+import Data.Void (Void)
 import Network.Lastfm.Request
 
 
 -- | Get the hype list for a group
 --
 -- <http://www.last.fm/api/show/group.getHype>
-getHype ∷ Group → Request f Ready t
-getHype g = api "group.getHype" <> group g
+getHype ∷ Request f Ready (Group → APIKey → Void)
+getHype = api "group.getHype"
 
 
 -- | Get a list of members for this group.
@@ -29,40 +28,43 @@ getHype g = api "group.getHype" <> group g
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/group.getMembers>
-getMembers ∷ Group → Request f Ready t
-getMembers g = api "group.getMembers" <> group g
+getMembers ∷ Request f Ready (Group → APIKey → Void)
+getMembers = api "group.getMembers"
 
 
--- | Get an album chart for a group, for a given date range. If no date range is supplied, it will return the most recent album chart for this group.
+-- | Get an album chart for a group, for a given date range.
+-- If no date range is supplied, it will return the most recent album chart for this group.
 --
 -- Optional: 'from', 'to'
 --
 -- <http://www.last.fm/api/show/group.getWeeklyAlbumChart>
-getWeeklyAlbumChart ∷ Group → Request f Ready t
-getWeeklyAlbumChart g = api "group.getWeeklyAlbumChart" <> group g
+getWeeklyAlbumChart ∷ Request f Ready (Group → APIKey → Void)
+getWeeklyAlbumChart = api "group.getWeeklyAlbumChart"
 
 
--- | Get an artist chart for a group, for a given date range. If no date range is supplied, it will return the most recent album chart for this group.
+-- | Get an artist chart for a group, for a given date range.
+-- If no date range is supplied, it will return the most recent album chart for this group.
 --
 -- Optional: 'from', 'to'
 --
 -- <http://www.last.fm/api/show/group.getWeeklyArtistChart>
-getWeeklyArtistChart ∷ Group → Request f Ready t
-getWeeklyArtistChart g = api "group.getWeeklyArtistChart" <> group g
+getWeeklyArtistChart ∷ Request f Ready (Group → APIKey → Void)
+getWeeklyArtistChart = api "group.getWeeklyArtistChart"
 
 
--- | Get a list of available charts for this group, expressed as date ranges which can be sent to the chart services.
+-- | Get a list of available charts for this group, expressed as
+-- date ranges which can be sent to the chart services.
 --
 -- <http://www.last.fm/api/show/group.getWeeklyChartList>
-getWeeklyChartList ∷ Group → Request f Ready t
-getWeeklyChartList g = api "group.getWeeklyChartList" <> group g
+getWeeklyChartList ∷ Request f Ready (Group → APIKey → Void)
+getWeeklyChartList = api "group.getWeeklyChartList"
 
 
--- | Get a track chart for a group, for a given date range. If no date range is supplied, it will return the most recent album chart for this group.
+-- | Get a track chart for a group, for a given date range.
+-- If no date range is supplied, it will return the most recent album chart for this group.
 --
 -- Optional: 'from', 'to'
 --
 -- <http://www.last.fm/api/show/group.getWeeklyTrackChart>
-getWeeklyTrackChart ∷ Group → Request f Ready t
-getWeeklyTrackChart g = api "group.getWeeklyTrackChart" <> group g
-
+getWeeklyTrackChart ∷ Request f Ready (Group → APIKey → Void)
+getWeeklyTrackChart = api "group.getWeeklyTrackChart"

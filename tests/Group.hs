@@ -2,7 +2,6 @@
 {-# LANGUAGE UnicodeSyntax #-}
 module Group (noauth) where
 
-import Control.Applicative
 import Data.Aeson.Types
 import Network.Lastfm
 import Network.Lastfm.Group
@@ -26,22 +25,22 @@ noauth =
   g = "People with no social lives that listen to more music than is healthy who are slightly scared of spiders and can never seem to find a pen"
 
   testGetHype = check gh $
-    getHype g <> apiKey ak
+    getHype <*> group g <*> apiKey ak
 
   testGetMembers = check gm $
-    getMembers g <> limit 10 <> apiKey ak
+    getMembers <*> group g <* limit 10 <*> apiKey ak
 
   testGetWeeklyAlbumChart = check ga $
-    getWeeklyAlbumChart g <> apiKey ak
+    getWeeklyAlbumChart <*> group g <*> apiKey ak
 
   testGetWeeklyArtistChart = check gar $
-    getWeeklyArtistChart g <> apiKey ak
+    getWeeklyArtistChart <*> group g <*> apiKey ak
 
   testGetWeeklyChartList = check gc $
-    getWeeklyChartList g <> apiKey ak
+    getWeeklyChartList <*> group g <*> apiKey ak
 
   testGetWeeklyTrackChart = check gt $
-    getWeeklyTrackChart g <> apiKey ak
+    getWeeklyTrackChart <*> group g <*> apiKey ak
 
 
 ga, gar, gh, gm, gt ∷ Value → Parser [String]

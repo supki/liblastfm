@@ -21,13 +21,13 @@ noauth =
   ak = "29effec263316a1f8a97f753caaa83e0"
 
   testGetEvents = check ge $
-    getEvents 9163107 <> apiKey ak
+    getEvents <*> venue 9163107 <*> apiKey ak
 
   testGetPastEvents = check gpe $
-    getPastEvents 9163107 <> limit 2 <> apiKey ak
+    getPastEvents <*> venue 9163107 <* limit 2 <*> apiKey ak
 
   testSearch = check se $
-    search "Arena" <> apiKey ak
+    search <*> venueName "Arena" <*> apiKey ak
 
 
 ge, gpe, se ∷ Value → Parser [String]

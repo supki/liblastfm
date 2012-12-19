@@ -12,7 +12,7 @@ module Network.Lastfm.Venue
   ( getEvents, getPastEvents, search
   ) where
 
-import Data.Monoid ((<>))
+import Data.Void (Void)
 
 import Network.Lastfm.Request
 
@@ -22,8 +22,8 @@ import Network.Lastfm.Request
 -- Optional: 'festivalsonly'
 --
 -- <http://www.last.fm/api/show/venue.getEvents>
-getEvents ∷ Venue → Request f Ready t
-getEvents v = api "venue.getEvents" <> venue v
+getEvents ∷ Request f Ready (Venue → APIKey → Void)
+getEvents = api "venue.getEvents"
 
 
 -- | Get a paginated list of all the events held at this venue in the past.
@@ -31,8 +31,8 @@ getEvents v = api "venue.getEvents" <> venue v
 -- Optional: 'festivalsonly', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/venue.getPastEvents>
-getPastEvents ∷ Venue → Request f Ready t
-getPastEvents v = api "venue.getPastEvents" <> venue v
+getPastEvents ∷ Request f Ready (Venue → APIKey → Void)
+getPastEvents = api "venue.getPastEvents"
 
 
 -- | Search for a venue by venue name
@@ -40,5 +40,5 @@ getPastEvents v = api "venue.getPastEvents" <> venue v
 -- Optional: 'page', 'limit', 'country'
 --
 -- <http://www.last.fm/api/show/venue.search>
-search ∷ VenueName → Request f Ready t
-search v = api "venue.search" <> venueName v
+search ∷ Request f Ready (VenueName → APIKey → Void)
+search = api "venue.search"
