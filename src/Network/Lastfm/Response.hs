@@ -54,7 +54,7 @@ sign s = approve . (<> signature)
 lastfm ∷ Default (R f Ready t) ⇒ Request f Ready t → IO (Response f)
 lastfm (($ def) . unwrap → request) =
   parse request <$> C.withManager (\m → C.parseUrl (render request) >>= \url →
-    C.responseBody <$> C.httpLbs (url { C.method = method request }) m)
+    C.responseBody <$> C.httpLbs (url { C.method = method request, C.responseTimeout = Just 10000000 }) m)
 
 
 approve ∷ Request f RequireSign Void → Request f Ready Void
