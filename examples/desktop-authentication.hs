@@ -14,11 +14,11 @@ import Network.Lastfm.Authentication
 
 main :: IO ()
 main = do
-  r <- lastfm $ getToken <> apiKey ak <> json
+  r <- lastfm $ getToken <*> apiKey ak <* json
   whenJust (r ^. key "token") $ \t -> do
-    putStrLn $ "approve: " ++ link (apiKey ak <> token t)
+    putStrLn $ "approve: " ++ link (apiKey ak <* token t)
     _ <- getChar
-    r' <- lastfm . sign s $ getSession t <> apiKey ak <> json
+    r' <- lastfm . sign s $ getSession <*> token t <*> apiKey ak <* json
     whenJust (r' ^. key "session" . key "key") $ \sk ->
       putStrLn $ "session key: " ++ sk
  where

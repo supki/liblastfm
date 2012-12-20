@@ -25,14 +25,15 @@ main :: IO ()
 main = mapM_ T.putStrLn =<< artists multitags
 
 
-artists :: [Tag] -> IO [Text]
+artists :: [Text] -> IO [Text]
 artists ts = do
   names <- mapM (\t -> name <$> query t) ts
   case names of
     [] -> return []
     ns -> return (foldl1 intersect ns)
  where
-  query t = lastfm $ Tag.getTopArtists t <> limit 100 <> apiKey "29effec263316a1f8a97f753caaa83e0" <> json
+  query t = lastfm $ Tag.getTopArtists <*> tag t <* limit 100
+    <*> apiKey "29effec263316a1f8a97f753caaa83e0" <* json
   name r = r ^. key "topartists" . key "artist" ^.. folded . traverseArray .  key "name" ^.. folded . folded
 
 

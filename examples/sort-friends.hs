@@ -23,14 +23,14 @@
  -}
 module Main where
 
-import Control.Applicative
 import Data.Function (on)
 import Data.List (sortBy)
 import Data.Maybe (catMaybes, fromMaybe)
+import Data.Monoid ((<>))
 import Text.Read (readMaybe)
 
 import           Control.Concurrent.Async
-import           Control.Lens
+import           Control.Lens hiding (value)
 import           Data.Aeson (Value)
 import           Data.Aeson.Lens
 import           Data.Text.Lazy (Text)
@@ -52,16 +52,16 @@ main = pages >>= scores . names >>= pretty
 
 pages :: IO [Maybe Value]
 pages = do
-  first <- query (User.getFriends target)
+  first <- query (User.getFriends <*> user target)
   let ps = fromMaybe 1 (readMaybe =<< first ^. total)
-  (first :) <$> forConcurrently [2..ps] (\p -> query (User.getFriends target <> page p))
+  (first :) <$> forConcurrently [2..ps] (\p -> query (User.getFriends <*> user target <* page p))
  where
   total = key "friends" . key "@attr" . key "totalPages"
 
 
-scores :: [User] -> IO [(User, Score)]
+scores :: [Text] -> IO [(Text, Score)]
 scores xs = zip xs <$> forConcurrently xs (\x ->
-  fromMaybe "0" . view score <$> query (Tasteometer.compare target x))
+  fromMaybe "0" . view score <$> query (Tasteometer.compare <*> value 1 target <*> value 2 x))
  where
   score = key "comparison" . key "result" . key "score"
 
@@ -70,13 +70,13 @@ forConcurrently :: [a] -> (a -> IO b) -> IO [b]
 forConcurrently = flip mapConcurrently
 
 
-pretty :: [(User, Score)] -> IO ()
+pretty :: [(Text, Score)] -> IO ()
 pretty = mapM_ (\(n,s) -> T.putStrLn $ n <> ": " <> s) . take 5 . sortBy (flip compare `on` snd)
 
 
-query :: Request Ready JSON -> IO (Response JSON)
-query r = lastfm (r <> apiKey "234fc6e0f41f6ef99b7bd62ebaf8d318" <> json)
+query :: Request JSON Send (APIKey -> Ready) -> IO (Response JSON)
+query r = lastfm (r <*> apiKey "234fc6e0f41f6ef99b7bd62ebaf8d318" <* json)
 
 
-target :: User
+target :: Text
 target = "MCDOOMDESTROYER"
