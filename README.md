@@ -4,7 +4,7 @@
 ##FAQ
 **Q: I'm getting the following error. How do I fix it?**
 ```
-> Album.getInfo "Pink Floyd" "The Wall" <> apiKey "1234567890"
+> Album.getInfo <*> artist "Pink Floyd" <*> album "The Wall" <*> apiKey "1234567890"
 
 <interactive>:8:27:
     Couldn't match type `[Char]' with `Data.Text.Lazy.Internal.Text'
@@ -16,17 +16,17 @@ To enable it type in `:set -XOverloadedStrings`.
 
 **Q: I'm getting the following error. How do I fix it?**
 ```
-> lastfm (Album.getInfo "Pink Floyd" "The Wall" <> apiKey "1234567890")
+> lastfm (Album.getInfo <*> artist "Pink Floyd" <*> album "The Wall" <*> apiKey "1234567890")
 
 <interactive>:3:1:
-    No instance for (Data.Default.Default (R 'Ready f0))
+    No instance for (Data.Default.Default (R f0 'Send))
       arising from a use of `lastfm'
     The type variable `f0' is ambiguous
     Possible fix: add a type signature that fixes these type variable(s)
     Note: there are several potential instances:
-      instance Data.Default.Default (R a 'XML)
+      instance Data.Default.Default (R 'XML a)
         -- Defined at src/Network/Lastfm/Request.hs:78:10
-      instance Data.Default.Default (R a 'JSON)
+      instance Data.Default.Default (R 'JSON a)
         -- Defined at src/Network/Lastfm/Request.hs:69:10
 ```
 A: This error message indicates that GHC cannot infer response format for that Request. 
