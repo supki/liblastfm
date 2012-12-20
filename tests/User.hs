@@ -21,16 +21,16 @@ auth ak sk s =
   ]
  where
   testGetRecentStations = check grs . sign s $
-    getRecentStations "liblastfm" <> limit 10 <> apiKey ak <> sessionKey sk
+    getRecentStations <*> user "liblastfm" <* limit 10 <*> apiKey ak <*> sessionKey sk
 
   testGetRecommendedArtists = check gra . sign s $
-    getRecommendedArtists <> limit 10 <> apiKey ak <> sessionKey sk
+    getRecommendedArtists <* limit 10 <*> apiKey ak <*> sessionKey sk
 
   testGetRecommendedEvents = check gre . sign s $
-    getRecommendedEvents <> limit 10 <> apiKey ak <> sessionKey sk
+    getRecommendedEvents <* limit 10 <*> apiKey ak <*> sessionKey sk
 
   testShout = check ok . sign s $
-    shout "liblastfm" "test message" <> apiKey ak <> sessionKey sk
+    shout <*> user "liblastfm" <*> message "test message" <*> apiKey ak <*> sessionKey sk
 
 
 noauth ∷ [Test]
@@ -61,67 +61,67 @@ noauth =
   ak = "29effec263316a1f8a97f753caaa83e0"
 
   testGetArtistTracks = check gat $
-    getArtistTracks "smpcln" "Dvar" <> apiKey ak
+    getArtistTracks <*> user "smpcln" <*> artist "Dvar" <*> apiKey ak
 
   testGetBannedTracks = check gbt $
-    getBannedTracks "smpcln" <> limit 10 <> apiKey ak
+    getBannedTracks <*> user "smpcln" <* limit 10 <*> apiKey ak
 
   testGetEvents = check ge $
-    getEvents "chansonnier" <> limit 5 <> apiKey ak
+    getEvents <*> user "chansonnier" <* limit 5 <*> apiKey ak
 
   testGetFriends = check gf $
-    getFriends "smpcln" <> limit 10 <> apiKey ak
+    getFriends <*> user "smpcln" <* limit 10 <*> apiKey ak
 
   testGetPlayCount = check gpc $
-    getInfo "smpcln" <> apiKey ak
+    getInfo <*> user "smpcln" <*> apiKey ak
 
   testGetLovedTracks = check glt $
-    getLovedTracks "smpcln" <> limit 10 <> apiKey ak
+    getLovedTracks <*> user "smpcln" <* limit 10 <*> apiKey ak
 
   testGetNeighbours = check gn $
-    getNeighbours "smpcln" <> limit 10 <> apiKey ak
+    getNeighbours <*> user "smpcln" <* limit 10 <*> apiKey ak
 
   testGetNewReleases = check gnr $
-    getNewReleases "smpcln" <> apiKey ak
+    getNewReleases <*> user "smpcln" <*> apiKey ak
 
   testGetPastEvents = check gpe $
-    getPastEvents "mokele" <> limit 5 <> apiKey ak
+    getPastEvents <*> user "mokele" <* limit 5 <*> apiKey ak
 
   testGetPersonalTags = check gpt $
-    getPersonalTags "crackedcore" "rhythmic noise" "artist" <> limit 10 <> apiKey ak
+    getPersonalTags <*> user "crackedcore" <*> tag "rhythmic noise" <*> taggingType "artist" <* limit 10 <*> apiKey ak
 
   testGetPlaylists = check gp $
-    getPlaylists "mokele" <> apiKey ak
+    getPlaylists <*> user "mokele" <*> apiKey ak
 
   testGetRecentTracks = check grt $
-    getRecentTracks "smpcln" <> limit 10 <> apiKey ak
+    getRecentTracks <*> user "smpcln" <* limit 10 <*> apiKey ak
 
   testGetShouts = check gs $
-    getShouts "smpcln" <> limit 2 <> apiKey ak
+    getShouts <*> user "smpcln" <* limit 2 <*> apiKey ak
 
   testGetTopAlbums = check gtal $
-    getTopAlbums "smpcln" <> limit 5 <> apiKey ak
+    getTopAlbums <*> user "smpcln" <* limit 5 <*> apiKey ak
 
   testGetTopArtists = check gtar $
-    getTopArtists "smpcln" <> limit 5 <> apiKey ak
+    getTopArtists <*> user "smpcln" <* limit 5 <*> apiKey ak
 
   testGetTopTags = check gtta $
-    getTopTags "smpcln" <> limit 10 <> apiKey ak
+    getTopTags <*> user "smpcln" <* limit 10 <*> apiKey ak
 
   testGetTopTracks = check gttr $
-    getTopTracks "smpcln" <> limit 10 <> apiKey ak
+    getTopTracks <*> user "smpcln" <* limit 10 <*> apiKey ak
 
   testGetWeeklyAlbumChart = check gwalc $
-    getWeeklyAlbumChart "rj" <> apiKey ak
+    getWeeklyAlbumChart <*> user "rj" <*> apiKey ak
 
   testGetWeeklyArtistChart = check gwarc $
-    getWeeklyArtistChart "rj" <> apiKey ak
+    getWeeklyArtistChart <*> user "rj" <*> apiKey ak
 
   testGetWeeklyChartList = check gwcl $
-    getWeeklyChartList "rj" <> apiKey ak
+    getWeeklyChartList <*> user "rj" <*> apiKey ak
 
   testGetWeeklyTrackChart = check gwtc $
-    getWeeklyTrackChart "rj" <> apiKey ak
+    getWeeklyTrackChart <*> user "rj" <*> apiKey ak
 
 
 gpc ∷ Value → Parser String

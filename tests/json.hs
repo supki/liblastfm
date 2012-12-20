@@ -19,8 +19,8 @@ import qualified Geo as Geo
 import qualified Group as Group
 import qualified Library as Library
 import qualified Tag as Tag
---import qualified Track as Track
---import qualified User as User
+import qualified Track as Track
+import qualified User as User
 import qualified Venue as Venue
 
 
@@ -36,8 +36,8 @@ main =
              , Artist.auth
              , Event.auth
              , Library.auth
-             --, Track.auth
-             --, User.auth
+             , Track.auth
+             , User.auth
              ]
            noauth = mconcat
              [ Album.noauth
@@ -48,8 +48,8 @@ main =
              , Group.noauth
              , Library.noauth
              , Tag.noauth
-             --, Track.noauth
-             --, User.noauth
+             , Track.noauth
+             , User.noauth
              , Venue.noauth
              ]
        Nothing → exitWith (ExitFailure 1)

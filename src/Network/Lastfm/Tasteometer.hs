@@ -3,10 +3,10 @@
 {-# LANGUAGE UnicodeSyntax #-}
 module Network.Lastfm.Tasteometer where
 
-import Data.Monoid ((<>))
+import Control.Applicative
 
 import Network.Lastfm.Request
 
 
-compare ∷ User → User → Request f Send t
-compare u1 u2 = api "tasteometer.compare" <> type' 1 "user" <> value 1 u1 <> type' 2 "user" <> value 2 u2
+compare ∷ Request f Send (Value' → Value' → APIKey → Ready)
+compare = api "tasteometer.compare" <* type' 1 "user" <* type' 2 "user"

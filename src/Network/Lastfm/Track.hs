@@ -9,14 +9,13 @@
 -- import qualified Network.Lastfm.Track as Track
 -- @
 module Network.Lastfm.Track
-  ( addTags, ban, getBuyLinks, getBuyLinks_mbid, getCorrection, getFingerprintMetadata
-  , getInfo, getInfo_mbid, getShouts, getShouts_mbid, getSimilar
-  , getSimilar_mbid, getTags, getTags_mbid, getTopFans, getTopFans_mbid
-  , getTopTags, getTopTags_mbid, love, removeTag, scrobble
+  ( addTags, ban, getBuyLinks, getCorrection, getFingerprintMetadata
+  , getInfo, getShouts, getSimilar, getTags, getTopFans
+  , getTopTags, love, removeTag, scrobble
   , search, share, unban, unlove, updateNowPlaying
   ) where
 
-import Data.Monoid ((<>))
+import Control.Applicative
 
 import Network.Lastfm.Request
 
@@ -24,35 +23,32 @@ import Network.Lastfm.Request
 -- | Tag a track using a list of user supplied tags.
 --
 -- <http://www.last.fm/api/show/track.addTags>
-addTags ∷ Artist → Track → [Tag] → Request f Sign t
-addTags a t ts = api "track.addTags" <> artist a <> track t <> tags ts <> post
+addTags ∷ Request f Sign (Artist → Track → [Tag] → APIKey → SessionKey → Ready)
+addTags = api "track.addTags" <* post
 
 
 -- | Ban a track for a given user profile.
 --
 -- <http://www.last.fm/api/show/track.ban>
-ban ∷ Artist → Track → Request f Sign t
-ban a t = api "track.ban" <> artist a <> track t <> post
+ban ∷ Request f Sign (Artist → Track → APIKey → SessionKey → Ready)
+ban = api "track.ban" <* post
 
-
-getBuyLinks ∷ Artist → Track → Country → Request f Send t
-getBuyLinks a t c = api "track.getBuyLinks" <> artist a <> track t <> country c
 
 -- | Get a list of Buy Links for a particular track.
 --
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/track.getBuylinks>
-getBuyLinks_mbid ∷ MBID → Country → Request f Send t
-getBuyLinks_mbid m c = api "track.getBuyLinks" <> mbid m <> country c
+getBuyLinks ∷ ArtistTrackOrMBID t ⇒ Request f Send (t → Country → APIKey → Ready)
+getBuyLinks = api "track.getBuyLinks"
 
 
 -- | Use the last.fm corrections data to check whether
 -- the supplied track has a correction to a canonical track.
 --
 -- <http://www.last.fm/api/show/track.getCorrection>
-getCorrection ∷ Artist → Track → Request f Send t
-getCorrection a t = api "track.getCorrection" <> artist a <> track t
+getCorrection ∷ Request f Send (Artist → Track → APIKey → Ready)
+getCorrection = api "track.getCorrection"
 
 
 -- | Retrieve track metadata associated with a fingerprint id
@@ -60,94 +56,76 @@ getCorrection a t = api "track.getCorrection" <> artist a <> track t
 -- elements, along with a 'rank' value between 0 and 1 reflecting the confidence for each match.
 --
 -- <http://www.last.fm/api/show/track.getFingerprintMetadata>
-getFingerprintMetadata ∷ Fingerprint → Request f Send t
-getFingerprintMetadata f = api "track.getFingerprintMetadata" <> fingerprint f
+getFingerprintMetadata ∷ Request f Send (Fingerprint → APIKey → Ready)
+getFingerprintMetadata = api "track.getFingerprintMetadata"
 
-
-getInfo ∷ Artist → Track → Request f Send t
-getInfo a t = api "track.getInfo" <> artist a <> track t
 
 -- | Get the metadata for a track on Last.fm.
 --
 -- Optional: 'autocorrect', 'username'
 --
 -- <http://www.last.fm/api/show/track.getInfo>
-getInfo_mbid ∷ MBID → Request f Send t
-getInfo_mbid m = api "track.getInfo" <> mbid m
+getInfo ∷ ArtistTrackOrMBID t ⇒ Request f Send (t → APIKey → Ready)
+getInfo = api "track.getInfo"
 
-
-getShouts ∷ Artist → Track → Request f Send t
-getShouts a t = api "track.getShouts" <> artist a <> track t
 
 -- | Get shouts for this track. Also available as an rss feed.
 --
 -- Optional: 'autocorrect', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/track.getShouts>
-getShouts_mbid ∷ MBID → Request f Send t
-getShouts_mbid m = api "track.getShouts" <> mbid m
+getShouts ∷ ArtistTrackOrMBID t ⇒ Request f Send (t → APIKey → Ready)
+getShouts = api "track.getShouts"
 
-
-getSimilar ∷ Artist → Track → Request f Send t
-getSimilar a t = api "track.getSimilar" <> artist a <> track t
 
 -- | Get the similar tracks for this track on Last.fm, based on listening data.
 --
 -- Optional: 'autocorrect', 'limit'
 --
 -- <http://www.last.fm/api/show/track.getSimilar>
-getSimilar_mbid ∷ MBID → Request f Send t
-getSimilar_mbid m = api "track.getSimilar" <> mbid m
+getSimilar ∷ ArtistTrackOrMBID t ⇒ Request f Send (t → APIKey → Ready)
+getSimilar = api "track.getSimilar"
 
-
-getTags ∷ Artist → Track → User → Request f Send t
-getTags a t u = api "track.getTags" <> artist a <> track t <> user u
 
 -- | Get the tags applied by an individual user to a track on Last.fm.
 --
 -- Optional: 'autocorrect', 'user'
 --
 -- <http://www.last.fm/api/show/track.getTags>
-getTags_mbid ∷ MBID → User → Request f Send t
-getTags_mbid m u = api "track.getTags" <> mbid m <> user u
+getTags ∷ ArtistTrackOrMBID t ⇒ Request f Send (t → User → APIKey → Ready)
+getTags = api "track.getTags"
 
-
-getTopFans ∷ Artist → Track → Request f Send t
-getTopFans a t = api "track.getTopFans" <> artist a <> track t
 
 -- | Get the top fans for this track on Last.fm, based on listening data.
 --
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/track.getTopFans>
-getTopFans_mbid ∷ MBID → Request f Send t
-getTopFans_mbid m = api "track.getTopFans" <> mbid m
+getTopFans ∷ ArtistTrackOrMBID t ⇒ Request f Send (t → APIKey → Ready)
+getTopFans = api "track.getTopFans"
 
-
-getTopTags ∷ Artist → Track → Request f Send t
-getTopTags a t = api "track.getTopTags" <> artist a <> track t
 
 -- | Get the top tags for this track on Last.fm, ordered by tag count.
 --
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/track.getTopTags>
-getTopTags_mbid ∷ MBID → Request f Send t
-getTopTags_mbid m = api "track.getTopTags" <> mbid m
+getTopTags ∷ ArtistTrackOrMBID t ⇒ Request f Send (t → APIKey → Ready)
+getTopTags = api "track.getTopTags"
 
 
 -- | Love a track for a user profile.
 --
 -- <http://www.last.fm/api/show/track.love>
-love ∷ Artist → Track → Request f Sign t
-love a t = api "track.love" <> artist a <> track t <> post
+love ∷ Request f Sign (Artist → Track → APIKey → SessionKey → Ready)
+love = api "track.love" <* post
 
 
 -- | Remove a user's tag from a track.
 --
 -- <http://www.last.fm/api/show/track.removeTag>
-removeTag ∷ Artist → Track → Tag → Request f Sign t
-removeTag a tr t = api "track.removeTag" <> artist a <> track tr <> tag t <> post
+removeTag ∷ Request f Sign (Artist → Track → Tag → APIKey → SessionKey → Ready)
+removeTag = api "track.removeTag" <* post
 
 
 -- | Used to add a track-play to a user's profile.
@@ -156,8 +134,8 @@ removeTag a tr t = api "track.removeTag" <> artist a <> track tr <> tag t <> pos
 -- 'duration', 'mbid', 'streamId', 'trackNumber'
 --
 -- <http://www.last.fm/api/show/track.scrobble>
-scrobble ∷ Artist → Track → Timestamp → Request f Sign t
-scrobble a tr ts = api "track.scrobble" <> artist a <> track tr <> timestamp ts <> post
+scrobble ∷ Request f Sign (Artist → Track → Timestamp → APIKey → SessionKey → Ready)
+scrobble = api "track.scrobble" <* post
 
 
 -- | Search for a track by track name. Returns track matches sorted by relevance.
@@ -165,8 +143,8 @@ scrobble a tr ts = api "track.scrobble" <> artist a <> track tr <> timestamp ts 
 -- Optional: 'artist', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/track.search>
-search ∷ Track → Request f Send t
-search t = api "track.search" <> track t
+search ∷ Request f Send (Track → APIKey → Ready)
+search = api "track.search"
 
 
 -- | Share a track twith one or more Last.fm users or other friends.
@@ -174,22 +152,22 @@ search t = api "track.search" <> track t
 -- Optional: 'public', 'message', 'recipient'
 --
 -- <http://www.last.fm/api/show/track.share>
-share ∷ Artist → Track → Recipient → Request f Sign t
-share a t r = api "track.share" <> artist a <> track t <> recipient r <> post
+share ∷ Request f Sign (Artist → Track → Recipient → APIKey → SessionKey → Ready)
+share = api "track.share" <* post
 
 
 -- | Unban a track for a user profile.
 --
 -- <http://www.last.fm/api/show/track.unban>
-unban ∷ Artist → Track → Request f Sign t
-unban a t = api "track.unban" <> artist a <> track t <> post
+unban ∷ Request f Sign (Artist → Track → APIKey → SessionKey → Ready)
+unban = api "track.unban" <* post
 
 
 -- | Unlove a track for a user profile.
 --
 -- <http://www.last.fm/api/show/track.unlove>
-unlove ∷ Artist → Track → Request f Sign t
-unlove a t = api "track.unlove" <> artist a <> track t <> post
+unlove ∷ Request f Sign (Artist → Track → APIKey → SessionKey → Ready)
+unlove = api "track.unlove" <* post
 
 
 -- | Used to notify Last.fm that a user has started listening
@@ -199,5 +177,5 @@ unlove a t = api "track.unlove" <> artist a <> track t <> post
 -- 'duration', 'mbid', 'trackNumber'
 --
 -- <http://www.last.fm/api/show/track.updateNowPlaying>
-updateNowPlaying ∷ Artist → Track → Request f Sign t
-updateNowPlaying a t = api "track.updateNowPlaying" <> artist a <> track t <> post
+updateNowPlaying ∷ Request f Sign (Artist → Track → APIKey → SessionKey → Ready)
+updateNowPlaying = api "track.updateNowPlaying" <* post

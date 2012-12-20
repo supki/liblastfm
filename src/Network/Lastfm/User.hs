@@ -9,21 +9,28 @@
 -- import qualified Network.Lastfm.User as User
 -- @
 module Network.Lastfm.User
-  ( getArtistTracks, getBannedTracks, getEvents, getFriends, getInfo, getLovedTracks, getNeighbours, getNewReleases, getPastEvents, getPersonalTags, getPlaylists, getRecentStations, getRecentTracks, getRecommendedArtists, getRecommendedEvents, getShouts, getTopAlbums, getTopArtists, getTopTags, getTopTracks, getWeeklyAlbumChart, getWeeklyArtistChart, getWeeklyChartList, getWeeklyTrackChart, shout
+  ( getArtistTracks, getBannedTracks, getEvents, getFriends
+  , getInfo, getLovedTracks, getNeighbours, getNewReleases
+  , getPastEvents, getPersonalTags, getPlaylists, getRecentStations
+  , getRecentTracks, getRecommendedArtists, getRecommendedEvents
+  , getShouts, getTopAlbums, getTopArtists, getTopTags
+  , getTopTracks, getWeeklyAlbumChart, getWeeklyArtistChart
+  , getWeeklyChartList, getWeeklyTrackChart, shout
   ) where
 
-import Data.Monoid ((<>))
+import Control.Applicative
 
 import Network.Lastfm.Request
 
 
--- | Get a list of tracks by a given artist scrobbled by this user, including scrobble time. Can be limited to specific timeranges, defaults to all time.
+-- | Get a list of tracks by a given artist scrobbled by this user
+-- , including scrobble time. Can be limited to specific timeranges, defaults to all time.
 --
 -- Optional: 'startTimestamp', 'page', 'endTimestamp'
 --
 -- <http://www.last.fm/api/show/user.getArtistTracks>
-getArtistTracks ∷ User → Artist → Request f Send t
-getArtistTracks u a = api "user.getArtistTracks" <> user u <> artist a
+getArtistTracks ∷ Request f Send (User → Artist → APIKey → Ready)
+getArtistTracks = api "user.getArtistTracks"
 
 
 -- | Returns the tracks banned by the user
@@ -31,17 +38,18 @@ getArtistTracks u a = api "user.getArtistTracks" <> user u <> artist a
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/user.getBannedTracks>
-getBannedTracks ∷ User → Request f Send t
-getBannedTracks u = api "user.getBannedTracks" <> user u
+getBannedTracks ∷ Request f Send (User → APIKey → Ready)
+getBannedTracks = api "user.getBannedTracks"
 
 
--- | Get a list of upcoming events that this user is attending. Easily integratable into calendars, using the ical standard (see 'more formats' section below).
+-- | Get a list of upcoming events that this user is attending.
+-- Easily integratable into calendars, using the ical standard (see 'more formats' section below).
 --
 -- Optional: 'page', 'festivalsonly', 'limit'
 --
 -- <http://www.last.fm/api/show/user.getEvents>
-getEvents ∷ User → Request f Send t
-getEvents u = api "user.getEvents" <> user u
+getEvents ∷ Request f Send (User → APIKey → Ready)
+getEvents = api "user.getEvents"
 
 
 -- | Get a list of the user's friends on Last.fm.
@@ -49,15 +57,15 @@ getEvents u = api "user.getEvents" <> user u
 -- Optional: 'recenttracks', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/user.getFriends>
-getFriends ∷ User → Request f Send t
-getFriends u = api "user.getFriends" <> user u
+getFriends ∷ Request f Send (User → APIKey → Ready)
+getFriends = api "user.getFriends"
 
 
 -- | Get information about a user profile.
 --
 -- <http://www.last.fm/api/show/user.getInfo>
-getInfo ∷ User → Request f Send t
-getInfo u = api "user.getInfo" <> user u
+getInfo ∷ Request f Send (User → APIKey → Ready)
+getInfo = api "user.getInfo"
 
 
 -- | Get the last 50 tracks loved by a user.
@@ -65,8 +73,8 @@ getInfo u = api "user.getInfo" <> user u
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/user.getLovedTracks>
-getLovedTracks ∷ User → Request f Send t
-getLovedTracks u = api "user.getLovedTracks" <> user u
+getLovedTracks ∷ Request f Send (User → APIKey → Ready)
+getLovedTracks = api "user.getLovedTracks"
 
 
 -- | Get a list of a user's neighbours on Last.fm.
@@ -74,8 +82,8 @@ getLovedTracks u = api "user.getLovedTracks" <> user u
 -- Optional: 'limit'
 --
 -- <http://www.last.fm/api/show/user.getNeighbours>
-getNeighbours ∷ User → Request f Send t
-getNeighbours u = api "user.getNeighbours" <> user u
+getNeighbours ∷ Request f Send (User → APIKey → Ready)
+getNeighbours = api "user.getNeighbours"
 
 
 -- | Gets a list of forthcoming releases based on a user's musical taste.
@@ -83,8 +91,8 @@ getNeighbours u = api "user.getNeighbours" <> user u
 -- Optional: 'userecs'
 --
 -- <http://www.last.fm/api/show/user.getNewReleases>
-getNewReleases ∷ User → Request f Send t
-getNewReleases u = api "user.getNewReleases" <> user u
+getNewReleases ∷ Request f Send (User → APIKey → Ready)
+getNewReleases = api "user.getNewReleases"
 
 
 -- | Get a paginated list of all events a user has attended in the past.
@@ -92,8 +100,8 @@ getNewReleases u = api "user.getNewReleases" <> user u
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/user.getPastEvents>
-getPastEvents ∷ User → Request f Send t
-getPastEvents u = api "user.getPastEvents" <> user u
+getPastEvents ∷ Request f Send (User → APIKey → Ready)
+getPastEvents = api "user.getPastEvents"
 
 
 -- | Get the user's personal tags
@@ -101,15 +109,15 @@ getPastEvents u = api "user.getPastEvents" <> user u
 -- Optional: 'taggingtype', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/user.getPersonalTags>
-getPersonalTags ∷ User → Tag → TaggingType → Request f Send t
-getPersonalTags u t tt = api "user.getPersonalTags" <> user u <> tag t <> taggingType tt
+getPersonalTags ∷ Request f Send (User → Tag → TaggingType → APIKey → Ready)
+getPersonalTags = api "user.getPersonalTags"
 
 
 -- | Get a list of a user's playlists on Last.fm.
 --
 -- <http://www.last.fm/api/show/user.getPlaylists>
-getPlaylists ∷ User → Request f Send t
-getPlaylists u = api "user.getPlaylists" <> user u
+getPlaylists ∷ Request f Send (User → APIKey → Ready)
+getPlaylists = api "user.getPlaylists"
 
 
 -- | Get a list of the recent Stations listened to by this user.
@@ -117,17 +125,19 @@ getPlaylists u = api "user.getPlaylists" <> user u
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/user.getRecentStations>
-getRecentStations ∷ User → Request f Sign t
-getRecentStations u = api "user.getRecentStations" <> user u
+getRecentStations ∷ Request f Sign (User → APIKey → SessionKey → Ready)
+getRecentStations = api "user.getRecentStations"
 
 
--- | Get a list of the recent tracks listened to by this user. Also includes the currently playing track with the nowplaying="true" attribute if the user is currently listening.
+-- | Get a list of the recent tracks listened to by this user.
+-- Also includes the currently playing track with the nowplaying="true"
+-- attribute if the user is currently listening.
 --
 -- Optional: 'limit', 'page', 'from', 'extended', 'to'
 --
 -- <http://www.last.fm/api/show/user.getRecentTracks>
-getRecentTracks ∷ User → Request f Send t
-getRecentTracks u = api "user.getRecentTracks" <> user u
+getRecentTracks ∷ Request f Send (User → APIKey → Ready)
+getRecentTracks = api "user.getRecentTracks"
 
 
 -- | Get Last.fm artist recommendations for a user
@@ -135,7 +145,7 @@ getRecentTracks u = api "user.getRecentTracks" <> user u
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/user.getRecommendedArtists>
-getRecommendedArtists ∷ Request f Sign t
+getRecommendedArtists ∷ Request f Sign (APIKey → SessionKey → Ready)
 getRecommendedArtists = api "user.getRecommendedArtists"
 
 
@@ -144,7 +154,7 @@ getRecommendedArtists = api "user.getRecommendedArtists"
 -- Optional: 'limit', 'page', 'latitude', 'longitude', 'festivalsonly', 'country'
 --
 -- <http://www.last.fm/api/show/user.getRecommendedEvents>
-getRecommendedEvents ∷ Request f Sign t
+getRecommendedEvents ∷ Request f Sign (APIKey → SessionKey → Ready)
 getRecommendedEvents = api "user.getRecommendedEvents"
 
 
@@ -153,26 +163,28 @@ getRecommendedEvents = api "user.getRecommendedEvents"
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/user.getShouts>
-getShouts ∷ User → Request f Send t
-getShouts u = api "user.getShouts" <> user u
+getShouts ∷ Request f Send (User → APIKey → Ready)
+getShouts = api "user.getShouts"
 
 
--- | Get the top albums listened to by a user. You can stipulate a time period. Sends the overall chart by default.
+-- | Get the top albums listened to by a user.
+-- You can stipulate a time period. Sends the overall chart by default.
 --
 -- Optional: 'period', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/user.getTopAlbums>
-getTopAlbums ∷ User → Request f Send t
-getTopAlbums u = api "user.getTopAlbums" <> user u
+getTopAlbums ∷ Request f Send (User → APIKey → Ready)
+getTopAlbums = api "user.getTopAlbums"
 
 
--- | Get the top artists listened to by a user. You can stipulate a time period. Sends the overall chart by default.
+-- | Get the top artists listened to by a user.
+-- You can stipulate a time period. Sends the overall chart by default.
 --
 -- Optional: 'period', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/user.getTopArtists>
-getTopArtists ∷ User → Request f Send t
-getTopArtists u = api "user.getTopArtists" <> user u
+getTopArtists ∷ Request f Send (User → APIKey → Ready)
+getTopArtists = api "user.getTopArtists"
 
 
 -- | Get the top tags used by this user.
@@ -180,55 +192,60 @@ getTopArtists u = api "user.getTopArtists" <> user u
 -- Optional: 'limit'
 --
 -- <http://www.last.fm/api/show/user.getTopTags>
-getTopTags ∷ User → Request f Send t
-getTopTags u = api "user.getTopTags" <> user u
+getTopTags ∷ Request f Send (User → APIKey → Ready)
+getTopTags = api "user.getTopTags"
 
 
--- | Get the top tracks listened to by a user. You can stipulate a time period. Sends the overall chart by default.
+-- | Get the top tracks listened to by a user.
+-- You can stipulate a time period. Sends the overall chart by default.
 --
 -- Optional: 'period', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/user.getTopTracks>
-getTopTracks ∷ User → Request f Send t
-getTopTracks u = api "user.getTopTracks" <> user u
+getTopTracks ∷ Request f Send (User → APIKey → Ready)
+getTopTracks = api "user.getTopTracks"
 
 
--- | Get an album chart for a user profile, for a given date range. If no date range is supplied, it will return the most recent album chart for this user.
+-- | Get an album chart for a user profile, for a given date range.
+-- If no date range is supplied, it will return the most recent album chart for this user.
 --
 -- Optional: 'from', 'to'
 --
 -- <http://www.last.fm/api/show/user.getWeeklyAlbumChart>
-getWeeklyAlbumChart ∷ User → Request f Send t
-getWeeklyAlbumChart u = api "user.getWeeklyAlbumChart" <> user u
+getWeeklyAlbumChart ∷ Request f Send (User → APIKey → Ready)
+getWeeklyAlbumChart = api "user.getWeeklyAlbumChart"
 
 
--- | Get an artist chart for a user profile, for a given date range. If no date range is supplied, it will return the most recent artist chart for this user.
+-- | Get an artist chart for a user profile, for a given date range.
+-- If no date range is supplied, it will return the most recent artist chart for this user.
 --
 -- Optional: 'from', 'to'
 --
 -- <http://www.last.fm/api/show/user.getWeeklyArtistChart>
-getWeeklyArtistChart ∷ User → Request f Send t
-getWeeklyArtistChart u = api "user.getWeeklyArtistChart" <> user u
+getWeeklyArtistChart ∷ Request f Send (User → APIKey → Ready)
+getWeeklyArtistChart = api "user.getWeeklyArtistChart"
 
 
--- | Get a list of available charts for this user, expressed as date ranges which can be sent to the chart services.
+-- | Get a list of available charts for this user, expressed as
+-- date ranges which can be sent to the chart services.
 --
 -- <http://www.last.fm/api/show/user.getWeeklyChartList>
-getWeeklyChartList ∷ User → Request f Send t
-getWeeklyChartList u = api "user.getWeeklyChartList" <> user u
+getWeeklyChartList ∷ Request f Send (User → APIKey → Ready)
+getWeeklyChartList = api "user.getWeeklyChartList"
 
 
--- | Get a track chart for a user profile, for a given date range. If no date range is supplied, it will return the most recent track chart for this user.
+-- | Get a track chart for a user profile, for a given date range.
+-- If no date range is supplied, it will return the most recent track chart for this user.
 --
 -- Optional: 'from', 'to'
 --
 -- <http://www.last.fm/api/show/user.getWeeklyTrackChart>
-getWeeklyTrackChart ∷ User → Request f Send t
-getWeeklyTrackChart u = api "user.getWeeklyTrackChart" <> user u
+getWeeklyTrackChart ∷ Request f Send (User → APIKey → Ready)
+getWeeklyTrackChart = api "user.getWeeklyTrackChart"
 
 
 -- | Shout on this user's shoutbox
 --
 -- <http://www.last.fm/api/show/user.shout>
-shout ∷ User → Message → Request f Sign t
-shout u m = api "user.shout" <> user u <> message m <> post
+shout ∷ Request f Sign (User → Message → APIKey → SessionKey → Ready)
+shout = api "user.shout" <* post

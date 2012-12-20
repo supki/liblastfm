@@ -10,7 +10,7 @@ module Network.Lastfm.Request
     -- * Request major parameters
   , api, post, get, json, xml, Ready, APIKey, apiKey, SessionKey, sessionKey
     -- * Request minor parameters
-  , ArtistAlbumOrMBID, ArtistOrMBID
+  , ArtistAlbumOrMBID, ArtistOrMBID, ArtistTrackOrMBID
   , Token, token, Callback, callback
   , Artist, artist, Album, album, MBID, mbid
   , Country, country, Autocorrect, autocorrect
@@ -27,7 +27,7 @@ module Network.Lastfm.Request
   , Recipient, recipient, Username, username, User, user, Password, password
   , Public, public, Message, message, Page, page, Limit, limit
   , TaggingType, taggingType, UseRecs, useRecs, Venue, venue, VenueName, venueName
-  , type', value
+  , type', Value', value
   ) where
 
 import Data.Int (Int64)
@@ -46,6 +46,10 @@ class ArtistAlbumOrMBID a
 instance ArtistAlbumOrMBID MBID
 instance ArtistAlbumOrMBID (Artist, Album)
 
+class ArtistTrackOrMBID a
+
+instance ArtistTrackOrMBID MBID
+instance ArtistTrackOrMBID (Artist, Track)
 
 class ArtistOrMBID a
 
@@ -117,6 +121,20 @@ data StartTimestamp
 data EndTimestamp
 data From
 data To
+data Value'
+data Track
+data Timestamp
+data Fingerprint
+data AlbumArtist
+data Context
+data StreamId
+data Duration
+data TrackNumber
+data ChosenByUser
+data TaggingType
+data RecentTracks
+data UseRecs
+data Group
 data Venue
 data VenueName
 
@@ -323,124 +341,85 @@ type' n = add ("type" <> T.toLazyText (T.decimal n))
 
 
 -- | Add value parameter
-value ∷ Int64 → Text → Request f a t
+value ∷ Int64 → Text → Request f a Value'
 value n = add ("value" <> T.toLazyText (T.decimal n))
 {-# INLINE value #-}
 
 
-type Track = Text
-
-
 -- | Add track parameter
-track ∷ Track → Request f a t
+track ∷ Text → Request f a Track
 track = add "track"
 {-# INLINE track #-}
 
 
-type Timestamp = Int64
-
-
 -- | Add timestamp parameter
-timestamp ∷ Timestamp → Request f a t
+timestamp ∷ Int64 → Request f a Timestamp
 timestamp = add "timestamp" . T.toLazyText . T.decimal
 {-# INLINE timestamp #-}
 
 
-type Fingerprint = Int64
-
-
 -- | Add fingerprint parameter
-fingerprint ∷ Fingerprint → Request f a t
+fingerprint ∷ Int64 → Request f a Fingerprint
 fingerprint = add "fingerprintid" . T.toLazyText . T.decimal
 {-# INLINE fingerprint #-}
 
 
-type AlbumArtist = Text
-
-
 -- | Add albumArtist parameter
-albumArtist ∷ AlbumArtist → Request f a t
+albumArtist ∷ Text → Request f a AlbumArtist
 albumArtist = add "albumArtist"
 {-# INLINE albumArtist #-}
 
 
-type Context = Text
-
-
 -- | Add context parameter
-context ∷ Context → Request f a t
+context ∷ Text → Request f a Context
 context = add "context"
 {-# INLINE context #-}
 
 
-type StreamId = Int64
-
-
 -- | Add streamId parameter
-streamId ∷ StreamId → Request f a t
+streamId ∷ Int64 → Request f a StreamId
 streamId = add "streamId" . T.toLazyText . T.decimal
 {-# INLINE streamId #-}
 
 
-type Duration = Int64
-
-
 -- | Add duration parameter
-duration ∷ Duration → Request f a t
+duration ∷ Int64 → Request f a Duration
 duration = add "duration" . T.toLazyText . T.decimal
 {-# INLINE duration #-}
 
 
-type TrackNumber = Int64
-
-
 -- | Add trackNumber parameter
-trackNumber ∷ TrackNumber → Request f a t
+trackNumber ∷ Int64 → Request f a TrackNumber
 trackNumber = add "trackNumber" . T.toLazyText . T.decimal
 {-# INLINE trackNumber #-}
 
 
-type ChosenByUser = Bool
-
-
 -- | Add chosenByUser parameter
-chosenByUser ∷ ChosenByUser → Request f a t
+chosenByUser ∷ Bool → Request f a ChosenByUser
 chosenByUser = add "chosenByUser" . boolToText
 {-# INLINE chosenByUser #-}
 
 
-type TaggingType = Text
-
-
 -- | Add taggingType parameter
-taggingType ∷ TaggingType → Request f a t
+taggingType ∷ Text → Request f a TaggingType
 taggingType = add "taggingtype"
 {-# INLINE taggingType #-}
 
 
-type RecentTracks = Bool
-
-
 -- | Add recentTracks parameter
-recentTracks ∷ RecentTracks → Request f a t
+recentTracks ∷ Bool → Request f a RecentTracks
 recentTracks = add "recentTracks" . boolToText
 {-# INLINE recentTracks #-}
 
 
-type UseRecs = Bool
-
-
 -- | Add useRecs parameter
-useRecs ∷ UseRecs → Request f a t
+useRecs ∷ Bool → Request f a UseRecs
 useRecs = add "useRecs" . boolToText
 {-# INLINE useRecs #-}
 
 
-type Group = Text
-
-
 -- | Add group parameter
-group ∷ Group → Request f a t
+group ∷ Text → Request f a Group
 group = add "group"
 {-# INLINE group #-}
 

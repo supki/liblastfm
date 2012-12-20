@@ -26,31 +26,40 @@ auth ak sk s =
   ]
  where
   testAddTags = check ok . sign s $
-    addTags "Jefferson Airplane" "White rabbit" ["60s", "awesome"] <> apiKey ak <> sessionKey sk
+    addTags <*> artist "Jefferson Airplane" <*> track "White rabbit" <*> tags ["60s", "awesome"]
+      <*> apiKey ak <*> sessionKey sk
 
   testBan = check ok . sign s $
-    ban "Eminem" "Kim" <> apiKey ak <> sessionKey sk
+    ban <*> artist "Eminem" <*> track "Kim"
+      <*> apiKey ak <*> sessionKey sk
 
   testLove = check ok . sign s $
-    love "Gojira" "Ocean" <> apiKey ak <> sessionKey sk
+    love <*> artist "Gojira" <*> track "Ocean"
+      <*> apiKey ak <*> sessionKey sk
 
   testRemoveTag = check ok . sign s $
-    removeTag "Jefferson Airplane" "White rabbit" "awesome" <> apiKey ak <> sessionKey sk
+    removeTag <*> artist "Jefferson Airplane" <*> track "White rabbit" <*> tag "awesome"
+      <*> apiKey ak <*> sessionKey sk
 
   testShare = check ok . sign s $
-    share "Led Zeppelin" "When the Levee Breaks" "liblastfm" <> message "Just listen!" <> apiKey ak <> sessionKey sk
+    share <*> artist "Led Zeppelin" <*> track "When the Levee Breaks" <*> recipient "liblastfm" <* message "Just listen!"
+      <*> apiKey ak <*> sessionKey sk
 
   testUnban = check ok . sign s $
-    unban "Eminem" "Kim" <> apiKey ak <> sessionKey sk
+    unban <*> artist "Eminem" <*> track "Kim"
+      <*> apiKey ak <*> sessionKey sk
 
   testUnlove = check ok . sign s $
-    unlove "Gojira" "Ocean" <> apiKey ak <> sessionKey sk
+    unlove <*> artist "Gojira" <*> track "Ocean"
+      <*> apiKey ak <*> sessionKey sk
 
   testScrobble = check ss . sign s $
-    scrobble "Gojira" "Ocean" 1300000000 <> apiKey ak <> sessionKey sk
+    scrobble <*> artist "Gojira" <*> track "Ocean" <*> timestamp 1300000000
+      <*> apiKey ak <*> sessionKey sk
 
   testUpdateNowPlaying = check np . sign s $
-    updateNowPlaying "Gojira" "Ocean" <> apiKey ak <> sessionKey sk
+    updateNowPlaying <*> artist "Gojira" <*> track "Ocean"
+      <*> apiKey ak <*> sessionKey sk
 
 
 noauth ∷ [Test]
@@ -70,34 +79,34 @@ noauth =
   ak = "29effec263316a1f8a97f753caaa83e0"
 
   testGetBuylinks = check gbl $
-    getBuyLinks "Pink Floyd" "Brain Damage" "United Kingdom" <> apiKey ak
+    getBuyLinks <*> liftA2 (,) (artist "Pink Floyd") (track "Brain Damage") <*> country "United Kingdom" <*> apiKey ak
 
   testGetCorrection = check gc $
-    getCorrection "Pink Ployd" "Brain Damage" <> apiKey ak
+    getCorrection <*> artist "Pink Ployd" <*> track "Brain Damage" <*> apiKey ak
 
   testGetFingerprintMetadata = check gfm $
-    getFingerprintMetadata 1234 <> apiKey ak
+    getFingerprintMetadata <*> fingerprint 1234 <*> apiKey ak
 
   testGetInfo = check gi $
-    getInfo "Pink Floyd" "Brain Damage" <> username "aswalrus" <> apiKey ak
+    getInfo <*> liftA2 (,) (artist "Pink Floyd") (track "Brain Damage") <* username "aswalrus" <*> apiKey ak
 
   testGetShouts = check gsh $
-    getShouts "Pink Floyd" "Comfortably Numb" <> limit 7 <> apiKey ak
+    getShouts <*> liftA2 (,) (artist "Pink Floyd") (track "Comfortably Numb") <* limit 7 <*> apiKey ak
 
   testGetSimilar = check gsi $
-    getSimilar "Pink Floyd" "Comfortably Numb" <> limit 4 <> apiKey ak
+    getSimilar <*> liftA2 (,) (artist "Pink Floyd") (track "Comfortably Numb") <* limit 4 <*> apiKey ak
 
   testGetTags = check gt $
-    getTags "Jefferson Airplane" "White Rabbit" "liblastfm" <> apiKey ak
+    getTags <*> liftA2 (,) (artist "Jefferson Airplane") (track "White Rabbit") <*> user "liblastfm" <*> apiKey ak
 
   testGetTopFans = check gtf $
-    getTopFans "Pink Floyd" "Comfortably Numb" <> apiKey ak
+    getTopFans <*> liftA2 (,) (artist "Pink Floyd") (track "Comfortably Numb") <*> apiKey ak
 
   testGetTopTags = check gtt $
-    getTopTags "Pink Floyd" "Brain Damage" <> apiKey ak
+    getTopTags <*> liftA2 (,) (artist "Pink Floyd") (track "Brain Damage") <*> apiKey ak
 
   testSearch = check s' $
-    search "Believe" <> limit 12 <> apiKey ak
+    search <*> track "Believe" <* limit 12 <*> apiKey ak
 
 
 gc, gi, gt, ss, np ∷ Value → Parser String
