@@ -4,10 +4,9 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UnicodeSyntax #-}
 module Network.Lastfm.Internal
-  ( Coercing(..), Request(..), R(..), wrap, unwrap, add, Response
+  ( Coercing(..), Request(..), R(..), wrap, unwrap, Response
   , Auth(..), Format(..)
   , render
-  , api, post, get, json, xml
   ) where
 
 import Control.Applicative (Applicative(..))
@@ -113,50 +112,3 @@ wrap = Request . Dual . Endo
 unwrap ∷ Request f a t → (R f a t → R f a t)
 unwrap = appEndo . getDual . unRequest
 {-# INLINE unwrap #-}
-
-
--- | Change request API method
---
--- Primarily used in API call wrappers, not intended for usage by library user
-api ∷ Text → Request f a t
-api = add "method"
-{-# INLINE api #-}
-
-
--- | Change html method to GET
---
--- Primarily used in API call wrappers, not intended for usage by library user
-get ∷ Request f a t
-get = wrap $ \r → r { method = "GET" }
-{-# INLINE get #-}
-
-
--- | Change html method to POST
---
--- Primarily used in API call wrappers, not intended for usage by library user
-post ∷ Request f a t
-post = wrap $ \r → r { method = "POST" }
-{-# INLINE post #-}
-
-
--- | Change API response format to JSON
---
--- This is a little helper. It's actually enough
--- to specialize Format manually
-json ∷ Request JSON a t
-json = wrap id
-{-# INLINE json #-}
-
-
--- | Change API response format to XML
---
--- This is a little helper. It's actually enough
--- to specialize Format manually
-xml ∷ Request XML a t
-xml = wrap id
-{-# INLINE xml #-}
-
-
-add ∷ Text → Text → Request f a t
-add k v = wrap $ \r@R { query = q } → r { query = M.insert k v q }
-{-# INLINE add #-}

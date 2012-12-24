@@ -33,6 +33,7 @@ module Network.Lastfm.Request
 import Data.Int (Int64)
 import Data.Monoid ((<>))
 
+import qualified Data.Map as M
 import           Data.Text.Lazy (Text)
 import qualified Data.Text.Lazy as T
 import qualified Data.Text.Lazy.Builder as T
@@ -57,9 +58,77 @@ instance ArtistOrMBID MBID
 instance ArtistOrMBID Artist
 
 
+class Argument a where
+  add ∷ Text → a → Request f b t
+  add k v = wrap $ \r@R { query = q } → r { query = M.insert k (toText v) q }
+  {-# INLINE add #-}
+
+  toText ∷ a → Text
+
+instance Argument Text where
+  toText = id
+  {-# INLINE toText #-}
+
+instance Argument Bool where
+  toText b = if b then "1" else "0"
+  {-# INLINE toText #-}
+
+instance Argument Int64 where
+  toText = T.toLazyText . T.decimal
+  {-# INLINE toText #-}
+
+instance Argument a ⇒ Argument [a] where
+  toText = T.intercalate "," . map toText
+  {-# INLINE toText #-}
+
+
 data Ready
 data APIKey
 data SessionKey
+data Token
+data Callback
+
+
+-- | Change request API method
+--
+-- Primarily used in API call wrappers, not intended for usage by library user
+api ∷ Text → Request f a t
+api = add "method"
+{-# INLINE api #-}
+
+
+-- | Change html method to GET
+--
+-- Primarily used in API call wrappers, not intended for usage by library user
+get ∷ Request f a t
+get = wrap $ \r → r { method = "GET" }
+{-# INLINE get #-}
+
+
+-- | Change html method to POST
+--
+-- Primarily used in API call wrappers, not intended for usage by library user
+post ∷ Request f a t
+post = wrap $ \r → r { method = "POST" }
+{-# INLINE post #-}
+
+
+-- | Change API response format to JSON
+--
+-- This is a little helper. It's actually enough
+-- to specialize Format manually
+json ∷ Request JSON a t
+json = wrap id
+{-# INLINE json #-}
+
+
+-- | Change API response format to XML
+--
+-- This is a little helper. It's actually enough
+-- to specialize Format manually
+xml ∷ Request XML a t
+xml = wrap id
+{-# INLINE xml #-}
 
 
 -- | Change request API key
@@ -74,20 +143,14 @@ sessionKey = add "sk"
 {-# INLINE sessionKey #-}
 
 
-type Token = Text
-
-
 -- | Add token parameter
-token ∷ Token → Request f a t
+token ∷ Text → Request f a Token
 token = add "token"
 {-# INLINE token #-}
 
 
-type Callback = Text
-
-
 -- | Add callback link parameter
-callback ∷ Callback → Request f a t
+callback ∷ Text → Request f a Callback
 callback = add "cb"
 {-# INLINE callback #-}
 
@@ -171,7 +234,7 @@ language = add "lang"
 
 -- | Add tags parameter
 tags ∷ [Text] → Request f a [Tag]
-tags = add "tags" . T.intercalate ","
+tags = add "tags"
 {-# INLINE tags #-}
 
 
@@ -183,19 +246,19 @@ tag = add "tag"
 
 -- | Add autocorrect parameter
 autocorrect ∷ Bool → Request f a Autocorrect
-autocorrect = add "tags" . boolToText
+autocorrect = add "tags"
 {-# INLINE autocorrect #-}
 
 
 -- | Add page parameter
 page ∷ Int64 → Request f a Page
-page = add "page" . T.toLazyText . T.decimal
+page = add "page"
 {-# INLINE page #-}
 
 
 -- | Add limit parameter
 limit ∷ Int64 → Request f a Limit
-limit = add "limit" . T.toLazyText . T.decimal
+limit = add "limit"
 {-# INLINE limit #-}
 
 
@@ -207,7 +270,7 @@ message = add "message"
 
 -- | Add public parameter
 public ∷ Bool → Request f a Public
-public = add "public" . boolToText
+public = add "public"
 {-# INLINE public #-}
 
 
@@ -237,7 +300,7 @@ password = add "password"
 
 -- | Add status parameter
 status ∷ Status → Request f a Status
-status = add "status" . \s -> case s of
+status = add "status" . T.pack . \s -> case s of
   Attending → "0"
   Maybe     → "1"
   _         → "2"
@@ -246,13 +309,13 @@ status = add "status" . \s -> case s of
 
 -- | Add event parameter
 event ∷ Int64 → Request f a Event
-event = add "event" . T.toLazyText . T.decimal
+event = add "event"
 {-# INLINE event #-}
 
 
 -- | Add festivalsonly parameter
 festivalsonly ∷ Bool → Request f a Festivals
-festivalsonly = add "festivalsonly" . boolToText
+festivalsonly = add "festivalsonly"
 {-# INLINE festivalsonly #-}
 
 
@@ -276,13 +339,13 @@ location = add "location"
 
 -- | Add distance parameter
 distance ∷ Int64 → Request f a Distance
-distance = add "distance" . T.toLazyText . T.decimal
+distance = add "distance"
 {-# INLINE distance #-}
 
 
 -- | Add venue parameter
 venue ∷ Int64 → Request f a Venue
-venue = add "venue" . T.toLazyText . T.decimal
+venue = add "venue"
 {-# INLINE venue #-}
 
 
@@ -300,49 +363,49 @@ metro = add "metro"
 
 -- | Add start parameter
 start ∷ Int64 → Request f a Start
-start = add "start" . T.toLazyText . T.decimal
+start = add "start"
 {-# INLINE start #-}
 
 
 -- | Add end parameter
 end ∷ Int64 → Request f a End
-end = add "end" . T.toLazyText . T.decimal
+end = add "end"
 {-# INLINE end #-}
 
 
 -- | Add startTimestamp parameter
 startTimestamp ∷ Int64 → Request f a StartTimestamp
-startTimestamp = add "startTimestamp" . T.toLazyText . T.decimal
+startTimestamp = add "startTimestamp"
 {-# INLINE startTimestamp #-}
 
 
 -- | Add endTimestamp parameter
 endTimestamp ∷ Int64 → Request f a EndTimestamp
-endTimestamp = add "endTimestamp" . T.toLazyText . T.decimal
+endTimestamp = add "endTimestamp"
 {-# INLINE endTimestamp #-}
 
 
 -- | Add from parameter
 from ∷ Int64 → Request f a From
-from = add "from" . T.toLazyText . T.decimal
+from = add "from"
 {-# INLINE from #-}
 
 
 -- | Add to parameter
 to ∷ Int64 → Request f a To
-to = add "to" . T.toLazyText . T.decimal
+to = add "to"
 {-# INLINE to #-}
 
 
 -- | Add type parameter
 type' ∷ Int64 → Text → Request f a t
-type' n = add ("type" <> T.toLazyText (T.decimal n))
+type' n = add ("type" <> toText n)
 {-# INLINE type' #-}
 
 
 -- | Add value parameter
 value ∷ Int64 → Text → Request f a Value'
-value n = add ("value" <> T.toLazyText (T.decimal n))
+value n = add ("value" <> toText n)
 {-# INLINE value #-}
 
 
@@ -354,13 +417,13 @@ track = add "track"
 
 -- | Add timestamp parameter
 timestamp ∷ Int64 → Request f a Timestamp
-timestamp = add "timestamp" . T.toLazyText . T.decimal
+timestamp = add "timestamp"
 {-# INLINE timestamp #-}
 
 
 -- | Add fingerprint parameter
 fingerprint ∷ Int64 → Request f a Fingerprint
-fingerprint = add "fingerprintid" . T.toLazyText . T.decimal
+fingerprint = add "fingerprintid"
 {-# INLINE fingerprint #-}
 
 
@@ -378,25 +441,25 @@ context = add "context"
 
 -- | Add streamId parameter
 streamId ∷ Int64 → Request f a StreamId
-streamId = add "streamId" . T.toLazyText . T.decimal
+streamId = add "streamId"
 {-# INLINE streamId #-}
 
 
 -- | Add duration parameter
 duration ∷ Int64 → Request f a Duration
-duration = add "duration" . T.toLazyText . T.decimal
+duration = add "duration"
 {-# INLINE duration #-}
 
 
 -- | Add trackNumber parameter
 trackNumber ∷ Int64 → Request f a TrackNumber
-trackNumber = add "trackNumber" . T.toLazyText . T.decimal
+trackNumber = add "trackNumber"
 {-# INLINE trackNumber #-}
 
 
 -- | Add chosenByUser parameter
 chosenByUser ∷ Bool → Request f a ChosenByUser
-chosenByUser = add "chosenByUser" . boolToText
+chosenByUser = add "chosenByUser"
 {-# INLINE chosenByUser #-}
 
 
@@ -408,13 +471,13 @@ taggingType = add "taggingtype"
 
 -- | Add recentTracks parameter
 recentTracks ∷ Bool → Request f a RecentTracks
-recentTracks = add "recentTracks" . boolToText
+recentTracks = add "recentTracks"
 {-# INLINE recentTracks #-}
 
 
 -- | Add useRecs parameter
 useRecs ∷ Bool → Request f a UseRecs
-useRecs = add "useRecs" . boolToText
+useRecs = add "useRecs"
 {-# INLINE useRecs #-}
 
 
@@ -422,8 +485,3 @@ useRecs = add "useRecs" . boolToText
 group ∷ Text → Request f a Group
 group = add "group"
 {-# INLINE group #-}
-
-
-boolToText ∷ Bool → Text
-boolToText b = if b then "1" else "0"
-{-# INLINE boolToText #-}
