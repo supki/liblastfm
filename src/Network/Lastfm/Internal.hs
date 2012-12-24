@@ -73,12 +73,6 @@ instance Default (R XML a t) where
 
 newtype Request f a t = Request { unRequest ∷ Dual (Endo (R f a t)) }
 
-instance Monoid (Request f a t) where
-  mempty = Request mempty
-  Request s `mappend` Request t = Request $ s `mappend` t
-  {-# INLINE mappend #-}
-
-
 instance Coercing (Request f) where
   coerce q = wrap $ coerce . unwrap q . coerce
   {-# INLINE coerce #-}
@@ -89,7 +83,9 @@ instance Functor (Request f a) where
 
 instance Applicative (Request f a) where
   pure _ = wrap id
-  f <*> x = coerce f <> coerce x
+  f <*> x = let Request g = coerce f
+                Request y = coerce x
+            in Request $ g <> y
   {-# INLINE (<*>) #-}
 
 

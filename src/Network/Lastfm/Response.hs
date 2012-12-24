@@ -42,7 +42,7 @@ type Secret = Text
 
 -- | Sign 'Request' with 'Secret'
 sign ∷ Secret → Request f Sign Ready → Request f Send Ready
-sign s = approve . (<> signature)
+sign s = approve . (<* signature)
  where
   signature = wrap $ \r@R { query = q } →
     r { query = M.insert "api_sig" (signer (foldr M.delete q ["format", "callback"])) q }
