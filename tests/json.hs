@@ -18,6 +18,7 @@ import qualified Event as Event
 import qualified Geo as Geo
 import qualified Group as Group
 import qualified Library as Library
+import qualified Playlist as Playlist
 import qualified Tag as Tag
 import qualified Track as Track
 import qualified User as User
@@ -36,6 +37,7 @@ main =
              , Artist.auth
              , Event.auth
              , Library.auth
+             , Playlist.auth
              , Track.auth
              , User.auth
              ]

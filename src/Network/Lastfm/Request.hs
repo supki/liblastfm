@@ -22,6 +22,7 @@ module Network.Lastfm.Request
   , StartTimestamp, startTimestamp, EndTimestamp, endTimestamp
   , Metro, metro, Tag, tags, tag, Track, track, Timestamp , timestamp, Fingerprint, fingerprint
   , AlbumArtist, albumArtist, Duration, duration, TrackNumber, trackNumber
+  , Playlist, playlist, Title, title, Description, description
   , ChosenByUser, chosenByUser, Context, context, StreamId, streamId
   , RecentTracks, recentTracks
   , Recipient, recipient, Username, username, User, user, Password, password
@@ -185,6 +186,9 @@ data EndTimestamp
 data From
 data To
 data Value'
+data Playlist
+data Title
+data Description
 data Track
 data Timestamp
 data Fingerprint
@@ -419,6 +423,24 @@ track = add "track"
 timestamp ∷ Int64 → Request f a Timestamp
 timestamp = add "timestamp"
 {-# INLINE timestamp #-}
+
+
+-- | Add playlistID parameter
+playlist ∷ Int64 → Request f a Playlist
+playlist = add "playlistID"
+{-# INLINE playlist #-}
+
+
+-- | Add title parameter
+title ∷ Text → Request f a Title
+title = add "title"
+{-# INLINE title #-}
+
+
+-- | Add description parameter
+description ∷ Text → Request f a Description
+description = add "description"
+{-# INLINE description #-}
 
 
 -- | Add fingerprint parameter
