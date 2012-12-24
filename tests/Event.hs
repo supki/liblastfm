@@ -26,23 +26,21 @@ auth ak sk s =
     share <*> event 3142549 <*> recipient "liblastfm" <* message "Just listen!" <*> ak <*> sk
 
 
-noauth ∷ [Test]
-noauth =
+noauth ∷ Request JSON Send APIKey → [Test]
+noauth ak =
   [ testCase "Event.getAttendees" testGetAttendees
   , testCase "Event.getInfo" testGetInfo
   , testCase "Event.getShouts" testGetShouts
   ]
  where
-  ak = "29effec263316a1f8a97f753caaa83e0"
-
   testGetAttendees = check ga $
-    getAttendees <*> event 3142549 <* limit 2 <*> apiKey ak
+    getAttendees <*> event 3142549 <* limit 2 <*> ak
 
   testGetInfo = check gi $
-    getInfo <*> event 3142549 <*> apiKey ak
+    getInfo <*> event 3142549 <*> ak
 
   testGetShouts = check gs $
-    getShouts <*> event 3142549 <* limit 1 <*> apiKey ak
+    getShouts <*> event 3142549 <* limit 1 <*> ak
 
 
 gi, gs ∷ Value → Parser String

@@ -1,3 +1,4 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
 module Geo (noauth) where
@@ -11,8 +12,8 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-noauth ∷ [Test]
-noauth =
+noauth ∷ Request JSON Send APIKey → [Test]
+noauth ak =
   [ testCase "Geo.getEvents" testGetEvents
   , testCase "Geo.getMetroArtistChart" testGetMetroArtistChart
   , testCase "Geo.getMetroHypeArtistChart" testGetMetroHypeArtistChart
@@ -26,40 +27,38 @@ noauth =
   , testCase "Geo.getTopTracks" testGetTopTracks
   ]
  where
-  ak = "29effec263316a1f8a97f753caaa83e0"
-
   testGetEvents = check ge $
-    getEvents <* location "Moscow" <* limit 5 <*> apiKey ak
+    getEvents <* location "Moscow" <* limit 5 <*> ak
 
   testGetMetroArtistChart = check ga $
-    getMetroArtistChart <*> metro "Saint Petersburg" <*> country "Russia" <*> apiKey ak
+    getMetroArtistChart <*> metro "Saint Petersburg" <*> country "Russia" <*> ak
 
   testGetMetroHypeArtistChart = check ga $
-    getMetroHypeArtistChart <*> metro "New York" <*> country "United States" <*> apiKey ak
+    getMetroHypeArtistChart <*> metro "New York" <*> country "United States" <*> ak
 
   testGetMetroHypeTrackChart = check gt $
-    getMetroHypeTrackChart <*> metro "Ufa" <*> country "Russia" <*> apiKey ak
+    getMetroHypeTrackChart <*> metro "Ufa" <*> country "Russia" <*> ak
 
   testGetMetroTrackChart = check gt $
-    getMetroTrackChart <*> metro "Boston" <*> country "United States" <*> apiKey ak
+    getMetroTrackChart <*> metro "Boston" <*> country "United States" <*> ak
 
   testGetMetroUniqueArtistChart = check ga $
-    getMetroUniqueArtistChart <*> metro "Minsk" <*> country "Belarus" <*> apiKey ak
+    getMetroUniqueArtistChart <*> metro "Minsk" <*> country "Belarus" <*> ak
 
   testGetMetroUniqueTrackChart = check gt $
-    getMetroUniqueTrackChart <*> metro "Moscow" <*> country "Russia" <*> apiKey ak
+    getMetroUniqueTrackChart <*> metro "Moscow" <*> country "Russia" <*> ak
 
   testGetMetroWeeklyChartlist = check gc $
-    getMetroWeeklyChartlist <*> metro "Moscow" <*> apiKey ak
+    getMetroWeeklyChartlist <*> metro "Moscow" <*> ak
 
   testGetMetros = check gm $
-    getMetros <* country "Russia" <*> apiKey ak
+    getMetros <* country "Russia" <*> ak
 
   testGetTopArtists = check ga $
-    getTopArtists <*> country "Belarus" <* limit 3 <*> apiKey ak
+    getTopArtists <*> country "Belarus" <* limit 3 <*> ak
 
   testGetTopTracks = check gt $
-    getTopTracks <*> country "Ukraine" <* limit 2 <*> apiKey ak
+    getTopTracks <*> country "Ukraine" <* limit 2 <*> ak
 
 
 ga, ge, gm, gt ∷ Value → Parser [String]

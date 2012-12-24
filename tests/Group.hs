@@ -1,3 +1,4 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
 module Group (noauth) where
@@ -11,8 +12,8 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-noauth ∷ [Test]
-noauth =
+noauth ∷ Request JSON Send APIKey → [Test]
+noauth ak =
   [ testCase "Group.getHype" testGetHype
   , testCase "Group.getMembers" testGetMembers
   , testCase "Group.getWeeklyAlbumChart" testGetWeeklyAlbumChart
@@ -21,26 +22,25 @@ noauth =
   , testCase "Group.getWeeklyTrackChart" testGetWeeklyTrackChart
   ]
  where
-  ak = "29effec263316a1f8a97f753caaa83e0"
   g = "People with no social lives that listen to more music than is healthy who are slightly scared of spiders and can never seem to find a pen"
 
   testGetHype = check gh $
-    getHype <*> group g <*> apiKey ak
+    getHype <*> group g <*> ak
 
   testGetMembers = check gm $
-    getMembers <*> group g <* limit 10 <*> apiKey ak
+    getMembers <*> group g <* limit 10 <*> ak
 
   testGetWeeklyAlbumChart = check ga $
-    getWeeklyAlbumChart <*> group g <*> apiKey ak
+    getWeeklyAlbumChart <*> group g <*> ak
 
   testGetWeeklyArtistChart = check gar $
-    getWeeklyArtistChart <*> group g <*> apiKey ak
+    getWeeklyArtistChart <*> group g <*> ak
 
   testGetWeeklyChartList = check gc $
-    getWeeklyChartList <*> group g <*> apiKey ak
+    getWeeklyChartList <*> group g <*> ak
 
   testGetWeeklyTrackChart = check gt $
-    getWeeklyTrackChart <*> group g <*> apiKey ak
+    getWeeklyTrackChart <*> group g <*> ak
 
 
 ga, gar, gh, gm, gt ∷ Value → Parser [String]

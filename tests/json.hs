@@ -42,7 +42,7 @@ main =
              , Track.auth
              , User.auth
              ]
-           noauth = mconcat
+           noauth = mconcat . map (\f → f (apiKey ak)) $
              [ Album.noauth
              , Artist.noauth
              , Chart.noauth

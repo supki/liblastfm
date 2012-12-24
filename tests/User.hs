@@ -34,8 +34,8 @@ auth ak sk s =
     shout <*> user "liblastfm" <*> message "test message" <*> ak <*> sk
 
 
-noauth ∷ [Test]
-noauth =
+noauth ∷ Request JSON Send APIKey → [Test]
+noauth ak =
   [ testCase "User.getArtistTracks" testGetArtistTracks
   , testCase "User.getBannedTracks" testGetBannedTracks
   , testCase "User.getEvents" testGetEvents
@@ -59,70 +59,68 @@ noauth =
   , testCase "User.getWeeklyTrackChart" testGetWeeklyTrackChart
   ]
  where
-  ak = "29effec263316a1f8a97f753caaa83e0"
-
   testGetArtistTracks = check gat $
-    getArtistTracks <*> user "smpcln" <*> artist "Dvar" <*> apiKey ak
+    getArtistTracks <*> user "smpcln" <*> artist "Dvar" <*> ak
 
   testGetBannedTracks = check gbt $
-    getBannedTracks <*> user "smpcln" <* limit 10 <*> apiKey ak
+    getBannedTracks <*> user "smpcln" <* limit 10 <*> ak
 
   testGetEvents = check ge $
-    getEvents <*> user "chansonnier" <* limit 5 <*> apiKey ak
+    getEvents <*> user "chansonnier" <* limit 5 <*> ak
 
   testGetFriends = check gf $
-    getFriends <*> user "smpcln" <* limit 10 <*> apiKey ak
+    getFriends <*> user "smpcln" <* limit 10 <*> ak
 
   testGetPlayCount = check gpc $
-    getInfo <*> user "smpcln" <*> apiKey ak
+    getInfo <*> user "smpcln" <*> ak
 
   testGetLovedTracks = check glt $
-    getLovedTracks <*> user "smpcln" <* limit 10 <*> apiKey ak
+    getLovedTracks <*> user "smpcln" <* limit 10 <*> ak
 
   testGetNeighbours = check gn $
-    getNeighbours <*> user "smpcln" <* limit 10 <*> apiKey ak
+    getNeighbours <*> user "smpcln" <* limit 10 <*> ak
 
   testGetNewReleases = check gnr $
-    getNewReleases <*> user "smpcln" <*> apiKey ak
+    getNewReleases <*> user "smpcln" <*> ak
 
   testGetPastEvents = check gpe $
-    getPastEvents <*> user "mokele" <* limit 5 <*> apiKey ak
+    getPastEvents <*> user "mokele" <* limit 5 <*> ak
 
   testGetPersonalTags = check gpt $
-    getPersonalTags <*> user "crackedcore" <*> tag "rhythmic noise" <*> taggingType "artist" <* limit 10 <*> apiKey ak
+    getPersonalTags <*> user "crackedcore" <*> tag "rhythmic noise" <*> taggingType "artist" <* limit 10 <*> ak
 
   testGetPlaylists = check gp $
-    getPlaylists <*> user "mokele" <*> apiKey ak
+    getPlaylists <*> user "mokele" <*> ak
 
   testGetRecentTracks = check grt $
-    getRecentTracks <*> user "smpcln" <* limit 10 <*> apiKey ak
+    getRecentTracks <*> user "smpcln" <* limit 10 <*> ak
 
   testGetShouts = check gs $
-    getShouts <*> user "smpcln" <* limit 2 <*> apiKey ak
+    getShouts <*> user "smpcln" <* limit 2 <*> ak
 
   testGetTopAlbums = check gtal $
-    getTopAlbums <*> user "smpcln" <* limit 5 <*> apiKey ak
+    getTopAlbums <*> user "smpcln" <* limit 5 <*> ak
 
   testGetTopArtists = check gtar $
-    getTopArtists <*> user "smpcln" <* limit 5 <*> apiKey ak
+    getTopArtists <*> user "smpcln" <* limit 5 <*> ak
 
   testGetTopTags = check gtta $
-    getTopTags <*> user "smpcln" <* limit 10 <*> apiKey ak
+    getTopTags <*> user "smpcln" <* limit 10 <*> ak
 
   testGetTopTracks = check gttr $
-    getTopTracks <*> user "smpcln" <* limit 10 <*> apiKey ak
+    getTopTracks <*> user "smpcln" <* limit 10 <*> ak
 
   testGetWeeklyAlbumChart = check gwalc $
-    getWeeklyAlbumChart <*> user "rj" <*> apiKey ak
+    getWeeklyAlbumChart <*> user "rj" <*> ak
 
   testGetWeeklyArtistChart = check gwarc $
-    getWeeklyArtistChart <*> user "rj" <*> apiKey ak
+    getWeeklyArtistChart <*> user "rj" <*> ak
 
   testGetWeeklyChartList = check gwcl $
-    getWeeklyChartList <*> user "rj" <*> apiKey ak
+    getWeeklyChartList <*> user "rj" <*> ak
 
   testGetWeeklyTrackChart = check gwtc $
-    getWeeklyTrackChart <*> user "rj" <*> apiKey ak
+    getWeeklyTrackChart <*> user "rj" <*> ak
 
 
 gpc ∷ Value → Parser String

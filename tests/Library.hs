@@ -46,23 +46,21 @@ auth ak sk s =
     removeScrobble <*> artist "Gojira" <*> track "Ocean" <*> timestamp 1328905590 <*> ak <*> sk
 
 
-noauth ∷ [Test]
-noauth =
+noauth ∷ Request JSON Send APIKey → [Test]
+noauth ak =
   [ testCase "Library.getAlbums" testGetAlbums
   , testCase "Library.getArtists" testGetArtists
   , testCase "Library.getTracks" testGetTracks
   ]
  where
-  ak = "29effec263316a1f8a97f753caaa83e0"
-
   testGetAlbums = check ga $
-    getAlbums <*> user "smpcln" <* artist "Burzum" <* limit 5 <*> apiKey ak
+    getAlbums <*> user "smpcln" <* artist "Burzum" <* limit 5 <*> ak
 
   testGetArtists = check gar $
-    getArtists <*> user "smpcln" <* limit 7 <*> apiKey ak
+    getArtists <*> user "smpcln" <* limit 7 <*> ak
 
   testGetTracks = check gt $
-    getTracks <*> user "smpcln" <* artist "Burzum" <* limit 4 <*> apiKey ak
+    getTracks <*> user "smpcln" <* artist "Burzum" <* limit 4 <*> ak
 
 
 ga, gar, gt ∷ Value → Parser [String]

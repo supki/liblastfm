@@ -34,8 +34,8 @@ auth ak sk s =
     share <*> artist "Sleep" <*> recipient "liblastfm" <* message "Just listen!" <*> ak <*> sk
 
 
-noauth ∷ [Test]
-noauth =
+noauth ∷ Request JSON Send APIKey → [Test]
+noauth ak =
   [ testCase "Artist.getCorrection" testGetCorrection
   , testCase "Artist.getEvents" testGetEvents
   , testCase "Artist.getEvents_mbid" testGetEvents_mbid
@@ -62,103 +62,77 @@ noauth =
   , testCase "Artist.search" testSearch
   ]
  where
-  ak = "29effec263316a1f8a97f753caaa83e0"
-
   testGetCorrection = check gc $
-    getCorrection <*> artist "Meshugah"
-      <*> apiKey ak
+    getCorrection <*> artist "Meshugah" <*> ak
 
   testGetEvents = check ge $
-    getEvents <*> artist "Meshuggah" <* limit 2
-      <*> apiKey ak
+    getEvents <*> artist "Meshuggah" <* limit 2 <*> ak
 
   testGetEvents_mbid = check ge $
-    getEvents <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 2
-      <*> apiKey ak
+    getEvents <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 2 <*> ak
 
   testGetInfo = check gin $
-    getInfo <*> artist "Meshuggah"
-      <*> apiKey ak
+    getInfo <*> artist "Meshuggah" <*> ak
 
   testGetInfo_mbid = check gin $
-    getInfo <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413"
-      <*> apiKey ak
+    getInfo <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <*> ak
 
   testGetPastEvents = check gpe $
-    getPastEvents <*> artist "Meshuggah" <* autocorrect True
-      <*> apiKey ak
+    getPastEvents <*> artist "Meshuggah" <* autocorrect True <*> ak
 
   testGetPastEvents_mbid = check gpe $
-    getPastEvents <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* autocorrect True
-      <*> apiKey ak
+    getPastEvents <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* autocorrect True <*> ak
 
   testGetPodcast = check gp $
-    getPodcast <*> artist "Meshuggah"
-      <*> apiKey ak
+    getPodcast <*> artist "Meshuggah" <*> ak
 
   testGetPodcast_mbid = check gp $
-    getPodcast <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413"
-      <*> apiKey ak
+    getPodcast <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <*> ak
 
   testGetShouts = check gs $
-    getShouts <*> artist "Meshuggah" <* limit 5
-      <*> apiKey ak
+    getShouts <*> artist "Meshuggah" <* limit 5 <*> ak
 
   testGetShouts_mbid = check gs $
-    getShouts <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 5
-      <*> apiKey ak
+    getShouts <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 5 <*> ak
 
   testGetSimilar = check gsi $
-    getSimilar <*> artist "Meshuggah" <* limit 3
-      <*> apiKey ak
+    getSimilar <*> artist "Meshuggah" <* limit 3 <*> ak
 
   testGetSimilar_mbid = check gsi $
-    getSimilar <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 3
-      <*> apiKey ak
+    getSimilar <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 3 <*> ak
 
   testGetTags = check gt $
-    getTags <*> artist "Егор Летов" <* user "liblastfm"
-      <*> apiKey ak
+    getTags <*> artist "Егор Летов" <* user "liblastfm" <*> ak
 
   testGetTags_mbid = check gt $
-    getTags <*> mbid "cfb3d32e-d095-4d63-946d-9daf06932180" <* user "liblastfm"
-      <*> apiKey ak
+    getTags <*> mbid "cfb3d32e-d095-4d63-946d-9daf06932180" <* user "liblastfm" <*> ak
 
   testGetTopAlbums = check gta $
-    getTopAlbums <*> artist "Meshuggah" <* limit 3
-      <*> apiKey ak
+    getTopAlbums <*> artist "Meshuggah" <* limit 3 <*> ak
 
   testGetTopAlbums_mbid = check gta $
-    getTopAlbums <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 3
-      <*> apiKey ak
+    getTopAlbums <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 3 <*> ak
 
   testGetTopFans = check gtf $
-    getTopFans <*> artist "Meshuggah"
-      <*> apiKey ak
+    getTopFans <*> artist "Meshuggah" <*> ak
 
   testGetTopFans_mbid = check gtf $
-    getTopFans <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413"
-      <*> apiKey ak
+    getTopFans <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <*> ak
 
   testGetTopTags = check gtt $
-    getTopTags <*> artist "Meshuggah"
-      <*> apiKey ak
+    getTopTags <*> artist "Meshuggah" <*> ak
 
   testGetTopTags_mbid = check gtt $
-    getTopTags <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413"
-      <*> apiKey ak
+    getTopTags <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <*> ak
 
   testGetTopTracks = check gttr $
-    getTopTracks <*> artist "Meshuggah" <* limit 3
-      <*> apiKey ak
+    getTopTracks <*> artist "Meshuggah" <* limit 3 <*> ak
 
   testGetTopTracks_mbid = check gttr $
-    getTopTracks <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 3
-      <*> apiKey ak
+    getTopTracks <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 3 <*> ak
 
   testSearch = check se $
-    search <*> artist "Mesh" <* limit 3
-      <*> apiKey ak
+    search <*> artist "Mesh" <* limit 3 <*> ak
 
 
 gc, gin, gp ∷ Value → Parser String

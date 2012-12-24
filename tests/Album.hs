@@ -38,8 +38,8 @@ auth ak sk s =
       <*> ak <*> sk
 
 
-noauth ∷ [Test]
-noauth =
+noauth ∷ Request JSON Send APIKey → [Test]
+noauth ak =
   [ testCase "Album.getBuyLinks" testGetBuylinks
   , testCase "Album.getBuyLinks_mbid" testGetBuylinks_mbid
   , testCase "Album.getInfo" testGetInfo
@@ -53,50 +53,38 @@ noauth =
   , testCase "Album.search" testSearch
   ]
  where
-  ak = "29effec263316a1f8a97f753caaa83e0"
-
   testGetBuylinks = check gbl $
-    getBuyLinks <*> country "United Kingdom" <*> (liftA2 (,) (artist "Pink Floyd") (album "The Wall"))
-      <*> apiKey ak
+    getBuyLinks <*> country "United Kingdom" <*> (liftA2 (,) (artist "Pink Floyd") (album "The Wall")) <*> ak
 
   testGetBuylinks_mbid = check gbl $
-    getBuyLinks <*> country "United Kingdom" <*> mbid "3a16c04b-922b-35c5-a29b-cbe9111fbe79"
-      <*> apiKey ak
+    getBuyLinks <*> country "United Kingdom" <*> mbid "3a16c04b-922b-35c5-a29b-cbe9111fbe79" <*> ak
 
   testGetInfo = check gi $
-    getInfo <*> (liftA2 (,) (artist "Pink Floyd") (album "The Wall"))
-      <*> apiKey ak
+    getInfo <*> (liftA2 (,) (artist "Pink Floyd") (album "The Wall")) <*> ak
 
   testGetInfo_mbid = check gi $
-    getInfo <*> mbid "3a16c04b-922b-35c5-a29b-cbe9111fbe79"
-      <*> apiKey ak
+    getInfo <*> mbid "3a16c04b-922b-35c5-a29b-cbe9111fbe79" <*> ak
 
   testGetShouts = check gs $
-    getShouts <*> (liftA2 (,) (artist "Pink Floyd") (album "The Wall")) <* limit 7
-      <*> apiKey ak
+    getShouts <*> (liftA2 (,) (artist "Pink Floyd") (album "The Wall")) <* limit 7 <*> ak
 
   testGetShouts_mbid = check gs $
-    getShouts <*> mbid "3a16c04b-922b-35c5-a29b-cbe9111fbe79" <* limit 7
-      <*> apiKey ak
+    getShouts <*> mbid "3a16c04b-922b-35c5-a29b-cbe9111fbe79" <* limit 7 <*> ak
 
   testGetTags = check gt $
-    getTags <*> (liftA2 (,) (artist "Pink Floyd") (album "The Wall")) <* user "liblastfm"
-      <*> apiKey ak
+    getTags <*> (liftA2 (,) (artist "Pink Floyd") (album "The Wall")) <* user "liblastfm" <*> ak
 
   testGetTags_mbid = check gt $
-    getTags <*> mbid "3a16c04b-922b-35c5-a29b-cbe9111fbe79" <* user "liblastfm"
-      <*> apiKey ak
+    getTags <*> mbid "3a16c04b-922b-35c5-a29b-cbe9111fbe79" <* user "liblastfm" <*> ak
 
   testGetTopTags = check gtt $
-    getTopTags <*> (liftA2 (,) (artist "Pink Floyd") (album "The Wall"))
-      <*> apiKey ak
+    getTopTags <*> (liftA2 (,) (artist "Pink Floyd") (album "The Wall")) <*> ak
 
   testGetTopTags_mbid = check gtt $
-    getTopTags <*> mbid "3a16c04b-922b-35c5-a29b-cbe9111fbe79"
-      <*> apiKey ak
+    getTopTags <*> mbid "3a16c04b-922b-35c5-a29b-cbe9111fbe79" <*> ak
 
   testSearch = check se $
-    search <*> album "wall" <* limit 5 <*> apiKey ak
+    search <*> album "wall" <* limit 5 <*> ak
 
 
 gbl, gi, gs, gt, gtt, se ∷ Value → Parser [String]

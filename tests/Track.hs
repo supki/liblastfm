@@ -54,8 +54,8 @@ auth ak sk s =
     updateNowPlaying <*> artist "Gojira" <*> track "Ocean" <*> ak <*> sk
 
 
-noauth ∷ [Test]
-noauth =
+noauth ∷ Request JSON Send APIKey → [Test]
+noauth ak =
   [ testCase "Track.getBuylinks" testGetBuylinks
   , testCase "Track.getCorrection" testGetCorrection
   , testCase "Track.getFingerprintMetadata" testGetFingerprintMetadata
@@ -68,37 +68,35 @@ noauth =
   , testCase "Track.search" testSearch
   ]
  where
-  ak = "29effec263316a1f8a97f753caaa83e0"
-
   testGetBuylinks = check gbl $
-    getBuyLinks <*> liftA2 (,) (artist "Pink Floyd") (track "Brain Damage") <*> country "United Kingdom" <*> apiKey ak
+    getBuyLinks <*> liftA2 (,) (artist "Pink Floyd") (track "Brain Damage") <*> country "United Kingdom" <*> ak
 
   testGetCorrection = check gc $
-    getCorrection <*> artist "Pink Ployd" <*> track "Brain Damage" <*> apiKey ak
+    getCorrection <*> artist "Pink Ployd" <*> track "Brain Damage" <*> ak
 
   testGetFingerprintMetadata = check gfm $
-    getFingerprintMetadata <*> fingerprint 1234 <*> apiKey ak
+    getFingerprintMetadata <*> fingerprint 1234 <*> ak
 
   testGetInfo = check gi $
-    getInfo <*> liftA2 (,) (artist "Pink Floyd") (track "Brain Damage") <* username "aswalrus" <*> apiKey ak
+    getInfo <*> liftA2 (,) (artist "Pink Floyd") (track "Brain Damage") <* username "aswalrus" <*> ak
 
   testGetShouts = check gsh $
-    getShouts <*> liftA2 (,) (artist "Pink Floyd") (track "Comfortably Numb") <* limit 7 <*> apiKey ak
+    getShouts <*> liftA2 (,) (artist "Pink Floyd") (track "Comfortably Numb") <* limit 7 <*> ak
 
   testGetSimilar = check gsi $
-    getSimilar <*> liftA2 (,) (artist "Pink Floyd") (track "Comfortably Numb") <* limit 4 <*> apiKey ak
+    getSimilar <*> liftA2 (,) (artist "Pink Floyd") (track "Comfortably Numb") <* limit 4 <*> ak
 
   testGetTags = check gt $
-    getTags <*> liftA2 (,) (artist "Jefferson Airplane") (track "White Rabbit") <*> user "liblastfm" <*> apiKey ak
+    getTags <*> liftA2 (,) (artist "Jefferson Airplane") (track "White Rabbit") <*> user "liblastfm" <*> ak
 
   testGetTopFans = check gtf $
-    getTopFans <*> liftA2 (,) (artist "Pink Floyd") (track "Comfortably Numb") <*> apiKey ak
+    getTopFans <*> liftA2 (,) (artist "Pink Floyd") (track "Comfortably Numb") <*> ak
 
   testGetTopTags = check gtt $
-    getTopTags <*> liftA2 (,) (artist "Pink Floyd") (track "Brain Damage") <*> apiKey ak
+    getTopTags <*> liftA2 (,) (artist "Pink Floyd") (track "Brain Damage") <*> ak
 
   testSearch = check s' $
-    search <*> track "Believe" <* limit 12 <*> apiKey ak
+    search <*> track "Believe" <* limit 12 <*> ak
 
 
 gc, gi, gt, ss, np ∷ Value → Parser String

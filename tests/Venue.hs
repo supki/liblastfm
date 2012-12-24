@@ -1,3 +1,4 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
 module Venue (noauth) where
@@ -11,23 +12,21 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-noauth ∷ [Test]
-noauth =
+noauth ∷ Request JSON Send APIKey → [Test]
+noauth ak =
   [ testCase "Venue.getEvents" testGetEvents
   , testCase "Venue.getPastEvents" testGetPastEvents
   , testCase "Venue.search" testSearch
   ]
  where
-  ak = "29effec263316a1f8a97f753caaa83e0"
-
   testGetEvents = check ge $
-    getEvents <*> venue 9163107 <*> apiKey ak
+    getEvents <*> venue 9163107 <*> ak
 
   testGetPastEvents = check gpe $
-    getPastEvents <*> venue 9163107 <* limit 2 <*> apiKey ak
+    getPastEvents <*> venue 9163107 <* limit 2 <*> ak
 
   testSearch = check se $
-    search <*> venueName "Arena" <*> apiKey ak
+    search <*> venueName "Arena" <*> ak
 
 
 ge, gpe, se ∷ Value → Parser [String]

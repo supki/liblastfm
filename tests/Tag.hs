@@ -1,3 +1,4 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
 module Tag (noauth) where
@@ -11,8 +12,8 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-noauth ∷ [Test]
-noauth =
+noauth ∷ Request JSON Send APIKey → [Test]
+noauth ak =
   [ testCase "Tag.getInfo" testGetInfo
   , testCase "Tag.getSimilar" testGetSimilar
   , testCase "Tag.getTopAlbums" testGetTopAlbums
@@ -24,34 +25,32 @@ noauth =
   , testCase "Tag.search" testSearch
   ]
  where
-  ak = "29effec263316a1f8a97f753caaa83e0"
-
   testGetInfo = check gi $
-    getInfo <*> tag "depressive" <*> apiKey ak
+    getInfo <*> tag "depressive" <*> ak
 
   testGetSimilar = check gs $
-    getSimilar <*> tag "depressive" <*> apiKey ak
+    getSimilar <*> tag "depressive" <*> ak
 
   testGetTopAlbums = check gta $
-    getTopAlbums <*> tag "depressive" <* limit 2 <*> apiKey ak
+    getTopAlbums <*> tag "depressive" <* limit 2 <*> ak
 
   testGetTopArtists = check gtar $
-    getTopArtists <*> tag "depressive" <* limit 3 <*> apiKey ak
+    getTopArtists <*> tag "depressive" <* limit 3 <*> ak
 
   testGetTopTags = check gtt $
-    getTopTags <*> apiKey ak
+    getTopTags <*> ak
 
   testGetTopTracks = check gttr $
-    getTopTracks <*> tag "depressive" <* limit 2 <*> apiKey ak
+    getTopTracks <*> tag "depressive" <* limit 2 <*> ak
 
   testGetWeeklyArtistChart = check gwac $
-    getWeeklyArtistChart <*> tag "depressive" <* limit 3 <*> apiKey ak
+    getWeeklyArtistChart <*> tag "depressive" <* limit 3 <*> ak
 
   testGetWeeklyChartList = check gc $
-    getWeeklyChartList <*> tag "depressive" <*> apiKey ak
+    getWeeklyChartList <*> tag "depressive" <*> ak
 
   testSearch = check se $
-    search <*> tag "depressive" <* limit 3 <*> apiKey ak
+    search <*> tag "depressive" <* limit 3 <*> ak
 
 
 gi ∷ Value → Parser String
