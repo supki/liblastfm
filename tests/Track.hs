@@ -1,3 +1,4 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
 module Track (auth, noauth) where
@@ -12,7 +13,7 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-auth ∷ Text → Text → Text → [Test]
+auth ∷ Request JSON Sign APIKey → Request JSON Sign SessionKey → Text → [Test]
 auth ak sk s =
   [ testCase "Track.addTags" testAddTags
   , testCase "Track.ban" testBan
@@ -26,40 +27,31 @@ auth ak sk s =
   ]
  where
   testAddTags = check ok . sign s $
-    addTags <*> artist "Jefferson Airplane" <*> track "White rabbit" <*> tags ["60s", "awesome"]
-      <*> apiKey ak <*> sessionKey sk
+    addTags <*> artist "Jefferson Airplane" <*> track "White rabbit" <*> tags ["60s", "awesome"] <*> ak <*> sk
 
   testBan = check ok . sign s $
-    ban <*> artist "Eminem" <*> track "Kim"
-      <*> apiKey ak <*> sessionKey sk
+    ban <*> artist "Eminem" <*> track "Kim" <*> ak <*> sk
 
   testLove = check ok . sign s $
-    love <*> artist "Gojira" <*> track "Ocean"
-      <*> apiKey ak <*> sessionKey sk
+    love <*> artist "Gojira" <*> track "Ocean" <*> ak <*> sk
 
   testRemoveTag = check ok . sign s $
-    removeTag <*> artist "Jefferson Airplane" <*> track "White rabbit" <*> tag "awesome"
-      <*> apiKey ak <*> sessionKey sk
+    removeTag <*> artist "Jefferson Airplane" <*> track "White rabbit" <*> tag "awesome" <*> ak <*> sk
 
   testShare = check ok . sign s $
-    share <*> artist "Led Zeppelin" <*> track "When the Levee Breaks" <*> recipient "liblastfm" <* message "Just listen!"
-      <*> apiKey ak <*> sessionKey sk
+    share <*> artist "Led Zeppelin" <*> track "When the Levee Breaks" <*> recipient "liblastfm" <* message "Just listen!" <*> ak <*> sk
 
   testUnban = check ok . sign s $
-    unban <*> artist "Eminem" <*> track "Kim"
-      <*> apiKey ak <*> sessionKey sk
+    unban <*> artist "Eminem" <*> track "Kim" <*> ak <*> sk
 
   testUnlove = check ok . sign s $
-    unlove <*> artist "Gojira" <*> track "Ocean"
-      <*> apiKey ak <*> sessionKey sk
+    unlove <*> artist "Gojira" <*> track "Ocean" <*> ak <*> sk
 
   testScrobble = check ss . sign s $
-    scrobble <*> artist "Gojira" <*> track "Ocean" <*> timestamp 1300000000
-      <*> apiKey ak <*> sessionKey sk
+    scrobble <*> artist "Gojira" <*> track "Ocean" <*> timestamp 1300000000 <*> ak <*> sk
 
   testUpdateNowPlaying = check np . sign s $
-    updateNowPlaying <*> artist "Gojira" <*> track "Ocean"
-      <*> apiKey ak <*> sessionKey sk
+    updateNowPlaying <*> artist "Gojira" <*> track "Ocean" <*> ak <*> sk
 
 
 noauth ∷ [Test]

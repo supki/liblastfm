@@ -1,3 +1,4 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
 module Library (auth, noauth) where
@@ -12,7 +13,7 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-auth ∷ Text → Text → Text → [Test]
+auth ∷ Request JSON Sign APIKey → Request JSON Sign SessionKey → Text → [Test]
 auth ak sk s =
   [ testCase "Library.addAlbum" testAddAlbum
   , testCase "Library.addArtist" testAddArtist
@@ -24,32 +25,25 @@ auth ak sk s =
   ]
  where
   testAddAlbum = check ok . sign s $
-    addAlbum <*> artist "Franz Ferdinand" <*> album "Franz Ferdinand"
-      <*> apiKey ak <*> sessionKey sk
+    addAlbum <*> artist "Franz Ferdinand" <*> album "Franz Ferdinand" <*> ak <*> sk
 
   testAddArtist = check ok . sign s $
-    addArtist <*> artist "Mobthrow"
-      <*> apiKey ak <*> sessionKey sk
+    addArtist <*> artist "Mobthrow" <*> ak <*> sk
 
   testAddTrack = check ok . sign s $
-    addTrack <*> artist "Eminem" <*> track "Kim"
-      <*> apiKey ak <*> sessionKey sk
+    addTrack <*> artist "Eminem" <*> track "Kim" <*> ak <*> sk
 
   testRemoveAlbum = check ok . sign s $
-    removeAlbum <*> artist "Franz Ferdinand" <*> album "Franz Ferdinand"
-      <*> apiKey ak <*> sessionKey sk
+    removeAlbum <*> artist "Franz Ferdinand" <*> album "Franz Ferdinand" <*> ak <*> sk
 
   testRemoveArtist = check ok . sign s $
-    removeArtist <*> artist "Burzum"
-      <*> apiKey ak <*> sessionKey sk
+    removeArtist <*> artist "Burzum" <*> ak <*> sk
 
   testRemoveTrack = check ok . sign s $
-    removeTrack <*> artist "Eminem" <*> track "Kim"
-      <*> apiKey ak <*> sessionKey sk
+    removeTrack <*> artist "Eminem" <*> track "Kim" <*> ak <*> sk
 
   testRemoveScrobble = check ok . sign s $
-    removeScrobble <*> artist "Gojira" <*> track "Ocean" <*> timestamp 1328905590
-      <*> apiKey ak <*> sessionKey sk
+    removeScrobble <*> artist "Gojira" <*> track "Ocean" <*> timestamp 1328905590 <*> ak <*> sk
 
 
 noauth ∷ [Test]

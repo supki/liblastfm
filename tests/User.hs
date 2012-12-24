@@ -1,3 +1,4 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
 module User (auth, noauth) where
@@ -12,7 +13,7 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-auth ∷ Text → Text → Text → [Test]
+auth ∷ Request JSON Sign APIKey → Request JSON Sign SessionKey → Text → [Test]
 auth ak sk s =
   [ testCase "User.getRecentStations" testGetRecentStations
   , testCase "User.getRecommendedArtists" testGetRecommendedArtists
@@ -21,16 +22,16 @@ auth ak sk s =
   ]
  where
   testGetRecentStations = check grs . sign s $
-    getRecentStations <*> user "liblastfm" <* limit 10 <*> apiKey ak <*> sessionKey sk
+    getRecentStations <*> user "liblastfm" <* limit 10 <*> ak <*> sk
 
   testGetRecommendedArtists = check gra . sign s $
-    getRecommendedArtists <* limit 10 <*> apiKey ak <*> sessionKey sk
+    getRecommendedArtists <* limit 10 <*> ak <*> sk
 
   testGetRecommendedEvents = check gre . sign s $
-    getRecommendedEvents <* limit 10 <*> apiKey ak <*> sessionKey sk
+    getRecommendedEvents <* limit 10 <*> ak <*> sk
 
   testShout = check ok . sign s $
-    shout <*> user "liblastfm" <*> message "test message" <*> apiKey ak <*> sessionKey sk
+    shout <*> user "liblastfm" <*> message "test message" <*> ak <*> sk
 
 
 noauth ∷ [Test]

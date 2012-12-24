@@ -4,6 +4,7 @@ module Main where
 
 import Control.Applicative
 import Data.Monoid
+import Network.Lastfm
 import System.Exit (ExitCode(ExitFailure), exitWith)
 
 import qualified Data.ByteString.Lazy as B
@@ -32,7 +33,7 @@ main =
        Just (Keys ak sk s) →
          defaultMainWithOpts (auth <> noauth) (mempty { ropt_threads = Just 20 })
           where
-           auth = mconcat . map (\f -> f ak sk s) $
+           auth = mconcat . map (\f → f (apiKey ak) (sessionKey sk) s) $
              [ Album.auth
              , Artist.auth
              , Event.auth

@@ -1,3 +1,4 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
 module Event (auth, noauth) where
@@ -12,19 +13,17 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-auth ∷ Text → Text → Text → [Test]
+auth ∷ Request JSON Sign APIKey → Request JSON Sign SessionKey → Text → [Test]
 auth ak sk s =
   [ testCase "Event.attend" testAttend
   , testCase "Event.share" testShare
   ]
  where
   testAttend = check ok . sign s $
-    attend <*> event 3142549 <*> status Attending <*>
-      apiKey ak <*> sessionKey sk
+    attend <*> event 3142549 <*> status Attending <*> ak <*> sk
 
   testShare = check ok . sign s $
-    share <*> event 3142549 <*> recipient "liblastfm" <* message "Just listen!"
-      <*> apiKey ak <*> sessionKey sk
+    share <*> event 3142549 <*> recipient "liblastfm" <* message "Just listen!" <*> ak <*> sk
 
 
 noauth ∷ [Test]

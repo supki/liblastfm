@@ -1,3 +1,4 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
 module Album (auth, noauth) where
@@ -12,7 +13,7 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-auth ∷ Text → Text → Text → [Test]
+auth ∷ Request JSON Sign APIKey → Request JSON Sign SessionKey → Text → [Test]
 auth ak sk s =
   [ testCase "Album.addTags" testAddTags
   , testCase "Album.getTags-authenticated" testGetTagsAuth
@@ -22,19 +23,19 @@ auth ak sk s =
  where
   testAddTags = check ok . sign s $
     addTags <*> artist "Pink Floyd" <*> album "The Wall" <*> tags ["70s", "awesome", "classic"]
-      <*> apiKey ak <*> sessionKey sk
+      <*> ak <*> sk
 
   testGetTagsAuth = check gt . sign s $
     getTags <*> (liftA2 (,) (artist "Pink Floyd") (album "The Wall"))
-      <*> apiKey ak <* sessionKey sk
+      <*> ak <* sk
 
   testRemoveTag = check ok . sign s $
     removeTag <*> artist "Pink Floyd" <*> album "The Wall" <*> tag "awesome"
-      <*> apiKey ak <*> sessionKey sk
+      <*> ak <*> sk
 
   testShare = check ok . sign s $
     share <*> album "Jerusalem" <*> artist "Sleep" <*> recipient "liblastfm" <* message "Just listen!"
-      <*> apiKey ak <*> sessionKey sk
+      <*> ak <*> sk
 
 
 noauth ∷ [Test]
