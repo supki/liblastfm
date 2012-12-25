@@ -28,6 +28,8 @@ module Network.Lastfm.Request
   , Recipient, recipient, Username, username, User, user, Password, password
   , Public, public, Message, message, Page, page, Limit, limit
   , TaggingType, taggingType, UseRecs, useRecs, Venue, venue, VenueName, venueName
+  , Discovery, discovery, RTP, rtp, BuyLinks, buyLinks, Multiplier(..), multiplier
+  , Bitrate(..), bitrate, Name, name, Station, station
   , type', Value', value
   ) where
 
@@ -204,6 +206,13 @@ data UseRecs
 data Group
 data Venue
 data VenueName
+data Multiplier = M1 | M2
+data Bitrate = B64 | B128
+data Name
+data Station
+data Discovery
+data RTP
+data BuyLinks
 
 
 -- | Add artist parameter
@@ -507,3 +516,49 @@ useRecs = add "useRecs"
 group ∷ Text → Request f a Group
 group = add "group"
 {-# INLINE group #-}
+
+
+-- | Add multiplier parameter
+multiplier ∷ Multiplier → Request f a Multiplier
+multiplier m = case m of
+  M1 → add "speed_multiplier" (T.pack "1.0")
+  M2 → add "speed_multiplier" (T.pack "2.0")
+{-# INLINE multiplier #-}
+
+
+-- | Add bitrate parameter
+bitrate ∷ Bitrate → Request f a Bitrate
+bitrate b = case b of
+  B64  → add "bitrate" (64 ∷ Int64)
+  B128 → add "bitrate" (128 ∷ Int64)
+{-# INLINE bitrate #-}
+
+
+-- | Add name parameter
+name ∷ Text → Request f a Name
+name = add "name"
+{-# INLINE name #-}
+
+
+-- | Add station parameter
+station ∷ Text → Request f a Station
+station = add "station"
+{-# INLINE station #-}
+
+
+-- | Add group parameter
+discovery ∷ Bool → Request f a Discovery
+discovery = add "discovery"
+{-# INLINE discovery #-}
+
+
+-- | Add rtp parameter
+rtp ∷ Bool → Request f a RTP
+rtp = add "rtp"
+{-# INLINE rtp #-}
+
+
+-- | Add buyLinks parameter
+buyLinks ∷ Bool → Request f a BuyLinks
+buyLinks = add "buyLinks"
+{-# INLINE buyLinks #-}
