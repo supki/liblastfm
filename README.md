@@ -1,5 +1,8 @@
-#liblastfm
-[![Build Status](https://secure.travis-ci.org/supki/haskell-liblastfm.png?branch=develop)](http://travis-ci.org/supki/haskell-liblastfm)
+#liblastfm [![Build Status](https://secure.travis-ci.org/supki/haskell-liblastfm.png?branch=develop)](http://travis-ci.org/supki/haskell-liblastfm)
+Complete API interface to [last.fm][1] service.  
+Documentation is available in two flavours:
+  * original [API reference][2]
+  * liblastfm [haddocks][3]
 
 ##FAQ
 **Q: I'm getting the following error. How do I fix it?**
@@ -33,3 +36,7 @@ A: This error message indicates that GHC cannot infer response format for `Reque
 To fix it, add use `json` or `xml` helpers, depending on your needs
 
 -
+
+ [1]: http://www.lastfm.ru/
+ [2]: http://www.lastfm.ru/api/intro
+ [3]: http://supki.github.com/haskell-liblastfm/
