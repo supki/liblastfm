@@ -1,6 +1,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UnicodeSyntax #-}
 module Network.Lastfm.Internal
@@ -10,9 +11,12 @@ module Network.Lastfm.Internal
   ) where
 
 import Control.Applicative
+import Control.Exception (throw)
+import Control.Monad
 import Data.Monoid
 
-import           Data.Aeson (Value, decode)
+import           Data.Aeson ((.:), Value, decode, parseJSON)
+import           Data.Aeson.Types (parseMaybe)
 import           Data.Serialize (Serialize(..), Putter)
 import qualified Data.ByteString.Lazy as Lazy
 import qualified Data.ByteString as Strict
@@ -23,6 +27,9 @@ import           Data.Text.Lazy (Text)
 import qualified Data.Text.Lazy as T
 import qualified Data.Text.Lazy.Encoding as T
 import           Network.URI (escapeURIChar, isUnreserved)
+import           Network.HTTP.Conduit (HttpException(..))
+import           Network.HTTP.Types (ResponseHeaders)
+import           Network.HTTP.Types.Status (status400)
 
 
 class Coercing t where
@@ -38,7 +45,7 @@ data R (f ∷ Format) (a ∷ Auth) t = R
   { host ∷ Text
   , method ∷ Strict.ByteString
   , query ∷ Map Text Text
-  , parse ∷ Lazy.ByteString → Response f
+  , parse ∷ Lazy.ByteString → ResponseHeaders → Response f
   }
 
 -- | Response format: either JSON or XML
@@ -58,7 +65,7 @@ instance Default (R JSON a t) where
     { host = "https://ws.audioscrobbler.com/2.0/"
     , method = "GET"
     , query = M.fromList [("format", "json")]
-    , parse = decode
+    , parse = toValue
     }
   {-# INLINE def #-}
 
@@ -67,7 +74,7 @@ instance Default (R XML a t) where
     { host = "https://ws.audioscrobbler.com/2.0/"
     , method = "GET"
     , query = mempty
-    , parse = id
+    , parse = const . id
     }
   {-# INLINE def #-}
 
@@ -116,6 +123,15 @@ unwrap = appEndo . getDual . unRequest
 {-# INLINE unwrap #-}
 
 
+toValue ∷ Lazy.ByteString → ResponseHeaders → Maybe Value
+toValue b hs = do
+  v ← decode b
+  case parseMaybe ((.: "error") <=< parseJSON) v of
+    Just (_ ∷ Int) →
+      throw (StatusCodeException status400 (("Response", (Strict.concat $ Lazy.toChunks b)) : hs))
+    _ → return v
+
+
 -- Miscellaneous instances
 
 instance Serialize (R JSON a t) where
@@ -124,7 +140,7 @@ instance Serialize (R JSON a t) where
     h ← T.decodeUtf8 <$> get
     m ← get
     q ← mapmap T.decodeUtf8 T.decodeUtf8 <$> get
-    return R { host = h, method = m, query = q, parse = decode }
+    return R { host = h, method = m, query = q, parse = toValue }
 
 instance Serialize (R XML a t) where
   put = putR
@@ -132,7 +148,7 @@ instance Serialize (R XML a t) where
     h ← T.decodeUtf8 <$> get
     m ← get
     q ← mapmap T.decodeUtf8 T.decodeUtf8 <$> get
-    return R { host = h, method = m, query = q, parse = id }
+    return R { host = h, method = m, query = q, parse = const . id }
 
 putR ∷ Putter (R f a t)
 putR r = do

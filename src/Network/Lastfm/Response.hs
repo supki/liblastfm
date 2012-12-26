@@ -66,12 +66,14 @@ finalize = ($ def) . unwrap
 --
 -- That's rarely needed unless you want low-level manipulation of requests
 lastfm' :: R f Send Ready -> IO (Response f)
-lastfm' request =
-  parse request <$> C.withManager (\m → C.parseUrl (render request) >>= \url →
-    C.responseBody <$> C.httpLbs (url
-      { C.method = method request
-      , C.responseTimeout = Just 10000000 }
-      ) m)
+lastfm' request = do
+  (b, h) <- C.withManager (\m → C.parseUrl (render request) >>= \url → do
+      t <- C.httpLbs (url
+            { C.method = method request
+            , C.responseTimeout = Just 10000000 }
+            ) m
+      return (C.responseBody t, C.responseHeaders t))
+  return $ parse request b h
 
 
 approve ∷ Request f Sign Ready → Request f Send Ready

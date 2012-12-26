@@ -18,6 +18,7 @@ library
                  data-default,
                  cereal,
                  http-conduit,
+                 http-types,
                  mtl,
                  pureMD5 == 2.1.*,
                  network,
