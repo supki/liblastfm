@@ -15,7 +15,7 @@ Documentation is available in two flavours:
       Actual type: [Char]
 ```
 A: This means you haven't OverloadedStrings extension enabled.
-To enable it:
+To enable it (either one works):
   * type in `:set -XOverloadedStrings` while in ghci session.
   * add `{-# LANGUAGE OverloadedStrings #-}` to the top of the file
   * compile with `-XOverloadedStrings` switch
