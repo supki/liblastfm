@@ -14,7 +14,6 @@ module Network.Lastfm.Response
 import Control.Applicative
 import Data.Monoid
 
-import           Data.Default (Default(..))
 import           Data.Digest.Pure.MD5 (md5)
 import qualified Data.Map as M
 import           Data.Text.Lazy (Text)
@@ -50,29 +49,28 @@ sign s = approve . (<* signature)
 
 
 -- | Send Request and parse Response
-lastfm ∷ Default (R f Send Ready) ⇒ Request f Send Ready → IO (Response f)
+lastfm ∷ Supported f ⇒ Request f Send Ready → IO (Response f)
 lastfm = lastfm' . finalize
 
 
 -- | Get R from Request
 --
 -- That's rarely needed unless you want low-level manipulation of requests
-finalize ∷ Default (R f Send Ready) ⇒ Request f Send Ready → R f Send Ready
-finalize = ($ def) . unwrap
+finalize ∷ Supported f ⇒ Request f Send Ready → R f Send Ready
+finalize = ($ base) . unwrap
 
 
 -- | Send R and parse Response
 --
 -- That's rarely needed unless you want low-level manipulation of requests
-lastfm' :: R f Send Ready -> IO (Response f)
-lastfm' request = do
-  (b, h) <- C.withManager (\m → C.parseUrl (render request) >>= \url → do
-      t <- C.httpLbs (url
-            { C.method = method request
-            , C.responseTimeout = Just 10000000 }
-            ) m
-      return (C.responseBody t, C.responseHeaders t))
-  return $ parse request b h
+lastfm' ∷ Supported f ⇒ R f Send Ready → IO (Response f)
+lastfm' request =
+  C.withManager (\m → C.parseUrl (render request) >>= \url → do
+    t ← C.httpLbs (url
+          { C.method = method request
+          , C.responseTimeout = Just 10000000 }
+          ) m
+    return $ parse request (C.responseBody t) (C.responseHeaders t))
 
 
 approve ∷ Request f Sign Ready → Request f Send Ready

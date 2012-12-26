@@ -49,6 +49,5 @@ link q = render . unwrap q $ R
   { host = "http://www.last.fm/api/auth/"
   , method = mempty
   , query = mempty
-  , parse = undefined
   }
 {-# INLINE link #-}
