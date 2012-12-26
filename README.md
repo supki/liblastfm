@@ -14,8 +14,11 @@ Documentation is available in two flavours:
     Expected type: Artist
       Actual type: [Char]
 ```
-A: This means you haven't `-XOverloadedStrings` extension enabled in current ghci session.
-To enable it type in `:set -XOverloadedStrings`.
+A: This means you haven't `-XOverloadedStrings` extension enabled.
+To enable it:
+  * type in `:set -XOverloadedStrings` while in ghci session.
+  * add `{-# LANGUAGE OverloadedStrings #-}` to the top of the file
+  * compile with `-XOverloadedStrings` switch
 
 **Q: I'm getting the following error. How do I fix it?**
 ```
