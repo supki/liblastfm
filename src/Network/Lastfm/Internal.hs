@@ -64,7 +64,7 @@ instance Default (R XML a t) where
   def = R
     { host = "https://ws.audioscrobbler.com/2.0/"
     , method = "GET"
-    , query = M.fromList [("format", "xml")]
+    , query = mempty
     , parse = id
     }
   {-# INLINE def #-}
