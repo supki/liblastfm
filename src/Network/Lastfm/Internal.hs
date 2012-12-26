@@ -118,7 +118,7 @@ wrap = Request . Dual . Endo
 
 
 -- | Unwrapping from interesting 'Monoid' ('R' -> 'R') instance
-unwrap ∷ Request f a t → (R f a t → R f a t)
+unwrap ∷ Request f a t → R f a t → R f a t
 unwrap = appEndo . getDual . unRequest
 {-# INLINE unwrap #-}
 
@@ -128,7 +128,7 @@ toValue b hs = do
   v ← decode b
   case parseMaybe ((.: "error") <=< parseJSON) v of
     Just (_ ∷ Int) →
-      throw (StatusCodeException status400 (("Response", (Strict.concat $ Lazy.toChunks b)) : hs))
+      throw (StatusCodeException status400 (("Response", Strict.concat $ Lazy.toChunks b) : hs))
     _ → return v
 
 

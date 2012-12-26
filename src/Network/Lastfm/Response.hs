@@ -2,7 +2,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
-{-# LANGUAGE ViewPatterns #-}
 -- | Request sending and Response parsing
 module Network.Lastfm.Response
   ( -- * Sign Request

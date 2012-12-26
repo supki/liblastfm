@@ -1,5 +1,4 @@
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE EmptyDataDecls #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
 module Network.Lastfm.Radio
