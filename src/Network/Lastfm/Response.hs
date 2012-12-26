@@ -9,7 +9,7 @@ module Network.Lastfm.Response
     -- $sign
     Secret, sign
     -- * Get Response
-  , lastfm, lastfm'
+  , lastfm, lastfm', finalize
   ) where
 
 import Control.Applicative
@@ -52,7 +52,14 @@ sign s = approve . (<* signature)
 
 -- | Send Request and parse Response
 lastfm ∷ Default (R f Send Ready) ⇒ Request f Send Ready → IO (Response f)
-lastfm = lastfm' . ($ def) . unwrap
+lastfm = lastfm' . finalize
+
+
+-- | Get R from Request
+--
+-- That's rarely needed unless you want low-level manipulation of requests
+finalize ∷ Default (R f Send Ready) ⇒ Request f Send Ready → R f Send Ready
+finalize = ($ def) . unwrap
 
 
 -- | Send R and parse Response
