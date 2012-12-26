@@ -6,7 +6,7 @@
 -- | Request construction
 module Network.Lastfm.Request
   ( -- * Request
-    Request, R, Auth(..), Format(..), Response
+    Request, R, Auth(..), Format(..)
     -- * Request major parameters
   , api, post, get, json, xml, Ready, APIKey, apiKey, SessionKey, sessionKey
     -- * Request minor parameters
@@ -85,7 +85,6 @@ instance Argument a ⇒ Argument [a] where
   {-# INLINE toText #-}
 
 
-data Ready
 data APIKey
 data SessionKey
 data Token
