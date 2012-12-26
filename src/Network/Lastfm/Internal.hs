@@ -71,28 +71,6 @@ instance Default (R XML a t) where
     }
   {-# INLINE def #-}
 
-instance Serialize (R JSON a t) where
-  put = putR
-  get = do
-    h ← T.decodeUtf8 <$> get
-    m ← get
-    q ← mapmap T.decodeUtf8 T.decodeUtf8 <$> get
-    return R { host = h, method = m, query = q, parse = decode }
-
-instance Serialize (R XML a t) where
-  put = putR
-  get = do
-    h ← T.decodeUtf8 <$> get
-    m ← get
-    q ← mapmap T.decodeUtf8 T.decodeUtf8 <$> get
-    return R { host = h, method = m, query = q, parse = id }
-
-putR ∷ Putter (R f a t)
-putR r = do
-  put $ T.encodeUtf8 (host r)
-  put $ method r
-  put $ mapmap T.encodeUtf8 T.encodeUtf8 (query r)
-
 
 newtype Request f a t = Request { unRequest ∷ Dual (Endo (R f a t)) }
 
@@ -137,6 +115,30 @@ unwrap ∷ Request f a t → (R f a t → R f a t)
 unwrap = appEndo . getDual . unRequest
 {-# INLINE unwrap #-}
 
+
+-- Miscellaneous instances
+
+instance Serialize (R JSON a t) where
+  put = putR
+  get = do
+    h ← T.decodeUtf8 <$> get
+    m ← get
+    q ← mapmap T.decodeUtf8 T.decodeUtf8 <$> get
+    return R { host = h, method = m, query = q, parse = decode }
+
+instance Serialize (R XML a t) where
+  put = putR
+  get = do
+    h ← T.decodeUtf8 <$> get
+    m ← get
+    q ← mapmap T.decodeUtf8 T.decodeUtf8 <$> get
+    return R { host = h, method = m, query = q, parse = id }
+
+putR ∷ Putter (R f a t)
+putR r = do
+  put $ T.encodeUtf8 (host r)
+  put $ method r
+  put $ mapmap T.encodeUtf8 T.encodeUtf8 (query r)
 
 mapmap :: (Ord s, Ord t) ⇒ (s → t) → (a → b) → Map s a → Map t b
 mapmap f g = M.mapKeys f . M.map g
