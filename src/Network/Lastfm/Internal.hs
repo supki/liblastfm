@@ -9,11 +9,11 @@ module Network.Lastfm.Internal
   , render
   ) where
 
-import Control.Applicative (Applicative(..))
+import Control.Applicative
 import Data.Monoid
 
 import           Data.Aeson (Value, decode)
-import           Network.URI (escapeURIChar, isUnreserved)
+import           Data.Serialize (Serialize(..), Putter)
 import qualified Data.ByteString.Lazy as Lazy
 import qualified Data.ByteString as Strict
 import           Data.Default
@@ -21,6 +21,8 @@ import           Data.Map (Map)
 import qualified Data.Map as M
 import           Data.Text.Lazy (Text)
 import qualified Data.Text.Lazy as T
+import qualified Data.Text.Lazy.Encoding as T
+import           Network.URI (escapeURIChar, isUnreserved)
 
 
 class Coercing t where
@@ -69,6 +71,28 @@ instance Default (R XML a t) where
     }
   {-# INLINE def #-}
 
+instance Serialize (R JSON a t) where
+  put = putR
+  get = do
+    h ← T.decodeUtf8 <$> get
+    m ← get
+    q ← mapmap T.decodeUtf8 T.decodeUtf8 <$> get
+    return R { host = h, method = m, query = q, parse = decode }
+
+instance Serialize (R XML a t) where
+  put = putR
+  get = do
+    h ← T.decodeUtf8 <$> get
+    m ← get
+    q ← mapmap T.decodeUtf8 T.decodeUtf8 <$> get
+    return R { host = h, method = m, query = q, parse = id }
+
+putR ∷ Putter (R f a t)
+putR r = do
+  put $ T.encodeUtf8 (host r)
+  put $ method r
+  put $ mapmap T.encodeUtf8 T.encodeUtf8 (query r)
+
 
 newtype Request f a t = Request { unRequest ∷ Dual (Endo (R f a t)) }
 
@@ -112,3 +136,7 @@ wrap = Request . Dual . Endo
 unwrap ∷ Request f a t → (R f a t → R f a t)
 unwrap = appEndo . getDual . unRequest
 {-# INLINE unwrap #-}
+
+
+mapmap :: (Ord s, Ord t) ⇒ (s → t) → (a → b) → Map s a → Map t b
+mapmap f g = M.mapKeys f . M.map g

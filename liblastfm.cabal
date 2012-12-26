@@ -16,6 +16,7 @@ library
                  containers,
                  text,
                  data-default,
+                 cereal,
                  http-conduit,
                  mtl,
                  pureMD5 == 2.1.*,
