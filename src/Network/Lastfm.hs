@@ -6,5 +6,5 @@ module Network.Lastfm
 
 import Control.Applicative
 
-import Network.Lastfm.Request as L
+import Network.Lastfm.Request as L hiding (get, post)
 import Network.Lastfm.Response as L
