@@ -9,7 +9,7 @@ module Network.Lastfm.Response
     -- $sign
     Secret, sign
     -- * Get Response
-  , lastfm
+  , lastfm, lastfm'
   ) where
 
 import Control.Applicative
@@ -52,9 +52,19 @@ sign s = approve . (<* signature)
 
 -- | Send Request and parse Response
 lastfm ∷ Default (R f Send Ready) ⇒ Request f Send Ready → IO (Response f)
-lastfm (($ def) . unwrap → request) =
+lastfm = lastfm' . ($ def) . unwrap
+
+
+-- | Send R and parse Response
+--
+-- That's rarely needed unless you want low-level manipulation of requests
+lastfm' :: R f Send Ready -> IO (Response f)
+lastfm' request =
   parse request <$> C.withManager (\m → C.parseUrl (render request) >>= \url →
-    C.responseBody <$> C.httpLbs (url { C.method = method request, C.responseTimeout = Just 10000000 }) m)
+    C.responseBody <$> C.httpLbs (url
+      { C.method = method request
+      , C.responseTimeout = Just 10000000 }
+      ) m)
 
 
 approve ∷ Request f Sign Ready → Request f Send Ready
