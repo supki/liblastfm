@@ -4,6 +4,17 @@ Documentation is available in two flavours:
   * original [API reference][2]
   * liblastfm [haddocks][3]
 
+##General introduction
+liblastfm provides Applicative interface for constructing requests. Also, it handles all machinery needed to prepare request for sending:
+  * [signing][4]
+  * url-encoding
+  * miscellaneous stuff like choosing correct HTML method, etc
+
+Once request is ready, liblastfm may send it and get you back a response.
+Response format might be:
+  * `Maybe Value` from [aeson][5] for json queries (nice interaction with [aeson-lens][6] for free!)
+  * raw `ByteString` for xml queries
+
 ##FAQ
 **Q: I'm getting the following error. How do I fix it?**
 ```
@@ -43,3 +54,6 @@ To fix it, add use `json` or `xml` helpers, depending on your needs
  [1]: http://www.lastfm.ru/
  [2]: http://www.lastfm.ru/api/intro
  [3]: http://supki.github.com/haskell-liblastfm/
+ [4]: http://www.lastfm.ru/api/authspec#8
+ [5]: http://hackage.haskell.org/package/aeson
+ [6]: http://hackage.haskell.org/package/aeson-lens
