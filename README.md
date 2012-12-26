@@ -29,7 +29,7 @@ To enable it type in `:set -XOverloadedStrings`.
       instance Data.Default.Default (R 'JSON a)
         -- Defined at src/Network/Lastfm/Request.hs:69:10
 ```
-A: This error message indicates that GHC cannot infer response format for that Request. 
+A: This error message indicates that GHC cannot infer response format for `Request`. 
 To fix it, add use `json` or `xml` helpers, depending on your needs
 
 -
