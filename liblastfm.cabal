@@ -41,7 +41,7 @@ library
                    Network.Lastfm.Venue
                    Network.Lastfm.Request
                    Network.Lastfm.Response
-  other-modules:   Network.Lastfm.Internal
+                   Network.Lastfm.Internal
   ghc-options: -Wall
                -fno-warn-unused-do-bind
                -threaded

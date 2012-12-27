@@ -63,7 +63,7 @@ instance ArtistOrMBID Artist
 
 class Argument a where
   add ∷ Text → a → Request f b t
-  add k v = wrap $ \r@R { query = q } → r { query = M.insert k (toText v) q }
+  add k v = wrap $ \r@R { _query = q } → r { _query = M.insert k (toText v) q }
   {-# INLINE add #-}
 
   toText ∷ a → Text
@@ -98,18 +98,18 @@ api ∷ Text → Request f a t
 api = add "method"
 {-# INLINE api #-}
 
--- | Change html method to GET
+-- | Change html _method to GET
 --
 -- Primarily used in API call wrappers, not intended for usage by library user
 get ∷ Request f a t
-get = wrap $ \r → r { method = "GET" }
+get = wrap $ \r → r { _method = "GET" }
 {-# INLINE get #-}
 
--- | Change html method to POST
+-- | Change html _method to POST
 --
 -- Primarily used in API call wrappers, not intended for usage by library user
 post ∷ Request f a t
-post = wrap $ \r → r { method = "POST" }
+post = wrap $ \r → r { _method = "POST" }
 {-# INLINE post #-}
 
 -- | Change API response format to JSON

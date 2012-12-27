@@ -46,8 +46,8 @@ getSession = api "auth.getSession"
 -- | Construct link user should follow to approve application
 link ∷ Request f a t → String
 link q = render . unwrap q $ R
-  { host = "http://www.last.fm/api/auth/"
-  , method = mempty
-  , query = mempty
+  { _host = "http://www.last.fm/api/auth/"
+  , _method = mempty
+  , _query = mempty
   }
 {-# INLINE link #-}

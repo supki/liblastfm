@@ -7,13 +7,15 @@ module Network.Lastfm.Internal
   ( Coercing(..), Request(..), R(..), wrap, unwrap
   , Format(..), Auth(..), Ready
   , render
+    -- * Lenses
+  , host, method, query
   ) where
 
 import Control.Applicative
 import Data.Monoid
 
 import           Data.Serialize (Serialize(..))
-import qualified Data.ByteString as Strict
+import           Data.ByteString (ByteString)
 import           Data.Map (Map)
 import qualified Data.Map as M
 import           Data.Text.Lazy (Text)
@@ -32,9 +34,9 @@ class Coercing t where
 --
 -- @f@ is response format
 data R (f ∷ Format) (a ∷ Auth) t = R
-  { host ∷ Text
-  , method ∷ Strict.ByteString
-  , query ∷ Map Text Text
+  { _host ∷ Text
+  , _method ∷ ByteString
+  , _query ∷ Map Text Text
   }
 
 -- | Response format: either JSON or XML
@@ -48,7 +50,7 @@ data Auth =
 data Ready
 
 instance Coercing (R f) where
-  coerce R { host = h, method = m, query = q } = R { host = h, method = m, query = q }
+  coerce R { _host = h, _method = m, _query = q } = R { _host = h, _method = m, _query = q }
   {-# INLINE coerce #-}
 
 newtype Request f a t = Request { unRequest ∷ Dual (Endo (R f a t)) }
@@ -70,7 +72,7 @@ instance Applicative (Request f a) where
 
 
 render ∷ R f a t → String
-render R { host = h, query = q } =
+render R { _host = h, _query = q } =
   T.unpack $ mconcat [h, "?", argie q]
  where
   argie = T.intercalate "&" . M.foldrWithKey (\k v m → T.concat [escape k, "=", escape v] : m) []
@@ -94,14 +96,27 @@ unwrap = appEndo . getDual . unRequest
 
 instance Serialize (R f a t) where
   put r = do
-    put $ T.encodeUtf8 (host r)
-    put $ method r
-    put $ mapmap T.encodeUtf8 T.encodeUtf8 (query r)
+    put $ T.encodeUtf8 (_host r)
+    put $ _method r
+    put $ mapmap T.encodeUtf8 T.encodeUtf8 (_query r)
   get = do
     h ← T.decodeUtf8 <$> get
     m ← get
     q ← mapmap T.decodeUtf8 T.decodeUtf8 <$> get
-    return R { host = h, method = m, query = q }
+    return R { _host = h, _method = m, _query = q }
 
 mapmap ∷ (Ord s, Ord t) ⇒ (s → t) → (a → b) → Map s a → Map t b
 mapmap f g = M.mapKeys f . M.map g
+
+
+-- | Request _host lens
+host :: Functor f => (Text -> f Text) -> R h a t -> f (R h a t)
+host f r@R { _host = h } = (\h' -> r { _host = h' }) <$> f h
+
+-- | Request http _method lens
+method :: Functor f => (ByteString -> f ByteString) -> R h a t -> f (R h a t)
+method f r@R { _method = m } = (\m' -> r { _method = m' }) <$> f m
+
+-- | Request _query string lens
+query :: Functor f => (Map Text Text -> f (Map Text Text)) -> R h a t -> f (R h a t)
+query f r@R { _query = q } = (\q' -> r { _query = q' }) <$> f q

@@ -57,9 +57,9 @@ instance Supported JSON where
         throw (C.StatusCodeException C.status400 (("Response", Strict.concat $ Lazy.toChunks b) : hs))
       _ → return v
   base = R
-    { host = "https://ws.audioscrobbler.com/2.0/"
-    , method = "GET"
-    , query = M.fromList [("format", "json")]
+    { _host = "https://ws.audioscrobbler.com/2.0/"
+    , _method = "GET"
+    , _query = M.fromList [("format", "json")]
     }
   {-# INLINE base #-}
 
@@ -67,9 +67,9 @@ instance Supported XML where
   type Response XML = Lazy.ByteString
   parse _ b _ = b
   base = R
-    { host = "https://ws.audioscrobbler.com/2.0/"
-    , method = "GET"
-    , query = mempty
+    { _host = "https://ws.audioscrobbler.com/2.0/"
+    , _method = "GET"
+    , _query = mempty
     }
   {-# INLINE base #-}
 
@@ -82,8 +82,8 @@ type Secret = Text
 sign ∷ Secret → Request f Sign Ready → Request f Send Ready
 sign s = approve . (<* signature)
  where
-  signature = wrap $ \r@R { query = q } →
-    r { query = M.insert "api_sig" (signer (foldr M.delete q ["format", "callback"])) q }
+  signature = wrap $ \r@R { _query = q } →
+    r { _query = M.insert "api_sig" (signer (foldr M.delete q ["format", "callback"])) q }
 
   signer = T.pack . show . md5 . T.encodeUtf8 . M.foldrWithKey(\k v xs → k <> v <> xs) s
 
@@ -107,7 +107,7 @@ lastfm' ∷ Supported f ⇒ R f Send Ready → IO (Response f)
 lastfm' request =
   C.withManager (\m → C.parseUrl (render request) >>= \url → do
     t ← C.httpLbs (url
-          { C.method = method request
+          { C.method = _method request
           , C.responseTimeout = Just 10000000 }
           ) m
     return $ parse request (C.responseBody t) (C.responseHeaders t))
