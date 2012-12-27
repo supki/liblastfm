@@ -8,7 +8,7 @@ Documentation is available in two flavours:
 liblastfm provides Applicative interface for constructing requests. Also, it handles all machinery needed to prepare request for sending:
   * [signing][4]
   * url-encoding
-  * miscellaneous stuff like choosing correct HTML method, etc
+  * miscellaneous stuff like choosing correct HTTP method, etc
 
 Once request is ready, liblastfm may send it and get you back a response.
 Response format might be:
