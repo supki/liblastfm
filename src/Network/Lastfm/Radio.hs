@@ -1,6 +1,13 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
+-- | Lastfm radio API
+--
+-- This module is intended to be imported qualified:
+--
+-- @
+-- import qualified Network.Lastfm.Radio as Radio
+-- @
 module Network.Lastfm.Radio
   ( getPlaylist, search, tune
   ) where

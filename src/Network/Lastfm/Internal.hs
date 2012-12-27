@@ -3,10 +3,12 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE UnicodeSyntax #-}
+-- | liblastfm internals
+--
+-- You shouldn't need to import this module unless you are doing something interesting.
 module Network.Lastfm.Internal
-  ( Coercing(..), Request(..), R(..), wrap, unwrap
-  , Format(..), Auth(..), Ready
-  , render
+  ( Request(..), Format(..), Auth(..), Ready
+  , R(..), wrap, unwrap, Coercing(..), render
     -- * Lenses
   , host, method, query
   ) where
@@ -24,15 +26,16 @@ import qualified Data.Text.Lazy.Encoding as T
 import           Network.URI (escapeURIChar, isUnreserved)
 
 
+-- | Coerce requests changing their phantom parameters.
+-- Used to ensure right flow of working with liblastfm. If you use it on your worn, then
+-- you will break abstraction
 class Coercing t where
   coerce ∷ t (a ∷ Auth) b → t c d
 
 
 -- | Lastfm API request data type
 --
--- @a@ is authentication method
---
--- @f@ is response format
+-- low-level representation
 data R (f ∷ Format) (a ∷ Auth) t = R
   { _host ∷ Text
   , _method ∷ ByteString
@@ -47,12 +50,20 @@ data Auth =
     Send -- ^ Public API. Doesn't require anything special besides API key
   | Sign -- ^ Private API. Requires Session key and Secret as well as API key
 
+-- | Indicates that request is ready for sending
 data Ready
 
 instance Coercing (R f) where
   coerce R { _host = h, _method = m, _query = q } = R { _host = h, _method = m, _query = q }
   {-# INLINE coerce #-}
 
+-- | Lastfm API request data type
+--
+-- @a@ is authentication state. Might be 'Send' which indicates
+-- that you may send this request already or 'Sign', when request signature
+-- isn't computed yet
+--
+-- @f@ is response format. liblastfm currently supports JSON or XML
 newtype Request f a t = Request { unRequest ∷ Dual (Endo (R f a t)) }
 
 instance Coercing (Request f) where
@@ -71,6 +82,7 @@ instance Applicative (Request f a) where
   {-# INLINE (<*>) #-}
 
 
+-- | Construct String from request for networking
 render ∷ R f a t → String
 render R { _host = h, _query = q } =
   T.unpack $ mconcat [h, "?", argie q]
