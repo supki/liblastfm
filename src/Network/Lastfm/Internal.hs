@@ -57,6 +57,7 @@ instance Coercing (R f) where
   coerce R { _host = h, _method = m, _query = q } = R { _host = h, _method = m, _query = q }
   {-# INLINE coerce #-}
 
+
 -- | Lastfm API request data type
 --
 -- @a@ is authentication state. Might be 'Send' which indicates
