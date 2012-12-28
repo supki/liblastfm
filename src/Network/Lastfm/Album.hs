@@ -10,7 +10,8 @@
 -- import qualified Network.Lastfm.Album as Album
 -- @
 module Network.Lastfm.Album
-  ( addTags, getBuyLinks, getInfo, getShouts
+  ( ArtistAlbumOrMBID
+  , addTags, getBuyLinks, getInfo, getShouts
   , getTags, getTopTags, removeTag, search, share
   ) where
 
@@ -19,7 +20,7 @@ import Control.Applicative
 import Network.Lastfm.Request
 
 
--- | Unify ('Artist' → 'Album' → …) and (MBID → …)
+-- | Unify ('Artist' → 'Album' → …) and ('MBID' → …)
 class ArtistAlbumOrMBID a
 
 instance ArtistAlbumOrMBID (MBID → APIKey → Ready)

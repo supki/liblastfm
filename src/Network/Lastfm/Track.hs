@@ -10,7 +10,8 @@
 -- import qualified Network.Lastfm.Track as Track
 -- @
 module Network.Lastfm.Track
-  ( addTags, ban, getBuyLinks, getCorrection, getFingerprintMetadata
+  ( ArtistTrackOrMBID
+  , addTags, ban, getBuyLinks, getCorrection, getFingerprintMetadata
   , getInfo, getShouts, getSimilar, getTags, getTopFans
   , getTopTags, love, removeTag, scrobble
   , search, share, unban, unlove, updateNowPlaying
@@ -21,7 +22,7 @@ import Control.Applicative
 import Network.Lastfm.Request
 
 
--- | Unify ('Artist' → 'Track' → …) and (MBID → …)
+-- | Unify ('Artist' → 'Track' → …) and ('MBID' → …)
 class ArtistTrackOrMBID a
 
 instance ArtistTrackOrMBID (MBID → APIKey → Ready)

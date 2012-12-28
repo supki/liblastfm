@@ -9,7 +9,8 @@
 -- import qualified Network.Lastfm.Artist as Artist
 -- @
 module Network.Lastfm.Artist
-  ( addTags, getCorrection, getEvents, getInfo
+  ( ArtistOrMBID
+  , addTags, getCorrection, getEvents, getInfo
   , getPastEvents, getPodcast, getShouts
   , getSimilar, getTags, getTopAlbums
   , getTopFans, getTopTags, getTopTracks
@@ -20,7 +21,7 @@ import Control.Applicative
 
 import Network.Lastfm.Request
 
--- | Unify ('Artist' → …) and (MBID → …)
+-- | Unify ('Artist' → …) and ('MBID' → …)
 class ArtistOrMBID a
 
 instance ArtistOrMBID MBID
