@@ -1,4 +1,5 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
 -- | Lastfm album API
@@ -18,6 +19,13 @@ import Control.Applicative
 import Network.Lastfm.Request
 
 
+-- | Unify ('Artist' → 'Album' → …) and (MBID → …)
+class ArtistAlbumOrMBID a
+
+instance ArtistAlbumOrMBID (MBID → APIKey → Ready)
+instance ArtistAlbumOrMBID (Artist → Album → APIKey → Ready)
+
+
 -- | Tag an album using a list of user supplied tags.
 --
 -- <http://www.last.fm/api/show/album.addTags>
@@ -31,7 +39,7 @@ addTags = api "album.addTags" <* post
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/album.getBuylinks>
-getBuyLinks ∷ ArtistAlbumOrMBID t ⇒ Request f Send (Country → t → APIKey → Ready)
+getBuyLinks ∷ ArtistAlbumOrMBID t ⇒ Request f Send (Country → t)
 getBuyLinks = api "album.getBuyLinks"
 
 
@@ -41,7 +49,7 @@ getBuyLinks = api "album.getBuyLinks"
 -- Optional: 'autocorrect', 'username', 'language'
 --
 -- <http://www.last.fm/api/show/album.getInfo>
-getInfo ∷ ArtistAlbumOrMBID t ⇒ Request f Send (t → APIKey → Ready)
+getInfo ∷ ArtistAlbumOrMBID t ⇒ Request f Send t
 getInfo = api "album.getInfo"
 
 
@@ -50,7 +58,7 @@ getInfo = api "album.getInfo"
 -- Optional: 'autocorrect', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/album.getShouts>
-getShouts ∷ ArtistAlbumOrMBID t ⇒ Request f Send (t → APIKey → Ready)
+getShouts ∷ ArtistAlbumOrMBID t ⇒ Request f Send t
 getShouts = api "album.getShouts"
 
 
@@ -59,7 +67,7 @@ getShouts = api "album.getShouts"
 -- Optional: 'autocorrect', 'user'
 --
 -- <http://www.last.fm/api/show/album.getTags>
-getTags ∷ ArtistAlbumOrMBID t ⇒ Request f a (t → APIKey → Ready)
+getTags ∷ ArtistAlbumOrMBID t ⇒ Request f a t
 getTags = api "album.getTags"
 
 
@@ -68,7 +76,7 @@ getTags = api "album.getTags"
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/album.getTopTags>
-getTopTags ∷ ArtistAlbumOrMBID t ⇒ Request f Send (t → APIKey → Ready)
+getTopTags ∷ ArtistAlbumOrMBID t ⇒ Request f Send t
 getTopTags = api "album.getTopTags"
 
 

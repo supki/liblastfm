@@ -20,6 +20,12 @@ import Control.Applicative
 
 import Network.Lastfm.Request
 
+-- | Unify ('Artist' → …) and (MBID → …)
+class ArtistOrMBID a
+
+instance ArtistOrMBID MBID
+instance ArtistOrMBID Artist
+
 
 -- | Tag an artist with one or more user supplied tags.
 --

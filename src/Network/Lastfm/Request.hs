@@ -1,6 +1,5 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE EmptyDataDecls #-}
-{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
 -- | Request construction
@@ -10,7 +9,6 @@ module Network.Lastfm.Request
     -- * Request major parameters
   , api, post, get, json, xml, Ready, APIKey, apiKey, SessionKey, sessionKey
     -- * Request minor parameters
-  , ArtistAlbumOrMBID, ArtistOrMBID, ArtistTrackOrMBID
   , Token, token, Callback, callback
   , Artist, artist, Album, album, MBID, mbid
   , Country, country, Autocorrect, autocorrect
@@ -43,22 +41,6 @@ import qualified Data.Text.Lazy.Builder as T
 import qualified Data.Text.Lazy.Builder.Int as T
 
 import Network.Lastfm.Internal
-
-
-class ArtistAlbumOrMBID a
-
-instance ArtistAlbumOrMBID MBID
-instance ArtistAlbumOrMBID (Artist, Album)
-
-class ArtistTrackOrMBID a
-
-instance ArtistTrackOrMBID MBID
-instance ArtistTrackOrMBID (Artist, Track)
-
-class ArtistOrMBID a
-
-instance ArtistOrMBID MBID
-instance ArtistOrMBID Artist
 
 
 class Argument a where

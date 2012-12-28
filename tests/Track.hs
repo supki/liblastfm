@@ -69,7 +69,7 @@ noauth ak =
   ]
  where
   testGetBuylinks = check gbl $
-    getBuyLinks <*> liftA2 (,) (artist "Pink Floyd") (track "Brain Damage") <*> country "United Kingdom" <*> ak
+    getBuyLinks <*> country "United Kingdom" <*> artist "Pink Floyd" <*> track "Brain Damage" <*> ak
 
   testGetCorrection = check gc $
     getCorrection <*> artist "Pink Ployd" <*> track "Brain Damage" <*> ak
@@ -78,22 +78,22 @@ noauth ak =
     getFingerprintMetadata <*> fingerprint 1234 <*> ak
 
   testGetInfo = check gi $
-    getInfo <*> liftA2 (,) (artist "Pink Floyd") (track "Brain Damage") <* username "aswalrus" <*> ak
+    getInfo <*> artist "Pink Floyd" <*> track "Brain Damage" <* username "aswalrus" <*> ak
 
   testGetShouts = check gsh $
-    getShouts <*> liftA2 (,) (artist "Pink Floyd") (track "Comfortably Numb") <* limit 7 <*> ak
+    getShouts <*> artist "Pink Floyd" <*> track "Comfortably Numb" <* limit 7 <*> ak
 
   testGetSimilar = check gsi $
-    getSimilar <*> liftA2 (,) (artist "Pink Floyd") (track "Comfortably Numb") <* limit 4 <*> ak
+    getSimilar <*> artist "Pink Floyd" <*> track "Comfortably Numb" <* limit 4 <*> ak
 
   testGetTags = check gt $
-    getTags <*> liftA2 (,) (artist "Jefferson Airplane") (track "White Rabbit") <*> user "liblastfm" <*> ak
+    getTags <*> artist "Jefferson Airplane" <*> track "White Rabbit" <* user "liblastfm" <*> ak
 
   testGetTopFans = check gtf $
-    getTopFans <*> liftA2 (,) (artist "Pink Floyd") (track "Comfortably Numb") <*> ak
+    getTopFans <*> artist "Pink Floyd" <*> track "Comfortably Numb" <*> ak
 
   testGetTopTags = check gtt $
-    getTopTags <*> liftA2 (,) (artist "Pink Floyd") (track "Brain Damage") <*> ak
+    getTopTags <*> artist "Pink Floyd" <*> track "Brain Damage" <*> ak
 
   testSearch = check s' $
     search <*> track "Believe" <* limit 12 <*> ak

@@ -1,4 +1,5 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
 -- | Lastfm track API
@@ -20,6 +21,13 @@ import Control.Applicative
 import Network.Lastfm.Request
 
 
+-- | Unify ('Artist' → 'Track' → …) and (MBID → …)
+class ArtistTrackOrMBID a
+
+instance ArtistTrackOrMBID (MBID → APIKey → Ready)
+instance ArtistTrackOrMBID (Artist → Track → APIKey → Ready)
+
+
 -- | Tag a track using a list of user supplied tags.
 --
 -- <http://www.last.fm/api/show/track.addTags>
@@ -39,7 +47,7 @@ ban = api "track.ban" <* post
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/track.getBuylinks>
-getBuyLinks ∷ ArtistTrackOrMBID t ⇒ Request f Send (t → Country → APIKey → Ready)
+getBuyLinks ∷ ArtistTrackOrMBID t ⇒ Request f Send (Country → t)
 getBuyLinks = api "track.getBuyLinks"
 
 
@@ -65,7 +73,7 @@ getFingerprintMetadata = api "track.getFingerprintMetadata"
 -- Optional: 'autocorrect', 'username'
 --
 -- <http://www.last.fm/api/show/track.getInfo>
-getInfo ∷ ArtistTrackOrMBID t ⇒ Request f Send (t → APIKey → Ready)
+getInfo ∷ ArtistTrackOrMBID t ⇒ Request f Send t
 getInfo = api "track.getInfo"
 
 
@@ -74,7 +82,7 @@ getInfo = api "track.getInfo"
 -- Optional: 'autocorrect', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/track.getShouts>
-getShouts ∷ ArtistTrackOrMBID t ⇒ Request f Send (t → APIKey → Ready)
+getShouts ∷ ArtistTrackOrMBID t ⇒ Request f Send t
 getShouts = api "track.getShouts"
 
 
@@ -83,7 +91,7 @@ getShouts = api "track.getShouts"
 -- Optional: 'autocorrect', 'limit'
 --
 -- <http://www.last.fm/api/show/track.getSimilar>
-getSimilar ∷ ArtistTrackOrMBID t ⇒ Request f Send (t → APIKey → Ready)
+getSimilar ∷ ArtistTrackOrMBID t ⇒ Request f Send t
 getSimilar = api "track.getSimilar"
 
 
@@ -92,7 +100,7 @@ getSimilar = api "track.getSimilar"
 -- Optional: 'autocorrect', 'user'
 --
 -- <http://www.last.fm/api/show/track.getTags>
-getTags ∷ ArtistTrackOrMBID t ⇒ Request f Send (t → User → APIKey → Ready)
+getTags ∷ ArtistTrackOrMBID t ⇒ Request f Send t
 getTags = api "track.getTags"
 
 
@@ -101,7 +109,7 @@ getTags = api "track.getTags"
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/track.getTopFans>
-getTopFans ∷ ArtistTrackOrMBID t ⇒ Request f Send (t → APIKey → Ready)
+getTopFans ∷ ArtistTrackOrMBID t ⇒ Request f Send t
 getTopFans = api "track.getTopFans"
 
 
@@ -110,7 +118,7 @@ getTopFans = api "track.getTopFans"
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/track.getTopTags>
-getTopTags ∷ ArtistTrackOrMBID t ⇒ Request f Send (t → APIKey → Ready)
+getTopTags ∷ ArtistTrackOrMBID t ⇒ Request f Send t
 getTopTags = api "track.getTopTags"
 
 
