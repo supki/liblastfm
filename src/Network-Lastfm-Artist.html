@@ -18,166 +18,173 @@
 <a name="line-9"></a><span class='hs-comment'>-- import qualified Network.Lastfm.Artist as Artist</span>
 <a name="line-10"></a><span class='hs-comment'>-- @</span>
 <a name="line-11"></a><span class='hs-keyword'>module</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span><span class='hs-varop'>.</span><span class='hs-conid'>Artist</span>
-<a name="line-12"></a>  <span class='hs-layout'>(</span> <span class='hs-varid'>addTags</span><span class='hs-layout'>,</span> <span class='hs-varid'>getCorrection</span><span class='hs-layout'>,</span> <span class='hs-varid'>getEvents</span><span class='hs-layout'>,</span> <span class='hs-varid'>getInfo</span>
-<a name="line-13"></a>  <span class='hs-layout'>,</span> <span class='hs-varid'>getPastEvents</span><span class='hs-layout'>,</span> <span class='hs-varid'>getPodcast</span><span class='hs-layout'>,</span> <span class='hs-varid'>getShouts</span>
-<a name="line-14"></a>  <span class='hs-layout'>,</span> <span class='hs-varid'>getSimilar</span><span class='hs-layout'>,</span> <span class='hs-varid'>getTags</span><span class='hs-layout'>,</span> <span class='hs-varid'>getTopAlbums</span>
-<a name="line-15"></a>  <span class='hs-layout'>,</span> <span class='hs-varid'>getTopFans</span><span class='hs-layout'>,</span> <span class='hs-varid'>getTopTags</span><span class='hs-layout'>,</span> <span class='hs-varid'>getTopTracks</span>
-<a name="line-16"></a>  <span class='hs-layout'>,</span> <span class='hs-varid'>removeTag</span><span class='hs-layout'>,</span> <span class='hs-varid'>search</span><span class='hs-layout'>,</span> <span class='hs-varid'>share</span><span class='hs-layout'>,</span> <span class='hs-varid'>shout</span>
-<a name="line-17"></a>  <span class='hs-layout'>)</span> <span class='hs-keyword'>where</span>
-<a name="line-18"></a>
-<a name="line-19"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Control</span><span class='hs-varop'>.</span><span class='hs-conid'>Applicative</span>
-<a name="line-20"></a>
-<a name="line-21"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span><span class='hs-varop'>.</span><span class='hs-conid'>Request</span>
-<a name="line-22"></a>
+<a name="line-12"></a>  <span class='hs-layout'>(</span> <span class='hs-conid'>ArtistOrMBID</span>
+<a name="line-13"></a>  <span class='hs-layout'>,</span> <span class='hs-varid'>addTags</span><span class='hs-layout'>,</span> <span class='hs-varid'>getCorrection</span><span class='hs-layout'>,</span> <span class='hs-varid'>getEvents</span><span class='hs-layout'>,</span> <span class='hs-varid'>getInfo</span>
+<a name="line-14"></a>  <span class='hs-layout'>,</span> <span class='hs-varid'>getPastEvents</span><span class='hs-layout'>,</span> <span class='hs-varid'>getPodcast</span><span class='hs-layout'>,</span> <span class='hs-varid'>getShouts</span>
+<a name="line-15"></a>  <span class='hs-layout'>,</span> <span class='hs-varid'>getSimilar</span><span class='hs-layout'>,</span> <span class='hs-varid'>getTags</span><span class='hs-layout'>,</span> <span class='hs-varid'>getTopAlbums</span>
+<a name="line-16"></a>  <span class='hs-layout'>,</span> <span class='hs-varid'>getTopFans</span><span class='hs-layout'>,</span> <span class='hs-varid'>getTopTags</span><span class='hs-layout'>,</span> <span class='hs-varid'>getTopTracks</span>
+<a name="line-17"></a>  <span class='hs-layout'>,</span> <span class='hs-varid'>removeTag</span><span class='hs-layout'>,</span> <span class='hs-varid'>search</span><span class='hs-layout'>,</span> <span class='hs-varid'>share</span><span class='hs-layout'>,</span> <span class='hs-varid'>shout</span>
+<a name="line-18"></a>  <span class='hs-layout'>)</span> <span class='hs-keyword'>where</span>
+<a name="line-19"></a>
+<a name="line-20"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Control</span><span class='hs-varop'>.</span><span class='hs-conid'>Applicative</span>
+<a name="line-21"></a>
+<a name="line-22"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span><span class='hs-varop'>.</span><span class='hs-conid'>Request</span>
 <a name="line-23"></a>
-<a name="line-24"></a><a name="addTags"></a><span class='hs-comment'>-- | Tag an artist with one or more user supplied tags.</span>
-<a name="line-25"></a><span class='hs-comment'>--</span>
-<a name="line-26"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.addTags">http://www.last.fm/api/show/artist.addTags</a>&gt;</span>
-<a name="line-27"></a><span class='hs-definition'>addTags</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Sign</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-sel'>→</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Tag</span><span class='hs-keyglyph'>]</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>SessionKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-28"></a><span class='hs-definition'>addTags</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.addTags"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
+<a name="line-24"></a><a name="ArtistOrMBID"></a><span class='hs-comment'>-- | Unify ('Artist' → …) and ('MBID' → …)</span>
+<a name="line-25"></a><a name="ArtistOrMBID"></a><span class='hs-keyword'>class</span> <span class='hs-conid'>ArtistOrMBID</span> <span class='hs-varid'>a</span>
+<a name="line-26"></a>
+<a name="line-27"></a><a name="instance%20ArtistOrMBID%20MBID%20instance%20ArtistOrMBID%20Artist%20--%20%7c%20Tag%20an%20artist%20with%20one%20or%20more%20user%20supplied%20tags.%20--%20--%20%3chttp://www.last.fm/api/show/artist.addTags%3e%20addTags%20∷%20Request%20f%20Sign%20(Artist%20→%20%5bTag%5d%20→%20APIKey%20→%20SessionKey%20→%20Ready)%20addTags%20=%20api%20%22artist.addTags%22%20%3c*%20post%20--%20%7c%20Use%20the%20last.fm%20corrections%20data%20to%20check%20whether%20the%20--%20supplied%20artist%20has%20a%20correction%20to%20a%20canonical%20artist%20--%20--%20%3chttp://www.last.fm/api/show/artist.getCorrection%3e%20getCorrection%20∷%20Request%20f%20Send%20(Artist%20→%20APIKey%20→%20Ready)%20getCorrection%20=%20api%20%22artist.getCorrection%22%20--%20%7c%20Get%20a%20list%20of%20upcoming%20events%20for%20this%20artist.%20Easily%20--%20integratable%20into%20calendars,%20using%20the%20ical%20standard%20(see%20feeds%20section%20below).%20--%20--%20Optional:%20'autocorrect',%20'limit',%20'pages',%20'festivalsonly'%20--%20--%20%3chttp://www.last.fm/api/show/artist.getEvents%3e%20getEvents%20∷%20ArtistOrMBID%20t%20⇒%20Request%20f%20Send%20(t%20→%20APIKey%20→%20Ready)%20getEvents%20=%20api%20%22artist.getEvents%22%20--%20%7c%20Get%20the%20metadata%20for%20an%20artist.%20Includes%20biography.%20--%20--%20Optional:%20'language',%20'autocorrect',%20'username'%20--%20--%20%3chttp://www.last.fm/api/show/artist.getInfo%3e%20getInfo%20∷%20ArtistOrMBID%20t%20⇒%20Request%20f%20Send%20(t%20→%20APIKey%20→%20Ready)%20getInfo%20=%20api%20%22artist.getInfo%22%20--%20%7c%20Get%20a%20paginated%20list%20of%20all%20the%20events%20this%20artist%20has%20played%20at%20in%20the%20past.%20--%20--%20Optional:%20'page',%20'autocorrect',%20'limit'%20--%20--%20%3chttp://www.last.fm/api/show/artist.getPastEvents%3e%20getPastEvents%20∷%20ArtistOrMBID%20t%20⇒%20Request%20f%20Send%20(t%20→%20APIKey%20→%20Ready)%20getPastEvents%20=%20api%20%22artist.getPastEvents%22%20--%20%7c%20Get%20a%20podcast%20of%20free%20mp3s%20based%20on%20an%20artist%20--%20--%20Optional:%20'autocorrect'%20--%20--%20%3chttp://www.last.fm/api/show/artist.getPodcast%3e%20getPodcast%20∷%20ArtistOrMBID%20t%20⇒%20Request%20f%20Send%20(t%20→%20APIKey%20→%20Ready)%20getPodcast%20=%20api%20%22artist.getPodcast%22%20--%20%7c%20Get%20shouts%20for%20this%20artist.%20Also%20available%20as%20an%20rss%20feed.%20--%20--%20Optional:'autocorrect',%20'limit',%20'page'%20--%20--%20%3chttp://www.last.fm/api/show/artist.getShouts%3e%20getShouts%20∷%20ArtistOrMBID%20t%20⇒%20Request%20f%20Send%20(t%20→%20APIKey%20→%20Ready)%20getShouts%20=%20api%20%22artist.getShouts%22%20--%20%7c%20Get%20all%20the%20artists%20similar%20to%20this%20artist%20--%20--%20Optional:%20'limit',%20'autocorrect'%20--%20--%20%3chttp://www.last.fm/api/show/artist.getSimilar%3e%20getSimilar%20∷%20ArtistOrMBID%20t%20⇒%20Request%20f%20Send%20(t%20→%20APIKey%20→%20Ready)%20getSimilar%20=%20api%20%22artist.getSimilar%22%20--%20%7c%20Get%20the%20tags%20applied%20by%20an%20individual%20user%20to%20an%20artist%20on%20Last.fm.%20--%20If%20accessed%20as%20an%20authenticated%20service%20/and/%20you%20don't%20supply%20a%20--%20user%20parameter%20then%20this%20service%20will%20return%20tags%20for%20--%20the%20authenticated%20user.%20To%20retrieve%20the%20list%20of%20top%20tags%20applied%20--%20to%20an%20artist%20by%20all%20users%20use%20'Network.Lastfm.Artist.getTopTags'.%20--%20--%20Optional:%20'user',%20'autocorrect'%20--%20--%20%3chttp://www.last.fm/api/show/artist.getTags%3e%20getTags%20∷%20ArtistOrMBID%20t%20⇒%20Request%20f%20a%20(t%20→%20APIKey%20→%20Ready)%20getTags%20=%20api%20%22artist.getTags%22%20--%20%7c%20Get%20the%20top%20albums%20for%20an%20artist%20on%20Last.fm,%20ordered%20by%20popularity.%20--%20--%20Optional:%20'autocorrect',%20'page',%20'limit'%20--%20--%20%3chttp://www.last.fm/api/show/artist.getTopAlbums%3e%20getTopAlbums%20∷%20ArtistOrMBID%20t%20⇒%20Request%20f%20Send%20(t%20→%20APIKey%20→%20Ready)%20getTopAlbums%20=%20api%20%22artist.getTopAlbums%22%20--%20%7c%20Get%20the%20top%20fans%20for%20an%20artist%20on%20Last.fm,%20based%20on%20listening%20data.%20--%20--%20Optional:%20'autocorrect'%20--%20--%20%3chttp://www.last.fm/api/show/artist.getTopFans%3e%20getTopFans%20∷%20ArtistOrMBID%20t%20⇒%20Request%20f%20Send%20(t%20→%20APIKey%20→%20Ready)%20getTopFans%20=%20api%20%22artist.getTopFans%22%20--%20%7c%20Get%20the%20top%20tags%20for%20an%20artist%20on%20Last.fm,%20ordered%20by%20popularity.%20--%20--%20Optional:%20'autocorrect'%20--%20--%20%3chttp://www.last.fm/api/show/artist.getTopTags%3e%20getTopTags%20∷%20ArtistOrMBID%20t%20⇒%20Request%20f%20Send%20(t%20→%20APIKey%20→%20Ready)%20getTopTags%20=%20api%20%22artist.getTopTags%22%20--%20%7c%20Get%20the%20top%20tracks%20by%20an%20artist%20on%20Last.fm,%20ordered%20by%20popularity%20--%20--%20Optional:%20'autocorrect',%20'page',%20'limit'%20--%20--%20%3chttp://www.last.fm/api/show/artist.getTopTracks%3e%20getTopTracks%20∷%20ArtistOrMBID%20t%20⇒%20Request%20f%20Send%20(t%20→%20APIKey%20→%20Ready)%20getTopTracks%20=%20api%20%22artist.getTopTracks%22%20--%20%7c%20Remove%20a%20user's%20tag%20from%20an%20artist.%20--%20--%20%3chttp://www.last.fm/api/show/artist.removeTag%3e%20removeTag%20∷%20Request%20f%20Sign%20(Artist%20→%20Tag%20→%20APIKey%20→%20SessionKey%20→%20Ready)%20removeTag%20=%20api%20%22artist.removeTag%22%20%3c*%20post%20--%20%7c%20Search%20for%20an%20artist%20by%20name.%20Returns%20artist%20matches%20sorted%20by%20relevance.%20--%20--%20Optional:%20'limit',%20'page'%20--%20--%20%3chttp://www.last.fm/api/show/artist.search%3e%20search%20∷%20Request%20f%20Send%20(Artist%20→%20APIKey%20→%20Ready)%20search%20=%20api%20%22artist.search%22%20--%20%7c%20Share%20an%20artist%20with%20Last.fm%20users%20or%20other%20friends.%20--%20--%20Optional:%20'message',%20'public'%20--%20--%20%3chttp://www.last.fm/api/show/artist.share%3e%20share%20∷%20Request%20f%20Sign%20(Artist%20→%20Recipient%20→%20APIKey%20→%20SessionKey%20→%20Ready)%20share%20=%20api%20%22artist.share%22%20%3c*%20post%20--%20%7c%20Shout%20in%20this%20artist's%20shoutbox%20--%20--%20%3chttp://www.last.fm/api/show/artist.shout%3e%20shout%20∷%20Request%20f%20Sign%20(Artist%20→%20Message%20→%20APIKey%20→%20SessionKey%20→%20Ready)%20shout%20=%20api%20%22artist.shout%22%20%3c*%20post"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>ArtistOrMBID</span> <span class='hs-conid'>MBID</span>
+<a name="line-28"></a><a name="instance%20ArtistOrMBID%20Artist%20--%20%7c%20Tag%20an%20artist%20with%20one%20or%20more%20user%20supplied%20tags.%20--%20--%20%3chttp://www.last.fm/api/show/artist.addTags%3e%20addTags%20∷%20Request%20f%20Sign%20(Artist%20→%20%5bTag%5d%20→%20APIKey%20→%20SessionKey%20→%20Ready)%20addTags%20=%20api%20%22artist.addTags%22%20%3c*%20post%20--%20%7c%20Use%20the%20last.fm%20corrections%20data%20to%20check%20whether%20the%20--%20supplied%20artist%20has%20a%20correction%20to%20a%20canonical%20artist%20--%20--%20%3chttp://www.last.fm/api/show/artist.getCorrection%3e%20getCorrection%20∷%20Request%20f%20Send%20(Artist%20→%20APIKey%20→%20Ready)%20getCorrection%20=%20api%20%22artist.getCorrection%22%20--%20%7c%20Get%20a%20list%20of%20upcoming%20events%20for%20this%20artist.%20Easily%20--%20integratable%20into%20calendars,%20using%20the%20ical%20standard%20(see%20feeds%20section%20below).%20--%20--%20Optional:%20'autocorrect',%20'limit',%20'pages',%20'festivalsonly'%20--%20--%20%3chttp://www.last.fm/api/show/artist.getEvents%3e%20getEvents%20∷%20ArtistOrMBID%20t%20⇒%20Request%20f%20Send%20(t%20→%20APIKey%20→%20Ready)%20getEvents%20=%20api%20%22artist.getEvents%22%20--%20%7c%20Get%20the%20metadata%20for%20an%20artist.%20Includes%20biography.%20--%20--%20Optional:%20'language',%20'autocorrect',%20'username'%20--%20--%20%3chttp://www.last.fm/api/show/artist.getInfo%3e%20getInfo%20∷%20ArtistOrMBID%20t%20⇒%20Request%20f%20Send%20(t%20→%20APIKey%20→%20Ready)%20getInfo%20=%20api%20%22artist.getInfo%22%20--%20%7c%20Get%20a%20paginated%20list%20of%20all%20the%20events%20this%20artist%20has%20played%20at%20in%20the%20past.%20--%20--%20Optional:%20'page',%20'autocorrect',%20'limit'%20--%20--%20%3chttp://www.last.fm/api/show/artist.getPastEvents%3e%20getPastEvents%20∷%20ArtistOrMBID%20t%20⇒%20Request%20f%20Send%20(t%20→%20APIKey%20→%20Ready)%20getPastEvents%20=%20api%20%22artist.getPastEvents%22%20--%20%7c%20Get%20a%20podcast%20of%20free%20mp3s%20based%20on%20an%20artist%20--%20--%20Optional:%20'autocorrect'%20--%20--%20%3chttp://www.last.fm/api/show/artist.getPodcast%3e%20getPodcast%20∷%20ArtistOrMBID%20t%20⇒%20Request%20f%20Send%20(t%20→%20APIKey%20→%20Ready)%20getPodcast%20=%20api%20%22artist.getPodcast%22%20--%20%7c%20Get%20shouts%20for%20this%20artist.%20Also%20available%20as%20an%20rss%20feed.%20--%20--%20Optional:'autocorrect',%20'limit',%20'page'%20--%20--%20%3chttp://www.last.fm/api/show/artist.getShouts%3e%20getShouts%20∷%20ArtistOrMBID%20t%20⇒%20Request%20f%20Send%20(t%20→%20APIKey%20→%20Ready)%20getShouts%20=%20api%20%22artist.getShouts%22%20--%20%7c%20Get%20all%20the%20artists%20similar%20to%20this%20artist%20--%20--%20Optional:%20'limit',%20'autocorrect'%20--%20--%20%3chttp://www.last.fm/api/show/artist.getSimilar%3e%20getSimilar%20∷%20ArtistOrMBID%20t%20⇒%20Request%20f%20Send%20(t%20→%20APIKey%20→%20Ready)%20getSimilar%20=%20api%20%22artist.getSimilar%22%20--%20%7c%20Get%20the%20tags%20applied%20by%20an%20individual%20user%20to%20an%20artist%20on%20Last.fm.%20--%20If%20accessed%20as%20an%20authenticated%20service%20/and/%20you%20don't%20supply%20a%20--%20user%20parameter%20then%20this%20service%20will%20return%20tags%20for%20--%20the%20authenticated%20user.%20To%20retrieve%20the%20list%20of%20top%20tags%20applied%20--%20to%20an%20artist%20by%20all%20users%20use%20'Network.Lastfm.Artist.getTopTags'.%20--%20--%20Optional:%20'user',%20'autocorrect'%20--%20--%20%3chttp://www.last.fm/api/show/artist.getTags%3e%20getTags%20∷%20ArtistOrMBID%20t%20⇒%20Request%20f%20a%20(t%20→%20APIKey%20→%20Ready)%20getTags%20=%20api%20%22artist.getTags%22%20--%20%7c%20Get%20the%20top%20albums%20for%20an%20artist%20on%20Last.fm,%20ordered%20by%20popularity.%20--%20--%20Optional:%20'autocorrect',%20'page',%20'limit'%20--%20--%20%3chttp://www.last.fm/api/show/artist.getTopAlbums%3e%20getTopAlbums%20∷%20ArtistOrMBID%20t%20⇒%20Request%20f%20Send%20(t%20→%20APIKey%20→%20Ready)%20getTopAlbums%20=%20api%20%22artist.getTopAlbums%22%20--%20%7c%20Get%20the%20top%20fans%20for%20an%20artist%20on%20Last.fm,%20based%20on%20listening%20data.%20--%20--%20Optional:%20'autocorrect'%20--%20--%20%3chttp://www.last.fm/api/show/artist.getTopFans%3e%20getTopFans%20∷%20ArtistOrMBID%20t%20⇒%20Request%20f%20Send%20(t%20→%20APIKey%20→%20Ready)%20getTopFans%20=%20api%20%22artist.getTopFans%22%20--%20%7c%20Get%20the%20top%20tags%20for%20an%20artist%20on%20Last.fm,%20ordered%20by%20popularity.%20--%20--%20Optional:%20'autocorrect'%20--%20--%20%3chttp://www.last.fm/api/show/artist.getTopTags%3e%20getTopTags%20∷%20ArtistOrMBID%20t%20⇒%20Request%20f%20Send%20(t%20→%20APIKey%20→%20Ready)%20getTopTags%20=%20api%20%22artist.getTopTags%22%20--%20%7c%20Get%20the%20top%20tracks%20by%20an%20artist%20on%20Last.fm,%20ordered%20by%20popularity%20--%20--%20Optional:%20'autocorrect',%20'page',%20'limit'%20--%20--%20%3chttp://www.last.fm/api/show/artist.getTopTracks%3e%20getTopTracks%20∷%20ArtistOrMBID%20t%20⇒%20Request%20f%20Send%20(t%20→%20APIKey%20→%20Ready)%20getTopTracks%20=%20api%20%22artist.getTopTracks%22%20--%20%7c%20Remove%20a%20user's%20tag%20from%20an%20artist.%20--%20--%20%3chttp://www.last.fm/api/show/artist.removeTag%3e%20removeTag%20∷%20Request%20f%20Sign%20(Artist%20→%20Tag%20→%20APIKey%20→%20SessionKey%20→%20Ready)%20removeTag%20=%20api%20%22artist.removeTag%22%20%3c*%20post%20--%20%7c%20Search%20for%20an%20artist%20by%20name.%20Returns%20artist%20matches%20sorted%20by%20relevance.%20--%20--%20Optional:%20'limit',%20'page'%20--%20--%20%3chttp://www.last.fm/api/show/artist.search%3e%20search%20∷%20Request%20f%20Send%20(Artist%20→%20APIKey%20→%20Ready)%20search%20=%20api%20%22artist.search%22%20--%20%7c%20Share%20an%20artist%20with%20Last.fm%20users%20or%20other%20friends.%20--%20--%20Optional:%20'message',%20'public'%20--%20--%20%3chttp://www.last.fm/api/show/artist.share%3e%20share%20∷%20Request%20f%20Sign%20(Artist%20→%20Recipient%20→%20APIKey%20→%20SessionKey%20→%20Ready)%20share%20=%20api%20%22artist.share%22%20%3c*%20post%20--%20%7c%20Shout%20in%20this%20artist's%20shoutbox%20--%20--%20%3chttp://www.last.fm/api/show/artist.shout%3e%20shout%20∷%20Request%20f%20Sign%20(Artist%20→%20Message%20→%20APIKey%20→%20SessionKey%20→%20Ready)%20shout%20=%20api%20%22artist.shout%22%20%3c*%20post"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>ArtistOrMBID</span> <span class='hs-conid'>Artist</span>
 <a name="line-29"></a>
 <a name="line-30"></a>
-<a name="line-31"></a><a name="getCorrection"></a><span class='hs-comment'>-- | Use the last.fm corrections data to check whether the</span>
-<a name="line-32"></a><span class='hs-comment'>-- supplied artist has a correction to a canonical artist</span>
-<a name="line-33"></a><span class='hs-comment'>--</span>
-<a name="line-34"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.getCorrection">http://www.last.fm/api/show/artist.getCorrection</a>&gt;</span>
-<a name="line-35"></a><span class='hs-definition'>getCorrection</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-36"></a><span class='hs-definition'>getCorrection</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.getCorrection"</span>
+<a name="line-31"></a><a name="addTags"></a><span class='hs-comment'>-- | Tag an artist with one or more user supplied tags.</span>
+<a name="line-32"></a><span class='hs-comment'>--</span>
+<a name="line-33"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.addTags">http://www.last.fm/api/show/artist.addTags</a>&gt;</span>
+<a name="line-34"></a><span class='hs-definition'>addTags</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Sign</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-sel'>→</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Tag</span><span class='hs-keyglyph'>]</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>SessionKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-35"></a><span class='hs-definition'>addTags</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.addTags"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
+<a name="line-36"></a>
 <a name="line-37"></a>
-<a name="line-38"></a>
-<a name="line-39"></a><a name="getEvents"></a><span class='hs-comment'>-- | Get a list of upcoming events for this artist. Easily</span>
-<a name="line-40"></a><span class='hs-comment'>-- integratable into calendars, using the ical standard (see feeds section below).</span>
-<a name="line-41"></a><span class='hs-comment'>--</span>
-<a name="line-42"></a><span class='hs-comment'>-- Optional: 'autocorrect', 'limit', 'pages', 'festivalsonly'</span>
-<a name="line-43"></a><span class='hs-comment'>--</span>
-<a name="line-44"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.getEvents">http://www.last.fm/api/show/artist.getEvents</a>&gt;</span>
-<a name="line-45"></a><span class='hs-definition'>getEvents</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>ArtistOrMBID</span> <span class='hs-varid'>t</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-varid'>t</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-46"></a><span class='hs-definition'>getEvents</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.getEvents"</span>
-<a name="line-47"></a>
-<a name="line-48"></a>
-<a name="line-49"></a><a name="getInfo"></a><span class='hs-comment'>-- | Get the metadata for an artist. Includes biography.</span>
+<a name="line-38"></a><a name="getCorrection"></a><span class='hs-comment'>-- | Use the last.fm corrections data to check whether the</span>
+<a name="line-39"></a><span class='hs-comment'>-- supplied artist has a correction to a canonical artist</span>
+<a name="line-40"></a><span class='hs-comment'>--</span>
+<a name="line-41"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.getCorrection">http://www.last.fm/api/show/artist.getCorrection</a>&gt;</span>
+<a name="line-42"></a><span class='hs-definition'>getCorrection</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-43"></a><span class='hs-definition'>getCorrection</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.getCorrection"</span>
+<a name="line-44"></a>
+<a name="line-45"></a>
+<a name="line-46"></a><a name="getEvents"></a><span class='hs-comment'>-- | Get a list of upcoming events for this artist. Easily</span>
+<a name="line-47"></a><span class='hs-comment'>-- integratable into calendars, using the ical standard (see feeds section below).</span>
+<a name="line-48"></a><span class='hs-comment'>--</span>
+<a name="line-49"></a><span class='hs-comment'>-- Optional: 'autocorrect', 'limit', 'pages', 'festivalsonly'</span>
 <a name="line-50"></a><span class='hs-comment'>--</span>
-<a name="line-51"></a><span class='hs-comment'>-- Optional: 'language', 'autocorrect', 'username'</span>
-<a name="line-52"></a><span class='hs-comment'>--</span>
-<a name="line-53"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.getInfo">http://www.last.fm/api/show/artist.getInfo</a>&gt;</span>
-<a name="line-54"></a><span class='hs-definition'>getInfo</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>ArtistOrMBID</span> <span class='hs-varid'>t</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-varid'>t</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-55"></a><span class='hs-definition'>getInfo</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.getInfo"</span>
-<a name="line-56"></a>
-<a name="line-57"></a>
-<a name="line-58"></a><a name="getPastEvents"></a><span class='hs-comment'>-- | Get a paginated list of all the events this artist has played at in the past.</span>
+<a name="line-51"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.getEvents">http://www.last.fm/api/show/artist.getEvents</a>&gt;</span>
+<a name="line-52"></a><span class='hs-definition'>getEvents</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>ArtistOrMBID</span> <span class='hs-varid'>t</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-varid'>t</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-53"></a><span class='hs-definition'>getEvents</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.getEvents"</span>
+<a name="line-54"></a>
+<a name="line-55"></a>
+<a name="line-56"></a><a name="getInfo"></a><span class='hs-comment'>-- | Get the metadata for an artist. Includes biography.</span>
+<a name="line-57"></a><span class='hs-comment'>--</span>
+<a name="line-58"></a><span class='hs-comment'>-- Optional: 'language', 'autocorrect', 'username'</span>
 <a name="line-59"></a><span class='hs-comment'>--</span>
-<a name="line-60"></a><span class='hs-comment'>-- Optional: 'page', 'autocorrect', 'limit'</span>
-<a name="line-61"></a><span class='hs-comment'>--</span>
-<a name="line-62"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.getPastEvents">http://www.last.fm/api/show/artist.getPastEvents</a>&gt;</span>
-<a name="line-63"></a><span class='hs-definition'>getPastEvents</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>ArtistOrMBID</span> <span class='hs-varid'>t</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-varid'>t</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-64"></a><span class='hs-definition'>getPastEvents</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.getPastEvents"</span>
-<a name="line-65"></a>
-<a name="line-66"></a>
-<a name="line-67"></a><a name="getPodcast"></a><span class='hs-comment'>-- | Get a podcast of free mp3s based on an artist</span>
+<a name="line-60"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.getInfo">http://www.last.fm/api/show/artist.getInfo</a>&gt;</span>
+<a name="line-61"></a><span class='hs-definition'>getInfo</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>ArtistOrMBID</span> <span class='hs-varid'>t</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-varid'>t</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-62"></a><span class='hs-definition'>getInfo</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.getInfo"</span>
+<a name="line-63"></a>
+<a name="line-64"></a>
+<a name="line-65"></a><a name="getPastEvents"></a><span class='hs-comment'>-- | Get a paginated list of all the events this artist has played at in the past.</span>
+<a name="line-66"></a><span class='hs-comment'>--</span>
+<a name="line-67"></a><span class='hs-comment'>-- Optional: 'page', 'autocorrect', 'limit'</span>
 <a name="line-68"></a><span class='hs-comment'>--</span>
-<a name="line-69"></a><span class='hs-comment'>-- Optional: 'autocorrect'</span>
-<a name="line-70"></a><span class='hs-comment'>--</span>
-<a name="line-71"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.getPodcast">http://www.last.fm/api/show/artist.getPodcast</a>&gt;</span>
-<a name="line-72"></a><span class='hs-definition'>getPodcast</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>ArtistOrMBID</span> <span class='hs-varid'>t</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-varid'>t</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-73"></a><span class='hs-definition'>getPodcast</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.getPodcast"</span>
-<a name="line-74"></a>
-<a name="line-75"></a>
-<a name="line-76"></a><a name="getShouts"></a><span class='hs-comment'>-- | Get shouts for this artist. Also available as an rss feed.</span>
+<a name="line-69"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.getPastEvents">http://www.last.fm/api/show/artist.getPastEvents</a>&gt;</span>
+<a name="line-70"></a><span class='hs-definition'>getPastEvents</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>ArtistOrMBID</span> <span class='hs-varid'>t</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-varid'>t</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-71"></a><span class='hs-definition'>getPastEvents</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.getPastEvents"</span>
+<a name="line-72"></a>
+<a name="line-73"></a>
+<a name="line-74"></a><a name="getPodcast"></a><span class='hs-comment'>-- | Get a podcast of free mp3s based on an artist</span>
+<a name="line-75"></a><span class='hs-comment'>--</span>
+<a name="line-76"></a><span class='hs-comment'>-- Optional: 'autocorrect'</span>
 <a name="line-77"></a><span class='hs-comment'>--</span>
-<a name="line-78"></a><span class='hs-comment'>-- Optional:'autocorrect', 'limit', 'page'</span>
-<a name="line-79"></a><span class='hs-comment'>--</span>
-<a name="line-80"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.getShouts">http://www.last.fm/api/show/artist.getShouts</a>&gt;</span>
-<a name="line-81"></a><span class='hs-definition'>getShouts</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>ArtistOrMBID</span> <span class='hs-varid'>t</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-varid'>t</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-82"></a><span class='hs-definition'>getShouts</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.getShouts"</span>
-<a name="line-83"></a>
-<a name="line-84"></a>
-<a name="line-85"></a><a name="getSimilar"></a><span class='hs-comment'>-- | Get all the artists similar to this artist</span>
+<a name="line-78"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.getPodcast">http://www.last.fm/api/show/artist.getPodcast</a>&gt;</span>
+<a name="line-79"></a><span class='hs-definition'>getPodcast</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>ArtistOrMBID</span> <span class='hs-varid'>t</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-varid'>t</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-80"></a><span class='hs-definition'>getPodcast</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.getPodcast"</span>
+<a name="line-81"></a>
+<a name="line-82"></a>
+<a name="line-83"></a><a name="getShouts"></a><span class='hs-comment'>-- | Get shouts for this artist. Also available as an rss feed.</span>
+<a name="line-84"></a><span class='hs-comment'>--</span>
+<a name="line-85"></a><span class='hs-comment'>-- Optional:'autocorrect', 'limit', 'page'</span>
 <a name="line-86"></a><span class='hs-comment'>--</span>
-<a name="line-87"></a><span class='hs-comment'>-- Optional: 'limit', 'autocorrect'</span>
-<a name="line-88"></a><span class='hs-comment'>--</span>
-<a name="line-89"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.getSimilar">http://www.last.fm/api/show/artist.getSimilar</a>&gt;</span>
-<a name="line-90"></a><span class='hs-definition'>getSimilar</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>ArtistOrMBID</span> <span class='hs-varid'>t</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-varid'>t</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-91"></a><span class='hs-definition'>getSimilar</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.getSimilar"</span>
-<a name="line-92"></a>
-<a name="line-93"></a>
-<a name="line-94"></a><a name="getTags"></a><span class='hs-comment'>-- | Get the tags applied by an individual user to an artist on Last.fm.</span>
-<a name="line-95"></a><span class='hs-comment'>-- If accessed as an authenticated service /and/ you don't supply a</span>
-<a name="line-96"></a><span class='hs-comment'>-- user parameter then this service will return tags for</span>
-<a name="line-97"></a><span class='hs-comment'>-- the authenticated user. To retrieve the list of top tags applied</span>
-<a name="line-98"></a><span class='hs-comment'>-- to an artist by all users use 'Network.Lastfm.Artist.getTopTags'.</span>
-<a name="line-99"></a><span class='hs-comment'>--</span>
-<a name="line-100"></a><span class='hs-comment'>-- Optional: 'user', 'autocorrect'</span>
-<a name="line-101"></a><span class='hs-comment'>--</span>
-<a name="line-102"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.getTags">http://www.last.fm/api/show/artist.getTags</a>&gt;</span>
-<a name="line-103"></a><span class='hs-definition'>getTags</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>ArtistOrMBID</span> <span class='hs-varid'>t</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-layout'>(</span><span class='hs-varid'>t</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-104"></a><span class='hs-definition'>getTags</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.getTags"</span>
-<a name="line-105"></a>
-<a name="line-106"></a>
-<a name="line-107"></a><a name="getTopAlbums"></a><span class='hs-comment'>-- | Get the top albums for an artist on Last.fm, ordered by popularity.</span>
+<a name="line-87"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.getShouts">http://www.last.fm/api/show/artist.getShouts</a>&gt;</span>
+<a name="line-88"></a><span class='hs-definition'>getShouts</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>ArtistOrMBID</span> <span class='hs-varid'>t</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-varid'>t</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-89"></a><span class='hs-definition'>getShouts</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.getShouts"</span>
+<a name="line-90"></a>
+<a name="line-91"></a>
+<a name="line-92"></a><a name="getSimilar"></a><span class='hs-comment'>-- | Get all the artists similar to this artist</span>
+<a name="line-93"></a><span class='hs-comment'>--</span>
+<a name="line-94"></a><span class='hs-comment'>-- Optional: 'limit', 'autocorrect'</span>
+<a name="line-95"></a><span class='hs-comment'>--</span>
+<a name="line-96"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.getSimilar">http://www.last.fm/api/show/artist.getSimilar</a>&gt;</span>
+<a name="line-97"></a><span class='hs-definition'>getSimilar</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>ArtistOrMBID</span> <span class='hs-varid'>t</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-varid'>t</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-98"></a><span class='hs-definition'>getSimilar</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.getSimilar"</span>
+<a name="line-99"></a>
+<a name="line-100"></a>
+<a name="line-101"></a><a name="getTags"></a><span class='hs-comment'>-- | Get the tags applied by an individual user to an artist on Last.fm.</span>
+<a name="line-102"></a><span class='hs-comment'>-- If accessed as an authenticated service /and/ you don't supply a</span>
+<a name="line-103"></a><span class='hs-comment'>-- user parameter then this service will return tags for</span>
+<a name="line-104"></a><span class='hs-comment'>-- the authenticated user. To retrieve the list of top tags applied</span>
+<a name="line-105"></a><span class='hs-comment'>-- to an artist by all users use 'Network.Lastfm.Artist.getTopTags'.</span>
+<a name="line-106"></a><span class='hs-comment'>--</span>
+<a name="line-107"></a><span class='hs-comment'>-- Optional: 'user', 'autocorrect'</span>
 <a name="line-108"></a><span class='hs-comment'>--</span>
-<a name="line-109"></a><span class='hs-comment'>-- Optional: 'autocorrect', 'page', 'limit'</span>
-<a name="line-110"></a><span class='hs-comment'>--</span>
-<a name="line-111"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.getTopAlbums">http://www.last.fm/api/show/artist.getTopAlbums</a>&gt;</span>
-<a name="line-112"></a><span class='hs-definition'>getTopAlbums</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>ArtistOrMBID</span> <span class='hs-varid'>t</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-varid'>t</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-113"></a><span class='hs-definition'>getTopAlbums</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.getTopAlbums"</span>
-<a name="line-114"></a>
-<a name="line-115"></a>
-<a name="line-116"></a><a name="getTopFans"></a><span class='hs-comment'>-- | Get the top fans for an artist on Last.fm, based on listening data.</span>
+<a name="line-109"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.getTags">http://www.last.fm/api/show/artist.getTags</a>&gt;</span>
+<a name="line-110"></a><span class='hs-definition'>getTags</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>ArtistOrMBID</span> <span class='hs-varid'>t</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-layout'>(</span><span class='hs-varid'>t</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-111"></a><span class='hs-definition'>getTags</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.getTags"</span>
+<a name="line-112"></a>
+<a name="line-113"></a>
+<a name="line-114"></a><a name="getTopAlbums"></a><span class='hs-comment'>-- | Get the top albums for an artist on Last.fm, ordered by popularity.</span>
+<a name="line-115"></a><span class='hs-comment'>--</span>
+<a name="line-116"></a><span class='hs-comment'>-- Optional: 'autocorrect', 'page', 'limit'</span>
 <a name="line-117"></a><span class='hs-comment'>--</span>
-<a name="line-118"></a><span class='hs-comment'>-- Optional: 'autocorrect'</span>
-<a name="line-119"></a><span class='hs-comment'>--</span>
-<a name="line-120"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.getTopFans">http://www.last.fm/api/show/artist.getTopFans</a>&gt;</span>
-<a name="line-121"></a><span class='hs-definition'>getTopFans</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>ArtistOrMBID</span> <span class='hs-varid'>t</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-varid'>t</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-122"></a><span class='hs-definition'>getTopFans</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.getTopFans"</span>
-<a name="line-123"></a>
-<a name="line-124"></a>
-<a name="line-125"></a><a name="getTopTags"></a><span class='hs-comment'>-- | Get the top tags for an artist on Last.fm, ordered by popularity.</span>
+<a name="line-118"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.getTopAlbums">http://www.last.fm/api/show/artist.getTopAlbums</a>&gt;</span>
+<a name="line-119"></a><span class='hs-definition'>getTopAlbums</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>ArtistOrMBID</span> <span class='hs-varid'>t</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-varid'>t</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-120"></a><span class='hs-definition'>getTopAlbums</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.getTopAlbums"</span>
+<a name="line-121"></a>
+<a name="line-122"></a>
+<a name="line-123"></a><a name="getTopFans"></a><span class='hs-comment'>-- | Get the top fans for an artist on Last.fm, based on listening data.</span>
+<a name="line-124"></a><span class='hs-comment'>--</span>
+<a name="line-125"></a><span class='hs-comment'>-- Optional: 'autocorrect'</span>
 <a name="line-126"></a><span class='hs-comment'>--</span>
-<a name="line-127"></a><span class='hs-comment'>-- Optional: 'autocorrect'</span>
-<a name="line-128"></a><span class='hs-comment'>--</span>
-<a name="line-129"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.getTopTags">http://www.last.fm/api/show/artist.getTopTags</a>&gt;</span>
-<a name="line-130"></a><span class='hs-definition'>getTopTags</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>ArtistOrMBID</span> <span class='hs-varid'>t</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-varid'>t</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-131"></a><span class='hs-definition'>getTopTags</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.getTopTags"</span>
-<a name="line-132"></a>
-<a name="line-133"></a>
-<a name="line-134"></a><a name="getTopTracks"></a><span class='hs-comment'>-- | Get the top tracks by an artist on Last.fm, ordered by popularity</span>
+<a name="line-127"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.getTopFans">http://www.last.fm/api/show/artist.getTopFans</a>&gt;</span>
+<a name="line-128"></a><span class='hs-definition'>getTopFans</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>ArtistOrMBID</span> <span class='hs-varid'>t</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-varid'>t</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-129"></a><span class='hs-definition'>getTopFans</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.getTopFans"</span>
+<a name="line-130"></a>
+<a name="line-131"></a>
+<a name="line-132"></a><a name="getTopTags"></a><span class='hs-comment'>-- | Get the top tags for an artist on Last.fm, ordered by popularity.</span>
+<a name="line-133"></a><span class='hs-comment'>--</span>
+<a name="line-134"></a><span class='hs-comment'>-- Optional: 'autocorrect'</span>
 <a name="line-135"></a><span class='hs-comment'>--</span>
-<a name="line-136"></a><span class='hs-comment'>-- Optional: 'autocorrect', 'page', 'limit'</span>
-<a name="line-137"></a><span class='hs-comment'>--</span>
-<a name="line-138"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.getTopTracks">http://www.last.fm/api/show/artist.getTopTracks</a>&gt;</span>
-<a name="line-139"></a><span class='hs-definition'>getTopTracks</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>ArtistOrMBID</span> <span class='hs-varid'>t</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-varid'>t</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-140"></a><span class='hs-definition'>getTopTracks</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.getTopTracks"</span>
-<a name="line-141"></a>
-<a name="line-142"></a>
-<a name="line-143"></a><a name="removeTag"></a><span class='hs-comment'>-- | Remove a user's tag from an artist.</span>
+<a name="line-136"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.getTopTags">http://www.last.fm/api/show/artist.getTopTags</a>&gt;</span>
+<a name="line-137"></a><span class='hs-definition'>getTopTags</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>ArtistOrMBID</span> <span class='hs-varid'>t</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-varid'>t</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-138"></a><span class='hs-definition'>getTopTags</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.getTopTags"</span>
+<a name="line-139"></a>
+<a name="line-140"></a>
+<a name="line-141"></a><a name="getTopTracks"></a><span class='hs-comment'>-- | Get the top tracks by an artist on Last.fm, ordered by popularity</span>
+<a name="line-142"></a><span class='hs-comment'>--</span>
+<a name="line-143"></a><span class='hs-comment'>-- Optional: 'autocorrect', 'page', 'limit'</span>
 <a name="line-144"></a><span class='hs-comment'>--</span>
-<a name="line-145"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.removeTag">http://www.last.fm/api/show/artist.removeTag</a>&gt;</span>
-<a name="line-146"></a><span class='hs-definition'>removeTag</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Sign</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Tag</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>SessionKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-147"></a><span class='hs-definition'>removeTag</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.removeTag"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
+<a name="line-145"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.getTopTracks">http://www.last.fm/api/show/artist.getTopTracks</a>&gt;</span>
+<a name="line-146"></a><span class='hs-definition'>getTopTracks</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>ArtistOrMBID</span> <span class='hs-varid'>t</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-varid'>t</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-147"></a><span class='hs-definition'>getTopTracks</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.getTopTracks"</span>
 <a name="line-148"></a>
 <a name="line-149"></a>
-<a name="line-150"></a><a name="search"></a><span class='hs-comment'>-- | Search for an artist by name. Returns artist matches sorted by relevance.</span>
+<a name="line-150"></a><a name="removeTag"></a><span class='hs-comment'>-- | Remove a user's tag from an artist.</span>
 <a name="line-151"></a><span class='hs-comment'>--</span>
-<a name="line-152"></a><span class='hs-comment'>-- Optional: 'limit', 'page'</span>
-<a name="line-153"></a><span class='hs-comment'>--</span>
-<a name="line-154"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.search">http://www.last.fm/api/show/artist.search</a>&gt;</span>
-<a name="line-155"></a><span class='hs-definition'>search</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-156"></a><span class='hs-definition'>search</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.search"</span>
-<a name="line-157"></a>
-<a name="line-158"></a>
-<a name="line-159"></a><a name="share"></a><span class='hs-comment'>-- | Share an artist with Last.fm users or other friends.</span>
+<a name="line-152"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.removeTag">http://www.last.fm/api/show/artist.removeTag</a>&gt;</span>
+<a name="line-153"></a><span class='hs-definition'>removeTag</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Sign</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Tag</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>SessionKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-154"></a><span class='hs-definition'>removeTag</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.removeTag"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
+<a name="line-155"></a>
+<a name="line-156"></a>
+<a name="line-157"></a><a name="search"></a><span class='hs-comment'>-- | Search for an artist by name. Returns artist matches sorted by relevance.</span>
+<a name="line-158"></a><span class='hs-comment'>--</span>
+<a name="line-159"></a><span class='hs-comment'>-- Optional: 'limit', 'page'</span>
 <a name="line-160"></a><span class='hs-comment'>--</span>
-<a name="line-161"></a><span class='hs-comment'>-- Optional: 'message', 'public'</span>
-<a name="line-162"></a><span class='hs-comment'>--</span>
-<a name="line-163"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.share">http://www.last.fm/api/show/artist.share</a>&gt;</span>
-<a name="line-164"></a><span class='hs-definition'>share</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Sign</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Recipient</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>SessionKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-165"></a><span class='hs-definition'>share</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.share"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
-<a name="line-166"></a>
-<a name="line-167"></a>
-<a name="line-168"></a><a name="shout"></a><span class='hs-comment'>-- | Shout in this artist's shoutbox</span>
+<a name="line-161"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.search">http://www.last.fm/api/show/artist.search</a>&gt;</span>
+<a name="line-162"></a><span class='hs-definition'>search</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-163"></a><span class='hs-definition'>search</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.search"</span>
+<a name="line-164"></a>
+<a name="line-165"></a>
+<a name="line-166"></a><a name="share"></a><span class='hs-comment'>-- | Share an artist with Last.fm users or other friends.</span>
+<a name="line-167"></a><span class='hs-comment'>--</span>
+<a name="line-168"></a><span class='hs-comment'>-- Optional: 'message', 'public'</span>
 <a name="line-169"></a><span class='hs-comment'>--</span>
-<a name="line-170"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.shout">http://www.last.fm/api/show/artist.shout</a>&gt;</span>
-<a name="line-171"></a><span class='hs-definition'>shout</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Sign</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Message</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>SessionKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-172"></a><span class='hs-definition'>shout</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.shout"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
+<a name="line-170"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.share">http://www.last.fm/api/show/artist.share</a>&gt;</span>
+<a name="line-171"></a><span class='hs-definition'>share</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Sign</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Recipient</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>SessionKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-172"></a><span class='hs-definition'>share</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.share"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
+<a name="line-173"></a>
+<a name="line-174"></a>
+<a name="line-175"></a><a name="shout"></a><span class='hs-comment'>-- | Shout in this artist's shoutbox</span>
+<a name="line-176"></a><span class='hs-comment'>--</span>
+<a name="line-177"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/artist.shout">http://www.last.fm/api/show/artist.shout</a>&gt;</span>
+<a name="line-178"></a><span class='hs-definition'>shout</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Sign</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Message</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>SessionKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-179"></a><span class='hs-definition'>shout</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"artist.shout"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
 </pre></body>
 </html>
