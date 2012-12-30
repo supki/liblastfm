@@ -4,12 +4,12 @@ module Main where
 
 import Control.Applicative
 import Data.Monoid
-import Network.Lastfm
 import System.Exit (ExitCode(ExitFailure), exitWith)
 
 import qualified Data.ByteString.Lazy as B
 import           Data.Aeson
-import           Data.Text.Lazy (Text)
+import           Data.Text (Text)
+import           Network.Lastfm
 import           Test.Framework
 
 import qualified Album as Album

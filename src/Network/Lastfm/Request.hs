@@ -35,10 +35,8 @@ import Data.Int (Int64)
 import Data.Monoid ((<>))
 
 import qualified Data.Map as M
-import           Data.Text.Lazy (Text)
-import qualified Data.Text.Lazy as T
-import qualified Data.Text.Lazy.Builder as T
-import qualified Data.Text.Lazy.Builder.Int as T
+import           Data.Text (Text)
+import qualified Data.Text as T
 
 import Network.Lastfm.Internal
 
@@ -59,7 +57,7 @@ instance Argument Bool where
   {-# INLINE toText #-}
 
 instance Argument Int64 where
-  toText = T.toLazyText . T.decimal
+  toText = T.pack . show
   {-# INLINE toText #-}
 
 instance Argument a ⇒ Argument [a] where

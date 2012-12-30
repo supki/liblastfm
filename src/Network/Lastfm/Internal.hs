@@ -20,9 +20,9 @@ import           Data.Serialize (Serialize(..))
 import           Data.ByteString (ByteString)
 import           Data.Map (Map)
 import qualified Data.Map as M
-import           Data.Text.Lazy (Text)
-import qualified Data.Text.Lazy as T
-import qualified Data.Text.Lazy.Encoding as T
+import           Data.Text (Text)
+import qualified Data.Text as T
+import qualified Data.Text.Encoding as T
 import           Network.URI (escapeURIChar, isUnreserved)
 
 

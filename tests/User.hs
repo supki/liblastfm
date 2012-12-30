@@ -4,7 +4,7 @@
 module User (auth, noauth) where
 
 import Data.Aeson.Types
-import Data.Text.Lazy (Text)
+import Data.Text (Text)
 import Network.Lastfm
 import Network.Lastfm.User
 import Test.Framework

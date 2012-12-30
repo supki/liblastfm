@@ -18,15 +18,16 @@ import Control.Exception (throw)
 import Control.Monad
 import Data.Monoid
 
+import           Crypto.Classes (hash')
 import           Data.Aeson ((.:), Value, decode, parseJSON)
 import           Data.Aeson.Types (parseMaybe)
 import qualified Data.ByteString.Lazy as Lazy
 import qualified Data.ByteString as Strict
-import           Data.Digest.Pure.MD5 (md5)
+import           Data.Digest.Pure.MD5 (MD5Digest)
 import qualified Data.Map as M
-import           Data.Text.Lazy (Text)
-import qualified Data.Text.Lazy as T
-import qualified Data.Text.Lazy.Encoding as T
+import           Data.Text (Text)
+import qualified Data.Text as T
+import qualified Data.Text.Encoding as T
 import qualified Network.HTTP.Conduit as C
 import qualified Network.HTTP.Types as C
 
@@ -85,7 +86,8 @@ sign s = coerce . (<* signature)
   signature = wrap $ \r@R { _query = q } →
     r { _query = M.insert "api_sig" (signer (foldr M.delete q ["format", "callback"])) q }
 
-  signer = T.pack . show . md5 . T.encodeUtf8 . M.foldrWithKey(\k v xs → k <> v <> xs) s
+  signer = T.pack . show . (hash' :: Strict.ByteString -> MD5Digest) .
+    T.encodeUtf8 . M.foldrWithKey(\k v xs → k <> v <> xs) s
 
 
 -- | Send Request and parse Response

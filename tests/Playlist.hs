@@ -4,7 +4,7 @@
 module Playlist (auth) where
 
 import Data.Aeson.Types
-import Data.Text.Lazy (Text)
+import Data.Text (Text)
 import Network.Lastfm
 import Network.Lastfm.Playlist
 import Network.Lastfm.User
