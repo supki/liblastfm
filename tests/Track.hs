@@ -60,11 +60,17 @@ noauth ak =
   , testCase "Track.getCorrection" testGetCorrection
   , testCase "Track.getFingerprintMetadata" testGetFingerprintMetadata
   , testCase "Track.getInfo" testGetInfo
+  , testCase "Track.getInfo_mbid" testGetInfo_mbid
   , testCase "Track.getShouts" testGetShouts
+  , testCase "Track.getShouts_mbid" testGetShouts_mbid
   , testCase "Track.getSimilar" testGetSimilar
+  , testCase "Track.getSimilar_mbid" testGetSimilar_mbid
   , testCase "Track.getTags" testGetTags
+  , testCase "Track.getTags_mbid" testGetTags_mbid
   , testCase "Track.getTopFans" testGetTopFans
+  , testCase "Track.getTopFans_mbid" testGetTopFans_mbid
   , testCase "Track.getTopTags" testGetTopTags
+  , testCase "Track.getTopTags_mbid" testGetTopTags_mbid
   , testCase "Track.search" testSearch
   ]
  where
@@ -78,22 +84,34 @@ noauth ak =
     getFingerprintMetadata <*> fingerprint 1234 <*> ak
 
   testGetInfo = check gi $
-    getInfo <*> artist "Pink Floyd" <*> track "Brain Damage" <* username "aswalrus" <*> ak
+    getInfo <*> artist "Pink Floyd" <*> track "Comfortably Numb" <* username "aswalrus" <*> ak
+  testGetInfo_mbid = check gi $
+    getInfo <*> mbid "b6581c74-0b8c-4981-ab92-7eed0298a4bb" <* username "aswalrus" <*> ak
 
   testGetShouts = check gsh $
     getShouts <*> artist "Pink Floyd" <*> track "Comfortably Numb" <* limit 7 <*> ak
+  testGetShouts_mbid = check gsh $
+    getShouts <*> mbid "b6581c74-0b8c-4981-ab92-7eed0298a4bb" <* limit 7 <*> ak
 
   testGetSimilar = check gsi $
     getSimilar <*> artist "Pink Floyd" <*> track "Comfortably Numb" <* limit 4 <*> ak
+  testGetSimilar_mbid = check gsi $
+    getSimilar <*> mbid "b6581c74-0b8c-4981-ab92-7eed0298a4bb" <* limit 4 <*> ak
 
   testGetTags = check gt $
     getTags <*> artist "Jefferson Airplane" <*> track "White Rabbit" <* user "liblastfm" <*> ak
+  testGetTags_mbid = check gt $
+    getTags <*> mbid "1fc619ee-c612-4b2a-a8dc-bb8f1b8b2d6d"  <* user "liblastfm" <*> ak
 
   testGetTopFans = check gtf $
     getTopFans <*> artist "Pink Floyd" <*> track "Comfortably Numb" <*> ak
+  testGetTopFans_mbid = check gtf $
+    getTopFans <*> mbid "b6581c74-0b8c-4981-ab92-7eed0298a4bb" <*> ak
 
   testGetTopTags = check gtt $
-    getTopTags <*> artist "Pink Floyd" <*> track "Brain Damage" <*> ak
+    getTopTags <*> artist "Pink Floyd" <*> track "Comfortably Numb" <*> ak
+  testGetTopTags_mbid = check gtt $
+    getTopTags <*> mbid "b6581c74-0b8c-4981-ab92-7eed0298a4bb" <*> ak
 
   testSearch = check s' $
     search <*> track "Believe" <* limit 12 <*> ak

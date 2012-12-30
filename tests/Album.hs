@@ -55,31 +55,26 @@ noauth ak =
  where
   testGetBuylinks = check gbl $
     getBuyLinks <*> country "United Kingdom" <*> artist "Pink Floyd" <*> album "The Wall" <*> ak
-
   testGetBuylinks_mbid = check gbl $
     getBuyLinks <*> country "United Kingdom" <*> mbid "3a16c04b-922b-35c5-a29b-cbe9111fbe79" <*> ak
 
   testGetInfo = check gi $
     getInfo <*> artist "Pink Floyd" <*> album "The Wall" <*> ak
-
   testGetInfo_mbid = check gi $
     getInfo <*> mbid "3a16c04b-922b-35c5-a29b-cbe9111fbe79" <*> ak
 
   testGetShouts = check gs $
     getShouts <*> artist "Pink Floyd" <*> album "The Wall" <* limit 7 <*> ak
-
   testGetShouts_mbid = check gs $
     getShouts <*> mbid "3a16c04b-922b-35c5-a29b-cbe9111fbe79" <* limit 7 <*> ak
 
   testGetTags = check gt $
     getTags <*> artist "Pink Floyd" <*> album "The Wall" <* user "liblastfm" <*> ak
-
   testGetTags_mbid = check gt $
     getTags <*> mbid "3a16c04b-922b-35c5-a29b-cbe9111fbe79" <* user "liblastfm" <*> ak
 
   testGetTopTags = check gtt $
     getTopTags <*> artist "Pink Floyd" <*> album "The Wall" <*> ak
-
   testGetTopTags_mbid = check gtt $
     getTopTags <*> mbid "3a16c04b-922b-35c5-a29b-cbe9111fbe79" <*> ak
 
