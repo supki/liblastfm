@@ -15,6 +15,17 @@ Response format might be:
   * `Maybe Value` from [aeson][5] for json queries (nice interaction with [aeson-lens][6] for free!)
   * raw `ByteString` for xml queries
 
+##Installation
+To install either use hackage:
+
+    % cabal install liblastfm
+    
+Or git:
+
+    % git clone git@github.com:supki/haskell-liblastfm
+    % cd haskell-liblastfm
+    % cabal install
+
 ##FAQ
 **Q: I'm getting the following error. How do I fix it?**
 ```
