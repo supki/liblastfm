@@ -12,7 +12,7 @@ build-type: Simple
 
 executable sort-friends
   build-depends: base >= 3 && < 5,
-                 liblastfm,
+                 liblastfm >= 0.0.4.0,
                  async,
                  text,
                  aeson,
@@ -25,17 +25,17 @@ executable sort-friends
 
 executable multitag-search
   build-depends: base >= 3 && < 5,
-                 liblastfm,
+                 liblastfm >= 0.0.4.0,
                  text,
                  lens,
-                 aeson-lens
+                 aeson
   main-is: multitag-search.hs
   ghc-options: -Wall
                -fno-warn-unused-do-bind
 
 executable web-authentication
   build-depends: base >= 3 && < 5,
-                 liblastfm,
+                 liblastfm >= 0.0.4.0,
                  happstack-server,
                  transformers,
                  lens,
@@ -46,7 +46,7 @@ executable web-authentication
 
 executable desktop-authentication
   build-depends: base >= 3 && < 5,
-                 liblastfm,
+                 liblastfm >= 0.0.4.0,
                  lens,
                  aeson-lens
   main-is: desktop-authentication.hs

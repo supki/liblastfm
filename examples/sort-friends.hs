@@ -33,8 +33,8 @@ import           Control.Concurrent.Async
 import           Control.Lens hiding (value)
 import           Data.Aeson (Value)
 import           Data.Aeson.Lens
-import           Data.Text.Lazy (Text)
-import qualified Data.Text.Lazy.IO as T
+import           Data.Text (Text)
+import qualified Data.Text.IO as T
 import           Network.Lastfm
 import qualified Network.Lastfm.User as User
 import qualified Network.Lastfm.Tasteometer as Tasteometer
