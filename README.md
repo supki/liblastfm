@@ -31,7 +31,7 @@ Suppose, you need to use [`tag.search`](http://www.last.fm/api/show/tag.search) 
 First find it in liblastfm: `Tag` would be the name of the module and `search` would be the name of function. [Here it is][7].
 So import a couple of modules:
 
-    ghci> import Network.Lastfm -- bunch of useful utilities
+    ghci> import Network.Lastfm -- a bunch of useful utilities
     ghci> import qualified Network.Lastfm.Tag as Tag -- for Tag.search
 
 Now you may you applicative `<*>` for required and `<*` or `*>` for optional parameters to construct
