@@ -1,5 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeFamilies #-}
@@ -8,7 +9,7 @@
 module Network.Lastfm.Response
   ( -- * Sign Request
     -- $sign
-    Secret, sign
+    Secret(..), sign
     -- * Get Response
   , Response, lastfm, lastfm', finalize
   ) where
@@ -17,6 +18,7 @@ import Control.Applicative
 import Control.Exception (throw)
 import Control.Monad
 import Data.Monoid
+import Data.String (IsString)
 
 import           Crypto.Classes (hash')
 import           Data.Aeson ((.:), Value, decode, parseJSON)
@@ -76,12 +78,12 @@ instance Supported XML where
 
 
 -- | Application secret
-type Secret = Text
+newtype Secret = Secret Text deriving (Show, IsString)
 
 
 -- | Sign 'Request' with 'Secret'
 sign ∷ Secret → Request f Sign Ready → Request f Send Ready
-sign s = coerce . (<* signature)
+sign (Secret s) = coerce . (<* signature)
  where
   signature = wrap $ \r@R { _query = q } →
     r { _query = M.insert "api_sig" (signer (foldr M.delete q ["format", "callback"])) q }

@@ -4,7 +4,6 @@
 module Event (auth, noauth) where
 
 import Data.Aeson.Types
-import Data.Text (Text)
 import Network.Lastfm
 import Network.Lastfm.Event
 import Test.Framework
@@ -13,7 +12,7 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-auth ∷ Request JSON Sign APIKey → Request JSON Sign SessionKey → Text → [Test]
+auth ∷ Request JSON Sign APIKey → Request JSON Sign SessionKey → Secret → [Test]
 auth ak sk s =
   [ testCase "Event.attend" testAttend
   , testCase "Event.share" testShare

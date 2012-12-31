@@ -4,7 +4,6 @@
 module Playlist (auth) where
 
 import Data.Aeson.Types
-import Data.Text (Text)
 import Network.Lastfm
 import Network.Lastfm.Playlist
 import Network.Lastfm.User
@@ -14,7 +13,7 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-auth ∷ Request JSON Sign APIKey → Request JSON Sign SessionKey → Text → [Test]
+auth ∷ Request JSON Sign APIKey → Request JSON Sign SessionKey → Secret → [Test]
 auth ak sk s =
   [ testCase "Playlist.create"   testCreate -- Order matters.
   , testCase "Playlist.addTrack" testAddTrack

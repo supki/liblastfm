@@ -33,7 +33,7 @@ main =
        Just (Keys ak sk s) →
          defaultMainWithOpts (auth <> noauth) (mempty { ropt_threads = Just 20 })
           where
-           auth = mconcat . map (\f → f (apiKey ak) (sessionKey sk) s) $
+           auth = mconcat . map (\f → f (apiKey ak) (sessionKey sk) (Secret s)) $
              [ Album.auth
              , Artist.auth
              , Event.auth
