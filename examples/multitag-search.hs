@@ -11,7 +11,6 @@
  - Lisa
  - 茅原実里
  -}
-import           Control.Applicative
 import           Data.Aeson.Types
 import           Data.List (intersect)
 import           Data.Maybe
@@ -27,11 +26,15 @@ main = mapM_ T.putStrLn =<< artists multitags
 
 artists :: [Text] -> IO [Text]
 artists ts = do
-  names <- catMaybes <$> mapM (((parseMaybe gta =<<) <$>) . query) ts
-  case names of
+  names <- mapM request ts
+  case catMaybes names of
     [] -> return []
     ns -> return (foldl1 intersect ns)
  where
+  request q = do
+    raw <- query q
+    return (raw >>= parseMaybe gta)
+
   query t = lastfm $ Tag.getTopArtists <*> tag t <* limit 100 <*> apiKey "29effec263316a1f8a97f753caaa83e0" <* json
 
 gta :: Value -> Parser [Text]
