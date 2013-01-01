@@ -40,223 +40,248 @@
 <a name="line-31"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getArtistTracks">http://www.last.fm/api/show/user.getArtistTracks</a>&gt;</span>
 <a name="line-32"></a><span class='hs-definition'>getArtistTracks</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Artist</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
 <a name="line-33"></a><span class='hs-definition'>getArtistTracks</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getArtistTracks"</span>
-<a name="line-34"></a>
+<a name="line-34"></a><span class='hs-comment'>{-# INLINE getArtistTracks #-}</span>
 <a name="line-35"></a>
-<a name="line-36"></a><a name="getBannedTracks"></a><span class='hs-comment'>-- | Returns the tracks banned by the user</span>
-<a name="line-37"></a><span class='hs-comment'>--</span>
-<a name="line-38"></a><span class='hs-comment'>-- Optional: 'limit', 'page'</span>
-<a name="line-39"></a><span class='hs-comment'>--</span>
-<a name="line-40"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getBannedTracks">http://www.last.fm/api/show/user.getBannedTracks</a>&gt;</span>
-<a name="line-41"></a><span class='hs-definition'>getBannedTracks</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-42"></a><span class='hs-definition'>getBannedTracks</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getBannedTracks"</span>
-<a name="line-43"></a>
-<a name="line-44"></a>
-<a name="line-45"></a><a name="getEvents"></a><span class='hs-comment'>-- | Get a list of upcoming events that this user is attending.</span>
-<a name="line-46"></a><span class='hs-comment'>-- Easily integratable into calendars, using the ical standard (see 'more formats' section below).</span>
-<a name="line-47"></a><span class='hs-comment'>--</span>
-<a name="line-48"></a><span class='hs-comment'>-- Optional: 'page', 'festivalsonly', 'limit'</span>
+<a name="line-36"></a>
+<a name="line-37"></a><a name="getBannedTracks"></a><span class='hs-comment'>-- | Returns the tracks banned by the user</span>
+<a name="line-38"></a><span class='hs-comment'>--</span>
+<a name="line-39"></a><span class='hs-comment'>-- Optional: 'limit', 'page'</span>
+<a name="line-40"></a><span class='hs-comment'>--</span>
+<a name="line-41"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getBannedTracks">http://www.last.fm/api/show/user.getBannedTracks</a>&gt;</span>
+<a name="line-42"></a><span class='hs-definition'>getBannedTracks</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-43"></a><span class='hs-definition'>getBannedTracks</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getBannedTracks"</span>
+<a name="line-44"></a><span class='hs-comment'>{-# INLINE getBannedTracks #-}</span>
+<a name="line-45"></a>
+<a name="line-46"></a>
+<a name="line-47"></a><a name="getEvents"></a><span class='hs-comment'>-- | Get a list of upcoming events that this user is attending.</span>
+<a name="line-48"></a><span class='hs-comment'>-- Easily integratable into calendars, using the ical standard (see 'more formats' section below).</span>
 <a name="line-49"></a><span class='hs-comment'>--</span>
-<a name="line-50"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getEvents">http://www.last.fm/api/show/user.getEvents</a>&gt;</span>
-<a name="line-51"></a><span class='hs-definition'>getEvents</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-52"></a><span class='hs-definition'>getEvents</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getEvents"</span>
-<a name="line-53"></a>
-<a name="line-54"></a>
-<a name="line-55"></a><a name="getFriends"></a><span class='hs-comment'>-- | Get a list of the user's friends on Last.fm.</span>
-<a name="line-56"></a><span class='hs-comment'>--</span>
-<a name="line-57"></a><span class='hs-comment'>-- Optional: 'recenttracks', 'limit', 'page'</span>
-<a name="line-58"></a><span class='hs-comment'>--</span>
-<a name="line-59"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getFriends">http://www.last.fm/api/show/user.getFriends</a>&gt;</span>
-<a name="line-60"></a><span class='hs-definition'>getFriends</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-61"></a><span class='hs-definition'>getFriends</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getFriends"</span>
-<a name="line-62"></a>
-<a name="line-63"></a>
-<a name="line-64"></a><a name="getInfo"></a><span class='hs-comment'>-- | Get information about a user profile.</span>
-<a name="line-65"></a><span class='hs-comment'>--</span>
-<a name="line-66"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getInfo">http://www.last.fm/api/show/user.getInfo</a>&gt;</span>
-<a name="line-67"></a><span class='hs-definition'>getInfo</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-68"></a><span class='hs-definition'>getInfo</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getInfo"</span>
-<a name="line-69"></a>
-<a name="line-70"></a>
-<a name="line-71"></a><a name="getLovedTracks"></a><span class='hs-comment'>-- | Get the last 50 tracks loved by a user.</span>
-<a name="line-72"></a><span class='hs-comment'>--</span>
-<a name="line-73"></a><span class='hs-comment'>-- Optional: 'limit', 'page'</span>
-<a name="line-74"></a><span class='hs-comment'>--</span>
-<a name="line-75"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getLovedTracks">http://www.last.fm/api/show/user.getLovedTracks</a>&gt;</span>
-<a name="line-76"></a><span class='hs-definition'>getLovedTracks</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-77"></a><span class='hs-definition'>getLovedTracks</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getLovedTracks"</span>
-<a name="line-78"></a>
-<a name="line-79"></a>
-<a name="line-80"></a><a name="getNeighbours"></a><span class='hs-comment'>-- | Get a list of a user's neighbours on Last.fm.</span>
-<a name="line-81"></a><span class='hs-comment'>--</span>
-<a name="line-82"></a><span class='hs-comment'>-- Optional: 'limit'</span>
-<a name="line-83"></a><span class='hs-comment'>--</span>
-<a name="line-84"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getNeighbours">http://www.last.fm/api/show/user.getNeighbours</a>&gt;</span>
-<a name="line-85"></a><span class='hs-definition'>getNeighbours</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-86"></a><span class='hs-definition'>getNeighbours</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getNeighbours"</span>
-<a name="line-87"></a>
-<a name="line-88"></a>
-<a name="line-89"></a><a name="getNewReleases"></a><span class='hs-comment'>-- | Gets a list of forthcoming releases based on a user's musical taste.</span>
-<a name="line-90"></a><span class='hs-comment'>--</span>
-<a name="line-91"></a><span class='hs-comment'>-- Optional: 'userecs'</span>
-<a name="line-92"></a><span class='hs-comment'>--</span>
-<a name="line-93"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getNewReleases">http://www.last.fm/api/show/user.getNewReleases</a>&gt;</span>
-<a name="line-94"></a><span class='hs-definition'>getNewReleases</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-95"></a><span class='hs-definition'>getNewReleases</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getNewReleases"</span>
-<a name="line-96"></a>
-<a name="line-97"></a>
-<a name="line-98"></a><a name="getPastEvents"></a><span class='hs-comment'>-- | Get a paginated list of all events a user has attended in the past.</span>
+<a name="line-50"></a><span class='hs-comment'>-- Optional: 'page', 'festivalsonly', 'limit'</span>
+<a name="line-51"></a><span class='hs-comment'>--</span>
+<a name="line-52"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getEvents">http://www.last.fm/api/show/user.getEvents</a>&gt;</span>
+<a name="line-53"></a><span class='hs-definition'>getEvents</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-54"></a><span class='hs-definition'>getEvents</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getEvents"</span>
+<a name="line-55"></a><span class='hs-comment'>{-# INLINE getEvents #-}</span>
+<a name="line-56"></a>
+<a name="line-57"></a>
+<a name="line-58"></a><a name="getFriends"></a><span class='hs-comment'>-- | Get a list of the user's friends on Last.fm.</span>
+<a name="line-59"></a><span class='hs-comment'>--</span>
+<a name="line-60"></a><span class='hs-comment'>-- Optional: 'recenttracks', 'limit', 'page'</span>
+<a name="line-61"></a><span class='hs-comment'>--</span>
+<a name="line-62"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getFriends">http://www.last.fm/api/show/user.getFriends</a>&gt;</span>
+<a name="line-63"></a><span class='hs-definition'>getFriends</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-64"></a><span class='hs-definition'>getFriends</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getFriends"</span>
+<a name="line-65"></a><span class='hs-comment'>{-# INLINE getFriends #-}</span>
+<a name="line-66"></a>
+<a name="line-67"></a>
+<a name="line-68"></a><a name="getInfo"></a><span class='hs-comment'>-- | Get information about a user profile.</span>
+<a name="line-69"></a><span class='hs-comment'>--</span>
+<a name="line-70"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getInfo">http://www.last.fm/api/show/user.getInfo</a>&gt;</span>
+<a name="line-71"></a><span class='hs-definition'>getInfo</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-72"></a><span class='hs-definition'>getInfo</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getInfo"</span>
+<a name="line-73"></a><span class='hs-comment'>{-# INLINE getInfo #-}</span>
+<a name="line-74"></a>
+<a name="line-75"></a>
+<a name="line-76"></a><a name="getLovedTracks"></a><span class='hs-comment'>-- | Get the last 50 tracks loved by a user.</span>
+<a name="line-77"></a><span class='hs-comment'>--</span>
+<a name="line-78"></a><span class='hs-comment'>-- Optional: 'limit', 'page'</span>
+<a name="line-79"></a><span class='hs-comment'>--</span>
+<a name="line-80"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getLovedTracks">http://www.last.fm/api/show/user.getLovedTracks</a>&gt;</span>
+<a name="line-81"></a><span class='hs-definition'>getLovedTracks</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-82"></a><span class='hs-definition'>getLovedTracks</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getLovedTracks"</span>
+<a name="line-83"></a><span class='hs-comment'>{-# INLINE getLovedTracks #-}</span>
+<a name="line-84"></a>
+<a name="line-85"></a>
+<a name="line-86"></a><a name="getNeighbours"></a><span class='hs-comment'>-- | Get a list of a user's neighbours on Last.fm.</span>
+<a name="line-87"></a><span class='hs-comment'>--</span>
+<a name="line-88"></a><span class='hs-comment'>-- Optional: 'limit'</span>
+<a name="line-89"></a><span class='hs-comment'>--</span>
+<a name="line-90"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getNeighbours">http://www.last.fm/api/show/user.getNeighbours</a>&gt;</span>
+<a name="line-91"></a><span class='hs-definition'>getNeighbours</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-92"></a><span class='hs-definition'>getNeighbours</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getNeighbours"</span>
+<a name="line-93"></a><span class='hs-comment'>{-# INLINE getNeighbours #-}</span>
+<a name="line-94"></a>
+<a name="line-95"></a>
+<a name="line-96"></a><a name="getNewReleases"></a><span class='hs-comment'>-- | Gets a list of forthcoming releases based on a user's musical taste.</span>
+<a name="line-97"></a><span class='hs-comment'>--</span>
+<a name="line-98"></a><span class='hs-comment'>-- Optional: 'userecs'</span>
 <a name="line-99"></a><span class='hs-comment'>--</span>
-<a name="line-100"></a><span class='hs-comment'>-- Optional: 'page', 'limit'</span>
-<a name="line-101"></a><span class='hs-comment'>--</span>
-<a name="line-102"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getPastEvents">http://www.last.fm/api/show/user.getPastEvents</a>&gt;</span>
-<a name="line-103"></a><span class='hs-definition'>getPastEvents</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-104"></a><span class='hs-definition'>getPastEvents</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getPastEvents"</span>
+<a name="line-100"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getNewReleases">http://www.last.fm/api/show/user.getNewReleases</a>&gt;</span>
+<a name="line-101"></a><span class='hs-definition'>getNewReleases</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-102"></a><span class='hs-definition'>getNewReleases</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getNewReleases"</span>
+<a name="line-103"></a><span class='hs-comment'>{-# INLINE getNewReleases #-}</span>
+<a name="line-104"></a>
 <a name="line-105"></a>
-<a name="line-106"></a>
-<a name="line-107"></a><a name="getPersonalTags"></a><span class='hs-comment'>-- | Get the user's personal tags</span>
-<a name="line-108"></a><span class='hs-comment'>--</span>
-<a name="line-109"></a><span class='hs-comment'>-- Optional: 'taggingtype', 'limit', 'page'</span>
-<a name="line-110"></a><span class='hs-comment'>--</span>
-<a name="line-111"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getPersonalTags">http://www.last.fm/api/show/user.getPersonalTags</a>&gt;</span>
-<a name="line-112"></a><span class='hs-definition'>getPersonalTags</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Tag</span> <span class='hs-sel'>→</span> <span class='hs-conid'>TaggingType</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-113"></a><span class='hs-definition'>getPersonalTags</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getPersonalTags"</span>
+<a name="line-106"></a><a name="getPastEvents"></a><span class='hs-comment'>-- | Get a paginated list of all events a user has attended in the past.</span>
+<a name="line-107"></a><span class='hs-comment'>--</span>
+<a name="line-108"></a><span class='hs-comment'>-- Optional: 'page', 'limit'</span>
+<a name="line-109"></a><span class='hs-comment'>--</span>
+<a name="line-110"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getPastEvents">http://www.last.fm/api/show/user.getPastEvents</a>&gt;</span>
+<a name="line-111"></a><span class='hs-definition'>getPastEvents</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-112"></a><span class='hs-definition'>getPastEvents</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getPastEvents"</span>
+<a name="line-113"></a><span class='hs-comment'>{-# INLINE getPastEvents #-}</span>
 <a name="line-114"></a>
 <a name="line-115"></a>
-<a name="line-116"></a><a name="getPlaylists"></a><span class='hs-comment'>-- | Get a list of a user's playlists on Last.fm.</span>
+<a name="line-116"></a><a name="getPersonalTags"></a><span class='hs-comment'>-- | Get the user's personal tags</span>
 <a name="line-117"></a><span class='hs-comment'>--</span>
-<a name="line-118"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getPlaylists">http://www.last.fm/api/show/user.getPlaylists</a>&gt;</span>
-<a name="line-119"></a><span class='hs-definition'>getPlaylists</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-120"></a><span class='hs-definition'>getPlaylists</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getPlaylists"</span>
-<a name="line-121"></a>
-<a name="line-122"></a>
-<a name="line-123"></a><a name="getRecentStations"></a><span class='hs-comment'>-- | Get a list of the recent Stations listened to by this user.</span>
-<a name="line-124"></a><span class='hs-comment'>--</span>
-<a name="line-125"></a><span class='hs-comment'>-- Optional: 'limit', 'page'</span>
-<a name="line-126"></a><span class='hs-comment'>--</span>
-<a name="line-127"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getRecentStations">http://www.last.fm/api/show/user.getRecentStations</a>&gt;</span>
-<a name="line-128"></a><span class='hs-definition'>getRecentStations</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Sign</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>SessionKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-129"></a><span class='hs-definition'>getRecentStations</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getRecentStations"</span>
-<a name="line-130"></a>
-<a name="line-131"></a>
-<a name="line-132"></a><a name="getRecentTracks"></a><span class='hs-comment'>-- | Get a list of the recent tracks listened to by this user.</span>
-<a name="line-133"></a><span class='hs-comment'>-- Also includes the currently playing track with the nowplaying="true"</span>
-<a name="line-134"></a><span class='hs-comment'>-- attribute if the user is currently listening.</span>
+<a name="line-118"></a><span class='hs-comment'>-- Optional: 'taggingtype', 'limit', 'page'</span>
+<a name="line-119"></a><span class='hs-comment'>--</span>
+<a name="line-120"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getPersonalTags">http://www.last.fm/api/show/user.getPersonalTags</a>&gt;</span>
+<a name="line-121"></a><span class='hs-definition'>getPersonalTags</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Tag</span> <span class='hs-sel'>→</span> <span class='hs-conid'>TaggingType</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-122"></a><span class='hs-definition'>getPersonalTags</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getPersonalTags"</span>
+<a name="line-123"></a><span class='hs-comment'>{-# INLINE getPersonalTags #-}</span>
+<a name="line-124"></a>
+<a name="line-125"></a>
+<a name="line-126"></a><a name="getPlaylists"></a><span class='hs-comment'>-- | Get a list of a user's playlists on Last.fm.</span>
+<a name="line-127"></a><span class='hs-comment'>--</span>
+<a name="line-128"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getPlaylists">http://www.last.fm/api/show/user.getPlaylists</a>&gt;</span>
+<a name="line-129"></a><span class='hs-definition'>getPlaylists</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-130"></a><span class='hs-definition'>getPlaylists</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getPlaylists"</span>
+<a name="line-131"></a><span class='hs-comment'>{-# INLINE getPlaylists #-}</span>
+<a name="line-132"></a>
+<a name="line-133"></a>
+<a name="line-134"></a><a name="getRecentStations"></a><span class='hs-comment'>-- | Get a list of the recent Stations listened to by this user.</span>
 <a name="line-135"></a><span class='hs-comment'>--</span>
-<a name="line-136"></a><span class='hs-comment'>-- Optional: 'limit', 'page', 'from', 'extended', 'to'</span>
+<a name="line-136"></a><span class='hs-comment'>-- Optional: 'limit', 'page'</span>
 <a name="line-137"></a><span class='hs-comment'>--</span>
-<a name="line-138"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getRecentTracks">http://www.last.fm/api/show/user.getRecentTracks</a>&gt;</span>
-<a name="line-139"></a><span class='hs-definition'>getRecentTracks</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-140"></a><span class='hs-definition'>getRecentTracks</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getRecentTracks"</span>
-<a name="line-141"></a>
+<a name="line-138"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getRecentStations">http://www.last.fm/api/show/user.getRecentStations</a>&gt;</span>
+<a name="line-139"></a><span class='hs-definition'>getRecentStations</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Sign</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>SessionKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-140"></a><span class='hs-definition'>getRecentStations</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getRecentStations"</span>
+<a name="line-141"></a><span class='hs-comment'>{-# INLINE getRecentStations #-}</span>
 <a name="line-142"></a>
-<a name="line-143"></a><a name="getRecommendedArtists"></a><span class='hs-comment'>-- | Get Last.fm artist recommendations for a user</span>
-<a name="line-144"></a><span class='hs-comment'>--</span>
-<a name="line-145"></a><span class='hs-comment'>-- Optional: 'page', 'limit'</span>
-<a name="line-146"></a><span class='hs-comment'>--</span>
-<a name="line-147"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getRecommendedArtists">http://www.last.fm/api/show/user.getRecommendedArtists</a>&gt;</span>
-<a name="line-148"></a><span class='hs-definition'>getRecommendedArtists</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Sign</span> <span class='hs-layout'>(</span><span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>SessionKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-149"></a><span class='hs-definition'>getRecommendedArtists</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getRecommendedArtists"</span>
-<a name="line-150"></a>
-<a name="line-151"></a>
-<a name="line-152"></a><a name="getRecommendedEvents"></a><span class='hs-comment'>-- | Get a paginated list of all events recommended to a user by Last.fm, based on their listening profile.</span>
-<a name="line-153"></a><span class='hs-comment'>--</span>
-<a name="line-154"></a><span class='hs-comment'>-- Optional: 'limit', 'page', 'latitude', 'longitude', 'festivalsonly', 'country'</span>
-<a name="line-155"></a><span class='hs-comment'>--</span>
-<a name="line-156"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getRecommendedEvents">http://www.last.fm/api/show/user.getRecommendedEvents</a>&gt;</span>
-<a name="line-157"></a><span class='hs-definition'>getRecommendedEvents</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Sign</span> <span class='hs-layout'>(</span><span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>SessionKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-158"></a><span class='hs-definition'>getRecommendedEvents</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getRecommendedEvents"</span>
-<a name="line-159"></a>
-<a name="line-160"></a>
-<a name="line-161"></a><a name="getShouts"></a><span class='hs-comment'>-- | Get shouts for this user. Also available as an rss feed.</span>
-<a name="line-162"></a><span class='hs-comment'>--</span>
-<a name="line-163"></a><span class='hs-comment'>-- Optional: 'page', 'limit'</span>
-<a name="line-164"></a><span class='hs-comment'>--</span>
-<a name="line-165"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getShouts">http://www.last.fm/api/show/user.getShouts</a>&gt;</span>
-<a name="line-166"></a><span class='hs-definition'>getShouts</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-167"></a><span class='hs-definition'>getShouts</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getShouts"</span>
-<a name="line-168"></a>
-<a name="line-169"></a>
-<a name="line-170"></a><a name="getTopAlbums"></a><span class='hs-comment'>-- | Get the top albums listened to by a user.</span>
-<a name="line-171"></a><span class='hs-comment'>-- You can stipulate a time period. Sends the overall chart by default.</span>
-<a name="line-172"></a><span class='hs-comment'>--</span>
-<a name="line-173"></a><span class='hs-comment'>-- Optional: 'period', 'limit', 'page'</span>
-<a name="line-174"></a><span class='hs-comment'>--</span>
-<a name="line-175"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getTopAlbums">http://www.last.fm/api/show/user.getTopAlbums</a>&gt;</span>
-<a name="line-176"></a><span class='hs-definition'>getTopAlbums</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-177"></a><span class='hs-definition'>getTopAlbums</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getTopAlbums"</span>
-<a name="line-178"></a>
-<a name="line-179"></a>
-<a name="line-180"></a><a name="getTopArtists"></a><span class='hs-comment'>-- | Get the top artists listened to by a user.</span>
-<a name="line-181"></a><span class='hs-comment'>-- You can stipulate a time period. Sends the overall chart by default.</span>
-<a name="line-182"></a><span class='hs-comment'>--</span>
-<a name="line-183"></a><span class='hs-comment'>-- Optional: 'period', 'limit', 'page'</span>
-<a name="line-184"></a><span class='hs-comment'>--</span>
-<a name="line-185"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getTopArtists">http://www.last.fm/api/show/user.getTopArtists</a>&gt;</span>
-<a name="line-186"></a><span class='hs-definition'>getTopArtists</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-187"></a><span class='hs-definition'>getTopArtists</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getTopArtists"</span>
-<a name="line-188"></a>
-<a name="line-189"></a>
-<a name="line-190"></a><a name="getTopTags"></a><span class='hs-comment'>-- | Get the top tags used by this user.</span>
-<a name="line-191"></a><span class='hs-comment'>--</span>
-<a name="line-192"></a><span class='hs-comment'>-- Optional: 'limit'</span>
-<a name="line-193"></a><span class='hs-comment'>--</span>
-<a name="line-194"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getTopTags">http://www.last.fm/api/show/user.getTopTags</a>&gt;</span>
-<a name="line-195"></a><span class='hs-definition'>getTopTags</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-196"></a><span class='hs-definition'>getTopTags</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getTopTags"</span>
-<a name="line-197"></a>
-<a name="line-198"></a>
-<a name="line-199"></a><a name="getTopTracks"></a><span class='hs-comment'>-- | Get the top tracks listened to by a user.</span>
-<a name="line-200"></a><span class='hs-comment'>-- You can stipulate a time period. Sends the overall chart by default.</span>
+<a name="line-143"></a>
+<a name="line-144"></a><a name="getRecentTracks"></a><span class='hs-comment'>-- | Get a list of the recent tracks listened to by this user.</span>
+<a name="line-145"></a><span class='hs-comment'>-- Also includes the currently playing track with the nowplaying="true"</span>
+<a name="line-146"></a><span class='hs-comment'>-- attribute if the user is currently listening.</span>
+<a name="line-147"></a><span class='hs-comment'>--</span>
+<a name="line-148"></a><span class='hs-comment'>-- Optional: 'limit', 'page', 'from', 'extended', 'to'</span>
+<a name="line-149"></a><span class='hs-comment'>--</span>
+<a name="line-150"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getRecentTracks">http://www.last.fm/api/show/user.getRecentTracks</a>&gt;</span>
+<a name="line-151"></a><span class='hs-definition'>getRecentTracks</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-152"></a><span class='hs-definition'>getRecentTracks</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getRecentTracks"</span>
+<a name="line-153"></a><span class='hs-comment'>{-# INLINE getRecentTracks #-}</span>
+<a name="line-154"></a>
+<a name="line-155"></a>
+<a name="line-156"></a><a name="getRecommendedArtists"></a><span class='hs-comment'>-- | Get Last.fm artist recommendations for a user</span>
+<a name="line-157"></a><span class='hs-comment'>--</span>
+<a name="line-158"></a><span class='hs-comment'>-- Optional: 'page', 'limit'</span>
+<a name="line-159"></a><span class='hs-comment'>--</span>
+<a name="line-160"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getRecommendedArtists">http://www.last.fm/api/show/user.getRecommendedArtists</a>&gt;</span>
+<a name="line-161"></a><span class='hs-definition'>getRecommendedArtists</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Sign</span> <span class='hs-layout'>(</span><span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>SessionKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-162"></a><span class='hs-definition'>getRecommendedArtists</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getRecommendedArtists"</span>
+<a name="line-163"></a><span class='hs-comment'>{-# INLINE getRecommendedArtists #-}</span>
+<a name="line-164"></a>
+<a name="line-165"></a>
+<a name="line-166"></a><a name="getRecommendedEvents"></a><span class='hs-comment'>-- | Get a paginated list of all events recommended to a user by Last.fm, based on their listening profile.</span>
+<a name="line-167"></a><span class='hs-comment'>--</span>
+<a name="line-168"></a><span class='hs-comment'>-- Optional: 'limit', 'page', 'latitude', 'longitude', 'festivalsonly', 'country'</span>
+<a name="line-169"></a><span class='hs-comment'>--</span>
+<a name="line-170"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getRecommendedEvents">http://www.last.fm/api/show/user.getRecommendedEvents</a>&gt;</span>
+<a name="line-171"></a><span class='hs-definition'>getRecommendedEvents</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Sign</span> <span class='hs-layout'>(</span><span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>SessionKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-172"></a><span class='hs-definition'>getRecommendedEvents</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getRecommendedEvents"</span>
+<a name="line-173"></a><span class='hs-comment'>{-# INLINE getRecommendedEvents #-}</span>
+<a name="line-174"></a>
+<a name="line-175"></a>
+<a name="line-176"></a><a name="getShouts"></a><span class='hs-comment'>-- | Get shouts for this user. Also available as an rss feed.</span>
+<a name="line-177"></a><span class='hs-comment'>--</span>
+<a name="line-178"></a><span class='hs-comment'>-- Optional: 'page', 'limit'</span>
+<a name="line-179"></a><span class='hs-comment'>--</span>
+<a name="line-180"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getShouts">http://www.last.fm/api/show/user.getShouts</a>&gt;</span>
+<a name="line-181"></a><span class='hs-definition'>getShouts</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-182"></a><span class='hs-definition'>getShouts</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getShouts"</span>
+<a name="line-183"></a><span class='hs-comment'>{-# INLINE getShouts #-}</span>
+<a name="line-184"></a>
+<a name="line-185"></a>
+<a name="line-186"></a><a name="getTopAlbums"></a><span class='hs-comment'>-- | Get the top albums listened to by a user.</span>
+<a name="line-187"></a><span class='hs-comment'>-- You can stipulate a time period. Sends the overall chart by default.</span>
+<a name="line-188"></a><span class='hs-comment'>--</span>
+<a name="line-189"></a><span class='hs-comment'>-- Optional: 'period', 'limit', 'page'</span>
+<a name="line-190"></a><span class='hs-comment'>--</span>
+<a name="line-191"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getTopAlbums">http://www.last.fm/api/show/user.getTopAlbums</a>&gt;</span>
+<a name="line-192"></a><span class='hs-definition'>getTopAlbums</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-193"></a><span class='hs-definition'>getTopAlbums</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getTopAlbums"</span>
+<a name="line-194"></a><span class='hs-comment'>{-# INLINE getTopAlbums #-}</span>
+<a name="line-195"></a>
+<a name="line-196"></a>
+<a name="line-197"></a><a name="getTopArtists"></a><span class='hs-comment'>-- | Get the top artists listened to by a user.</span>
+<a name="line-198"></a><span class='hs-comment'>-- You can stipulate a time period. Sends the overall chart by default.</span>
+<a name="line-199"></a><span class='hs-comment'>--</span>
+<a name="line-200"></a><span class='hs-comment'>-- Optional: 'period', 'limit', 'page'</span>
 <a name="line-201"></a><span class='hs-comment'>--</span>
-<a name="line-202"></a><span class='hs-comment'>-- Optional: 'period', 'limit', 'page'</span>
-<a name="line-203"></a><span class='hs-comment'>--</span>
-<a name="line-204"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getTopTracks">http://www.last.fm/api/show/user.getTopTracks</a>&gt;</span>
-<a name="line-205"></a><span class='hs-definition'>getTopTracks</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-206"></a><span class='hs-definition'>getTopTracks</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getTopTracks"</span>
+<a name="line-202"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getTopArtists">http://www.last.fm/api/show/user.getTopArtists</a>&gt;</span>
+<a name="line-203"></a><span class='hs-definition'>getTopArtists</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-204"></a><span class='hs-definition'>getTopArtists</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getTopArtists"</span>
+<a name="line-205"></a><span class='hs-comment'>{-# INLINE getTopArtists #-}</span>
+<a name="line-206"></a>
 <a name="line-207"></a>
-<a name="line-208"></a>
-<a name="line-209"></a><a name="getWeeklyAlbumChart"></a><span class='hs-comment'>-- | Get an album chart for a user profile, for a given date range.</span>
-<a name="line-210"></a><span class='hs-comment'>-- If no date range is supplied, it will return the most recent album chart for this user.</span>
+<a name="line-208"></a><a name="getTopTags"></a><span class='hs-comment'>-- | Get the top tags used by this user.</span>
+<a name="line-209"></a><span class='hs-comment'>--</span>
+<a name="line-210"></a><span class='hs-comment'>-- Optional: 'limit'</span>
 <a name="line-211"></a><span class='hs-comment'>--</span>
-<a name="line-212"></a><span class='hs-comment'>-- Optional: 'from', 'to'</span>
-<a name="line-213"></a><span class='hs-comment'>--</span>
-<a name="line-214"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getWeeklyAlbumChart">http://www.last.fm/api/show/user.getWeeklyAlbumChart</a>&gt;</span>
-<a name="line-215"></a><span class='hs-definition'>getWeeklyAlbumChart</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-216"></a><span class='hs-definition'>getWeeklyAlbumChart</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getWeeklyAlbumChart"</span>
+<a name="line-212"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getTopTags">http://www.last.fm/api/show/user.getTopTags</a>&gt;</span>
+<a name="line-213"></a><span class='hs-definition'>getTopTags</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-214"></a><span class='hs-definition'>getTopTags</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getTopTags"</span>
+<a name="line-215"></a><span class='hs-comment'>{-# INLINE getTopTags #-}</span>
+<a name="line-216"></a>
 <a name="line-217"></a>
-<a name="line-218"></a>
-<a name="line-219"></a><a name="getWeeklyArtistChart"></a><span class='hs-comment'>-- | Get an artist chart for a user profile, for a given date range.</span>
-<a name="line-220"></a><span class='hs-comment'>-- If no date range is supplied, it will return the most recent artist chart for this user.</span>
-<a name="line-221"></a><span class='hs-comment'>--</span>
-<a name="line-222"></a><span class='hs-comment'>-- Optional: 'from', 'to'</span>
-<a name="line-223"></a><span class='hs-comment'>--</span>
-<a name="line-224"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getWeeklyArtistChart">http://www.last.fm/api/show/user.getWeeklyArtistChart</a>&gt;</span>
-<a name="line-225"></a><span class='hs-definition'>getWeeklyArtistChart</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-226"></a><span class='hs-definition'>getWeeklyArtistChart</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getWeeklyArtistChart"</span>
+<a name="line-218"></a><a name="getTopTracks"></a><span class='hs-comment'>-- | Get the top tracks listened to by a user.</span>
+<a name="line-219"></a><span class='hs-comment'>-- You can stipulate a time period. Sends the overall chart by default.</span>
+<a name="line-220"></a><span class='hs-comment'>--</span>
+<a name="line-221"></a><span class='hs-comment'>-- Optional: 'period', 'limit', 'page'</span>
+<a name="line-222"></a><span class='hs-comment'>--</span>
+<a name="line-223"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getTopTracks">http://www.last.fm/api/show/user.getTopTracks</a>&gt;</span>
+<a name="line-224"></a><span class='hs-definition'>getTopTracks</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-225"></a><span class='hs-definition'>getTopTracks</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getTopTracks"</span>
+<a name="line-226"></a><span class='hs-comment'>{-# INLINE getTopTracks #-}</span>
 <a name="line-227"></a>
 <a name="line-228"></a>
-<a name="line-229"></a><a name="getWeeklyChartList"></a><span class='hs-comment'>-- | Get a list of available charts for this user, expressed as</span>
-<a name="line-230"></a><span class='hs-comment'>-- date ranges which can be sent to the chart services.</span>
+<a name="line-229"></a><a name="getWeeklyAlbumChart"></a><span class='hs-comment'>-- | Get an album chart for a user profile, for a given date range.</span>
+<a name="line-230"></a><span class='hs-comment'>-- If no date range is supplied, it will return the most recent album chart for this user.</span>
 <a name="line-231"></a><span class='hs-comment'>--</span>
-<a name="line-232"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getWeeklyChartList">http://www.last.fm/api/show/user.getWeeklyChartList</a>&gt;</span>
-<a name="line-233"></a><span class='hs-definition'>getWeeklyChartList</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-234"></a><span class='hs-definition'>getWeeklyChartList</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getWeeklyChartList"</span>
-<a name="line-235"></a>
-<a name="line-236"></a>
-<a name="line-237"></a><a name="getWeeklyTrackChart"></a><span class='hs-comment'>-- | Get a track chart for a user profile, for a given date range.</span>
-<a name="line-238"></a><span class='hs-comment'>-- If no date range is supplied, it will return the most recent track chart for this user.</span>
-<a name="line-239"></a><span class='hs-comment'>--</span>
-<a name="line-240"></a><span class='hs-comment'>-- Optional: 'from', 'to'</span>
-<a name="line-241"></a><span class='hs-comment'>--</span>
-<a name="line-242"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getWeeklyTrackChart">http://www.last.fm/api/show/user.getWeeklyTrackChart</a>&gt;</span>
-<a name="line-243"></a><span class='hs-definition'>getWeeklyTrackChart</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-244"></a><span class='hs-definition'>getWeeklyTrackChart</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getWeeklyTrackChart"</span>
-<a name="line-245"></a>
-<a name="line-246"></a>
-<a name="line-247"></a><a name="shout"></a><span class='hs-comment'>-- | Shout on this user's shoutbox</span>
-<a name="line-248"></a><span class='hs-comment'>--</span>
-<a name="line-249"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.shout">http://www.last.fm/api/show/user.shout</a>&gt;</span>
-<a name="line-250"></a><span class='hs-definition'>shout</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Sign</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Message</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>SessionKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-251"></a><span class='hs-definition'>shout</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.shout"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
+<a name="line-232"></a><span class='hs-comment'>-- Optional: 'from', 'to'</span>
+<a name="line-233"></a><span class='hs-comment'>--</span>
+<a name="line-234"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getWeeklyAlbumChart">http://www.last.fm/api/show/user.getWeeklyAlbumChart</a>&gt;</span>
+<a name="line-235"></a><span class='hs-definition'>getWeeklyAlbumChart</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-236"></a><span class='hs-definition'>getWeeklyAlbumChart</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getWeeklyAlbumChart"</span>
+<a name="line-237"></a><span class='hs-comment'>{-# INLINE getWeeklyAlbumChart #-}</span>
+<a name="line-238"></a>
+<a name="line-239"></a>
+<a name="line-240"></a><a name="getWeeklyArtistChart"></a><span class='hs-comment'>-- | Get an artist chart for a user profile, for a given date range.</span>
+<a name="line-241"></a><span class='hs-comment'>-- If no date range is supplied, it will return the most recent artist chart for this user.</span>
+<a name="line-242"></a><span class='hs-comment'>--</span>
+<a name="line-243"></a><span class='hs-comment'>-- Optional: 'from', 'to'</span>
+<a name="line-244"></a><span class='hs-comment'>--</span>
+<a name="line-245"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getWeeklyArtistChart">http://www.last.fm/api/show/user.getWeeklyArtistChart</a>&gt;</span>
+<a name="line-246"></a><span class='hs-definition'>getWeeklyArtistChart</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-247"></a><span class='hs-definition'>getWeeklyArtistChart</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getWeeklyArtistChart"</span>
+<a name="line-248"></a><span class='hs-comment'>{-# INLINE getWeeklyArtistChart #-}</span>
+<a name="line-249"></a>
+<a name="line-250"></a>
+<a name="line-251"></a><a name="getWeeklyChartList"></a><span class='hs-comment'>-- | Get a list of available charts for this user, expressed as</span>
+<a name="line-252"></a><span class='hs-comment'>-- date ranges which can be sent to the chart services.</span>
+<a name="line-253"></a><span class='hs-comment'>--</span>
+<a name="line-254"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getWeeklyChartList">http://www.last.fm/api/show/user.getWeeklyChartList</a>&gt;</span>
+<a name="line-255"></a><span class='hs-definition'>getWeeklyChartList</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-256"></a><span class='hs-definition'>getWeeklyChartList</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getWeeklyChartList"</span>
+<a name="line-257"></a><span class='hs-comment'>{-# INLINE getWeeklyChartList #-}</span>
+<a name="line-258"></a>
+<a name="line-259"></a>
+<a name="line-260"></a><a name="getWeeklyTrackChart"></a><span class='hs-comment'>-- | Get a track chart for a user profile, for a given date range.</span>
+<a name="line-261"></a><span class='hs-comment'>-- If no date range is supplied, it will return the most recent track chart for this user.</span>
+<a name="line-262"></a><span class='hs-comment'>--</span>
+<a name="line-263"></a><span class='hs-comment'>-- Optional: 'from', 'to'</span>
+<a name="line-264"></a><span class='hs-comment'>--</span>
+<a name="line-265"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.getWeeklyTrackChart">http://www.last.fm/api/show/user.getWeeklyTrackChart</a>&gt;</span>
+<a name="line-266"></a><span class='hs-definition'>getWeeklyTrackChart</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-267"></a><span class='hs-definition'>getWeeklyTrackChart</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.getWeeklyTrackChart"</span>
+<a name="line-268"></a><span class='hs-comment'>{-# INLINE getWeeklyTrackChart #-}</span>
+<a name="line-269"></a>
+<a name="line-270"></a>
+<a name="line-271"></a><a name="shout"></a><span class='hs-comment'>-- | Shout on this user's shoutbox</span>
+<a name="line-272"></a><span class='hs-comment'>--</span>
+<a name="line-273"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/user.shout">http://www.last.fm/api/show/user.shout</a>&gt;</span>
+<a name="line-274"></a><span class='hs-definition'>shout</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Sign</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Message</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>SessionKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-275"></a><span class='hs-definition'>shout</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"user.shout"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
+<a name="line-276"></a><span class='hs-comment'>{-# INLINE shout #-}</span>
 </pre></body>
 </html>

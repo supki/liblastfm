@@ -31,14 +31,16 @@
 <a name="line-22"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/playlist.addTrack">http://www.last.fm/api/show/playlist.addTrack</a>&gt;</span>
 <a name="line-23"></a><span class='hs-definition'>addTrack</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Sign</span> <span class='hs-layout'>(</span><span class='hs-conid'>Playlist</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Artist</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Track</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>SessionKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
 <a name="line-24"></a><span class='hs-definition'>addTrack</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"playlist.addTrack"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
-<a name="line-25"></a>
+<a name="line-25"></a><span class='hs-comment'>{-# INLINE addTrack #-}</span>
 <a name="line-26"></a>
-<a name="line-27"></a><a name="create"></a><span class='hs-comment'>-- | Create a Last.fm playlist on behalf of a user</span>
-<a name="line-28"></a><span class='hs-comment'>--</span>
-<a name="line-29"></a><span class='hs-comment'>-- Optional: 'title', 'description'</span>
-<a name="line-30"></a><span class='hs-comment'>--</span>
-<a name="line-31"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/playlist.create">http://www.last.fm/api/show/playlist.create</a>&gt;</span>
-<a name="line-32"></a><span class='hs-definition'>create</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Sign</span> <span class='hs-layout'>(</span><span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>SessionKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-33"></a><span class='hs-definition'>create</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"playlist.create"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
+<a name="line-27"></a>
+<a name="line-28"></a><a name="create"></a><span class='hs-comment'>-- | Create a Last.fm playlist on behalf of a user</span>
+<a name="line-29"></a><span class='hs-comment'>--</span>
+<a name="line-30"></a><span class='hs-comment'>-- Optional: 'title', 'description'</span>
+<a name="line-31"></a><span class='hs-comment'>--</span>
+<a name="line-32"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/playlist.create">http://www.last.fm/api/show/playlist.create</a>&gt;</span>
+<a name="line-33"></a><span class='hs-definition'>create</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Sign</span> <span class='hs-layout'>(</span><span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>SessionKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-34"></a><span class='hs-definition'>create</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"playlist.create"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
+<a name="line-35"></a><span class='hs-comment'>{-# INLINE create #-}</span>
 </pre></body>
 </html>

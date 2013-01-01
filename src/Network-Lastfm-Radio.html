@@ -33,22 +33,25 @@
 <a name="line-24"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/radio.getPlaylist">http://www.last.fm/api/show/radio.getPlaylist</a>&gt;</span>
 <a name="line-25"></a><span class='hs-definition'>getPlaylist</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Sign</span> <span class='hs-layout'>(</span><span class='hs-conid'>Multiplier</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Bitrate</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>SessionKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
 <a name="line-26"></a><span class='hs-definition'>getPlaylist</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"radio.getPlaylist"</span>
-<a name="line-27"></a>
+<a name="line-27"></a><span class='hs-comment'>{-# INLINE getPlaylist #-}</span>
 <a name="line-28"></a>
-<a name="line-29"></a><a name="search"></a><span class='hs-comment'>-- | Resolve the name of a resource into a station depending on which resource</span>
-<a name="line-30"></a><span class='hs-comment'>-- it is most likely to represent.</span>
-<a name="line-31"></a><span class='hs-comment'>--</span>
-<a name="line-32"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/radio.search">http://www.last.fm/api/show/radio.search</a>&gt;</span>
-<a name="line-33"></a><span class='hs-definition'>search</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>Name</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-34"></a><span class='hs-definition'>search</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"radio.search"</span>
-<a name="line-35"></a>
-<a name="line-36"></a>
-<a name="line-37"></a><a name="tune"></a><span class='hs-comment'>-- | Tune in to a Last.fm radio station.</span>
-<a name="line-38"></a><span class='hs-comment'>--</span>
-<a name="line-39"></a><span class='hs-comment'>-- Optional: 'language'</span>
+<a name="line-29"></a>
+<a name="line-30"></a><a name="search"></a><span class='hs-comment'>-- | Resolve the name of a resource into a station depending on which resource</span>
+<a name="line-31"></a><span class='hs-comment'>-- it is most likely to represent.</span>
+<a name="line-32"></a><span class='hs-comment'>--</span>
+<a name="line-33"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/radio.search">http://www.last.fm/api/show/radio.search</a>&gt;</span>
+<a name="line-34"></a><span class='hs-definition'>search</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>Name</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-35"></a><span class='hs-definition'>search</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"radio.search"</span>
+<a name="line-36"></a><span class='hs-comment'>{-# INLINE search #-}</span>
+<a name="line-37"></a>
+<a name="line-38"></a>
+<a name="line-39"></a><a name="tune"></a><span class='hs-comment'>-- | Tune in to a Last.fm radio station.</span>
 <a name="line-40"></a><span class='hs-comment'>--</span>
-<a name="line-41"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/radio.tune">http://www.last.fm/api/show/radio.tune</a>&gt;</span>
-<a name="line-42"></a><span class='hs-definition'>tune</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Sign</span> <span class='hs-layout'>(</span><span class='hs-conid'>Station</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>SessionKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-43"></a><span class='hs-definition'>tune</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"radio.tune"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
+<a name="line-41"></a><span class='hs-comment'>-- Optional: 'language'</span>
+<a name="line-42"></a><span class='hs-comment'>--</span>
+<a name="line-43"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/radio.tune">http://www.last.fm/api/show/radio.tune</a>&gt;</span>
+<a name="line-44"></a><span class='hs-definition'>tune</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Sign</span> <span class='hs-layout'>(</span><span class='hs-conid'>Station</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>SessionKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-45"></a><span class='hs-definition'>tune</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"radio.tune"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
+<a name="line-46"></a><span class='hs-comment'>{-# INLINE tune #-}</span>
 </pre></body>
 </html>
