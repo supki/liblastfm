@@ -69,4 +69,4 @@ test-suite json
 
 source-repository head
   type:     git
-  location: https://github.com/supki/haskell-liblastfm
+  location: https://github.com/supki/liblastfm
