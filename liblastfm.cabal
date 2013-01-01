@@ -1,12 +1,13 @@
 name: liblastfm
-version: 0.0.4.0
-synopsis: Wrapper to Lastfm API
+version: 0.1.0.0
+synopsis: Lastfm API interface
 license: MIT
 license-file: LICENSE
 author: Matvey Aksenov, Dmitry Malikov
 maintainer: Matvey Aksenov <matvey.aksenov@gmail.com>
 category: Network APIs
-description: Simple but complete interface to Lastfm API. Can send some stuff and receive reponses from Lastfm. JSON/XML parsing is an exercise for the user.
+description:
+  Provides interface to Lastfm REST API, supports XML and JSON formats.
 cabal-version: >= 1.9.2
 build-type: Simple
 
