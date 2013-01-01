@@ -37,9 +37,9 @@ class Coercing t where
 --
 -- low-level representation
 data R (f ∷ Format) (a ∷ Auth) t = R
-  { _host ∷ !Text
-  , _method ∷ !ByteString
-  , _query ∷ !(Map Text Text)
+  { _host   ∷ {-# UNPACK #-} !Text
+  , _method ∷ {-# UNPACK #-} !ByteString
+  , _query  ∷ !(Map Text Text)
   }
 
 -- | Response format: either JSON or XML

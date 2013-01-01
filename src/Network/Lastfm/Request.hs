@@ -480,9 +480,11 @@ class Targeted t where
 
 instance Targeted [Artist] where
   target _ = "artists"
+  {-# INLINE target #-}
 
 instance Targeted User where
   target _ = "user"
+  {-# INLINE target #-}
 
 -- | Add comparison parameter
 comparison ∷ Targeted t ⇒ Int64 → Request f a t → Request f a t

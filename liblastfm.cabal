@@ -46,7 +46,7 @@ library
                    Network.Lastfm.Internal
   ghc-options: -Wall
                -fno-warn-unused-do-bind
-               -threaded
+               -funbox-strict-fields
 
 
 test-suite json
