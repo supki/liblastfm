@@ -1,6 +1,13 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
+-- | Lastfm tasteometer API
+--
+-- This module is intended to be imported qualified:
+--
+-- @
+-- import qualified Network.Lastfm.Tasteometer as Tasteometer
+-- @
 module Network.Lastfm.Tasteometer where
 
 import Control.Applicative
