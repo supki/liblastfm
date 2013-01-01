@@ -22,8 +22,8 @@ To install either use hackage:
     
 Or git:
 
-    % git clone git@github.com:supki/haskell-liblastfm
-    % cd haskell-liblastfm
+    % git clone git@github.com:supki/liblastfm
+    % cd liblastfm
     % cabal install
     
 ## Usage
