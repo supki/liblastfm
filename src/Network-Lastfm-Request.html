@@ -8,483 +8,497 @@
 </head>
 <body>
 <pre><a name="line-1"></a><span class='hs-comment'>{-# LANGUAGE DataKinds #-}</span>
-<a name="line-2"></a><span class='hs-comment'>{-# LANGUAGE EmptyDataDecls #-}</span>
-<a name="line-3"></a><span class='hs-comment'>{-# LANGUAGE OverloadedStrings #-}</span>
-<a name="line-4"></a><span class='hs-comment'>{-# LANGUAGE UnicodeSyntax #-}</span>
-<a name="line-5"></a><span class='hs-comment'>-- | Request construction</span>
-<a name="line-6"></a><span class='hs-keyword'>module</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span><span class='hs-varop'>.</span><span class='hs-conid'>Request</span>
-<a name="line-7"></a>  <span class='hs-layout'>(</span> <span class='hs-comment'>-- * Request</span>
-<a name="line-8"></a>    <span class='hs-conid'>Request</span><span class='hs-layout'>,</span> <span class='hs-conid'>R</span><span class='hs-layout'>,</span> <span class='hs-conid'>Auth</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-conid'>Format</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span>
-<a name="line-9"></a>    <span class='hs-comment'>-- * Request major parameters</span>
-<a name="line-10"></a>  <span class='hs-layout'>,</span> <span class='hs-varid'>api</span><span class='hs-layout'>,</span> <span class='hs-varid'>post</span><span class='hs-layout'>,</span> <span class='hs-varid'>get</span><span class='hs-layout'>,</span> <span class='hs-varid'>json</span><span class='hs-layout'>,</span> <span class='hs-varid'>xml</span><span class='hs-layout'>,</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>,</span> <span class='hs-conid'>APIKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>apiKey</span><span class='hs-layout'>,</span> <span class='hs-conid'>SessionKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>sessionKey</span>
-<a name="line-11"></a>    <span class='hs-comment'>-- * Request minor parameters</span>
-<a name="line-12"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Token</span><span class='hs-layout'>,</span> <span class='hs-varid'>token</span><span class='hs-layout'>,</span> <span class='hs-conid'>Callback</span><span class='hs-layout'>,</span> <span class='hs-varid'>callback</span>
-<a name="line-13"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Artist</span><span class='hs-layout'>,</span> <span class='hs-varid'>artist</span><span class='hs-layout'>,</span> <span class='hs-conid'>Album</span><span class='hs-layout'>,</span> <span class='hs-varid'>album</span><span class='hs-layout'>,</span> <span class='hs-conid'>MBID</span><span class='hs-layout'>,</span> <span class='hs-varid'>mbid</span>
-<a name="line-14"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Country</span><span class='hs-layout'>,</span> <span class='hs-varid'>country</span><span class='hs-layout'>,</span> <span class='hs-conid'>Autocorrect</span><span class='hs-layout'>,</span> <span class='hs-varid'>autocorrect</span>
-<a name="line-15"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Event</span><span class='hs-layout'>,</span> <span class='hs-varid'>event</span><span class='hs-layout'>,</span> <span class='hs-conid'>Status</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>status</span>
-<a name="line-16"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>From</span><span class='hs-layout'>,</span> <span class='hs-varid'>from</span><span class='hs-layout'>,</span> <span class='hs-conid'>To</span><span class='hs-layout'>,</span> <span class='hs-varid'>to</span><span class='hs-layout'>,</span> <span class='hs-conid'>Group</span><span class='hs-layout'>,</span> <span class='hs-varid'>group</span>
-<a name="line-17"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Language</span><span class='hs-layout'>,</span> <span class='hs-varid'>language</span><span class='hs-layout'>,</span> <span class='hs-conid'>Distance</span><span class='hs-layout'>,</span> <span class='hs-varid'>distance</span>
-<a name="line-18"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Longitude</span><span class='hs-layout'>,</span> <span class='hs-varid'>longitude</span><span class='hs-layout'>,</span> <span class='hs-conid'>Latitude</span><span class='hs-layout'>,</span> <span class='hs-varid'>latitude</span><span class='hs-layout'>,</span> <span class='hs-conid'>Location</span><span class='hs-layout'>,</span> <span class='hs-varid'>location</span>
-<a name="line-19"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Start</span><span class='hs-layout'>,</span> <span class='hs-varid'>start</span><span class='hs-layout'>,</span> <span class='hs-conid'>End</span><span class='hs-layout'>,</span> <span class='hs-varid'>end</span><span class='hs-layout'>,</span> <span class='hs-conid'>Festivals</span><span class='hs-layout'>,</span> <span class='hs-varid'>festivalsonly</span>
-<a name="line-20"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>StartTimestamp</span><span class='hs-layout'>,</span> <span class='hs-varid'>startTimestamp</span><span class='hs-layout'>,</span> <span class='hs-conid'>EndTimestamp</span><span class='hs-layout'>,</span> <span class='hs-varid'>endTimestamp</span>
-<a name="line-21"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Metro</span><span class='hs-layout'>,</span> <span class='hs-varid'>metro</span><span class='hs-layout'>,</span> <span class='hs-conid'>Tag</span><span class='hs-layout'>,</span> <span class='hs-varid'>tags</span><span class='hs-layout'>,</span> <span class='hs-varid'>tag</span><span class='hs-layout'>,</span> <span class='hs-conid'>Track</span><span class='hs-layout'>,</span> <span class='hs-varid'>track</span><span class='hs-layout'>,</span> <span class='hs-conid'>Timestamp</span> <span class='hs-layout'>,</span> <span class='hs-varid'>timestamp</span><span class='hs-layout'>,</span> <span class='hs-conid'>Fingerprint</span><span class='hs-layout'>,</span> <span class='hs-varid'>fingerprint</span>
-<a name="line-22"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>AlbumArtist</span><span class='hs-layout'>,</span> <span class='hs-varid'>albumArtist</span><span class='hs-layout'>,</span> <span class='hs-conid'>Duration</span><span class='hs-layout'>,</span> <span class='hs-varid'>duration</span><span class='hs-layout'>,</span> <span class='hs-conid'>TrackNumber</span><span class='hs-layout'>,</span> <span class='hs-varid'>trackNumber</span>
-<a name="line-23"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Playlist</span><span class='hs-layout'>,</span> <span class='hs-varid'>playlist</span><span class='hs-layout'>,</span> <span class='hs-conid'>Title</span><span class='hs-layout'>,</span> <span class='hs-varid'>title</span><span class='hs-layout'>,</span> <span class='hs-conid'>Description</span><span class='hs-layout'>,</span> <span class='hs-varid'>description</span>
-<a name="line-24"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>ChosenByUser</span><span class='hs-layout'>,</span> <span class='hs-varid'>chosenByUser</span><span class='hs-layout'>,</span> <span class='hs-conid'>Context</span><span class='hs-layout'>,</span> <span class='hs-varid'>context</span><span class='hs-layout'>,</span> <span class='hs-conid'>StreamId</span><span class='hs-layout'>,</span> <span class='hs-varid'>streamId</span>
-<a name="line-25"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>RecentTracks</span><span class='hs-layout'>,</span> <span class='hs-varid'>recentTracks</span>
-<a name="line-26"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Recipient</span><span class='hs-layout'>,</span> <span class='hs-varid'>recipient</span><span class='hs-layout'>,</span> <span class='hs-conid'>Username</span><span class='hs-layout'>,</span> <span class='hs-varid'>username</span><span class='hs-layout'>,</span> <span class='hs-conid'>User</span><span class='hs-layout'>,</span> <span class='hs-varid'>user</span><span class='hs-layout'>,</span> <span class='hs-conid'>Password</span><span class='hs-layout'>,</span> <span class='hs-varid'>password</span>
-<a name="line-27"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Public</span><span class='hs-layout'>,</span> <span class='hs-varid'>public</span><span class='hs-layout'>,</span> <span class='hs-conid'>Message</span><span class='hs-layout'>,</span> <span class='hs-varid'>message</span><span class='hs-layout'>,</span> <span class='hs-conid'>Page</span><span class='hs-layout'>,</span> <span class='hs-varid'>page</span><span class='hs-layout'>,</span> <span class='hs-conid'>Limit</span><span class='hs-layout'>,</span> <span class='hs-varid'>limit</span>
-<a name="line-28"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>TaggingType</span><span class='hs-layout'>,</span> <span class='hs-varid'>taggingType</span><span class='hs-layout'>,</span> <span class='hs-conid'>UseRecs</span><span class='hs-layout'>,</span> <span class='hs-varid'>useRecs</span><span class='hs-layout'>,</span> <span class='hs-conid'>Venue</span><span class='hs-layout'>,</span> <span class='hs-varid'>venue</span><span class='hs-layout'>,</span> <span class='hs-conid'>VenueName</span><span class='hs-layout'>,</span> <span class='hs-varid'>venueName</span>
-<a name="line-29"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Discovery</span><span class='hs-layout'>,</span> <span class='hs-varid'>discovery</span><span class='hs-layout'>,</span> <span class='hs-conid'>RTP</span><span class='hs-layout'>,</span> <span class='hs-varid'>rtp</span><span class='hs-layout'>,</span> <span class='hs-conid'>BuyLinks</span><span class='hs-layout'>,</span> <span class='hs-varid'>buyLinks</span><span class='hs-layout'>,</span> <span class='hs-conid'>Multiplier</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>multiplier</span>
-<a name="line-30"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Bitrate</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>bitrate</span><span class='hs-layout'>,</span> <span class='hs-conid'>Name</span><span class='hs-layout'>,</span> <span class='hs-varid'>name</span><span class='hs-layout'>,</span> <span class='hs-conid'>Station</span><span class='hs-layout'>,</span> <span class='hs-varid'>station</span>
-<a name="line-31"></a>  <span class='hs-layout'>,</span> <span class='hs-varid'>type'</span><span class='hs-layout'>,</span> <span class='hs-conid'>Value'</span><span class='hs-layout'>,</span> <span class='hs-varid'>value</span>
-<a name="line-32"></a>  <span class='hs-layout'>)</span> <span class='hs-keyword'>where</span>
-<a name="line-33"></a>
-<a name="line-34"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Int</span> <span class='hs-layout'>(</span><span class='hs-conid'>Int64</span><span class='hs-layout'>)</span>
-<a name="line-35"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Monoid</span> <span class='hs-layout'>(</span><span class='hs-layout'>(</span><span class='hs-varop'>&lt;&gt;</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
-<a name="line-36"></a>
-<a name="line-37"></a><span class='hs-keyword'>import</span> <span class='hs-keyword'>qualified</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Map</span> <span class='hs-keyword'>as</span> <span class='hs-conid'>M</span>
-<a name="line-38"></a><span class='hs-keyword'>import</span>           <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Text</span> <span class='hs-layout'>(</span><span class='hs-conid'>Text</span><span class='hs-layout'>)</span>
-<a name="line-39"></a><span class='hs-keyword'>import</span> <span class='hs-keyword'>qualified</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Text</span> <span class='hs-keyword'>as</span> <span class='hs-conid'>T</span>
-<a name="line-40"></a>
-<a name="line-41"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span><span class='hs-varop'>.</span><span class='hs-conid'>Internal</span>
+<a name="line-2"></a><span class='hs-comment'>{-# LANGUAGE FlexibleInstances #-}</span>
+<a name="line-3"></a><span class='hs-comment'>{-# LANGUAGE EmptyDataDecls #-}</span>
+<a name="line-4"></a><span class='hs-comment'>{-# LANGUAGE OverloadedStrings #-}</span>
+<a name="line-5"></a><span class='hs-comment'>{-# LANGUAGE UnicodeSyntax #-}</span>
+<a name="line-6"></a><span class='hs-comment'>-- | Request construction</span>
+<a name="line-7"></a><span class='hs-keyword'>module</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span><span class='hs-varop'>.</span><span class='hs-conid'>Request</span>
+<a name="line-8"></a>  <span class='hs-layout'>(</span> <span class='hs-comment'>-- * Request</span>
+<a name="line-9"></a>    <span class='hs-conid'>Request</span><span class='hs-layout'>,</span> <span class='hs-conid'>R</span><span class='hs-layout'>,</span> <span class='hs-conid'>Auth</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-conid'>Format</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span>
+<a name="line-10"></a>    <span class='hs-comment'>-- * Request major parameters</span>
+<a name="line-11"></a>  <span class='hs-layout'>,</span> <span class='hs-varid'>api</span><span class='hs-layout'>,</span> <span class='hs-varid'>post</span><span class='hs-layout'>,</span> <span class='hs-varid'>get</span><span class='hs-layout'>,</span> <span class='hs-varid'>json</span><span class='hs-layout'>,</span> <span class='hs-varid'>xml</span><span class='hs-layout'>,</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>,</span> <span class='hs-conid'>APIKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>apiKey</span><span class='hs-layout'>,</span> <span class='hs-conid'>SessionKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>sessionKey</span>
+<a name="line-12"></a>    <span class='hs-comment'>-- * Request minor parameters</span>
+<a name="line-13"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Token</span><span class='hs-layout'>,</span> <span class='hs-varid'>token</span><span class='hs-layout'>,</span> <span class='hs-conid'>Callback</span><span class='hs-layout'>,</span> <span class='hs-varid'>callback</span>
+<a name="line-14"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Artist</span><span class='hs-layout'>,</span> <span class='hs-varid'>artist</span><span class='hs-layout'>,</span> <span class='hs-varid'>artists</span><span class='hs-layout'>,</span> <span class='hs-conid'>Album</span><span class='hs-layout'>,</span> <span class='hs-varid'>album</span><span class='hs-layout'>,</span> <span class='hs-conid'>MBID</span><span class='hs-layout'>,</span> <span class='hs-varid'>mbid</span>
+<a name="line-15"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Country</span><span class='hs-layout'>,</span> <span class='hs-varid'>country</span><span class='hs-layout'>,</span> <span class='hs-conid'>Autocorrect</span><span class='hs-layout'>,</span> <span class='hs-varid'>autocorrect</span>
+<a name="line-16"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Event</span><span class='hs-layout'>,</span> <span class='hs-varid'>event</span><span class='hs-layout'>,</span> <span class='hs-conid'>Status</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>status</span>
+<a name="line-17"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>From</span><span class='hs-layout'>,</span> <span class='hs-varid'>from</span><span class='hs-layout'>,</span> <span class='hs-conid'>To</span><span class='hs-layout'>,</span> <span class='hs-varid'>to</span><span class='hs-layout'>,</span> <span class='hs-conid'>Group</span><span class='hs-layout'>,</span> <span class='hs-varid'>group</span>
+<a name="line-18"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Language</span><span class='hs-layout'>,</span> <span class='hs-varid'>language</span><span class='hs-layout'>,</span> <span class='hs-conid'>Distance</span><span class='hs-layout'>,</span> <span class='hs-varid'>distance</span>
+<a name="line-19"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Longitude</span><span class='hs-layout'>,</span> <span class='hs-varid'>longitude</span><span class='hs-layout'>,</span> <span class='hs-conid'>Latitude</span><span class='hs-layout'>,</span> <span class='hs-varid'>latitude</span><span class='hs-layout'>,</span> <span class='hs-conid'>Location</span><span class='hs-layout'>,</span> <span class='hs-varid'>location</span>
+<a name="line-20"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Start</span><span class='hs-layout'>,</span> <span class='hs-varid'>start</span><span class='hs-layout'>,</span> <span class='hs-conid'>End</span><span class='hs-layout'>,</span> <span class='hs-varid'>end</span><span class='hs-layout'>,</span> <span class='hs-conid'>Festivals</span><span class='hs-layout'>,</span> <span class='hs-varid'>festivalsonly</span>
+<a name="line-21"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>StartTimestamp</span><span class='hs-layout'>,</span> <span class='hs-varid'>startTimestamp</span><span class='hs-layout'>,</span> <span class='hs-conid'>EndTimestamp</span><span class='hs-layout'>,</span> <span class='hs-varid'>endTimestamp</span>
+<a name="line-22"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Metro</span><span class='hs-layout'>,</span> <span class='hs-varid'>metro</span><span class='hs-layout'>,</span> <span class='hs-conid'>Tag</span><span class='hs-layout'>,</span> <span class='hs-varid'>tags</span><span class='hs-layout'>,</span> <span class='hs-varid'>tag</span><span class='hs-layout'>,</span> <span class='hs-conid'>Track</span><span class='hs-layout'>,</span> <span class='hs-varid'>track</span><span class='hs-layout'>,</span> <span class='hs-conid'>Timestamp</span> <span class='hs-layout'>,</span> <span class='hs-varid'>timestamp</span><span class='hs-layout'>,</span> <span class='hs-conid'>Fingerprint</span><span class='hs-layout'>,</span> <span class='hs-varid'>fingerprint</span>
+<a name="line-23"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>AlbumArtist</span><span class='hs-layout'>,</span> <span class='hs-varid'>albumArtist</span><span class='hs-layout'>,</span> <span class='hs-conid'>Duration</span><span class='hs-layout'>,</span> <span class='hs-varid'>duration</span><span class='hs-layout'>,</span> <span class='hs-conid'>TrackNumber</span><span class='hs-layout'>,</span> <span class='hs-varid'>trackNumber</span>
+<a name="line-24"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Playlist</span><span class='hs-layout'>,</span> <span class='hs-varid'>playlist</span><span class='hs-layout'>,</span> <span class='hs-conid'>Title</span><span class='hs-layout'>,</span> <span class='hs-varid'>title</span><span class='hs-layout'>,</span> <span class='hs-conid'>Description</span><span class='hs-layout'>,</span> <span class='hs-varid'>description</span>
+<a name="line-25"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>ChosenByUser</span><span class='hs-layout'>,</span> <span class='hs-varid'>chosenByUser</span><span class='hs-layout'>,</span> <span class='hs-conid'>Context</span><span class='hs-layout'>,</span> <span class='hs-varid'>context</span><span class='hs-layout'>,</span> <span class='hs-conid'>StreamId</span><span class='hs-layout'>,</span> <span class='hs-varid'>streamId</span>
+<a name="line-26"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>RecentTracks</span><span class='hs-layout'>,</span> <span class='hs-varid'>recentTracks</span>
+<a name="line-27"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Recipient</span><span class='hs-layout'>,</span> <span class='hs-varid'>recipient</span><span class='hs-layout'>,</span> <span class='hs-conid'>Username</span><span class='hs-layout'>,</span> <span class='hs-varid'>username</span><span class='hs-layout'>,</span> <span class='hs-conid'>User</span><span class='hs-layout'>,</span> <span class='hs-varid'>user</span><span class='hs-layout'>,</span> <span class='hs-conid'>Password</span><span class='hs-layout'>,</span> <span class='hs-varid'>password</span>
+<a name="line-28"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Public</span><span class='hs-layout'>,</span> <span class='hs-varid'>public</span><span class='hs-layout'>,</span> <span class='hs-conid'>Message</span><span class='hs-layout'>,</span> <span class='hs-varid'>message</span><span class='hs-layout'>,</span> <span class='hs-conid'>Page</span><span class='hs-layout'>,</span> <span class='hs-varid'>page</span><span class='hs-layout'>,</span> <span class='hs-conid'>Limit</span><span class='hs-layout'>,</span> <span class='hs-varid'>limit</span>
+<a name="line-29"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>TaggingType</span><span class='hs-layout'>,</span> <span class='hs-varid'>taggingType</span><span class='hs-layout'>,</span> <span class='hs-conid'>UseRecs</span><span class='hs-layout'>,</span> <span class='hs-varid'>useRecs</span><span class='hs-layout'>,</span> <span class='hs-conid'>Venue</span><span class='hs-layout'>,</span> <span class='hs-varid'>venue</span><span class='hs-layout'>,</span> <span class='hs-conid'>VenueName</span><span class='hs-layout'>,</span> <span class='hs-varid'>venueName</span>
+<a name="line-30"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Discovery</span><span class='hs-layout'>,</span> <span class='hs-varid'>discovery</span><span class='hs-layout'>,</span> <span class='hs-conid'>RTP</span><span class='hs-layout'>,</span> <span class='hs-varid'>rtp</span><span class='hs-layout'>,</span> <span class='hs-conid'>BuyLinks</span><span class='hs-layout'>,</span> <span class='hs-varid'>buyLinks</span><span class='hs-layout'>,</span> <span class='hs-conid'>Multiplier</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>multiplier</span>
+<a name="line-31"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Bitrate</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>bitrate</span><span class='hs-layout'>,</span> <span class='hs-conid'>Name</span><span class='hs-layout'>,</span> <span class='hs-varid'>name</span><span class='hs-layout'>,</span> <span class='hs-conid'>Station</span><span class='hs-layout'>,</span> <span class='hs-varid'>station</span>
+<a name="line-32"></a>  <span class='hs-layout'>,</span> <span class='hs-conid'>Targeted</span><span class='hs-layout'>,</span> <span class='hs-varid'>comparison</span>
+<a name="line-33"></a>  <span class='hs-layout'>)</span> <span class='hs-keyword'>where</span>
+<a name="line-34"></a>
+<a name="line-35"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Control</span><span class='hs-varop'>.</span><span class='hs-conid'>Applicative</span>
+<a name="line-36"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Int</span> <span class='hs-layout'>(</span><span class='hs-conid'>Int64</span><span class='hs-layout'>)</span>
+<a name="line-37"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Monoid</span> <span class='hs-layout'>(</span><span class='hs-layout'>(</span><span class='hs-varop'>&lt;&gt;</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>mempty</span><span class='hs-layout'>)</span>
+<a name="line-38"></a>
+<a name="line-39"></a><span class='hs-keyword'>import</span> <span class='hs-keyword'>qualified</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Map</span><span class='hs-varop'>.</span><span class='hs-conid'>Strict</span> <span class='hs-keyword'>as</span> <span class='hs-conid'>M</span>
+<a name="line-40"></a><span class='hs-keyword'>import</span>           <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Text</span> <span class='hs-layout'>(</span><span class='hs-conid'>Text</span><span class='hs-layout'>)</span>
+<a name="line-41"></a><span class='hs-keyword'>import</span> <span class='hs-keyword'>qualified</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Text</span> <span class='hs-keyword'>as</span> <span class='hs-conid'>T</span>
 <a name="line-42"></a>
-<a name="line-43"></a>
-<a name="line-44"></a><a name="Argument"></a><span class='hs-keyword'>class</span> <span class='hs-conid'>Argument</span> <span class='hs-varid'>a</span> <span class='hs-keyword'>where</span>
-<a name="line-45"></a>  <span class='hs-varid'>add</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-varid'>a</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>b</span> <span class='hs-varid'>t</span>
-<a name="line-46"></a>  <span class='hs-varid'>add</span> <span class='hs-varid'>k</span> <span class='hs-varid'>v</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>wrap</span> <span class='hs-varop'>$</span> <span class='hs-keyglyph'>\</span><span class='hs-varid'>r</span><span class='hs-keyglyph'>@</span><span class='hs-conid'>R</span> <span class='hs-layout'>{</span> <span class='hs-sel'>_query</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>q</span> <span class='hs-layout'>}</span> <span class='hs-sel'>→</span> <span class='hs-varid'>r</span> <span class='hs-layout'>{</span> <span class='hs-sel'>_query</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>M</span><span class='hs-varop'>.</span><span class='hs-varid'>insert</span> <span class='hs-varid'>k</span> <span class='hs-layout'>(</span><span class='hs-varid'>toText</span> <span class='hs-varid'>v</span><span class='hs-layout'>)</span> <span class='hs-varid'>q</span> <span class='hs-layout'>}</span>
-<a name="line-47"></a>  <span class='hs-comment'>{-# INLINE add #-}</span>
-<a name="line-48"></a>
-<a name="line-49"></a>  <span class='hs-varid'>toText</span> <span class='hs-sel'>∷</span> <span class='hs-varid'>a</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Text</span>
+<a name="line-43"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span><span class='hs-varop'>.</span><span class='hs-conid'>Internal</span>
+<a name="line-44"></a>
+<a name="line-45"></a>
+<a name="line-46"></a><a name="Argument"></a><span class='hs-keyword'>class</span> <span class='hs-conid'>Argument</span> <span class='hs-varid'>a</span> <span class='hs-keyword'>where</span>
+<a name="line-47"></a>  <span class='hs-varid'>add</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-varid'>a</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>b</span> <span class='hs-varid'>t</span>
+<a name="line-48"></a>  <span class='hs-varid'>add</span> <span class='hs-varid'>k</span> <span class='hs-varid'>v</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>wrap</span> <span class='hs-varop'>$</span> <span class='hs-keyglyph'>\</span><span class='hs-varid'>r</span><span class='hs-keyglyph'>@</span><span class='hs-conid'>R</span> <span class='hs-layout'>{</span> <span class='hs-sel'>_query</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>q</span> <span class='hs-layout'>}</span> <span class='hs-sel'>→</span> <span class='hs-varid'>r</span> <span class='hs-layout'>{</span> <span class='hs-sel'>_query</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>M</span><span class='hs-varop'>.</span><span class='hs-varid'>insert</span> <span class='hs-varid'>k</span> <span class='hs-layout'>(</span><span class='hs-varid'>toText</span> <span class='hs-varid'>v</span><span class='hs-layout'>)</span> <span class='hs-varid'>q</span> <span class='hs-layout'>}</span>
+<a name="line-49"></a>  <span class='hs-comment'>{-# INLINE add #-}</span>
 <a name="line-50"></a>
-<a name="line-51"></a><a name="instance%20Argument%20Text"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Argument</span> <span class='hs-conid'>Text</span> <span class='hs-keyword'>where</span>
-<a name="line-52"></a>  <span class='hs-varid'>toText</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>id</span>
-<a name="line-53"></a>  <span class='hs-comment'>{-# INLINE toText #-}</span>
-<a name="line-54"></a>
-<a name="line-55"></a><a name="instance%20Argument%20Bool"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Argument</span> <span class='hs-conid'>Bool</span> <span class='hs-keyword'>where</span>
-<a name="line-56"></a>  <span class='hs-varid'>toText</span> <span class='hs-varid'>b</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>if</span> <span class='hs-varid'>b</span> <span class='hs-keyword'>then</span> <span class='hs-str'>"1"</span> <span class='hs-keyword'>else</span> <span class='hs-str'>"0"</span>
-<a name="line-57"></a>  <span class='hs-comment'>{-# INLINE toText #-}</span>
-<a name="line-58"></a>
-<a name="line-59"></a><a name="instance%20Argument%20Int64"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Argument</span> <span class='hs-conid'>Int64</span> <span class='hs-keyword'>where</span>
-<a name="line-60"></a>  <span class='hs-varid'>toText</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>T</span><span class='hs-varop'>.</span><span class='hs-varid'>pack</span> <span class='hs-varop'>.</span> <span class='hs-varid'>show</span>
-<a name="line-61"></a>  <span class='hs-comment'>{-# INLINE toText #-}</span>
-<a name="line-62"></a>
-<a name="line-63"></a><a name="instance%20Argument%20a%20⇒%20Argument%20%5ba%5d"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Argument</span> <span class='hs-varid'>a</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Argument</span> <span class='hs-keyglyph'>[</span><span class='hs-varid'>a</span><span class='hs-keyglyph'>]</span> <span class='hs-keyword'>where</span>
-<a name="line-64"></a>  <span class='hs-varid'>toText</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>T</span><span class='hs-varop'>.</span><span class='hs-varid'>intercalate</span> <span class='hs-str'>","</span> <span class='hs-varop'>.</span> <span class='hs-varid'>map</span> <span class='hs-varid'>toText</span>
-<a name="line-65"></a>  <span class='hs-comment'>{-# INLINE toText #-}</span>
-<a name="line-66"></a>
-<a name="line-67"></a>
-<a name="line-68"></a><a name="APIKey"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>APIKey</span>
-<a name="line-69"></a><a name="SessionKey"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>SessionKey</span>
-<a name="line-70"></a><a name="Token"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Token</span>
-<a name="line-71"></a><a name="Callback"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Callback</span>
-<a name="line-72"></a>
-<a name="line-73"></a>
-<a name="line-74"></a><a name="api"></a><span class='hs-comment'>-- | Change request API method</span>
-<a name="line-75"></a><span class='hs-comment'>--</span>
-<a name="line-76"></a><span class='hs-comment'>-- Primarily used in API call wrappers, not intended for usage by library user</span>
-<a name="line-77"></a><span class='hs-definition'>api</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-varid'>t</span>
-<a name="line-78"></a><span class='hs-definition'>api</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"method"</span>
-<a name="line-79"></a><span class='hs-comment'>{-# INLINE api #-}</span>
-<a name="line-80"></a>
-<a name="line-81"></a><a name="get"></a><span class='hs-comment'>-- | Change html _method to GET</span>
-<a name="line-82"></a><span class='hs-comment'>--</span>
-<a name="line-83"></a><span class='hs-comment'>-- Primarily used in API call wrappers, not intended for usage by library user</span>
-<a name="line-84"></a><span class='hs-definition'>get</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-varid'>t</span>
-<a name="line-85"></a><span class='hs-definition'>get</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>wrap</span> <span class='hs-varop'>$</span> <span class='hs-keyglyph'>\</span><span class='hs-varid'>r</span> <span class='hs-sel'>→</span> <span class='hs-varid'>r</span> <span class='hs-layout'>{</span> <span class='hs-sel'>_method</span> <span class='hs-keyglyph'>=</span> <span class='hs-str'>"GET"</span> <span class='hs-layout'>}</span>
-<a name="line-86"></a><span class='hs-comment'>{-# INLINE get #-}</span>
-<a name="line-87"></a>
-<a name="line-88"></a><a name="post"></a><span class='hs-comment'>-- | Change html _method to POST</span>
-<a name="line-89"></a><span class='hs-comment'>--</span>
-<a name="line-90"></a><span class='hs-comment'>-- Primarily used in API call wrappers, not intended for usage by library user</span>
-<a name="line-91"></a><span class='hs-definition'>post</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-varid'>t</span>
-<a name="line-92"></a><span class='hs-definition'>post</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>wrap</span> <span class='hs-varop'>$</span> <span class='hs-keyglyph'>\</span><span class='hs-varid'>r</span> <span class='hs-sel'>→</span> <span class='hs-varid'>r</span> <span class='hs-layout'>{</span> <span class='hs-sel'>_method</span> <span class='hs-keyglyph'>=</span> <span class='hs-str'>"POST"</span> <span class='hs-layout'>}</span>
-<a name="line-93"></a><span class='hs-comment'>{-# INLINE post #-}</span>
-<a name="line-94"></a>
-<a name="line-95"></a><a name="json"></a><span class='hs-comment'>-- | Change API response format to JSON</span>
-<a name="line-96"></a><span class='hs-comment'>--</span>
-<a name="line-97"></a><span class='hs-comment'>-- This is a little helper. It's actually enough</span>
-<a name="line-98"></a><span class='hs-comment'>-- to specialize Format manually</span>
-<a name="line-99"></a><span class='hs-definition'>json</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-conid'>JSON</span> <span class='hs-varid'>a</span> <span class='hs-varid'>t</span>
-<a name="line-100"></a><span class='hs-definition'>json</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>wrap</span> <span class='hs-varid'>id</span>
-<a name="line-101"></a><span class='hs-comment'>{-# INLINE json #-}</span>
-<a name="line-102"></a>
-<a name="line-103"></a><a name="xml"></a><span class='hs-comment'>-- | Change API response format to XML</span>
-<a name="line-104"></a><span class='hs-comment'>--</span>
-<a name="line-105"></a><span class='hs-comment'>-- This is a little helper. It's actually enough</span>
-<a name="line-106"></a><span class='hs-comment'>-- to specialize Format manually</span>
-<a name="line-107"></a><span class='hs-definition'>xml</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-conid'>XML</span> <span class='hs-varid'>a</span> <span class='hs-varid'>t</span>
-<a name="line-108"></a><span class='hs-definition'>xml</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>wrap</span> <span class='hs-varid'>id</span>
-<a name="line-109"></a><span class='hs-comment'>{-# INLINE xml #-}</span>
-<a name="line-110"></a>
-<a name="line-111"></a><a name="apiKey"></a><span class='hs-comment'>-- | Change request API key</span>
-<a name="line-112"></a><span class='hs-definition'>apiKey</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>APIKey</span>
-<a name="line-113"></a><span class='hs-definition'>apiKey</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"api_key"</span>
-<a name="line-114"></a><span class='hs-comment'>{-# INLINE apiKey #-}</span>
-<a name="line-115"></a>
-<a name="line-116"></a><a name="sessionKey"></a><span class='hs-comment'>-- | Change request session key</span>
-<a name="line-117"></a><span class='hs-definition'>sessionKey</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Sign</span> <span class='hs-conid'>SessionKey</span>
-<a name="line-118"></a><span class='hs-definition'>sessionKey</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"sk"</span>
-<a name="line-119"></a><span class='hs-comment'>{-# INLINE sessionKey #-}</span>
-<a name="line-120"></a>
-<a name="line-121"></a><a name="token"></a><span class='hs-comment'>-- | Add token parameter</span>
-<a name="line-122"></a><span class='hs-definition'>token</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Token</span>
-<a name="line-123"></a><span class='hs-definition'>token</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"token"</span>
-<a name="line-124"></a><span class='hs-comment'>{-# INLINE token #-}</span>
-<a name="line-125"></a>
-<a name="line-126"></a><a name="callback"></a><span class='hs-comment'>-- | Add callback link parameter</span>
-<a name="line-127"></a><span class='hs-definition'>callback</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Callback</span>
-<a name="line-128"></a><span class='hs-definition'>callback</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"cb"</span>
-<a name="line-129"></a><span class='hs-comment'>{-# INLINE callback #-}</span>
-<a name="line-130"></a>
-<a name="line-131"></a>
-<a name="line-132"></a><a name="Artist"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Artist</span>
-<a name="line-133"></a><a name="Album"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Album</span>
-<a name="line-134"></a><a name="MBID"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>MBID</span>
-<a name="line-135"></a><a name="Country"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Country</span>
-<a name="line-136"></a><a name="Language"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Language</span>
-<a name="line-137"></a><a name="Tag"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Tag</span>
-<a name="line-138"></a><a name="Autocorrect"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Autocorrect</span>
-<a name="line-139"></a><a name="Page"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Page</span>
-<a name="line-140"></a><a name="Limit"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Limit</span>
-<a name="line-141"></a><a name="Message"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Message</span>
-<a name="line-142"></a><a name="Public"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Public</span>
-<a name="line-143"></a><a name="Recipient"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Recipient</span>
-<a name="line-144"></a><a name="Username"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Username</span>
-<a name="line-145"></a><a name="User"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>User</span>
-<a name="line-146"></a><a name="Password"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Password</span>
-<a name="line-147"></a><a name="Status"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Status</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Attending</span> <span class='hs-keyglyph'>|</span> <span class='hs-conid'>Maybe</span> <span class='hs-keyglyph'>|</span> <span class='hs-conid'>NotAttending</span>
-<a name="line-148"></a><a name="Event"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Event</span>
-<a name="line-149"></a><a name="Festivals"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Festivals</span>
-<a name="line-150"></a><a name="Longitude"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Longitude</span>
-<a name="line-151"></a><a name="Latitude"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Latitude</span>
-<a name="line-152"></a><a name="Location"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Location</span>
-<a name="line-153"></a><a name="Distance"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Distance</span>
-<a name="line-154"></a><a name="Metro"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Metro</span>
-<a name="line-155"></a><a name="Start"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Start</span>
-<a name="line-156"></a><a name="End"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>End</span>
-<a name="line-157"></a><a name="StartTimestamp"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>StartTimestamp</span>
-<a name="line-158"></a><a name="EndTimestamp"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>EndTimestamp</span>
-<a name="line-159"></a><a name="From"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>From</span>
-<a name="line-160"></a><a name="To"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>To</span>
-<a name="line-161"></a><a name="Value'"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Value'</span>
-<a name="line-162"></a><a name="Playlist"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Playlist</span>
-<a name="line-163"></a><a name="Title"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Title</span>
-<a name="line-164"></a><a name="Description"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Description</span>
-<a name="line-165"></a><a name="Track"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Track</span>
-<a name="line-166"></a><a name="Timestamp"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Timestamp</span>
-<a name="line-167"></a><a name="Fingerprint"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Fingerprint</span>
-<a name="line-168"></a><a name="AlbumArtist"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>AlbumArtist</span>
-<a name="line-169"></a><a name="Context"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Context</span>
-<a name="line-170"></a><a name="StreamId"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>StreamId</span>
-<a name="line-171"></a><a name="Duration"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Duration</span>
-<a name="line-172"></a><a name="TrackNumber"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>TrackNumber</span>
-<a name="line-173"></a><a name="ChosenByUser"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>ChosenByUser</span>
-<a name="line-174"></a><a name="TaggingType"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>TaggingType</span>
-<a name="line-175"></a><a name="RecentTracks"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>RecentTracks</span>
-<a name="line-176"></a><a name="UseRecs"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>UseRecs</span>
-<a name="line-177"></a><a name="Group"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Group</span>
-<a name="line-178"></a><a name="Venue"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Venue</span>
-<a name="line-179"></a><a name="VenueName"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>VenueName</span>
-<a name="line-180"></a><a name="Multiplier"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Multiplier</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>M1</span> <span class='hs-keyglyph'>|</span> <span class='hs-conid'>M2</span>
-<a name="line-181"></a><a name="Bitrate"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Bitrate</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>B64</span> <span class='hs-keyglyph'>|</span> <span class='hs-conid'>B128</span>
-<a name="line-182"></a><a name="Name"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Name</span>
-<a name="line-183"></a><a name="Station"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Station</span>
-<a name="line-184"></a><a name="Discovery"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Discovery</span>
-<a name="line-185"></a><a name="RTP"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>RTP</span>
-<a name="line-186"></a><a name="BuyLinks"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>BuyLinks</span>
-<a name="line-187"></a>
+<a name="line-51"></a>  <span class='hs-varid'>toText</span> <span class='hs-sel'>∷</span> <span class='hs-varid'>a</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Text</span>
+<a name="line-52"></a>
+<a name="line-53"></a><a name="instance%20Argument%20Text"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Argument</span> <span class='hs-conid'>Text</span> <span class='hs-keyword'>where</span>
+<a name="line-54"></a>  <span class='hs-varid'>toText</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>id</span>
+<a name="line-55"></a>  <span class='hs-comment'>{-# INLINE toText #-}</span>
+<a name="line-56"></a>
+<a name="line-57"></a><a name="instance%20Argument%20Bool"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Argument</span> <span class='hs-conid'>Bool</span> <span class='hs-keyword'>where</span>
+<a name="line-58"></a>  <span class='hs-varid'>toText</span> <span class='hs-varid'>b</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>if</span> <span class='hs-varid'>b</span> <span class='hs-keyword'>then</span> <span class='hs-str'>"1"</span> <span class='hs-keyword'>else</span> <span class='hs-str'>"0"</span>
+<a name="line-59"></a>  <span class='hs-comment'>{-# INLINE toText #-}</span>
+<a name="line-60"></a>
+<a name="line-61"></a><a name="instance%20Argument%20Int64"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Argument</span> <span class='hs-conid'>Int64</span> <span class='hs-keyword'>where</span>
+<a name="line-62"></a>  <span class='hs-varid'>toText</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>T</span><span class='hs-varop'>.</span><span class='hs-varid'>pack</span> <span class='hs-varop'>.</span> <span class='hs-varid'>show</span>
+<a name="line-63"></a>  <span class='hs-comment'>{-# INLINE toText #-}</span>
+<a name="line-64"></a>
+<a name="line-65"></a><a name="instance%20Argument%20a%20⇒%20Argument%20%5ba%5d"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Argument</span> <span class='hs-varid'>a</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Argument</span> <span class='hs-keyglyph'>[</span><span class='hs-varid'>a</span><span class='hs-keyglyph'>]</span> <span class='hs-keyword'>where</span>
+<a name="line-66"></a>  <span class='hs-varid'>toText</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>T</span><span class='hs-varop'>.</span><span class='hs-varid'>intercalate</span> <span class='hs-str'>","</span> <span class='hs-varop'>.</span> <span class='hs-varid'>map</span> <span class='hs-varid'>toText</span>
+<a name="line-67"></a>  <span class='hs-comment'>{-# INLINE toText #-}</span>
+<a name="line-68"></a>
+<a name="line-69"></a>
+<a name="line-70"></a><a name="APIKey"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>APIKey</span>
+<a name="line-71"></a><a name="SessionKey"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>SessionKey</span>
+<a name="line-72"></a><a name="Token"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Token</span>
+<a name="line-73"></a><a name="Callback"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Callback</span>
+<a name="line-74"></a>
+<a name="line-75"></a>
+<a name="line-76"></a><a name="api"></a><span class='hs-comment'>-- | Change request API method</span>
+<a name="line-77"></a><span class='hs-comment'>--</span>
+<a name="line-78"></a><span class='hs-comment'>-- Primarily used in API call wrappers, not intended for usage by library user</span>
+<a name="line-79"></a><span class='hs-definition'>api</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-varid'>t</span>
+<a name="line-80"></a><span class='hs-definition'>api</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"method"</span>
+<a name="line-81"></a><span class='hs-comment'>{-# INLINE api #-}</span>
+<a name="line-82"></a>
+<a name="line-83"></a><a name="get"></a><span class='hs-comment'>-- | Change html _method to GET</span>
+<a name="line-84"></a><span class='hs-comment'>--</span>
+<a name="line-85"></a><span class='hs-comment'>-- Primarily used in API call wrappers, not intended for usage by library user</span>
+<a name="line-86"></a><span class='hs-definition'>get</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-varid'>t</span>
+<a name="line-87"></a><span class='hs-definition'>get</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>wrap</span> <span class='hs-varop'>$</span> <span class='hs-keyglyph'>\</span><span class='hs-varid'>r</span> <span class='hs-sel'>→</span> <span class='hs-varid'>r</span> <span class='hs-layout'>{</span> <span class='hs-sel'>_method</span> <span class='hs-keyglyph'>=</span> <span class='hs-str'>"GET"</span> <span class='hs-layout'>}</span>
+<a name="line-88"></a><span class='hs-comment'>{-# INLINE get #-}</span>
+<a name="line-89"></a>
+<a name="line-90"></a><a name="post"></a><span class='hs-comment'>-- | Change html _method to POST</span>
+<a name="line-91"></a><span class='hs-comment'>--</span>
+<a name="line-92"></a><span class='hs-comment'>-- Primarily used in API call wrappers, not intended for usage by library user</span>
+<a name="line-93"></a><span class='hs-definition'>post</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-varid'>t</span>
+<a name="line-94"></a><span class='hs-definition'>post</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>wrap</span> <span class='hs-varop'>$</span> <span class='hs-keyglyph'>\</span><span class='hs-varid'>r</span> <span class='hs-sel'>→</span> <span class='hs-varid'>r</span> <span class='hs-layout'>{</span> <span class='hs-sel'>_method</span> <span class='hs-keyglyph'>=</span> <span class='hs-str'>"POST"</span> <span class='hs-layout'>}</span>
+<a name="line-95"></a><span class='hs-comment'>{-# INLINE post #-}</span>
+<a name="line-96"></a>
+<a name="line-97"></a><a name="json"></a><span class='hs-comment'>-- | Change API response format to JSON</span>
+<a name="line-98"></a><span class='hs-comment'>--</span>
+<a name="line-99"></a><span class='hs-comment'>-- This is a little helper. It's actually enough</span>
+<a name="line-100"></a><span class='hs-comment'>-- to specialize Format manually</span>
+<a name="line-101"></a><span class='hs-definition'>json</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-conid'>JSON</span> <span class='hs-varid'>a</span> <span class='hs-varid'>t</span>
+<a name="line-102"></a><span class='hs-definition'>json</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>wrap</span> <span class='hs-varid'>id</span>
+<a name="line-103"></a><span class='hs-comment'>{-# INLINE json #-}</span>
+<a name="line-104"></a>
+<a name="line-105"></a><a name="xml"></a><span class='hs-comment'>-- | Change API response format to XML</span>
+<a name="line-106"></a><span class='hs-comment'>--</span>
+<a name="line-107"></a><span class='hs-comment'>-- This is a little helper. It's actually enough</span>
+<a name="line-108"></a><span class='hs-comment'>-- to specialize Format manually</span>
+<a name="line-109"></a><span class='hs-definition'>xml</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-conid'>XML</span> <span class='hs-varid'>a</span> <span class='hs-varid'>t</span>
+<a name="line-110"></a><span class='hs-definition'>xml</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>wrap</span> <span class='hs-varid'>id</span>
+<a name="line-111"></a><span class='hs-comment'>{-# INLINE xml #-}</span>
+<a name="line-112"></a>
+<a name="line-113"></a><a name="apiKey"></a><span class='hs-comment'>-- | Change request API key</span>
+<a name="line-114"></a><span class='hs-definition'>apiKey</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>APIKey</span>
+<a name="line-115"></a><span class='hs-definition'>apiKey</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"api_key"</span>
+<a name="line-116"></a><span class='hs-comment'>{-# INLINE apiKey #-}</span>
+<a name="line-117"></a>
+<a name="line-118"></a><a name="sessionKey"></a><span class='hs-comment'>-- | Change request session key</span>
+<a name="line-119"></a><span class='hs-definition'>sessionKey</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Sign</span> <span class='hs-conid'>SessionKey</span>
+<a name="line-120"></a><span class='hs-definition'>sessionKey</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"sk"</span>
+<a name="line-121"></a><span class='hs-comment'>{-# INLINE sessionKey #-}</span>
+<a name="line-122"></a>
+<a name="line-123"></a><a name="token"></a><span class='hs-comment'>-- | Add token parameter</span>
+<a name="line-124"></a><span class='hs-definition'>token</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Token</span>
+<a name="line-125"></a><span class='hs-definition'>token</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"token"</span>
+<a name="line-126"></a><span class='hs-comment'>{-# INLINE token #-}</span>
+<a name="line-127"></a>
+<a name="line-128"></a><a name="callback"></a><span class='hs-comment'>-- | Add callback link parameter</span>
+<a name="line-129"></a><span class='hs-definition'>callback</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Callback</span>
+<a name="line-130"></a><span class='hs-definition'>callback</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"cb"</span>
+<a name="line-131"></a><span class='hs-comment'>{-# INLINE callback #-}</span>
+<a name="line-132"></a>
+<a name="line-133"></a>
+<a name="line-134"></a><a name="Artist"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Artist</span>
+<a name="line-135"></a><a name="Album"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Album</span>
+<a name="line-136"></a><a name="MBID"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>MBID</span>
+<a name="line-137"></a><a name="Country"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Country</span>
+<a name="line-138"></a><a name="Language"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Language</span>
+<a name="line-139"></a><a name="Tag"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Tag</span>
+<a name="line-140"></a><a name="Autocorrect"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Autocorrect</span>
+<a name="line-141"></a><a name="Page"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Page</span>
+<a name="line-142"></a><a name="Limit"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Limit</span>
+<a name="line-143"></a><a name="Message"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Message</span>
+<a name="line-144"></a><a name="Public"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Public</span>
+<a name="line-145"></a><a name="Recipient"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Recipient</span>
+<a name="line-146"></a><a name="Username"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Username</span>
+<a name="line-147"></a><a name="User"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>User</span>
+<a name="line-148"></a><a name="Password"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Password</span>
+<a name="line-149"></a><a name="Status"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Status</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Attending</span> <span class='hs-keyglyph'>|</span> <span class='hs-conid'>Maybe</span> <span class='hs-keyglyph'>|</span> <span class='hs-conid'>NotAttending</span>
+<a name="line-150"></a><a name="Event"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Event</span>
+<a name="line-151"></a><a name="Festivals"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Festivals</span>
+<a name="line-152"></a><a name="Longitude"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Longitude</span>
+<a name="line-153"></a><a name="Latitude"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Latitude</span>
+<a name="line-154"></a><a name="Location"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Location</span>
+<a name="line-155"></a><a name="Distance"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Distance</span>
+<a name="line-156"></a><a name="Metro"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Metro</span>
+<a name="line-157"></a><a name="Start"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Start</span>
+<a name="line-158"></a><a name="End"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>End</span>
+<a name="line-159"></a><a name="StartTimestamp"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>StartTimestamp</span>
+<a name="line-160"></a><a name="EndTimestamp"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>EndTimestamp</span>
+<a name="line-161"></a><a name="From"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>From</span>
+<a name="line-162"></a><a name="To"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>To</span>
+<a name="line-163"></a><a name="Playlist"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Playlist</span>
+<a name="line-164"></a><a name="Title"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Title</span>
+<a name="line-165"></a><a name="Description"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Description</span>
+<a name="line-166"></a><a name="Track"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Track</span>
+<a name="line-167"></a><a name="Timestamp"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Timestamp</span>
+<a name="line-168"></a><a name="Fingerprint"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Fingerprint</span>
+<a name="line-169"></a><a name="AlbumArtist"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>AlbumArtist</span>
+<a name="line-170"></a><a name="Context"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Context</span>
+<a name="line-171"></a><a name="StreamId"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>StreamId</span>
+<a name="line-172"></a><a name="Duration"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Duration</span>
+<a name="line-173"></a><a name="TrackNumber"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>TrackNumber</span>
+<a name="line-174"></a><a name="ChosenByUser"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>ChosenByUser</span>
+<a name="line-175"></a><a name="TaggingType"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>TaggingType</span>
+<a name="line-176"></a><a name="RecentTracks"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>RecentTracks</span>
+<a name="line-177"></a><a name="UseRecs"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>UseRecs</span>
+<a name="line-178"></a><a name="Group"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Group</span>
+<a name="line-179"></a><a name="Venue"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Venue</span>
+<a name="line-180"></a><a name="VenueName"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>VenueName</span>
+<a name="line-181"></a><a name="Multiplier"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Multiplier</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>M1</span> <span class='hs-keyglyph'>|</span> <span class='hs-conid'>M2</span>
+<a name="line-182"></a><a name="Bitrate"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Bitrate</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>B64</span> <span class='hs-keyglyph'>|</span> <span class='hs-conid'>B128</span>
+<a name="line-183"></a><a name="Name"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Name</span>
+<a name="line-184"></a><a name="Station"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Station</span>
+<a name="line-185"></a><a name="Discovery"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Discovery</span>
+<a name="line-186"></a><a name="RTP"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>RTP</span>
+<a name="line-187"></a><a name="BuyLinks"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>BuyLinks</span>
 <a name="line-188"></a>
-<a name="line-189"></a><a name="artist"></a><span class='hs-comment'>-- | Add artist parameter</span>
-<a name="line-190"></a><span class='hs-definition'>artist</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Artist</span>
-<a name="line-191"></a><span class='hs-definition'>artist</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"artist"</span>
-<a name="line-192"></a><span class='hs-comment'>{-# INLINE artist #-}</span>
-<a name="line-193"></a>
-<a name="line-194"></a><a name="album"></a><span class='hs-comment'>-- | Add artist parameter</span>
-<a name="line-195"></a><span class='hs-definition'>album</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Album</span>
-<a name="line-196"></a><span class='hs-definition'>album</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"album"</span>
-<a name="line-197"></a><span class='hs-comment'>{-# INLINE album #-}</span>
-<a name="line-198"></a>
-<a name="line-199"></a><a name="mbid"></a><span class='hs-comment'>-- | Add MBID parameter</span>
-<a name="line-200"></a><span class='hs-definition'>mbid</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>MBID</span>
-<a name="line-201"></a><span class='hs-definition'>mbid</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"mbid"</span>
-<a name="line-202"></a><span class='hs-comment'>{-# INLINE mbid #-}</span>
-<a name="line-203"></a>
-<a name="line-204"></a><a name="country"></a><span class='hs-comment'>-- | Add country parameter</span>
-<a name="line-205"></a><span class='hs-definition'>country</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Country</span>
-<a name="line-206"></a><span class='hs-definition'>country</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"country"</span>
-<a name="line-207"></a><span class='hs-comment'>{-# INLINE country #-}</span>
-<a name="line-208"></a>
-<a name="line-209"></a><a name="language"></a><span class='hs-comment'>-- | Add language parameter</span>
-<a name="line-210"></a><span class='hs-definition'>language</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Language</span>
-<a name="line-211"></a><span class='hs-definition'>language</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"lang"</span>
-<a name="line-212"></a><span class='hs-comment'>{-# INLINE language #-}</span>
-<a name="line-213"></a>
-<a name="line-214"></a><a name="tags"></a><span class='hs-comment'>-- | Add tags parameter</span>
-<a name="line-215"></a><span class='hs-definition'>tags</span> <span class='hs-sel'>∷</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Text</span><span class='hs-keyglyph'>]</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Tag</span><span class='hs-keyglyph'>]</span>
-<a name="line-216"></a><span class='hs-definition'>tags</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"tags"</span>
-<a name="line-217"></a><span class='hs-comment'>{-# INLINE tags #-}</span>
-<a name="line-218"></a>
-<a name="line-219"></a><a name="tag"></a><span class='hs-comment'>-- | Add tag parameter</span>
-<a name="line-220"></a><span class='hs-definition'>tag</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Tag</span>
-<a name="line-221"></a><span class='hs-definition'>tag</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"tag"</span>
-<a name="line-222"></a><span class='hs-comment'>{-# INLINE tag #-}</span>
-<a name="line-223"></a>
-<a name="line-224"></a><a name="autocorrect"></a><span class='hs-comment'>-- | Add autocorrect parameter</span>
-<a name="line-225"></a><span class='hs-definition'>autocorrect</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Bool</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Autocorrect</span>
-<a name="line-226"></a><span class='hs-definition'>autocorrect</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"tags"</span>
-<a name="line-227"></a><span class='hs-comment'>{-# INLINE autocorrect #-}</span>
-<a name="line-228"></a>
-<a name="line-229"></a><a name="page"></a><span class='hs-comment'>-- | Add page parameter</span>
-<a name="line-230"></a><span class='hs-definition'>page</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Page</span>
-<a name="line-231"></a><span class='hs-definition'>page</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"page"</span>
-<a name="line-232"></a><span class='hs-comment'>{-# INLINE page #-}</span>
-<a name="line-233"></a>
-<a name="line-234"></a><a name="limit"></a><span class='hs-comment'>-- | Add limit parameter</span>
-<a name="line-235"></a><span class='hs-definition'>limit</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Limit</span>
-<a name="line-236"></a><span class='hs-definition'>limit</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"limit"</span>
-<a name="line-237"></a><span class='hs-comment'>{-# INLINE limit #-}</span>
-<a name="line-238"></a>
-<a name="line-239"></a><a name="message"></a><span class='hs-comment'>-- | Add message parameter</span>
-<a name="line-240"></a><span class='hs-definition'>message</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Message</span>
-<a name="line-241"></a><span class='hs-definition'>message</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"message"</span>
-<a name="line-242"></a><span class='hs-comment'>{-# INLINE message #-}</span>
-<a name="line-243"></a>
-<a name="line-244"></a><a name="public"></a><span class='hs-comment'>-- | Add public parameter</span>
-<a name="line-245"></a><span class='hs-definition'>public</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Bool</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Public</span>
-<a name="line-246"></a><span class='hs-definition'>public</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"public"</span>
-<a name="line-247"></a><span class='hs-comment'>{-# INLINE public #-}</span>
-<a name="line-248"></a>
-<a name="line-249"></a><a name="recipient"></a><span class='hs-comment'>-- | Add recipient parameter</span>
-<a name="line-250"></a><span class='hs-definition'>recipient</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Recipient</span>
-<a name="line-251"></a><span class='hs-definition'>recipient</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"recipient"</span>
-<a name="line-252"></a><span class='hs-comment'>{-# INLINE recipient #-}</span>
-<a name="line-253"></a>
-<a name="line-254"></a><a name="username"></a><span class='hs-comment'>-- | Add username parameter</span>
-<a name="line-255"></a><span class='hs-definition'>username</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Username</span>
-<a name="line-256"></a><span class='hs-definition'>username</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"username"</span>
-<a name="line-257"></a><span class='hs-comment'>{-# INLINE username #-}</span>
-<a name="line-258"></a>
-<a name="line-259"></a><a name="user"></a><span class='hs-comment'>-- | Add user parameter</span>
-<a name="line-260"></a><span class='hs-definition'>user</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>User</span>
-<a name="line-261"></a><span class='hs-definition'>user</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"user"</span>
-<a name="line-262"></a><span class='hs-comment'>{-# INLINE user #-}</span>
-<a name="line-263"></a>
-<a name="line-264"></a><a name="password"></a><span class='hs-comment'>-- | Add password parameter</span>
-<a name="line-265"></a><span class='hs-definition'>password</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Password</span>
-<a name="line-266"></a><span class='hs-definition'>password</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"password"</span>
-<a name="line-267"></a><span class='hs-comment'>{-# INLINE password #-}</span>
-<a name="line-268"></a>
-<a name="line-269"></a><a name="status"></a><span class='hs-comment'>-- | Add status parameter</span>
-<a name="line-270"></a><span class='hs-definition'>status</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Status</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Status</span>
-<a name="line-271"></a><span class='hs-definition'>status</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"status"</span> <span class='hs-varop'>.</span> <span class='hs-conid'>T</span><span class='hs-varop'>.</span><span class='hs-varid'>pack</span> <span class='hs-varop'>.</span> <span class='hs-keyglyph'>\</span><span class='hs-varid'>s</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>case</span> <span class='hs-varid'>s</span> <span class='hs-keyword'>of</span>
-<a name="line-272"></a>  <span class='hs-conid'>Attending</span> <span class='hs-sel'>→</span> <span class='hs-str'>"0"</span>
-<a name="line-273"></a>  <span class='hs-conid'>Maybe</span>     <span class='hs-sel'>→</span> <span class='hs-str'>"1"</span>
-<a name="line-274"></a>  <span class='hs-keyword'>_</span>         <span class='hs-sel'>→</span> <span class='hs-str'>"2"</span>
-<a name="line-275"></a><span class='hs-comment'>{-# INLINE status #-}</span>
-<a name="line-276"></a>
-<a name="line-277"></a><a name="event"></a><span class='hs-comment'>-- | Add event parameter</span>
-<a name="line-278"></a><span class='hs-definition'>event</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Event</span>
-<a name="line-279"></a><span class='hs-definition'>event</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"event"</span>
-<a name="line-280"></a><span class='hs-comment'>{-# INLINE event #-}</span>
-<a name="line-281"></a>
-<a name="line-282"></a><a name="festivalsonly"></a><span class='hs-comment'>-- | Add festivalsonly parameter</span>
-<a name="line-283"></a><span class='hs-definition'>festivalsonly</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Bool</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Festivals</span>
-<a name="line-284"></a><span class='hs-definition'>festivalsonly</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"festivalsonly"</span>
-<a name="line-285"></a><span class='hs-comment'>{-# INLINE festivalsonly #-}</span>
-<a name="line-286"></a>
-<a name="line-287"></a><a name="longitude"></a><span class='hs-comment'>-- | Add longitude parameter</span>
-<a name="line-288"></a><span class='hs-definition'>longitude</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Longitude</span>
-<a name="line-289"></a><span class='hs-definition'>longitude</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"longitude"</span>
-<a name="line-290"></a><span class='hs-comment'>{-# INLINE longitude #-}</span>
-<a name="line-291"></a>
-<a name="line-292"></a><a name="latitude"></a><span class='hs-comment'>-- | Add latitude parameter</span>
-<a name="line-293"></a><span class='hs-definition'>latitude</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Latitude</span>
-<a name="line-294"></a><span class='hs-definition'>latitude</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"latitude"</span>
-<a name="line-295"></a><span class='hs-comment'>{-# INLINE latitude #-}</span>
-<a name="line-296"></a>
-<a name="line-297"></a><a name="location"></a><span class='hs-comment'>-- | Add location parameter</span>
-<a name="line-298"></a><span class='hs-definition'>location</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Location</span>
-<a name="line-299"></a><span class='hs-definition'>location</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"location"</span>
-<a name="line-300"></a><span class='hs-comment'>{-# INLINE location #-}</span>
-<a name="line-301"></a>
-<a name="line-302"></a><a name="distance"></a><span class='hs-comment'>-- | Add distance parameter</span>
-<a name="line-303"></a><span class='hs-definition'>distance</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Distance</span>
-<a name="line-304"></a><span class='hs-definition'>distance</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"distance"</span>
-<a name="line-305"></a><span class='hs-comment'>{-# INLINE distance #-}</span>
-<a name="line-306"></a>
-<a name="line-307"></a><a name="venue"></a><span class='hs-comment'>-- | Add venue parameter</span>
-<a name="line-308"></a><span class='hs-definition'>venue</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Venue</span>
-<a name="line-309"></a><span class='hs-definition'>venue</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"venue"</span>
-<a name="line-310"></a><span class='hs-comment'>{-# INLINE venue #-}</span>
-<a name="line-311"></a>
-<a name="line-312"></a><a name="venueName"></a><span class='hs-comment'>-- | Add venue parameter</span>
-<a name="line-313"></a><span class='hs-definition'>venueName</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>VenueName</span>
-<a name="line-314"></a><span class='hs-definition'>venueName</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"venue"</span>
-<a name="line-315"></a><span class='hs-comment'>{-# INLINE venueName #-}</span>
-<a name="line-316"></a>
-<a name="line-317"></a><a name="metro"></a><span class='hs-comment'>-- | Add metro parameter</span>
-<a name="line-318"></a><span class='hs-definition'>metro</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Metro</span>
-<a name="line-319"></a><span class='hs-definition'>metro</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"metro"</span>
-<a name="line-320"></a><span class='hs-comment'>{-# INLINE metro #-}</span>
-<a name="line-321"></a>
-<a name="line-322"></a><a name="start"></a><span class='hs-comment'>-- | Add start parameter</span>
-<a name="line-323"></a><span class='hs-definition'>start</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Start</span>
-<a name="line-324"></a><span class='hs-definition'>start</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"start"</span>
-<a name="line-325"></a><span class='hs-comment'>{-# INLINE start #-}</span>
-<a name="line-326"></a>
-<a name="line-327"></a><a name="end"></a><span class='hs-comment'>-- | Add end parameter</span>
-<a name="line-328"></a><span class='hs-definition'>end</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>End</span>
-<a name="line-329"></a><span class='hs-definition'>end</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"end"</span>
-<a name="line-330"></a><span class='hs-comment'>{-# INLINE end #-}</span>
-<a name="line-331"></a>
-<a name="line-332"></a><a name="startTimestamp"></a><span class='hs-comment'>-- | Add startTimestamp parameter</span>
-<a name="line-333"></a><span class='hs-definition'>startTimestamp</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>StartTimestamp</span>
-<a name="line-334"></a><span class='hs-definition'>startTimestamp</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"startTimestamp"</span>
-<a name="line-335"></a><span class='hs-comment'>{-# INLINE startTimestamp #-}</span>
-<a name="line-336"></a>
-<a name="line-337"></a><a name="endTimestamp"></a><span class='hs-comment'>-- | Add endTimestamp parameter</span>
-<a name="line-338"></a><span class='hs-definition'>endTimestamp</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>EndTimestamp</span>
-<a name="line-339"></a><span class='hs-definition'>endTimestamp</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"endTimestamp"</span>
-<a name="line-340"></a><span class='hs-comment'>{-# INLINE endTimestamp #-}</span>
-<a name="line-341"></a>
-<a name="line-342"></a><a name="from"></a><span class='hs-comment'>-- | Add from parameter</span>
-<a name="line-343"></a><span class='hs-definition'>from</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>From</span>
-<a name="line-344"></a><span class='hs-definition'>from</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"from"</span>
-<a name="line-345"></a><span class='hs-comment'>{-# INLINE from #-}</span>
-<a name="line-346"></a>
-<a name="line-347"></a><a name="to"></a><span class='hs-comment'>-- | Add to parameter</span>
-<a name="line-348"></a><span class='hs-definition'>to</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>To</span>
-<a name="line-349"></a><span class='hs-definition'>to</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"to"</span>
-<a name="line-350"></a><span class='hs-comment'>{-# INLINE to #-}</span>
-<a name="line-351"></a>
-<a name="line-352"></a><a name="type'"></a><span class='hs-comment'>-- | Add type parameter</span>
-<a name="line-353"></a><span class='hs-definition'>type'</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-varid'>t</span>
-<a name="line-354"></a><span class='hs-definition'>type'</span> <span class='hs-varid'>n</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-layout'>(</span><span class='hs-str'>"type"</span> <span class='hs-varop'>&lt;&gt;</span> <span class='hs-varid'>toText</span> <span class='hs-varid'>n</span><span class='hs-layout'>)</span>
-<a name="line-355"></a><span class='hs-comment'>{-# INLINE type' #-}</span>
-<a name="line-356"></a>
-<a name="line-357"></a><a name="value"></a><span class='hs-comment'>-- | Add value parameter</span>
-<a name="line-358"></a><span class='hs-definition'>value</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Value'</span>
-<a name="line-359"></a><span class='hs-definition'>value</span> <span class='hs-varid'>n</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-layout'>(</span><span class='hs-str'>"value"</span> <span class='hs-varop'>&lt;&gt;</span> <span class='hs-varid'>toText</span> <span class='hs-varid'>n</span><span class='hs-layout'>)</span>
-<a name="line-360"></a><span class='hs-comment'>{-# INLINE value #-}</span>
-<a name="line-361"></a>
-<a name="line-362"></a><a name="track"></a><span class='hs-comment'>-- | Add track parameter</span>
-<a name="line-363"></a><span class='hs-definition'>track</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Track</span>
-<a name="line-364"></a><span class='hs-definition'>track</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"track"</span>
-<a name="line-365"></a><span class='hs-comment'>{-# INLINE track #-}</span>
-<a name="line-366"></a>
-<a name="line-367"></a><a name="timestamp"></a><span class='hs-comment'>-- | Add timestamp parameter</span>
-<a name="line-368"></a><span class='hs-definition'>timestamp</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Timestamp</span>
-<a name="line-369"></a><span class='hs-definition'>timestamp</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"timestamp"</span>
-<a name="line-370"></a><span class='hs-comment'>{-# INLINE timestamp #-}</span>
-<a name="line-371"></a>
-<a name="line-372"></a><a name="playlist"></a><span class='hs-comment'>-- | Add playlistID parameter</span>
-<a name="line-373"></a><span class='hs-definition'>playlist</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Playlist</span>
-<a name="line-374"></a><span class='hs-definition'>playlist</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"playlistID"</span>
-<a name="line-375"></a><span class='hs-comment'>{-# INLINE playlist #-}</span>
-<a name="line-376"></a>
-<a name="line-377"></a><a name="title"></a><span class='hs-comment'>-- | Add title parameter</span>
-<a name="line-378"></a><span class='hs-definition'>title</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Title</span>
-<a name="line-379"></a><span class='hs-definition'>title</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"title"</span>
-<a name="line-380"></a><span class='hs-comment'>{-# INLINE title #-}</span>
-<a name="line-381"></a>
-<a name="line-382"></a><a name="description"></a><span class='hs-comment'>-- | Add description parameter</span>
-<a name="line-383"></a><span class='hs-definition'>description</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Description</span>
-<a name="line-384"></a><span class='hs-definition'>description</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"description"</span>
-<a name="line-385"></a><span class='hs-comment'>{-# INLINE description #-}</span>
-<a name="line-386"></a>
-<a name="line-387"></a><a name="fingerprint"></a><span class='hs-comment'>-- | Add fingerprint parameter</span>
-<a name="line-388"></a><span class='hs-definition'>fingerprint</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Fingerprint</span>
-<a name="line-389"></a><span class='hs-definition'>fingerprint</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"fingerprintid"</span>
-<a name="line-390"></a><span class='hs-comment'>{-# INLINE fingerprint #-}</span>
-<a name="line-391"></a>
-<a name="line-392"></a><a name="albumArtist"></a><span class='hs-comment'>-- | Add albumArtist parameter</span>
-<a name="line-393"></a><span class='hs-definition'>albumArtist</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>AlbumArtist</span>
-<a name="line-394"></a><span class='hs-definition'>albumArtist</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"albumArtist"</span>
-<a name="line-395"></a><span class='hs-comment'>{-# INLINE albumArtist #-}</span>
-<a name="line-396"></a>
-<a name="line-397"></a><a name="context"></a><span class='hs-comment'>-- | Add context parameter</span>
-<a name="line-398"></a><span class='hs-definition'>context</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Context</span>
-<a name="line-399"></a><span class='hs-definition'>context</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"context"</span>
-<a name="line-400"></a><span class='hs-comment'>{-# INLINE context #-}</span>
-<a name="line-401"></a>
-<a name="line-402"></a><a name="streamId"></a><span class='hs-comment'>-- | Add streamId parameter</span>
-<a name="line-403"></a><span class='hs-definition'>streamId</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>StreamId</span>
-<a name="line-404"></a><span class='hs-definition'>streamId</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"streamId"</span>
-<a name="line-405"></a><span class='hs-comment'>{-# INLINE streamId #-}</span>
-<a name="line-406"></a>
-<a name="line-407"></a><a name="duration"></a><span class='hs-comment'>-- | Add duration parameter</span>
-<a name="line-408"></a><span class='hs-definition'>duration</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Duration</span>
-<a name="line-409"></a><span class='hs-definition'>duration</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"duration"</span>
-<a name="line-410"></a><span class='hs-comment'>{-# INLINE duration #-}</span>
-<a name="line-411"></a>
-<a name="line-412"></a><a name="trackNumber"></a><span class='hs-comment'>-- | Add trackNumber parameter</span>
-<a name="line-413"></a><span class='hs-definition'>trackNumber</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>TrackNumber</span>
-<a name="line-414"></a><span class='hs-definition'>trackNumber</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"trackNumber"</span>
-<a name="line-415"></a><span class='hs-comment'>{-# INLINE trackNumber #-}</span>
-<a name="line-416"></a>
-<a name="line-417"></a><a name="chosenByUser"></a><span class='hs-comment'>-- | Add chosenByUser parameter</span>
-<a name="line-418"></a><span class='hs-definition'>chosenByUser</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Bool</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>ChosenByUser</span>
-<a name="line-419"></a><span class='hs-definition'>chosenByUser</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"chosenByUser"</span>
-<a name="line-420"></a><span class='hs-comment'>{-# INLINE chosenByUser #-}</span>
-<a name="line-421"></a>
-<a name="line-422"></a><a name="taggingType"></a><span class='hs-comment'>-- | Add taggingType parameter</span>
-<a name="line-423"></a><span class='hs-definition'>taggingType</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>TaggingType</span>
-<a name="line-424"></a><span class='hs-definition'>taggingType</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"taggingtype"</span>
-<a name="line-425"></a><span class='hs-comment'>{-# INLINE taggingType #-}</span>
-<a name="line-426"></a>
-<a name="line-427"></a><a name="recentTracks"></a><span class='hs-comment'>-- | Add recentTracks parameter</span>
-<a name="line-428"></a><span class='hs-definition'>recentTracks</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Bool</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>RecentTracks</span>
-<a name="line-429"></a><span class='hs-definition'>recentTracks</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"recentTracks"</span>
-<a name="line-430"></a><span class='hs-comment'>{-# INLINE recentTracks #-}</span>
-<a name="line-431"></a>
-<a name="line-432"></a><a name="useRecs"></a><span class='hs-comment'>-- | Add useRecs parameter</span>
-<a name="line-433"></a><span class='hs-definition'>useRecs</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Bool</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>UseRecs</span>
-<a name="line-434"></a><span class='hs-definition'>useRecs</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"useRecs"</span>
-<a name="line-435"></a><span class='hs-comment'>{-# INLINE useRecs #-}</span>
-<a name="line-436"></a>
-<a name="line-437"></a><a name="group"></a><span class='hs-comment'>-- | Add group parameter</span>
-<a name="line-438"></a><span class='hs-definition'>group</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Group</span>
-<a name="line-439"></a><span class='hs-definition'>group</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"group"</span>
-<a name="line-440"></a><span class='hs-comment'>{-# INLINE group #-}</span>
-<a name="line-441"></a>
-<a name="line-442"></a><a name="multiplier"></a><span class='hs-comment'>-- | Add multiplier parameter</span>
-<a name="line-443"></a><span class='hs-definition'>multiplier</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Multiplier</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Multiplier</span>
-<a name="line-444"></a><span class='hs-definition'>multiplier</span> <span class='hs-varid'>m</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>case</span> <span class='hs-varid'>m</span> <span class='hs-keyword'>of</span>
-<a name="line-445"></a>  <span class='hs-conid'>M1</span> <span class='hs-sel'>→</span> <span class='hs-varid'>add</span> <span class='hs-str'>"speed_multiplier"</span> <span class='hs-layout'>(</span><span class='hs-conid'>T</span><span class='hs-varop'>.</span><span class='hs-varid'>pack</span> <span class='hs-str'>"1.0"</span><span class='hs-layout'>)</span>
-<a name="line-446"></a>  <span class='hs-conid'>M2</span> <span class='hs-sel'>→</span> <span class='hs-varid'>add</span> <span class='hs-str'>"speed_multiplier"</span> <span class='hs-layout'>(</span><span class='hs-conid'>T</span><span class='hs-varop'>.</span><span class='hs-varid'>pack</span> <span class='hs-str'>"2.0"</span><span class='hs-layout'>)</span>
-<a name="line-447"></a><span class='hs-comment'>{-# INLINE multiplier #-}</span>
-<a name="line-448"></a>
-<a name="line-449"></a><a name="bitrate"></a><span class='hs-comment'>-- | Add bitrate parameter</span>
-<a name="line-450"></a><span class='hs-definition'>bitrate</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Bitrate</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Bitrate</span>
-<a name="line-451"></a><span class='hs-definition'>bitrate</span> <span class='hs-varid'>b</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>case</span> <span class='hs-varid'>b</span> <span class='hs-keyword'>of</span>
-<a name="line-452"></a>  <span class='hs-conid'>B64</span>  <span class='hs-sel'>→</span> <span class='hs-varid'>add</span> <span class='hs-str'>"bitrate"</span> <span class='hs-layout'>(</span><span class='hs-num'>64</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span><span class='hs-layout'>)</span>
-<a name="line-453"></a>  <span class='hs-conid'>B128</span> <span class='hs-sel'>→</span> <span class='hs-varid'>add</span> <span class='hs-str'>"bitrate"</span> <span class='hs-layout'>(</span><span class='hs-num'>128</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span><span class='hs-layout'>)</span>
-<a name="line-454"></a><span class='hs-comment'>{-# INLINE bitrate #-}</span>
-<a name="line-455"></a>
-<a name="line-456"></a><a name="name"></a><span class='hs-comment'>-- | Add name parameter</span>
-<a name="line-457"></a><span class='hs-definition'>name</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Name</span>
-<a name="line-458"></a><span class='hs-definition'>name</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"name"</span>
-<a name="line-459"></a><span class='hs-comment'>{-# INLINE name #-}</span>
-<a name="line-460"></a>
-<a name="line-461"></a><a name="station"></a><span class='hs-comment'>-- | Add station parameter</span>
-<a name="line-462"></a><span class='hs-definition'>station</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Station</span>
-<a name="line-463"></a><span class='hs-definition'>station</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"station"</span>
-<a name="line-464"></a><span class='hs-comment'>{-# INLINE station #-}</span>
-<a name="line-465"></a>
-<a name="line-466"></a><a name="discovery"></a><span class='hs-comment'>-- | Add group parameter</span>
-<a name="line-467"></a><span class='hs-definition'>discovery</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Bool</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Discovery</span>
-<a name="line-468"></a><span class='hs-definition'>discovery</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"discovery"</span>
-<a name="line-469"></a><span class='hs-comment'>{-# INLINE discovery #-}</span>
-<a name="line-470"></a>
-<a name="line-471"></a><a name="rtp"></a><span class='hs-comment'>-- | Add rtp parameter</span>
-<a name="line-472"></a><span class='hs-definition'>rtp</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Bool</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>RTP</span>
-<a name="line-473"></a><span class='hs-definition'>rtp</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"rtp"</span>
-<a name="line-474"></a><span class='hs-comment'>{-# INLINE rtp #-}</span>
-<a name="line-475"></a>
-<a name="line-476"></a><a name="buyLinks"></a><span class='hs-comment'>-- | Add buyLinks parameter</span>
-<a name="line-477"></a><span class='hs-definition'>buyLinks</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Bool</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>BuyLinks</span>
-<a name="line-478"></a><span class='hs-definition'>buyLinks</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"buyLinks"</span>
-<a name="line-479"></a><span class='hs-comment'>{-# INLINE buyLinks #-}</span>
+<a name="line-189"></a>
+<a name="line-190"></a><a name="artist"></a><span class='hs-comment'>-- | Add artist parameter</span>
+<a name="line-191"></a><span class='hs-definition'>artist</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Artist</span>
+<a name="line-192"></a><span class='hs-definition'>artist</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"artist"</span>
+<a name="line-193"></a><span class='hs-comment'>{-# INLINE artist #-}</span>
+<a name="line-194"></a>
+<a name="line-195"></a><a name="artists"></a><span class='hs-comment'>-- | Add artist parameter</span>
+<a name="line-196"></a><span class='hs-definition'>artists</span> <span class='hs-sel'>∷</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Text</span><span class='hs-keyglyph'>]</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Artist</span><span class='hs-keyglyph'>]</span>
+<a name="line-197"></a><span class='hs-definition'>artists</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"artists"</span>
+<a name="line-198"></a><span class='hs-comment'>{-# INLINE artists #-}</span>
+<a name="line-199"></a>
+<a name="line-200"></a><a name="album"></a><span class='hs-comment'>-- | Add artist parameter</span>
+<a name="line-201"></a><span class='hs-definition'>album</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Album</span>
+<a name="line-202"></a><span class='hs-definition'>album</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"album"</span>
+<a name="line-203"></a><span class='hs-comment'>{-# INLINE album #-}</span>
+<a name="line-204"></a>
+<a name="line-205"></a><a name="mbid"></a><span class='hs-comment'>-- | Add MBID parameter</span>
+<a name="line-206"></a><span class='hs-definition'>mbid</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>MBID</span>
+<a name="line-207"></a><span class='hs-definition'>mbid</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"mbid"</span>
+<a name="line-208"></a><span class='hs-comment'>{-# INLINE mbid #-}</span>
+<a name="line-209"></a>
+<a name="line-210"></a><a name="country"></a><span class='hs-comment'>-- | Add country parameter</span>
+<a name="line-211"></a><span class='hs-definition'>country</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Country</span>
+<a name="line-212"></a><span class='hs-definition'>country</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"country"</span>
+<a name="line-213"></a><span class='hs-comment'>{-# INLINE country #-}</span>
+<a name="line-214"></a>
+<a name="line-215"></a><a name="language"></a><span class='hs-comment'>-- | Add language parameter</span>
+<a name="line-216"></a><span class='hs-definition'>language</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Language</span>
+<a name="line-217"></a><span class='hs-definition'>language</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"lang"</span>
+<a name="line-218"></a><span class='hs-comment'>{-# INLINE language #-}</span>
+<a name="line-219"></a>
+<a name="line-220"></a><a name="tags"></a><span class='hs-comment'>-- | Add tags parameter</span>
+<a name="line-221"></a><span class='hs-definition'>tags</span> <span class='hs-sel'>∷</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Text</span><span class='hs-keyglyph'>]</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Tag</span><span class='hs-keyglyph'>]</span>
+<a name="line-222"></a><span class='hs-definition'>tags</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"tags"</span>
+<a name="line-223"></a><span class='hs-comment'>{-# INLINE tags #-}</span>
+<a name="line-224"></a>
+<a name="line-225"></a><a name="tag"></a><span class='hs-comment'>-- | Add tag parameter</span>
+<a name="line-226"></a><span class='hs-definition'>tag</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Tag</span>
+<a name="line-227"></a><span class='hs-definition'>tag</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"tag"</span>
+<a name="line-228"></a><span class='hs-comment'>{-# INLINE tag #-}</span>
+<a name="line-229"></a>
+<a name="line-230"></a><a name="autocorrect"></a><span class='hs-comment'>-- | Add autocorrect parameter</span>
+<a name="line-231"></a><span class='hs-definition'>autocorrect</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Bool</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Autocorrect</span>
+<a name="line-232"></a><span class='hs-definition'>autocorrect</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"tags"</span>
+<a name="line-233"></a><span class='hs-comment'>{-# INLINE autocorrect #-}</span>
+<a name="line-234"></a>
+<a name="line-235"></a><a name="page"></a><span class='hs-comment'>-- | Add page parameter</span>
+<a name="line-236"></a><span class='hs-definition'>page</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Page</span>
+<a name="line-237"></a><span class='hs-definition'>page</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"page"</span>
+<a name="line-238"></a><span class='hs-comment'>{-# INLINE page #-}</span>
+<a name="line-239"></a>
+<a name="line-240"></a><a name="limit"></a><span class='hs-comment'>-- | Add limit parameter</span>
+<a name="line-241"></a><span class='hs-definition'>limit</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Limit</span>
+<a name="line-242"></a><span class='hs-definition'>limit</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"limit"</span>
+<a name="line-243"></a><span class='hs-comment'>{-# INLINE limit #-}</span>
+<a name="line-244"></a>
+<a name="line-245"></a><a name="message"></a><span class='hs-comment'>-- | Add message parameter</span>
+<a name="line-246"></a><span class='hs-definition'>message</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Message</span>
+<a name="line-247"></a><span class='hs-definition'>message</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"message"</span>
+<a name="line-248"></a><span class='hs-comment'>{-# INLINE message #-}</span>
+<a name="line-249"></a>
+<a name="line-250"></a><a name="public"></a><span class='hs-comment'>-- | Add public parameter</span>
+<a name="line-251"></a><span class='hs-definition'>public</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Bool</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Public</span>
+<a name="line-252"></a><span class='hs-definition'>public</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"public"</span>
+<a name="line-253"></a><span class='hs-comment'>{-# INLINE public #-}</span>
+<a name="line-254"></a>
+<a name="line-255"></a><a name="recipient"></a><span class='hs-comment'>-- | Add recipient parameter</span>
+<a name="line-256"></a><span class='hs-definition'>recipient</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Recipient</span>
+<a name="line-257"></a><span class='hs-definition'>recipient</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"recipient"</span>
+<a name="line-258"></a><span class='hs-comment'>{-# INLINE recipient #-}</span>
+<a name="line-259"></a>
+<a name="line-260"></a><a name="username"></a><span class='hs-comment'>-- | Add username parameter</span>
+<a name="line-261"></a><span class='hs-definition'>username</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Username</span>
+<a name="line-262"></a><span class='hs-definition'>username</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"username"</span>
+<a name="line-263"></a><span class='hs-comment'>{-# INLINE username #-}</span>
+<a name="line-264"></a>
+<a name="line-265"></a><a name="user"></a><span class='hs-comment'>-- | Add user parameter</span>
+<a name="line-266"></a><span class='hs-definition'>user</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>User</span>
+<a name="line-267"></a><span class='hs-definition'>user</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"user"</span>
+<a name="line-268"></a><span class='hs-comment'>{-# INLINE user #-}</span>
+<a name="line-269"></a>
+<a name="line-270"></a><a name="password"></a><span class='hs-comment'>-- | Add password parameter</span>
+<a name="line-271"></a><span class='hs-definition'>password</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Password</span>
+<a name="line-272"></a><span class='hs-definition'>password</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"password"</span>
+<a name="line-273"></a><span class='hs-comment'>{-# INLINE password #-}</span>
+<a name="line-274"></a>
+<a name="line-275"></a><a name="status"></a><span class='hs-comment'>-- | Add status parameter</span>
+<a name="line-276"></a><span class='hs-definition'>status</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Status</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Status</span>
+<a name="line-277"></a><span class='hs-definition'>status</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"status"</span> <span class='hs-varop'>.</span> <span class='hs-conid'>T</span><span class='hs-varop'>.</span><span class='hs-varid'>pack</span> <span class='hs-varop'>.</span> <span class='hs-keyglyph'>\</span><span class='hs-varid'>s</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>case</span> <span class='hs-varid'>s</span> <span class='hs-keyword'>of</span>
+<a name="line-278"></a>  <span class='hs-conid'>Attending</span> <span class='hs-sel'>→</span> <span class='hs-str'>"0"</span>
+<a name="line-279"></a>  <span class='hs-conid'>Maybe</span>     <span class='hs-sel'>→</span> <span class='hs-str'>"1"</span>
+<a name="line-280"></a>  <span class='hs-keyword'>_</span>         <span class='hs-sel'>→</span> <span class='hs-str'>"2"</span>
+<a name="line-281"></a><span class='hs-comment'>{-# INLINE status #-}</span>
+<a name="line-282"></a>
+<a name="line-283"></a><a name="event"></a><span class='hs-comment'>-- | Add event parameter</span>
+<a name="line-284"></a><span class='hs-definition'>event</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Event</span>
+<a name="line-285"></a><span class='hs-definition'>event</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"event"</span>
+<a name="line-286"></a><span class='hs-comment'>{-# INLINE event #-}</span>
+<a name="line-287"></a>
+<a name="line-288"></a><a name="festivalsonly"></a><span class='hs-comment'>-- | Add festivalsonly parameter</span>
+<a name="line-289"></a><span class='hs-definition'>festivalsonly</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Bool</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Festivals</span>
+<a name="line-290"></a><span class='hs-definition'>festivalsonly</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"festivalsonly"</span>
+<a name="line-291"></a><span class='hs-comment'>{-# INLINE festivalsonly #-}</span>
+<a name="line-292"></a>
+<a name="line-293"></a><a name="longitude"></a><span class='hs-comment'>-- | Add longitude parameter</span>
+<a name="line-294"></a><span class='hs-definition'>longitude</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Longitude</span>
+<a name="line-295"></a><span class='hs-definition'>longitude</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"longitude"</span>
+<a name="line-296"></a><span class='hs-comment'>{-# INLINE longitude #-}</span>
+<a name="line-297"></a>
+<a name="line-298"></a><a name="latitude"></a><span class='hs-comment'>-- | Add latitude parameter</span>
+<a name="line-299"></a><span class='hs-definition'>latitude</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Latitude</span>
+<a name="line-300"></a><span class='hs-definition'>latitude</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"latitude"</span>
+<a name="line-301"></a><span class='hs-comment'>{-# INLINE latitude #-}</span>
+<a name="line-302"></a>
+<a name="line-303"></a><a name="location"></a><span class='hs-comment'>-- | Add location parameter</span>
+<a name="line-304"></a><span class='hs-definition'>location</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Location</span>
+<a name="line-305"></a><span class='hs-definition'>location</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"location"</span>
+<a name="line-306"></a><span class='hs-comment'>{-# INLINE location #-}</span>
+<a name="line-307"></a>
+<a name="line-308"></a><a name="distance"></a><span class='hs-comment'>-- | Add distance parameter</span>
+<a name="line-309"></a><span class='hs-definition'>distance</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Distance</span>
+<a name="line-310"></a><span class='hs-definition'>distance</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"distance"</span>
+<a name="line-311"></a><span class='hs-comment'>{-# INLINE distance #-}</span>
+<a name="line-312"></a>
+<a name="line-313"></a><a name="venue"></a><span class='hs-comment'>-- | Add venue parameter</span>
+<a name="line-314"></a><span class='hs-definition'>venue</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Venue</span>
+<a name="line-315"></a><span class='hs-definition'>venue</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"venue"</span>
+<a name="line-316"></a><span class='hs-comment'>{-# INLINE venue #-}</span>
+<a name="line-317"></a>
+<a name="line-318"></a><a name="venueName"></a><span class='hs-comment'>-- | Add venue parameter</span>
+<a name="line-319"></a><span class='hs-definition'>venueName</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>VenueName</span>
+<a name="line-320"></a><span class='hs-definition'>venueName</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"venue"</span>
+<a name="line-321"></a><span class='hs-comment'>{-# INLINE venueName #-}</span>
+<a name="line-322"></a>
+<a name="line-323"></a><a name="metro"></a><span class='hs-comment'>-- | Add metro parameter</span>
+<a name="line-324"></a><span class='hs-definition'>metro</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Metro</span>
+<a name="line-325"></a><span class='hs-definition'>metro</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"metro"</span>
+<a name="line-326"></a><span class='hs-comment'>{-# INLINE metro #-}</span>
+<a name="line-327"></a>
+<a name="line-328"></a><a name="start"></a><span class='hs-comment'>-- | Add start parameter</span>
+<a name="line-329"></a><span class='hs-definition'>start</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Start</span>
+<a name="line-330"></a><span class='hs-definition'>start</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"start"</span>
+<a name="line-331"></a><span class='hs-comment'>{-# INLINE start #-}</span>
+<a name="line-332"></a>
+<a name="line-333"></a><a name="end"></a><span class='hs-comment'>-- | Add end parameter</span>
+<a name="line-334"></a><span class='hs-definition'>end</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>End</span>
+<a name="line-335"></a><span class='hs-definition'>end</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"end"</span>
+<a name="line-336"></a><span class='hs-comment'>{-# INLINE end #-}</span>
+<a name="line-337"></a>
+<a name="line-338"></a><a name="startTimestamp"></a><span class='hs-comment'>-- | Add startTimestamp parameter</span>
+<a name="line-339"></a><span class='hs-definition'>startTimestamp</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>StartTimestamp</span>
+<a name="line-340"></a><span class='hs-definition'>startTimestamp</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"startTimestamp"</span>
+<a name="line-341"></a><span class='hs-comment'>{-# INLINE startTimestamp #-}</span>
+<a name="line-342"></a>
+<a name="line-343"></a><a name="endTimestamp"></a><span class='hs-comment'>-- | Add endTimestamp parameter</span>
+<a name="line-344"></a><span class='hs-definition'>endTimestamp</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>EndTimestamp</span>
+<a name="line-345"></a><span class='hs-definition'>endTimestamp</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"endTimestamp"</span>
+<a name="line-346"></a><span class='hs-comment'>{-# INLINE endTimestamp #-}</span>
+<a name="line-347"></a>
+<a name="line-348"></a><a name="from"></a><span class='hs-comment'>-- | Add from parameter</span>
+<a name="line-349"></a><span class='hs-definition'>from</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>From</span>
+<a name="line-350"></a><span class='hs-definition'>from</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"from"</span>
+<a name="line-351"></a><span class='hs-comment'>{-# INLINE from #-}</span>
+<a name="line-352"></a>
+<a name="line-353"></a><a name="to"></a><span class='hs-comment'>-- | Add to parameter</span>
+<a name="line-354"></a><span class='hs-definition'>to</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>To</span>
+<a name="line-355"></a><span class='hs-definition'>to</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"to"</span>
+<a name="line-356"></a><span class='hs-comment'>{-# INLINE to #-}</span>
+<a name="line-357"></a>
+<a name="line-358"></a><a name="track"></a><span class='hs-comment'>-- | Add track parameter</span>
+<a name="line-359"></a><span class='hs-definition'>track</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Track</span>
+<a name="line-360"></a><span class='hs-definition'>track</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"track"</span>
+<a name="line-361"></a><span class='hs-comment'>{-# INLINE track #-}</span>
+<a name="line-362"></a>
+<a name="line-363"></a><a name="timestamp"></a><span class='hs-comment'>-- | Add timestamp parameter</span>
+<a name="line-364"></a><span class='hs-definition'>timestamp</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Timestamp</span>
+<a name="line-365"></a><span class='hs-definition'>timestamp</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"timestamp"</span>
+<a name="line-366"></a><span class='hs-comment'>{-# INLINE timestamp #-}</span>
+<a name="line-367"></a>
+<a name="line-368"></a><a name="playlist"></a><span class='hs-comment'>-- | Add playlistID parameter</span>
+<a name="line-369"></a><span class='hs-definition'>playlist</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Playlist</span>
+<a name="line-370"></a><span class='hs-definition'>playlist</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"playlistID"</span>
+<a name="line-371"></a><span class='hs-comment'>{-# INLINE playlist #-}</span>
+<a name="line-372"></a>
+<a name="line-373"></a><a name="title"></a><span class='hs-comment'>-- | Add title parameter</span>
+<a name="line-374"></a><span class='hs-definition'>title</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Title</span>
+<a name="line-375"></a><span class='hs-definition'>title</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"title"</span>
+<a name="line-376"></a><span class='hs-comment'>{-# INLINE title #-}</span>
+<a name="line-377"></a>
+<a name="line-378"></a><a name="description"></a><span class='hs-comment'>-- | Add description parameter</span>
+<a name="line-379"></a><span class='hs-definition'>description</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Description</span>
+<a name="line-380"></a><span class='hs-definition'>description</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"description"</span>
+<a name="line-381"></a><span class='hs-comment'>{-# INLINE description #-}</span>
+<a name="line-382"></a>
+<a name="line-383"></a><a name="fingerprint"></a><span class='hs-comment'>-- | Add fingerprint parameter</span>
+<a name="line-384"></a><span class='hs-definition'>fingerprint</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Fingerprint</span>
+<a name="line-385"></a><span class='hs-definition'>fingerprint</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"fingerprintid"</span>
+<a name="line-386"></a><span class='hs-comment'>{-# INLINE fingerprint #-}</span>
+<a name="line-387"></a>
+<a name="line-388"></a><a name="albumArtist"></a><span class='hs-comment'>-- | Add albumArtist parameter</span>
+<a name="line-389"></a><span class='hs-definition'>albumArtist</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>AlbumArtist</span>
+<a name="line-390"></a><span class='hs-definition'>albumArtist</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"albumArtist"</span>
+<a name="line-391"></a><span class='hs-comment'>{-# INLINE albumArtist #-}</span>
+<a name="line-392"></a>
+<a name="line-393"></a><a name="context"></a><span class='hs-comment'>-- | Add context parameter</span>
+<a name="line-394"></a><span class='hs-definition'>context</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Context</span>
+<a name="line-395"></a><span class='hs-definition'>context</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"context"</span>
+<a name="line-396"></a><span class='hs-comment'>{-# INLINE context #-}</span>
+<a name="line-397"></a>
+<a name="line-398"></a><a name="streamId"></a><span class='hs-comment'>-- | Add streamId parameter</span>
+<a name="line-399"></a><span class='hs-definition'>streamId</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>StreamId</span>
+<a name="line-400"></a><span class='hs-definition'>streamId</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"streamId"</span>
+<a name="line-401"></a><span class='hs-comment'>{-# INLINE streamId #-}</span>
+<a name="line-402"></a>
+<a name="line-403"></a><a name="duration"></a><span class='hs-comment'>-- | Add duration parameter</span>
+<a name="line-404"></a><span class='hs-definition'>duration</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Duration</span>
+<a name="line-405"></a><span class='hs-definition'>duration</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"duration"</span>
+<a name="line-406"></a><span class='hs-comment'>{-# INLINE duration #-}</span>
+<a name="line-407"></a>
+<a name="line-408"></a><a name="trackNumber"></a><span class='hs-comment'>-- | Add trackNumber parameter</span>
+<a name="line-409"></a><span class='hs-definition'>trackNumber</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>TrackNumber</span>
+<a name="line-410"></a><span class='hs-definition'>trackNumber</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"trackNumber"</span>
+<a name="line-411"></a><span class='hs-comment'>{-# INLINE trackNumber #-}</span>
+<a name="line-412"></a>
+<a name="line-413"></a><a name="chosenByUser"></a><span class='hs-comment'>-- | Add chosenByUser parameter</span>
+<a name="line-414"></a><span class='hs-definition'>chosenByUser</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Bool</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>ChosenByUser</span>
+<a name="line-415"></a><span class='hs-definition'>chosenByUser</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"chosenByUser"</span>
+<a name="line-416"></a><span class='hs-comment'>{-# INLINE chosenByUser #-}</span>
+<a name="line-417"></a>
+<a name="line-418"></a><a name="taggingType"></a><span class='hs-comment'>-- | Add taggingType parameter</span>
+<a name="line-419"></a><span class='hs-definition'>taggingType</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>TaggingType</span>
+<a name="line-420"></a><span class='hs-definition'>taggingType</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"taggingtype"</span>
+<a name="line-421"></a><span class='hs-comment'>{-# INLINE taggingType #-}</span>
+<a name="line-422"></a>
+<a name="line-423"></a><a name="recentTracks"></a><span class='hs-comment'>-- | Add recentTracks parameter</span>
+<a name="line-424"></a><span class='hs-definition'>recentTracks</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Bool</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>RecentTracks</span>
+<a name="line-425"></a><span class='hs-definition'>recentTracks</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"recentTracks"</span>
+<a name="line-426"></a><span class='hs-comment'>{-# INLINE recentTracks #-}</span>
+<a name="line-427"></a>
+<a name="line-428"></a><a name="useRecs"></a><span class='hs-comment'>-- | Add useRecs parameter</span>
+<a name="line-429"></a><span class='hs-definition'>useRecs</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Bool</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>UseRecs</span>
+<a name="line-430"></a><span class='hs-definition'>useRecs</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"useRecs"</span>
+<a name="line-431"></a><span class='hs-comment'>{-# INLINE useRecs #-}</span>
+<a name="line-432"></a>
+<a name="line-433"></a><a name="group"></a><span class='hs-comment'>-- | Add group parameter</span>
+<a name="line-434"></a><span class='hs-definition'>group</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Group</span>
+<a name="line-435"></a><span class='hs-definition'>group</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"group"</span>
+<a name="line-436"></a><span class='hs-comment'>{-# INLINE group #-}</span>
+<a name="line-437"></a>
+<a name="line-438"></a><a name="multiplier"></a><span class='hs-comment'>-- | Add multiplier parameter</span>
+<a name="line-439"></a><span class='hs-definition'>multiplier</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Multiplier</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Multiplier</span>
+<a name="line-440"></a><span class='hs-definition'>multiplier</span> <span class='hs-varid'>m</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>case</span> <span class='hs-varid'>m</span> <span class='hs-keyword'>of</span>
+<a name="line-441"></a>  <span class='hs-conid'>M1</span> <span class='hs-sel'>→</span> <span class='hs-varid'>add</span> <span class='hs-str'>"speed_multiplier"</span> <span class='hs-layout'>(</span><span class='hs-conid'>T</span><span class='hs-varop'>.</span><span class='hs-varid'>pack</span> <span class='hs-str'>"1.0"</span><span class='hs-layout'>)</span>
+<a name="line-442"></a>  <span class='hs-conid'>M2</span> <span class='hs-sel'>→</span> <span class='hs-varid'>add</span> <span class='hs-str'>"speed_multiplier"</span> <span class='hs-layout'>(</span><span class='hs-conid'>T</span><span class='hs-varop'>.</span><span class='hs-varid'>pack</span> <span class='hs-str'>"2.0"</span><span class='hs-layout'>)</span>
+<a name="line-443"></a><span class='hs-comment'>{-# INLINE multiplier #-}</span>
+<a name="line-444"></a>
+<a name="line-445"></a><a name="bitrate"></a><span class='hs-comment'>-- | Add bitrate parameter</span>
+<a name="line-446"></a><span class='hs-definition'>bitrate</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Bitrate</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Bitrate</span>
+<a name="line-447"></a><span class='hs-definition'>bitrate</span> <span class='hs-varid'>b</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>case</span> <span class='hs-varid'>b</span> <span class='hs-keyword'>of</span>
+<a name="line-448"></a>  <span class='hs-conid'>B64</span>  <span class='hs-sel'>→</span> <span class='hs-varid'>add</span> <span class='hs-str'>"bitrate"</span> <span class='hs-layout'>(</span><span class='hs-num'>64</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span><span class='hs-layout'>)</span>
+<a name="line-449"></a>  <span class='hs-conid'>B128</span> <span class='hs-sel'>→</span> <span class='hs-varid'>add</span> <span class='hs-str'>"bitrate"</span> <span class='hs-layout'>(</span><span class='hs-num'>128</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Int64</span><span class='hs-layout'>)</span>
+<a name="line-450"></a><span class='hs-comment'>{-# INLINE bitrate #-}</span>
+<a name="line-451"></a>
+<a name="line-452"></a><a name="name"></a><span class='hs-comment'>-- | Add name parameter</span>
+<a name="line-453"></a><span class='hs-definition'>name</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Name</span>
+<a name="line-454"></a><span class='hs-definition'>name</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"name"</span>
+<a name="line-455"></a><span class='hs-comment'>{-# INLINE name #-}</span>
+<a name="line-456"></a>
+<a name="line-457"></a><a name="station"></a><span class='hs-comment'>-- | Add station parameter</span>
+<a name="line-458"></a><span class='hs-definition'>station</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Text</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Station</span>
+<a name="line-459"></a><span class='hs-definition'>station</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"station"</span>
+<a name="line-460"></a><span class='hs-comment'>{-# INLINE station #-}</span>
+<a name="line-461"></a>
+<a name="line-462"></a><a name="discovery"></a><span class='hs-comment'>-- | Add group parameter</span>
+<a name="line-463"></a><span class='hs-definition'>discovery</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Bool</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>Discovery</span>
+<a name="line-464"></a><span class='hs-definition'>discovery</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"discovery"</span>
+<a name="line-465"></a><span class='hs-comment'>{-# INLINE discovery #-}</span>
+<a name="line-466"></a>
+<a name="line-467"></a><a name="rtp"></a><span class='hs-comment'>-- | Add rtp parameter</span>
+<a name="line-468"></a><span class='hs-definition'>rtp</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Bool</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>RTP</span>
+<a name="line-469"></a><span class='hs-definition'>rtp</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"rtp"</span>
+<a name="line-470"></a><span class='hs-comment'>{-# INLINE rtp #-}</span>
+<a name="line-471"></a>
+<a name="line-472"></a><a name="buyLinks"></a><span class='hs-comment'>-- | Add buyLinks parameter</span>
+<a name="line-473"></a><span class='hs-definition'>buyLinks</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Bool</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-conid'>BuyLinks</span>
+<a name="line-474"></a><span class='hs-definition'>buyLinks</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-str'>"buyLinks"</span>
+<a name="line-475"></a><span class='hs-comment'>{-# INLINE buyLinks #-}</span>
+<a name="line-476"></a>
+<a name="line-477"></a>
+<a name="line-478"></a><a name="Targeted"></a><span class='hs-keyword'>class</span> <span class='hs-conid'>Targeted</span> <span class='hs-varid'>t</span> <span class='hs-keyword'>where</span>
+<a name="line-479"></a>  <span class='hs-varid'>requestType</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-varid'>t</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Text</span>
+<a name="line-480"></a>  <span class='hs-varid'>requestValue</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-varid'>t</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Text</span>
+<a name="line-481"></a>
+<a name="line-482"></a><a name="instance%20Targeted%20%5bArtist%5d"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Targeted</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Artist</span><span class='hs-keyglyph'>]</span> <span class='hs-keyword'>where</span>
+<a name="line-483"></a>  <span class='hs-varid'>requestType</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>=</span> <span class='hs-str'>"artists"</span>
+<a name="line-484"></a>  <span class='hs-varid'>requestValue</span> <span class='hs-varid'>t</span> <span class='hs-keyglyph'>=</span> <span class='hs-sel'>_query</span> <span class='hs-layout'>(</span><span class='hs-varid'>unwrap</span> <span class='hs-varid'>t</span> <span class='hs-layout'>(</span><span class='hs-conid'>R</span> <span class='hs-varid'>mempty</span> <span class='hs-varid'>mempty</span> <span class='hs-varid'>mempty</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-conid'>M</span><span class='hs-varop'>.!</span> <span class='hs-str'>"artists"</span>
+<a name="line-485"></a>
+<a name="line-486"></a><a name="instance%20Targeted%20User"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Targeted</span> <span class='hs-conid'>User</span> <span class='hs-keyword'>where</span>
+<a name="line-487"></a>  <span class='hs-varid'>requestType</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>=</span> <span class='hs-str'>"user"</span>
+<a name="line-488"></a>  <span class='hs-varid'>requestValue</span> <span class='hs-varid'>t</span> <span class='hs-keyglyph'>=</span> <span class='hs-sel'>_query</span> <span class='hs-layout'>(</span><span class='hs-varid'>unwrap</span> <span class='hs-varid'>t</span> <span class='hs-layout'>(</span><span class='hs-conid'>R</span> <span class='hs-varid'>mempty</span> <span class='hs-varid'>mempty</span> <span class='hs-varid'>mempty</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-conid'>M</span><span class='hs-varop'>.!</span> <span class='hs-str'>"user"</span>
+<a name="line-489"></a>
+<a name="line-490"></a><a name="comparison"></a><span class='hs-comment'>-- | Add comparison parameter</span>
+<a name="line-491"></a><span class='hs-definition'>comparison</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Targeted</span> <span class='hs-varid'>t</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Int64</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-varid'>t</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>a</span> <span class='hs-varid'>t</span>
+<a name="line-492"></a><span class='hs-definition'>comparison</span> <span class='hs-varid'>n</span> <span class='hs-varid'>t</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>add</span> <span class='hs-layout'>(</span><span class='hs-str'>"type"</span> <span class='hs-varop'>&lt;&gt;</span> <span class='hs-varid'>toText</span> <span class='hs-varid'>n</span><span class='hs-layout'>)</span> <span class='hs-layout'>(</span><span class='hs-varid'>requestType</span> <span class='hs-varid'>t</span><span class='hs-layout'>)</span> <span class='hs-varop'>&lt;*&gt;</span> <span class='hs-varid'>add</span> <span class='hs-layout'>(</span><span class='hs-str'>"value"</span> <span class='hs-varop'>&lt;&gt;</span> <span class='hs-varid'>toText</span> <span class='hs-varid'>n</span><span class='hs-layout'>)</span> <span class='hs-layout'>(</span><span class='hs-varid'>requestValue</span> <span class='hs-varid'>t</span><span class='hs-layout'>)</span>
+<a name="line-493"></a><span class='hs-comment'>{-# INLINE comparison #-}</span>
 </pre></body>
 </html>

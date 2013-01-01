@@ -8,14 +8,17 @@
 </head>
 <body>
 <pre><a name="line-1"></a><span class='hs-keyword'>module</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span>
-<a name="line-2"></a>  <span class='hs-layout'>(</span> <span class='hs-comment'>-- * Control.Applicative is re-exported for convenience</span>
-<a name="line-3"></a>    <span class='hs-keyword'>module</span> <span class='hs-conid'>Control</span><span class='hs-varop'>.</span><span class='hs-conid'>Applicative</span>
-<a name="line-4"></a>  <span class='hs-layout'>,</span> <span class='hs-keyword'>module</span> <span class='hs-conid'>L</span>
-<a name="line-5"></a>  <span class='hs-layout'>)</span> <span class='hs-keyword'>where</span>
-<a name="line-6"></a>
-<a name="line-7"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Control</span><span class='hs-varop'>.</span><span class='hs-conid'>Applicative</span>
-<a name="line-8"></a>
-<a name="line-9"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span><span class='hs-varop'>.</span><span class='hs-conid'>Request</span> <span class='hs-keyword'>as</span> <span class='hs-conid'>L</span> <span class='hs-varid'>hiding</span> <span class='hs-layout'>(</span><span class='hs-varid'>get</span><span class='hs-layout'>,</span> <span class='hs-varid'>post</span><span class='hs-layout'>)</span>
-<a name="line-10"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span><span class='hs-varop'>.</span><span class='hs-conid'>Response</span> <span class='hs-keyword'>as</span> <span class='hs-conid'>L</span>
+<a name="line-2"></a>  <span class='hs-layout'>(</span> <span class='hs-comment'>-- * Utilities for constructing requests</span>
+<a name="line-3"></a>    <span class='hs-keyword'>module</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span><span class='hs-varop'>.</span><span class='hs-conid'>Request</span>
+<a name="line-4"></a>    <span class='hs-comment'>-- * Utilities for signing and sending requests</span>
+<a name="line-5"></a>  <span class='hs-layout'>,</span> <span class='hs-keyword'>module</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span><span class='hs-varop'>.</span><span class='hs-conid'>Response</span>
+<a name="line-6"></a>    <span class='hs-comment'>-- * Control.Applicative is re-exported for convenience</span>
+<a name="line-7"></a>  <span class='hs-layout'>,</span> <span class='hs-keyword'>module</span> <span class='hs-conid'>Control</span><span class='hs-varop'>.</span><span class='hs-conid'>Applicative</span>
+<a name="line-8"></a>  <span class='hs-layout'>)</span> <span class='hs-keyword'>where</span>
+<a name="line-9"></a>
+<a name="line-10"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Control</span><span class='hs-varop'>.</span><span class='hs-conid'>Applicative</span>
+<a name="line-11"></a>
+<a name="line-12"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span><span class='hs-varop'>.</span><span class='hs-conid'>Request</span>
+<a name="line-13"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span><span class='hs-varop'>.</span><span class='hs-conid'>Response</span>
 </pre></body>
 </html>
