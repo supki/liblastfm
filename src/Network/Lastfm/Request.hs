@@ -1,4 +1,5 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE EmptyDataDecls #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UnicodeSyntax #-}
@@ -10,7 +11,7 @@ module Network.Lastfm.Request
   , api, post, get, json, xml, Ready, APIKey, apiKey, SessionKey, sessionKey
     -- * Request minor parameters
   , Token, token, Callback, callback
-  , Artist, artist, Album, album, MBID, mbid
+  , Artist, artist, artists, Album, album, MBID, mbid
   , Country, country, Autocorrect, autocorrect
   , Event, event, Status(..), status
   , From, from, To, to, Group, group
@@ -28,13 +29,14 @@ module Network.Lastfm.Request
   , TaggingType, taggingType, UseRecs, useRecs, Venue, venue, VenueName, venueName
   , Discovery, discovery, RTP, rtp, BuyLinks, buyLinks, Multiplier(..), multiplier
   , Bitrate(..), bitrate, Name, name, Station, station
-  , type', Value', value
+  , Targeted, comparison
   ) where
 
+import Control.Applicative
 import Data.Int (Int64)
-import Data.Monoid ((<>))
+import Data.Monoid ((<>), mempty)
 
-import qualified Data.Map as M
+import qualified Data.Map.Strict as M
 import           Data.Text (Text)
 import qualified Data.Text as T
 
@@ -158,7 +160,6 @@ data StartTimestamp
 data EndTimestamp
 data From
 data To
-data Value'
 data Playlist
 data Title
 data Description
@@ -190,6 +191,11 @@ data BuyLinks
 artist ∷ Text → Request f a Artist
 artist = add "artist"
 {-# INLINE artist #-}
+
+-- | Add artist parameter
+artists ∷ [Text] → Request f a [Artist]
+artists = add "artists"
+{-# INLINE artists #-}
 
 -- | Add artist parameter
 album ∷ Text → Request f a Album
@@ -349,16 +355,6 @@ to ∷ Int64 → Request f a To
 to = add "to"
 {-# INLINE to #-}
 
--- | Add type parameter
-type' ∷ Int64 → Text → Request f a t
-type' n = add ("type" <> toText n)
-{-# INLINE type' #-}
-
--- | Add value parameter
-value ∷ Int64 → Text → Request f a Value'
-value n = add ("value" <> toText n)
-{-# INLINE value #-}
-
 -- | Add track parameter
 track ∷ Text → Request f a Track
 track = add "track"
@@ -477,3 +473,21 @@ rtp = add "rtp"
 buyLinks ∷ Bool → Request f a BuyLinks
 buyLinks = add "buyLinks"
 {-# INLINE buyLinks #-}
+
+
+class Targeted t where
+  requestType ∷ Request f a t → Text
+  requestValue ∷ Request f a t → Text
+
+instance Targeted [Artist] where
+  requestType _ = "artists"
+  requestValue t = _query (unwrap t (R mempty mempty mempty)) M.! "artists"
+
+instance Targeted User where
+  requestType _ = "user"
+  requestValue t = _query (unwrap t (R mempty mempty mempty)) M.! "user"
+
+-- | Add comparison parameter
+comparison ∷ Targeted t ⇒ Int64 → Request f a t → Request f a t
+comparison n t = add ("type" <> toText n) (requestType t) <*> add ("value" <> toText n) (requestValue t)
+{-# INLINE comparison #-}

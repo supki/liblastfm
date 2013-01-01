@@ -21,6 +21,7 @@ import qualified Group as Group
 import qualified Library as Library
 import qualified Playlist as Playlist
 import qualified Tag as Tag
+import qualified Tasteometer as Tasteometer
 import qualified Track as Track
 import qualified User as User
 import qualified Venue as Venue
@@ -51,6 +52,7 @@ main =
              , Group.noauth
              , Library.noauth
              , Tag.noauth
+             , Tasteometer.noauth
              , Track.noauth
              , User.noauth
              , Venue.noauth
