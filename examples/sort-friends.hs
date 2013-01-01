@@ -61,7 +61,7 @@ pages = do
 
 scores :: [Text] -> IO [(Text, Score)]
 scores xs = zip xs <$> forConcurrently xs (\x ->
-  fromMaybe "0" . view score <$> query (Tasteometer.compare <*> value 1 target <*> value 2 x))
+  fromMaybe "0" . view score <$> query (Tasteometer.compare (user target) (user x)))
  where
   score = key "comparison" . key "result" . key "score"
 

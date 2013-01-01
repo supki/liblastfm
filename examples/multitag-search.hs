@@ -21,11 +21,11 @@ import qualified Network.Lastfm.Tag as Tag
 
 
 main :: IO ()
-main = mapM_ T.putStrLn =<< artists multitags
+main = mapM_ T.putStrLn =<< get_artists multitags
 
 
-artists :: [Text] -> IO [Text]
-artists ts = do
+get_artists :: [Text] -> IO [Text]
+get_artists ts = do
   names <- mapM request ts
   case catMaybes names of
     [] -> return []
