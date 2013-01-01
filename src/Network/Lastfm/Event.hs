@@ -22,6 +22,7 @@ import Network.Lastfm.Request
 -- <http://www.last.fm/api/show/event.attend>
 attend ∷ Request f Sign (Event → Status → APIKey → SessionKey → Ready)
 attend = api "event.attend" <* post
+{-# INLINE attend #-}
 
 
 -- | Get a list of attendees for an event.
@@ -31,6 +32,7 @@ attend = api "event.attend" <* post
 -- <http://www.last.fm/api/show/event.getAttendees>
 getAttendees ∷ Request f Send (Event → APIKey → Ready)
 getAttendees = api "event.getAttendees"
+{-# INLINE getAttendees #-}
 
 
 -- | Get the metadata for an event on Last.fm. Includes attendance and lineup information.
@@ -38,6 +40,7 @@ getAttendees = api "event.getAttendees"
 -- <http://www.last.fm/api/show/event.getInfo>
 getInfo ∷ Request f Send (Event → APIKey → Ready)
 getInfo = api "event.getInfo"
+{-# INLINE getInfo #-}
 
 
 -- | Get shouts for this event. Also available as an rss feed.
@@ -47,6 +50,7 @@ getInfo = api "event.getInfo"
 -- <http://www.last.fm/api/show/event.getShouts>
 getShouts ∷ Request f Send (Event → APIKey → Ready)
 getShouts = api "event.getShouts"
+{-# INLINE getShouts #-}
 
 
 -- | Share an event with one or more Last.fm users or other friends.
@@ -56,6 +60,7 @@ getShouts = api "event.getShouts"
 -- <http://www.last.fm/api/show/event.share>
 share ∷ Request f Sign (Event → Recipient → APIKey → SessionKey → Ready)
 share = api "event.share" <* post
+{-# INLINE share #-}
 
 
 -- | Shout in this event's shoutbox
@@ -63,3 +68,4 @@ share = api "event.share" <* post
 -- <http://www.last.fm/api/show/event.shout>
 shout ∷ Request f Sign (Event → Message → APIKey → SessionKey → Ready)
 shout = api "event.shout" <* post
+{-# INLINE shout #-}

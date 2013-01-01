@@ -23,6 +23,7 @@ import Network.Lastfm.Request
 -- <http://www.last.fm/api/show/tag.getInfo>
 getInfo ∷ Request f Send (Tag → APIKey → Ready)
 getInfo = api "tag.getInfo"
+{-# INLINE getInfo #-}
 
 
 -- | Search for tags similar to this one. Returns tags ranked by similarity, based on listening data.
@@ -30,6 +31,7 @@ getInfo = api "tag.getInfo"
 -- <http://www.last.fm/api/show/tag.getSimilar>
 getSimilar ∷ Request f Send (Tag → APIKey → Ready)
 getSimilar = api "tag.getSimilar"
+{-# INLINE getSimilar #-}
 
 
 -- | Get the top albums tagged by this tag, ordered by tag count.
@@ -39,6 +41,7 @@ getSimilar = api "tag.getSimilar"
 -- <http://www.last.fm/api/show/tag.getTopAlbums>
 getTopAlbums ∷ Request f Send (Tag → APIKey → Ready)
 getTopAlbums = api "tag.getTopAlbums"
+{-# INLINE getTopAlbums #-}
 
 
 -- | Get the top artists tagged by this tag, ordered by tag count.
@@ -48,6 +51,7 @@ getTopAlbums = api "tag.getTopAlbums"
 -- <http://www.last.fm/api/show/tag.getTopArtists>
 getTopArtists ∷ Request f Send (Tag → APIKey → Ready)
 getTopArtists = api "tag.getTopArtists"
+{-# INLINE getTopArtists #-}
 
 
 -- | Fetches the top global tags on Last.fm, sorted by popularity (number of times used)
@@ -55,6 +59,7 @@ getTopArtists = api "tag.getTopArtists"
 -- <http://www.last.fm/api/show/tag.getTopTags>
 getTopTags ∷ Request f Send (APIKey → Ready)
 getTopTags = api "tag.getTopTags"
+{-# INLINE getTopTags #-}
 
 
 -- | Get the top tracks tagged by this tag, ordered by tag count.
@@ -64,6 +69,7 @@ getTopTags = api "tag.getTopTags"
 -- <http://www.last.fm/api/show/tag.getTopTracks>
 getTopTracks ∷ Request f Send (Tag → APIKey → Ready)
 getTopTracks = api "tag.getTopTracks"
+{-# INLINE getTopTracks #-}
 
 
 -- | Get an artist chart for a tag, for a given date range.
@@ -74,6 +80,7 @@ getTopTracks = api "tag.getTopTracks"
 -- <http://www.last.fm/api/show/tag.getWeeklyArtistChart>
 getWeeklyArtistChart ∷ Request f Send (Tag → APIKey → Ready)
 getWeeklyArtistChart = api "tag.getWeeklyArtistChart"
+{-# INLINE getWeeklyArtistChart #-}
 
 
 -- | Get a list of available charts for this tag, expressed as
@@ -82,6 +89,7 @@ getWeeklyArtistChart = api "tag.getWeeklyArtistChart"
 -- <http://www.last.fm/api/show/tag.getWeeklyChartList>
 getWeeklyChartList ∷ Request f Send (Tag → APIKey → Ready)
 getWeeklyChartList = api "tag.getWeeklyChartList"
+{-# INLINE getWeeklyChartList #-}
 
 
 -- | Search for a tag by name. Returns matches sorted by relevance.
@@ -91,3 +99,4 @@ getWeeklyChartList = api "tag.getWeeklyChartList"
 -- <http://www.last.fm/api/show/tag.search>
 search ∷ Request f Send (Tag → APIKey → Ready)
 search = api "tag.search"
+{-# INLINE search #-}

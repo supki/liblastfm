@@ -20,6 +20,7 @@ import Network.Lastfm.Request
 -- <http://www.last.fm/api/show/group.getHype>
 getHype ∷ Request f Send (Group → APIKey → Ready)
 getHype = api "group.getHype"
+{-# INLINE getHype #-}
 
 
 -- | Get a list of members for this group.
@@ -29,6 +30,7 @@ getHype = api "group.getHype"
 -- <http://www.last.fm/api/show/group.getMembers>
 getMembers ∷ Request f Send (Group → APIKey → Ready)
 getMembers = api "group.getMembers"
+{-# INLINE getMembers #-}
 
 
 -- | Get an album chart for a group, for a given date range.
@@ -39,6 +41,7 @@ getMembers = api "group.getMembers"
 -- <http://www.last.fm/api/show/group.getWeeklyAlbumChart>
 getWeeklyAlbumChart ∷ Request f Send (Group → APIKey → Ready)
 getWeeklyAlbumChart = api "group.getWeeklyAlbumChart"
+{-# INLINE getWeeklyAlbumChart #-}
 
 
 -- | Get an artist chart for a group, for a given date range.
@@ -49,6 +52,7 @@ getWeeklyAlbumChart = api "group.getWeeklyAlbumChart"
 -- <http://www.last.fm/api/show/group.getWeeklyArtistChart>
 getWeeklyArtistChart ∷ Request f Send (Group → APIKey → Ready)
 getWeeklyArtistChart = api "group.getWeeklyArtistChart"
+{-# INLINE getWeeklyArtistChart #-}
 
 
 -- | Get a list of available charts for this group, expressed as
@@ -57,6 +61,7 @@ getWeeklyArtistChart = api "group.getWeeklyArtistChart"
 -- <http://www.last.fm/api/show/group.getWeeklyChartList>
 getWeeklyChartList ∷ Request f Send (Group → APIKey → Ready)
 getWeeklyChartList = api "group.getWeeklyChartList"
+{-# INLINE getWeeklyChartList #-}
 
 
 -- | Get a track chart for a group, for a given date range.
@@ -67,3 +72,4 @@ getWeeklyChartList = api "group.getWeeklyChartList"
 -- <http://www.last.fm/api/show/group.getWeeklyTrackChart>
 getWeeklyTrackChart ∷ Request f Send (Group → APIKey → Ready)
 getWeeklyTrackChart = api "group.getWeeklyTrackChart"
+{-# INLINE getWeeklyTrackChart #-}
