@@ -83,9 +83,9 @@ To fix it, add use `json` or `xml` helpers, depending on your needs
 
  [1]: http://www.last.fm/
  [2]: http://www.last.fm/api/intro
- [3]: http://supki.github.com/haskell-liblastfm/
+ [3]: http://supki.github.com/liblastfm/
  [4]: http://www.last.fm/api/authspec#8
  [5]: http://hackage.haskell.org/package/aeson
  [6]: http://hackage.haskell.org/package/aeson-lens
- [7]: http://supki.github.com/haskell-liblastfm/Network-Lastfm-Tag.html#v:search
- [8]: https://github.com/supki/haskell-liblastfm/wiki/How-to-parse-JSON-response
+ [7]: http://supki.github.com/liblastfm/Network-Lastfm-Tag.html#v:search
+ [8]: https://github.com/supki/liblastfm/wiki/How-to-parse-JSON-response
