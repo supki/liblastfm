@@ -1,4 +1,4 @@
-# liblastfm [![Build Status](https://secure.travis-ci.org/supki/haskell-liblastfm.png?branch=develop)](http://travis-ci.org/supki/haskell-liblastfm)
+# liblastfm [![Build Status](https://secure.travis-ci.org/supki/liblastfm.png?branch=develop)](http://travis-ci.org/supki/liblastfm)
 Complete API interface to [last.fm][1] service.  
 Documentation is available in two flavours:
   * original [API reference][2]
