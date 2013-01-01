@@ -18,8 +18,8 @@ import Data.Monoid
 
 import           Data.Serialize (Serialize(..))
 import           Data.ByteString (ByteString)
-import           Data.Map (Map)
-import qualified Data.Map as M
+import           Data.Map.Strict (Map)
+import qualified Data.Map.Strict as M
 import           Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
@@ -37,9 +37,9 @@ class Coercing t where
 --
 -- low-level representation
 data R (f ∷ Format) (a ∷ Auth) t = R
-  { _host ∷ Text
-  , _method ∷ ByteString
-  , _query ∷ Map Text Text
+  { _host ∷ !Text
+  , _method ∷ !ByteString
+  , _query ∷ !(Map Text Text)
   }
 
 -- | Response format: either JSON or XML
