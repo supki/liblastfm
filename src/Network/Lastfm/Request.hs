@@ -476,18 +476,16 @@ buyLinks = add "buyLinks"
 
 
 class Targeted t where
-  requestType ∷ Request f a t → Text
-  requestValue ∷ Request f a t → Text
+  target ∷ Request f a t → Text
 
 instance Targeted [Artist] where
-  requestType _ = "artists"
-  requestValue t = _query (unwrap t (R mempty mempty mempty)) M.! "artists"
+  target _ = "artists"
 
 instance Targeted User where
-  requestType _ = "user"
-  requestValue t = _query (unwrap t (R mempty mempty mempty)) M.! "user"
+  target _ = "user"
 
 -- | Add comparison parameter
 comparison ∷ Targeted t ⇒ Int64 → Request f a t → Request f a t
-comparison n t = add ("type" <> toText n) (requestType t) <*> add ("value" <> toText n) (requestValue t)
+comparison n t = let z = target t in
+  add ("type" <> toText n) z <*> add ("value" <> toText n) (_query (unwrap t (R mempty mempty mempty)) M.! z)
 {-# INLINE comparison #-}
