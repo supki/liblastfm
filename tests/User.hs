@@ -110,16 +110,16 @@ noauth ak =
     getTopTracks <*> user "smpcln" <* limit 10 <*> ak
 
   testGetWeeklyAlbumChart = check gwalc $
-    getWeeklyAlbumChart <*> user "rj" <*> ak
+    getWeeklyAlbumChart <*> user "smpcln" <*> ak
 
   testGetWeeklyArtistChart = check gwarc $
-    getWeeklyArtistChart <*> user "rj" <*> ak
+    getWeeklyArtistChart <*> user "smpcln" <*> ak
 
   testGetWeeklyChartList = check gwcl $
-    getWeeklyChartList <*> user "rj" <*> ak
+    getWeeklyChartList <*> user "smpcln" <*> ak
 
   testGetWeeklyTrackChart = check gwtc $
-    getWeeklyTrackChart <*> user "rj" <*> ak
+    getWeeklyTrackChart <*> user "smpcln" <*> ak
 
 
 gpc ∷ Value → Parser String
