@@ -46,9 +46,9 @@
 <a name="line-37"></a><a name="R"></a><span class='hs-comment'>--</span>
 <a name="line-38"></a><a name="R"></a><span class='hs-comment'>-- low-level representation</span>
 <a name="line-39"></a><a name="R"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>R</span> <span class='hs-layout'>(</span><span class='hs-varid'>f</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Format</span><span class='hs-layout'>)</span> <span class='hs-layout'>(</span><span class='hs-varid'>a</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Auth</span><span class='hs-layout'>)</span> <span class='hs-varid'>t</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>R</span>
-<a name="line-40"></a>  <span class='hs-layout'>{</span> <span class='hs-sel'>_host</span> <span class='hs-sel'>∷</span> <span class='hs-varop'>!</span><span class='hs-conid'>Text</span>
-<a name="line-41"></a>  <span class='hs-layout'>,</span> <span class='hs-sel'>_method</span> <span class='hs-sel'>∷</span> <span class='hs-varop'>!</span><span class='hs-conid'>ByteString</span>
-<a name="line-42"></a>  <span class='hs-layout'>,</span> <span class='hs-sel'>_query</span> <span class='hs-sel'>∷</span> <span class='hs-varop'>!</span><span class='hs-layout'>(</span><span class='hs-conid'>Map</span> <span class='hs-conid'>Text</span> <span class='hs-conid'>Text</span><span class='hs-layout'>)</span>
+<a name="line-40"></a>  <span class='hs-layout'>{</span> <span class='hs-sel'>_host</span>   <span class='hs-sel'>∷</span> <span class='hs-comment'>{-# UNPACK #-}</span> <span class='hs-varop'>!</span><span class='hs-conid'>Text</span>
+<a name="line-41"></a>  <span class='hs-layout'>,</span> <span class='hs-sel'>_method</span> <span class='hs-sel'>∷</span> <span class='hs-comment'>{-# UNPACK #-}</span> <span class='hs-varop'>!</span><span class='hs-conid'>ByteString</span>
+<a name="line-42"></a>  <span class='hs-layout'>,</span> <span class='hs-sel'>_query</span>  <span class='hs-sel'>∷</span> <span class='hs-varop'>!</span><span class='hs-layout'>(</span><span class='hs-conid'>Map</span> <span class='hs-conid'>Text</span> <span class='hs-conid'>Text</span><span class='hs-layout'>)</span>
 <a name="line-43"></a>  <span class='hs-layout'>}</span>
 <a name="line-44"></a>
 <a name="line-45"></a><a name="Format"></a><span class='hs-comment'>-- | Response format: either JSON or XML</span>
