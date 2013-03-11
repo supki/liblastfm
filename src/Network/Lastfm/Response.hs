@@ -57,7 +57,7 @@ instance Supported JSON where
     v ← decode b
     case parseMaybe ((.: "error") <=< parseJSON) v of
       Just (_ ∷ Int) →
-        throw (C.StatusCodeException C.status400 (("Response", Strict.concat $ Lazy.toChunks b) : hs))
+        throw (C.StatusCodeException C.status400 (("Response", Strict.concat $ Lazy.toChunks b) : hs) (C.createCookieJar []))
       _ → return v
   base = R
     { _host = "https://ws.audioscrobbler.com/2.0/"
