@@ -17,7 +17,7 @@ library
                  containers >= 0.5,
                  text,
                  cereal,
-                 http-conduit,
+                 http-conduit >= 1.9,
                  http-types,
                  pureMD5,
                  crypto-api,
