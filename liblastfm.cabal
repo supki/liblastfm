@@ -59,8 +59,22 @@ test-suite json
                  text,
                  liblastfm
   type: exitcode-stdio-1.0
-  main-is: json.hs
   hs-source-dirs: tests
+  main-is: json.hs
+  other-modules: Common
+                 Venue
+                 User
+                 Track
+                 Tasteometer
+                 Tag
+                 Playlist
+                 Library
+                 Group
+                 Geo
+                 Event
+                 Chart
+                 Artist
+                 Album
   ghc-options: -Wall
                -fno-warn-unused-do-bind
                -fno-warn-orphans
