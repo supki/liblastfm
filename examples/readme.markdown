@@ -14,15 +14,22 @@ Shows how to work lastfm api around to get search for multiple tags at once.
 --
 
 ### desktop-authentication
-Demonstrates desktop application authentication flow
+Demonstrates desktop application authentication flow.
 
 --
 
 ### web-authentication
-Demonstrates web application authentication flow. 
+Demonstrates web application authentication flow.
   * [happstack][4]
+
+--
+
+### netwire-scrobbler
+Shows basic scrobbling techniques.
+  * [netwire][5]
 
  [1]: http://hackage.haskell.org/package/async
  [2]: http://hackage.haskell.org/package/aeson-lens
  [3]: http://hackage.haskell.org/package/aeson
  [4]: http://happstack.com
+ [5]: http://hackage.haskell.org/package/netwire
