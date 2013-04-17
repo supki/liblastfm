@@ -7,12 +7,12 @@ author: Matvey Aksenov, Dmitry Malikov
 maintainer: Matvey Aksenov <matvey.aksenov@gmail.com>
 category: Network APIs
 description: Haddock documentation isn't enough to get feeling of the library
-cabal-version: >= 1.8
+cabal-version: >= 1.10
 build-type: Simple
 
 executable sort-friends
   build-depends: base >= 3 && < 5,
-                 liblastfm >= 0.0.4.0,
+                 liblastfm >= 0.1.0.0,
                  async,
                  text,
                  aeson,
@@ -25,7 +25,7 @@ executable sort-friends
 
 executable multitag-search
   build-depends: base >= 3 && < 5,
-                 liblastfm >= 0.0.4.0,
+                 liblastfm >= 0.1.0.0,
                  text,
                  lens,
                  aeson
@@ -35,7 +35,7 @@ executable multitag-search
 
 executable web-authentication
   build-depends: base >= 3 && < 5,
-                 liblastfm >= 0.0.4.0,
+                 liblastfm >= 0.1.0.0,
                  happstack-server,
                  transformers,
                  lens,
@@ -46,9 +46,24 @@ executable web-authentication
 
 executable desktop-authentication
   build-depends: base >= 3 && < 5,
-                 liblastfm >= 0.0.4.0,
+                 liblastfm >= 0.1.0.0,
                  lens,
                  aeson-lens
   main-is: desktop-authentication.hs
+  ghc-options: -Wall
+               -fno-warn-unused-do-bind
+
+executable netwire-scrobbler
+  default-language: Haskell2010
+  build-depends: base >= 3 && < 5,
+                 liblastfm >= 0.1.0.0,
+                 old-locale,
+                 time,
+                 containers,
+                 mtl,
+                 text,
+                 netwire,
+                 libmpd
+  main-is: netwire-scrobbler.hs
   ghc-options: -Wall
                -fno-warn-unused-do-bind

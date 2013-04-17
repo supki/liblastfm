@@ -30,7 +30,7 @@ import Data.Monoid ((<>))
 import Text.Read (readMaybe)
 
 import           Control.Concurrent.Async
-import           Control.Lens hiding (value)
+import           Control.Lens
 import           Data.Aeson (Value)
 import           Data.Aeson.Lens
 import           Data.Text (Text)
