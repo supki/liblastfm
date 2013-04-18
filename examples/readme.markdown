@@ -13,6 +13,12 @@ Shows how to work lastfm api around to get search for multiple tags at once.
 
 --
 
+### recommendations
+Shows how to use signed queries
+  * [aeson-lens][2]
+
+--
+
 ### desktop-authentication
 Demonstrates desktop application authentication flow.
 
