@@ -27,7 +27,7 @@ import           Network.URI (escapeURIChar, isUnreserved)
 
 
 -- | Coerce requests changing their phantom parameters.
--- Used to ensure right flow of working with liblastfm. If you use it on your worn, then
+-- Used to ensure right flow of working with liblastfm. If you use it on your own, then
 -- you will break abstraction
 class Coercing t where
   coerce ∷ t (a ∷ Auth) b → t c d
