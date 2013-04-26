@@ -120,16 +120,20 @@ instance Serialize (R f a t) where
 
 mapmap ∷ (Ord s, Ord t) ⇒ (s → t) → (a → b) → Map s a → Map t b
 mapmap f g = M.mapKeys f . M.map g
+{-# INLINE mapmap #-}
 
 
 -- | 'Request' '_host'
 host :: Functor f => (Text -> f Text) -> R h a t -> f (R h a t)
 host f r@R { _host = h } = (\h' -> r { _host = h' }) <$> f h
+{-# INLINE host #-}
 
 -- | 'Request' HTTP '_method'
 method :: Functor f => (ByteString -> f ByteString) -> R h a t -> f (R h a t)
 method f r@R { _method = m } = (\m' -> r { _method = m' }) <$> f m
+{-# INLINE method #-}
 
 -- | 'Request' '_query' string
 query :: Functor f => (Map Text Text -> f (Map Text Text)) -> R h a t -> f (R h a t)
 query f r@R { _query = q } = (\q' -> r { _query = q' }) <$> f q
+{-# INLINE query #-}
