@@ -64,7 +64,7 @@ instance Coercing (R f) where
 -- that you may send this request already or 'Sign', when request signature
 -- isn't computed yet
 --
--- @f@ is response format. liblastfm currently supports JSON or XML
+-- @f@ is response format. liblastfm currently supports 'JSON' or 'XML'
 newtype Request f a t = Request { unRequest ∷ Dual (Endo (R f a t)) }
 
 instance Coercing (Request f) where
@@ -122,14 +122,14 @@ mapmap ∷ (Ord s, Ord t) ⇒ (s → t) → (a → b) → Map s a → Map t b
 mapmap f g = M.mapKeys f . M.map g
 
 
--- | Request _host lens
+-- | 'Request' '_host'
 host :: Functor f => (Text -> f Text) -> R h a t -> f (R h a t)
 host f r@R { _host = h } = (\h' -> r { _host = h' }) <$> f h
 
--- | Request http _method lens
+-- | 'Request' HTTP '_method'
 method :: Functor f => (ByteString -> f ByteString) -> R h a t -> f (R h a t)
 method f r@R { _method = m } = (\m' -> r { _method = m' }) <$> f m
 
--- | Request _query string lens
+-- | 'Request' '_query' string
 query :: Functor f => (Map Text Text -> f (Map Text Text)) -> R h a t -> f (R h a t)
 query f r@R { _query = q } = (\q' -> r { _query = q' }) <$> f q
