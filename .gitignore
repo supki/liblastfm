@@ -1,5 +1,5 @@
 dist
 cabal-dev
-examples/.lastfm.conf
+examples
 lastfm-keys.json
 *.pyc
