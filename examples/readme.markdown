@@ -13,6 +13,13 @@ Shows how to work lastfm api around to get search for multiple tags at once.
 
 --
 
+### playcount
+Shows how to get user playcount.
+  * [aeson][3]
+  * [lens-aeson][7]
+
+--
+
 ### recommendations
 Shows how to use signed queries
   * [aeson-lens][2]
@@ -41,3 +48,4 @@ Shows basic scrobbling techniques.
  [4]: http://happstack.com
  [5]: http://hackage.haskell.org/package/netwire
  [6]: http://hackage.haskell.org/package/libmpd
+ [7]: http://hackage.haskell.org/package/lens-aeson
