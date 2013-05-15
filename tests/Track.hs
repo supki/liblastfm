@@ -85,32 +85,32 @@ noauth ak =
   testGetInfo = check gi $
     getInfo <*> artist "Pink Floyd" <*> track "Comfortably Numb" <* username "aswalrus" <*> ak
   testGetInfo_mbid = check gi $
-    getInfo <*> mbid "b6581c74-0b8c-4981-ab92-7eed0298a4bb" <* username "aswalrus" <*> ak
+    getInfo <*> mbid "52d7c9ff-6ae4-48a6-acec-4c1a486f8c92" <* username "aswalrus" <*> ak
 
   testGetShouts = check gsh $
     getShouts <*> artist "Pink Floyd" <*> track "Comfortably Numb" <* limit 7 <*> ak
   testGetShouts_mbid = check gsh $
-    getShouts <*> mbid "b6581c74-0b8c-4981-ab92-7eed0298a4bb" <* limit 7 <*> ak
+    getShouts <*> mbid "52d7c9ff-6ae4-48a6-acec-4c1a486f8c92" <* limit 7 <*> ak
 
   testGetSimilar = check gsi $
     getSimilar <*> artist "Pink Floyd" <*> track "Comfortably Numb" <* limit 4 <*> ak
   testGetSimilar_mbid = check gsi $
-    getSimilar <*> mbid "b6581c74-0b8c-4981-ab92-7eed0298a4bb" <* limit 4 <*> ak
+    getSimilar <*> mbid "52d7c9ff-6ae4-48a6-acec-4c1a486f8c92" <* limit 4 <*> ak
 
   testGetTags = check gt $
     getTags <*> artist "Jefferson Airplane" <*> track "White Rabbit" <* user "liblastfm" <*> ak
   testGetTags_mbid = check gt $
-    getTags <*> mbid "1fc619ee-c612-4b2a-a8dc-bb8f1b8b2d6d"  <* user "liblastfm" <*> ak
+    getTags <*> mbid "001b3337-faf4-421a-a11f-45e0b60a7703"  <* user "liblastfm" <*> ak
 
   testGetTopFans = check gtf $
     getTopFans <*> artist "Pink Floyd" <*> track "Comfortably Numb" <*> ak
   testGetTopFans_mbid = check gtf $
-    getTopFans <*> mbid "b6581c74-0b8c-4981-ab92-7eed0298a4bb" <*> ak
+    getTopFans <*> mbid "52d7c9ff-6ae4-48a6-acec-4c1a486f8c92" <*> ak
 
   testGetTopTags = check gtt $
     getTopTags <*> artist "Pink Floyd" <*> track "Comfortably Numb" <*> ak
   testGetTopTags_mbid = check gtt $
-    getTopTags <*> mbid "b6581c74-0b8c-4981-ab92-7eed0298a4bb" <*> ak
+    getTopTags <*> mbid "52d7c9ff-6ae4-48a6-acec-4c1a486f8c92" <*> ak
 
   testSearch = check s' $
     search <*> track "Believe" <* limit 12 <*> ak
