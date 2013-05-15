@@ -1,6 +1,5 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UnicodeSyntax #-}
 -- | Lastfm venue API
 --
 -- This module is intended to be imported qualified:
@@ -20,7 +19,7 @@ import Network.Lastfm.Request
 -- Optional: 'festivalsonly'
 --
 -- <http://www.last.fm/api/show/venue.getEvents>
-getEvents ∷ Request f Send (Venue → APIKey → Ready)
+getEvents :: Request f Send (Venue -> APIKey -> Ready)
 getEvents = api "venue.getEvents"
 
 
@@ -29,7 +28,7 @@ getEvents = api "venue.getEvents"
 -- Optional: 'festivalsonly', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/venue.getPastEvents>
-getPastEvents ∷ Request f Send (Venue → APIKey → Ready)
+getPastEvents :: Request f Send (Venue -> APIKey -> Ready)
 getPastEvents = api "venue.getPastEvents"
 
 
@@ -38,5 +37,5 @@ getPastEvents = api "venue.getPastEvents"
 -- Optional: 'page', 'limit', 'country'
 --
 -- <http://www.last.fm/api/show/venue.search>
-search ∷ Request f Send (VenueName → APIKey → Ready)
+search :: Request f Send (VenueName -> APIKey -> Ready)
 search = api "venue.search"

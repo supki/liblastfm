@@ -1,6 +1,5 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UnicodeSyntax #-}
 -- | Lastfm radio API
 --
 -- This module is intended to be imported qualified:
@@ -22,7 +21,7 @@ import Network.Lastfm.Request
 -- Optional: 'discovery', 'rtp', 'buyLinks'
 --
 -- <http://www.last.fm/api/show/radio.getPlaylist>
-getPlaylist ∷ Request f Sign (Multiplier → Bitrate → APIKey → SessionKey → Ready)
+getPlaylist :: Request f Sign (Multiplier -> Bitrate -> APIKey -> SessionKey -> Ready)
 getPlaylist = api "radio.getPlaylist"
 {-# INLINE getPlaylist #-}
 
@@ -31,7 +30,7 @@ getPlaylist = api "radio.getPlaylist"
 -- it is most likely to represent.
 --
 -- <http://www.last.fm/api/show/radio.search>
-search ∷ Request f Send (Name → APIKey → Ready)
+search :: Request f Send (Name -> APIKey -> Ready)
 search = api "radio.search"
 {-# INLINE search #-}
 
@@ -41,6 +40,6 @@ search = api "radio.search"
 -- Optional: 'language'
 --
 -- <http://www.last.fm/api/show/radio.tune>
-tune ∷ Request f Sign (Station → APIKey → SessionKey → Ready)
+tune :: Request f Sign (Station -> APIKey -> SessionKey -> Ready)
 tune = api "radio.tune" <* post
 {-# INLINE tune #-}

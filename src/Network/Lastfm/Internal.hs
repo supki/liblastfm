@@ -2,7 +2,6 @@
 {-# LANGUAGE EmptyDataDecls #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE KindSignatures #-}
-{-# LANGUAGE UnicodeSyntax #-}
 -- | liblastfm internals
 --
 -- You shouldn't need to import this module unless you are doing something interesting.
@@ -30,16 +29,16 @@ import           Network.URI (escapeURIChar, isUnreserved)
 -- Used to ensure right flow of working with liblastfm. If you use it on your own, then
 -- you will break abstraction
 class Coercing t where
-  coerce ∷ t (a ∷ Auth) b → t c d
+  coerce :: t (a :: Auth) b -> t c d
 
 
 -- | Lastfm API request data type
 --
 -- low-level representation
-data R (f ∷ Format) (a ∷ Auth) t = R
-  { _host   ∷ {-# UNPACK #-} !Text
-  , _method ∷ {-# UNPACK #-} !ByteString
-  , _query  ∷ !(Map Text Text)
+data R (f :: Format) (a :: Auth) t = R
+  { _host   :: {-# UNPACK #-} !Text
+  , _method :: {-# UNPACK #-} !ByteString
+  , _query  :: !(Map Text Text)
   }
 
 -- | Response format: either JSON or XML
@@ -65,7 +64,7 @@ instance Coercing (R f) where
 -- isn't computed yet
 --
 -- @f@ is response format. liblastfm currently supports 'JSON' or 'XML'
-newtype Request f a t = Request { unRequest ∷ Dual (Endo (R f a t)) }
+newtype Request f a t = Request { unRequest :: Dual (Endo (R f a t)) }
 
 instance Coercing (Request f) where
   coerce q = wrap $ coerce . unwrap q . coerce
@@ -84,23 +83,23 @@ instance Applicative (Request f a) where
 
 
 -- | Construct String from request for networking
-render ∷ R f a t → String
+render :: R f a t -> String
 render R { _host = h, _query = q } =
   T.unpack $ mconcat [h, "?", argie q]
  where
-  argie = T.intercalate "&" . M.foldrWithKey (\k v m → T.concat [escape k, "=", escape v] : m) []
+  argie = T.intercalate "&" . M.foldrWithKey (\k v m -> T.concat [escape k, "=", escape v] : m) []
 
   escape = T.concatMap (T.pack . escapeURIChar isUnreserved)
 
 
 -- | Wrapping to interesting 'Monoid' ('R' -> 'R') instance
-wrap ∷ (R f a t → R f a t) → Request f a t
+wrap :: (R f a t -> R f a t) -> Request f a t
 wrap = Request . Dual . Endo
 {-# INLINE wrap #-}
 
 
 -- | Unwrapping from interesting 'Monoid' ('R' -> 'R') instance
-unwrap ∷ Request f a t → R f a t → R f a t
+unwrap :: Request f a t -> R f a t -> R f a t
 unwrap = appEndo . getDual . unRequest
 {-# INLINE unwrap #-}
 
@@ -113,12 +112,12 @@ instance Serialize (R f a t) where
     put $ _method r
     put $ mapmap T.encodeUtf8 T.encodeUtf8 (_query r)
   get = do
-    h ← T.decodeUtf8 <$> get
-    m ← get
-    q ← mapmap T.decodeUtf8 T.decodeUtf8 <$> get
+    h <- T.decodeUtf8 <$> get
+    m <- get
+    q <- mapmap T.decodeUtf8 T.decodeUtf8 <$> get
     return R { _host = h, _method = m, _query = q }
 
-mapmap ∷ (Ord s, Ord t) ⇒ (s → t) → (a → b) → Map s a → Map t b
+mapmap :: (Ord s, Ord t) => (s -> t) -> (a -> b) -> Map s a -> Map t b
 mapmap f g = M.mapKeys f . M.map g
 {-# INLINE mapmap #-}
 

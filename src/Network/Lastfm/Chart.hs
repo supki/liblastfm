@@ -1,6 +1,5 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UnicodeSyntax #-}
 -- | Lastfm chart API
 --
 -- This module is intended to be imported qualified:
@@ -21,7 +20,7 @@ import Network.Lastfm.Request
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/chart.getHypedArtists>
-getHypedArtists ∷ Request f Send (APIKey → Ready)
+getHypedArtists :: Request f Send (APIKey -> Ready)
 getHypedArtists = api "chart.getHypedArtists"
 {-# INLINE getHypedArtists #-}
 
@@ -31,7 +30,7 @@ getHypedArtists = api "chart.getHypedArtists"
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/chart.getHypedTracks>
-getHypedTracks ∷ Request f Send (APIKey → Ready)
+getHypedTracks :: Request f Send (APIKey -> Ready)
 getHypedTracks = api "chart.getHypedTracks"
 {-# INLINE getHypedTracks #-}
 
@@ -41,7 +40,7 @@ getHypedTracks = api "chart.getHypedTracks"
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/chart.getLovedTracks>
-getLovedTracks ∷ Request f Send (APIKey → Ready)
+getLovedTracks :: Request f Send (APIKey -> Ready)
 getLovedTracks = api "chart.getLovedTracks"
 {-# INLINE getLovedTracks #-}
 
@@ -51,7 +50,7 @@ getLovedTracks = api "chart.getLovedTracks"
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/chart.getTopArtists>
-getTopArtists ∷ Request f Send (APIKey → Ready)
+getTopArtists :: Request f Send (APIKey -> Ready)
 getTopArtists = api "chart.getTopArtists"
 {-# INLINE getTopArtists #-}
 
@@ -61,7 +60,7 @@ getTopArtists = api "chart.getTopArtists"
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/chart.getTopTags>
-getTopTags ∷ Request f Send (APIKey → Ready)
+getTopTags :: Request f Send (APIKey -> Ready)
 getTopTags = api "chart.getTopTags"
 {-# INLINE getTopTags #-}
 
@@ -71,6 +70,6 @@ getTopTags = api "chart.getTopTags"
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/chart.getTopTracks>
-getTopTracks ∷ Request f Send (APIKey → Ready)
+getTopTracks :: Request f Send (APIKey -> Ready)
 getTopTracks = api "chart.getTopTracks"
 {-# INLINE getTopTracks #-}

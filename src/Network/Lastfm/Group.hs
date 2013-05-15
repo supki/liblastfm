@@ -1,6 +1,5 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UnicodeSyntax #-}
 -- | Lastfm group API
 --
 -- This module is intended to be imported qualified:
@@ -18,7 +17,7 @@ import Network.Lastfm.Request
 -- | Get the hype list for a group
 --
 -- <http://www.last.fm/api/show/group.getHype>
-getHype ∷ Request f Send (Group → APIKey → Ready)
+getHype :: Request f Send (Group -> APIKey -> Ready)
 getHype = api "group.getHype"
 {-# INLINE getHype #-}
 
@@ -28,7 +27,7 @@ getHype = api "group.getHype"
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/group.getMembers>
-getMembers ∷ Request f Send (Group → APIKey → Ready)
+getMembers :: Request f Send (Group -> APIKey -> Ready)
 getMembers = api "group.getMembers"
 {-# INLINE getMembers #-}
 
@@ -39,7 +38,7 @@ getMembers = api "group.getMembers"
 -- Optional: 'from', 'to'
 --
 -- <http://www.last.fm/api/show/group.getWeeklyAlbumChart>
-getWeeklyAlbumChart ∷ Request f Send (Group → APIKey → Ready)
+getWeeklyAlbumChart :: Request f Send (Group -> APIKey -> Ready)
 getWeeklyAlbumChart = api "group.getWeeklyAlbumChart"
 {-# INLINE getWeeklyAlbumChart #-}
 
@@ -50,7 +49,7 @@ getWeeklyAlbumChart = api "group.getWeeklyAlbumChart"
 -- Optional: 'from', 'to'
 --
 -- <http://www.last.fm/api/show/group.getWeeklyArtistChart>
-getWeeklyArtistChart ∷ Request f Send (Group → APIKey → Ready)
+getWeeklyArtistChart :: Request f Send (Group -> APIKey -> Ready)
 getWeeklyArtistChart = api "group.getWeeklyArtistChart"
 {-# INLINE getWeeklyArtistChart #-}
 
@@ -59,7 +58,7 @@ getWeeklyArtistChart = api "group.getWeeklyArtistChart"
 -- date ranges which can be sent to the chart services.
 --
 -- <http://www.last.fm/api/show/group.getWeeklyChartList>
-getWeeklyChartList ∷ Request f Send (Group → APIKey → Ready)
+getWeeklyChartList :: Request f Send (Group -> APIKey -> Ready)
 getWeeklyChartList = api "group.getWeeklyChartList"
 {-# INLINE getWeeklyChartList #-}
 
@@ -70,6 +69,6 @@ getWeeklyChartList = api "group.getWeeklyChartList"
 -- Optional: 'from', 'to'
 --
 -- <http://www.last.fm/api/show/group.getWeeklyTrackChart>
-getWeeklyTrackChart ∷ Request f Send (Group → APIKey → Ready)
+getWeeklyTrackChart :: Request f Send (Group -> APIKey -> Ready)
 getWeeklyTrackChart = api "group.getWeeklyTrackChart"
 {-# INLINE getWeeklyTrackChart #-}

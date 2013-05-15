@@ -1,6 +1,5 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UnicodeSyntax #-}
 -- | Lastfm tasteometer API
 --
 -- This module is intended to be imported qualified:
@@ -21,6 +20,6 @@ import Network.Lastfm.Request
 -- Optional: 'limit'
 --
 -- <http://www.lastfm.ru/api/show/tasteometer.compare>
-compare ∷ (Targeted u, Targeted v) ⇒ Request f Send u → Request f Send v → Request f Send (APIKey → Ready)
+compare :: (Targeted u, Targeted v) => Request f Send u -> Request f Send v -> Request f Send (APIKey -> Ready)
 compare u v = api "tasteometer.compare" <* comparison 1 u <* comparison 2 v
 {-# INLINE compare #-}
