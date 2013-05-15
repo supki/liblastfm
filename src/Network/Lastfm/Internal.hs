@@ -6,8 +6,8 @@
 --
 -- You shouldn't need to import this module unless you are doing something interesting.
 module Network.Lastfm.Internal
-  ( Request(..), Format(..), Auth(..), Ready
-  , R(..), wrap, unwrap, Coercing(..), render
+  ( Request(..), Format(..), Ready, Sign
+  , R(..), wrap, unwrap, render, coerce
     -- * Lenses
   , host, method, query
   ) where
@@ -15,27 +15,22 @@ module Network.Lastfm.Internal
 import Control.Applicative
 import Data.Monoid
 
-import           Data.Serialize (Serialize(..))
 import           Data.ByteString (ByteString)
+import           Data.Functor.Contravariant (Contravariant(..))
 import           Data.Map.Strict (Map)
 import qualified Data.Map.Strict as M
+import           Data.Serialize (Serialize(..))
 import           Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
+import           Data.Void (absurd)
 import           Network.URI (escapeURIChar, isUnreserved)
-
-
--- | Coerce requests changing their phantom parameters.
--- Used to ensure right flow of working with liblastfm. If you use it on your own, then
--- you will break abstraction
-class Coercing t where
-  coerce :: t (a :: Auth) b -> t c d
 
 
 -- | Lastfm API request data type
 --
 -- low-level representation
-data R (f :: Format) (a :: Auth) t = R
+data R (f :: Format) = R
   { _host   :: {-# UNPACK #-} !Text
   , _method :: {-# UNPACK #-} !ByteString
   , _query  :: !(Map Text Text)
@@ -44,17 +39,11 @@ data R (f :: Format) (a :: Auth) t = R
 -- | Response format: either JSON or XML
 data Format = JSON | XML
 
--- | Authentication method
-data Auth =
-    Send -- ^ Public API. Doesn't require anything special besides API key
-  | Sign -- ^ Private API. Requires Session key and Secret as well as API key
-
--- | Indicates that request is ready for sending
+-- | Request that is ready to be sent
 data Ready
 
-instance Coercing (R f) where
-  coerce R { _host = h, _method = m, _query = q } = R { _host = h, _method = m, _query = q }
-  {-# INLINE coerce #-}
+-- | Request that requires signing procedure
+data Sign
 
 
 -- | Lastfm API request data type
@@ -64,26 +53,29 @@ instance Coercing (R f) where
 -- isn't computed yet
 --
 -- @f@ is response format. liblastfm currently supports 'JSON' or 'XML'
-newtype Request f a t = Request { unRequest :: Dual (Endo (R f a t)) }
+newtype Request f a = Request { unRequest :: Const (Dual (Endo (R f))) a }
 
-instance Coercing (Request f) where
-  coerce q = wrap $ coerce . unwrap q . coerce
-  {-# INLINE coerce #-}
-
-instance Functor (Request f a) where
-  fmap _ = coerce
+instance Functor (Request f) where
+  fmap f (Request x) = Request (fmap f x)
   {-# INLINE fmap #-}
 
-instance Applicative (Request f a) where
-  pure _ = wrap id
-  f <*> x = let Request g = coerce f
-                Request y = coerce x
-            in Request $ g <> y
+instance Contravariant (Request f) where
+  contramap f (Request x) = Request (contramap f x)
+  {-# INLINE contramap #-}
+
+instance Applicative (Request f) where
+  pure x = Request (pure x)
+  Request f <*> Request x = Request (f <*> x)
   {-# INLINE (<*>) #-}
+
+-- | Copypaste from "Control.Lens.Internal.Getter"
+coerce :: (Contravariant f, Functor f) => f a -> f b
+coerce a = absurd <$> contramap absurd a
+{-# INLINE coerce #-}
 
 
 -- | Construct String from request for networking
-render :: R f a t -> String
+render :: R f -> String
 render R { _host = h, _query = q } =
   T.unpack $ mconcat [h, "?", argie q]
  where
@@ -93,20 +85,20 @@ render R { _host = h, _query = q } =
 
 
 -- | Wrapping to interesting 'Monoid' ('R' -> 'R') instance
-wrap :: (R f a t -> R f a t) -> Request f a t
-wrap = Request . Dual . Endo
+wrap :: (R f -> R f) -> Request f a
+wrap = Request . Const . Dual . Endo
 {-# INLINE wrap #-}
 
 
 -- | Unwrapping from interesting 'Monoid' ('R' -> 'R') instance
-unwrap :: Request f a t -> R f a t -> R f a t
-unwrap = appEndo . getDual . unRequest
+unwrap :: Request f a -> R f -> R f
+unwrap = appEndo . getDual . getConst . unRequest
 {-# INLINE unwrap #-}
 
 
 -- Miscellaneous instances
 
-instance Serialize (R f a t) where
+instance Serialize (R f) where
   put r = do
     put $ T.encodeUtf8 (_host r)
     put $ _method r
@@ -123,16 +115,16 @@ mapmap f g = M.mapKeys f . M.map g
 
 
 -- | 'Request' '_host'
-host :: Functor f => (Text -> f Text) -> R h a t -> f (R h a t)
+host :: Functor f => (Text -> f Text) -> R h -> f (R h)
 host f r@R { _host = h } = (\h' -> r { _host = h' }) <$> f h
 {-# INLINE host #-}
 
 -- | 'Request' HTTP '_method'
-method :: Functor f => (ByteString -> f ByteString) -> R h a t -> f (R h a t)
+method :: Functor f => (ByteString -> f ByteString) -> R h -> f (R h)
 method f r@R { _method = m } = (\m' -> r { _method = m' }) <$> f m
 {-# INLINE method #-}
 
 -- | 'Request' '_query' string
-query :: Functor f => (Map Text Text -> f (Map Text Text)) -> R h a t -> f (R h a t)
+query :: Functor f => (Map Text Text -> f (Map Text Text)) -> R h -> f (R h)
 query f r@R { _query = q } = (\q' -> r { _query = q' }) <$> f q
 {-# INLINE query #-}

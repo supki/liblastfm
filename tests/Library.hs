@@ -12,7 +12,7 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-auth ∷ Request JSON Sign APIKey → Request JSON Sign SessionKey → Secret → [Test]
+auth ∷ Request JSON APIKey → Request JSON SessionKey → Secret → [Test]
 auth ak sk s =
   [ testCase "Library.addAlbum" testAddAlbum
   , testCase "Library.addArtist" testAddArtist
@@ -45,7 +45,7 @@ auth ak sk s =
     removeScrobble <*> artist "Gojira" <*> track "Ocean" <*> timestamp 1328905590 <*> ak <*> sk
 
 
-noauth ∷ Request JSON Send APIKey → [Test]
+noauth ∷ Request JSON APIKey → [Test]
 noauth ak =
   [ testCase "Library.getAlbums" testGetAlbums
   , testCase "Library.getArtists" testGetArtists

@@ -12,7 +12,7 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-auth ∷ Request JSON Sign APIKey → Request JSON Sign SessionKey → Secret → [Test]
+auth ∷ Request JSON APIKey → Request JSON SessionKey → Secret → [Test]
 auth ak sk s =
   [ testCase "Track.addTags" testAddTags
   , testCase "Track.ban" testBan
@@ -53,7 +53,7 @@ auth ak sk s =
     updateNowPlaying <*> artist "Gojira" <*> track "Ocean" <*> ak <*> sk
 
 
-noauth ∷ Request JSON Send APIKey → [Test]
+noauth ∷ Request JSON APIKey → [Test]
 noauth ak =
   [ testCase "Track.getBuylinks" testGetBuylinks
   , testCase "Track.getCorrection" testGetCorrection

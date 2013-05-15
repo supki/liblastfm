@@ -1,4 +1,7 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 -- | Lastfm artist API
 --
@@ -21,16 +24,16 @@ import Control.Applicative
 import Network.Lastfm.Request
 
 -- | Unify ('Artist' -> …) and ('MBID' -> …)
-class ArtistOrMBID a
+class ArtistOrMBID r a
 
-instance ArtistOrMBID MBID
-instance ArtistOrMBID Artist
+instance ArtistOrMBID r MBID
+instance ArtistOrMBID r Artist
 
 
 -- | Tag an artist with one or more user supplied tags.
 --
 -- <http://www.last.fm/api/show/artist.addTags>
-addTags :: Request f Sign (Artist -> [Tag] -> APIKey -> SessionKey -> Ready)
+addTags :: Request f (Artist -> [Tag] -> APIKey -> SessionKey -> Sign)
 addTags = api "artist.addTags" <* post
 {-# INLINE addTags #-}
 
@@ -39,7 +42,7 @@ addTags = api "artist.addTags" <* post
 -- supplied artist has a correction to a canonical artist
 --
 -- <http://www.last.fm/api/show/artist.getCorrection>
-getCorrection :: Request f Send (Artist -> APIKey -> Ready)
+getCorrection :: Request f (Artist -> APIKey -> Ready)
 getCorrection = api "artist.getCorrection"
 {-# INLINE getCorrection #-}
 
@@ -50,7 +53,7 @@ getCorrection = api "artist.getCorrection"
 -- Optional: 'autocorrect', 'limit', 'pages', 'festivalsonly'
 --
 -- <http://www.last.fm/api/show/artist.getEvents>
-getEvents :: ArtistOrMBID t => Request f Send (t -> APIKey -> Ready)
+getEvents :: ArtistOrMBID Ready a => Request f (a -> APIKey -> Ready)
 getEvents = api "artist.getEvents"
 {-# INLINE getEvents #-}
 
@@ -60,7 +63,7 @@ getEvents = api "artist.getEvents"
 -- Optional: 'language', 'autocorrect', 'username'
 --
 -- <http://www.last.fm/api/show/artist.getInfo>
-getInfo :: ArtistOrMBID t => Request f Send (t -> APIKey -> Ready)
+getInfo :: ArtistOrMBID Ready a => Request f (a -> APIKey -> Ready)
 getInfo = api "artist.getInfo"
 {-# INLINE getInfo #-}
 
@@ -70,7 +73,7 @@ getInfo = api "artist.getInfo"
 -- Optional: 'page', 'autocorrect', 'limit'
 --
 -- <http://www.last.fm/api/show/artist.getPastEvents>
-getPastEvents :: ArtistOrMBID t => Request f Send (t -> APIKey -> Ready)
+getPastEvents :: ArtistOrMBID Ready a => Request f (a -> APIKey -> Ready)
 getPastEvents = api "artist.getPastEvents"
 {-# INLINE getPastEvents #-}
 
@@ -80,7 +83,7 @@ getPastEvents = api "artist.getPastEvents"
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/artist.getPodcast>
-getPodcast :: ArtistOrMBID t => Request f Send (t -> APIKey -> Ready)
+getPodcast :: ArtistOrMBID Ready a => Request f (a -> APIKey -> Ready)
 getPodcast = api "artist.getPodcast"
 {-# INLINE getPodcast #-}
 
@@ -90,7 +93,7 @@ getPodcast = api "artist.getPodcast"
 -- Optional:'autocorrect', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/artist.getShouts>
-getShouts :: ArtistOrMBID t => Request f Send (t -> APIKey -> Ready)
+getShouts :: ArtistOrMBID Ready a => Request f (a -> APIKey -> Ready)
 getShouts = api "artist.getShouts"
 {-# INLINE getShouts #-}
 
@@ -100,7 +103,7 @@ getShouts = api "artist.getShouts"
 -- Optional: 'limit', 'autocorrect'
 --
 -- <http://www.last.fm/api/show/artist.getSimilar>
-getSimilar :: ArtistOrMBID t => Request f Send (t -> APIKey -> Ready)
+getSimilar :: ArtistOrMBID Ready a => Request f (a -> APIKey -> Ready)
 getSimilar = api "artist.getSimilar"
 {-# INLINE getSimilar #-}
 
@@ -114,7 +117,7 @@ getSimilar = api "artist.getSimilar"
 -- Optional: 'user', 'autocorrect'
 --
 -- <http://www.last.fm/api/show/artist.getTags>
-getTags :: ArtistOrMBID t => Request f a (t -> APIKey -> Ready)
+getTags :: ArtistOrMBID r a => Request f (a -> APIKey -> r)
 getTags = api "artist.getTags"
 {-# INLINE getTags #-}
 
@@ -124,7 +127,7 @@ getTags = api "artist.getTags"
 -- Optional: 'autocorrect', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/artist.getTopAlbums>
-getTopAlbums :: ArtistOrMBID t => Request f Send (t -> APIKey -> Ready)
+getTopAlbums :: ArtistOrMBID Ready a => Request f (a -> APIKey -> Ready)
 getTopAlbums = api "artist.getTopAlbums"
 {-# INLINE getTopAlbums #-}
 
@@ -134,7 +137,7 @@ getTopAlbums = api "artist.getTopAlbums"
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/artist.getTopFans>
-getTopFans :: ArtistOrMBID t => Request f Send (t -> APIKey -> Ready)
+getTopFans :: ArtistOrMBID Ready a => Request f (a -> APIKey -> Ready)
 getTopFans = api "artist.getTopFans"
 {-# INLINE getTopFans #-}
 
@@ -144,7 +147,7 @@ getTopFans = api "artist.getTopFans"
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/artist.getTopTags>
-getTopTags :: ArtistOrMBID t => Request f Send (t -> APIKey -> Ready)
+getTopTags :: ArtistOrMBID Ready a => Request f (a -> APIKey -> Ready)
 getTopTags = api "artist.getTopTags"
 {-# INLINE getTopTags #-}
 
@@ -154,7 +157,7 @@ getTopTags = api "artist.getTopTags"
 -- Optional: 'autocorrect', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/artist.getTopTracks>
-getTopTracks :: ArtistOrMBID t => Request f Send (t -> APIKey -> Ready)
+getTopTracks :: ArtistOrMBID Ready a => Request f (a -> APIKey -> Ready)
 getTopTracks = api "artist.getTopTracks"
 {-# INLINE getTopTracks #-}
 
@@ -162,7 +165,7 @@ getTopTracks = api "artist.getTopTracks"
 -- | Remove a user's tag from an artist.
 --
 -- <http://www.last.fm/api/show/artist.removeTag>
-removeTag :: Request f Sign (Artist -> Tag -> APIKey -> SessionKey -> Ready)
+removeTag :: Request f (Artist -> Tag -> APIKey -> SessionKey -> Sign)
 removeTag = api "artist.removeTag" <* post
 {-# INLINE removeTag #-}
 
@@ -172,7 +175,7 @@ removeTag = api "artist.removeTag" <* post
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/artist.search>
-search :: Request f Send (Artist -> APIKey -> Ready)
+search :: Request f (Artist -> APIKey -> Ready)
 search = api "artist.search"
 {-# INLINE search #-}
 
@@ -182,7 +185,7 @@ search = api "artist.search"
 -- Optional: 'message', 'public'
 --
 -- <http://www.last.fm/api/show/artist.share>
-share :: Request f Sign (Artist -> Recipient -> APIKey -> SessionKey -> Ready)
+share :: Request f (Artist -> Recipient -> APIKey -> SessionKey -> Sign)
 share = api "artist.share" <* post
 {-# INLINE share #-}
 
@@ -190,6 +193,6 @@ share = api "artist.share" <* post
 -- | Shout in this artist's shoutbox
 --
 -- <http://www.last.fm/api/show/artist.shout>
-shout :: Request f Sign (Artist -> Message -> APIKey -> SessionKey -> Ready)
+shout :: Request f (Artist -> Message -> APIKey -> SessionKey -> Sign)
 shout = api "artist.shout" <* post
 {-# INLINE shout #-}

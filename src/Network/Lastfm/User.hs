@@ -28,7 +28,7 @@ import Network.Lastfm.Request
 -- Optional: 'startTimestamp', 'page', 'endTimestamp'
 --
 -- <http://www.last.fm/api/show/user.getArtistTracks>
-getArtistTracks :: Request f Send (User -> Artist -> APIKey -> Ready)
+getArtistTracks :: Request f (User -> Artist -> APIKey -> Ready)
 getArtistTracks = api "user.getArtistTracks"
 {-# INLINE getArtistTracks #-}
 
@@ -38,7 +38,7 @@ getArtistTracks = api "user.getArtistTracks"
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/user.getBannedTracks>
-getBannedTracks :: Request f Send (User -> APIKey -> Ready)
+getBannedTracks :: Request f (User -> APIKey -> Ready)
 getBannedTracks = api "user.getBannedTracks"
 {-# INLINE getBannedTracks #-}
 
@@ -49,7 +49,7 @@ getBannedTracks = api "user.getBannedTracks"
 -- Optional: 'page', 'festivalsonly', 'limit'
 --
 -- <http://www.last.fm/api/show/user.getEvents>
-getEvents :: Request f Send (User -> APIKey -> Ready)
+getEvents :: Request f (User -> APIKey -> Ready)
 getEvents = api "user.getEvents"
 {-# INLINE getEvents #-}
 
@@ -59,7 +59,7 @@ getEvents = api "user.getEvents"
 -- Optional: 'recenttracks', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/user.getFriends>
-getFriends :: Request f Send (User -> APIKey -> Ready)
+getFriends :: Request f (User -> APIKey -> Ready)
 getFriends = api "user.getFriends"
 {-# INLINE getFriends #-}
 
@@ -67,7 +67,7 @@ getFriends = api "user.getFriends"
 -- | Get information about a user profile.
 --
 -- <http://www.last.fm/api/show/user.getInfo>
-getInfo :: Request f Send (User -> APIKey -> Ready)
+getInfo :: Request f (User -> APIKey -> Ready)
 getInfo = api "user.getInfo"
 {-# INLINE getInfo #-}
 
@@ -77,7 +77,7 @@ getInfo = api "user.getInfo"
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/user.getLovedTracks>
-getLovedTracks :: Request f Send (User -> APIKey -> Ready)
+getLovedTracks :: Request f (User -> APIKey -> Ready)
 getLovedTracks = api "user.getLovedTracks"
 {-# INLINE getLovedTracks #-}
 
@@ -87,7 +87,7 @@ getLovedTracks = api "user.getLovedTracks"
 -- Optional: 'limit'
 --
 -- <http://www.last.fm/api/show/user.getNeighbours>
-getNeighbours :: Request f Send (User -> APIKey -> Ready)
+getNeighbours :: Request f (User -> APIKey -> Ready)
 getNeighbours = api "user.getNeighbours"
 {-# INLINE getNeighbours #-}
 
@@ -97,7 +97,7 @@ getNeighbours = api "user.getNeighbours"
 -- Optional: 'userecs'
 --
 -- <http://www.last.fm/api/show/user.getNewReleases>
-getNewReleases :: Request f Send (User -> APIKey -> Ready)
+getNewReleases :: Request f (User -> APIKey -> Ready)
 getNewReleases = api "user.getNewReleases"
 {-# INLINE getNewReleases #-}
 
@@ -107,7 +107,7 @@ getNewReleases = api "user.getNewReleases"
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/user.getPastEvents>
-getPastEvents :: Request f Send (User -> APIKey -> Ready)
+getPastEvents :: Request f (User -> APIKey -> Ready)
 getPastEvents = api "user.getPastEvents"
 {-# INLINE getPastEvents #-}
 
@@ -117,7 +117,7 @@ getPastEvents = api "user.getPastEvents"
 -- Optional: 'taggingtype', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/user.getPersonalTags>
-getPersonalTags :: Request f Send (User -> Tag -> TaggingType -> APIKey -> Ready)
+getPersonalTags :: Request f (User -> Tag -> TaggingType -> APIKey -> Ready)
 getPersonalTags = api "user.getPersonalTags"
 {-# INLINE getPersonalTags #-}
 
@@ -125,7 +125,7 @@ getPersonalTags = api "user.getPersonalTags"
 -- | Get a list of a user's playlists on Last.fm.
 --
 -- <http://www.last.fm/api/show/user.getPlaylists>
-getPlaylists :: Request f Send (User -> APIKey -> Ready)
+getPlaylists :: Request f (User -> APIKey -> Ready)
 getPlaylists = api "user.getPlaylists"
 {-# INLINE getPlaylists #-}
 
@@ -135,7 +135,7 @@ getPlaylists = api "user.getPlaylists"
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/user.getRecentStations>
-getRecentStations :: Request f Sign (User -> APIKey -> SessionKey -> Ready)
+getRecentStations :: Request f (User -> APIKey -> SessionKey -> Sign)
 getRecentStations = api "user.getRecentStations"
 {-# INLINE getRecentStations #-}
 
@@ -147,7 +147,7 @@ getRecentStations = api "user.getRecentStations"
 -- Optional: 'limit', 'page', 'from', 'extended', 'to'
 --
 -- <http://www.last.fm/api/show/user.getRecentTracks>
-getRecentTracks :: Request f Send (User -> APIKey -> Ready)
+getRecentTracks :: Request f (User -> APIKey -> Ready)
 getRecentTracks = api "user.getRecentTracks"
 {-# INLINE getRecentTracks #-}
 
@@ -157,7 +157,7 @@ getRecentTracks = api "user.getRecentTracks"
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/user.getRecommendedArtists>
-getRecommendedArtists :: Request f Sign (APIKey -> SessionKey -> Ready)
+getRecommendedArtists :: Request f (APIKey -> SessionKey -> Sign)
 getRecommendedArtists = api "user.getRecommendedArtists"
 {-# INLINE getRecommendedArtists #-}
 
@@ -167,7 +167,7 @@ getRecommendedArtists = api "user.getRecommendedArtists"
 -- Optional: 'limit', 'page', 'latitude', 'longitude', 'festivalsonly', 'country'
 --
 -- <http://www.last.fm/api/show/user.getRecommendedEvents>
-getRecommendedEvents :: Request f Sign (APIKey -> SessionKey -> Ready)
+getRecommendedEvents :: Request f (APIKey -> SessionKey -> Sign)
 getRecommendedEvents = api "user.getRecommendedEvents"
 {-# INLINE getRecommendedEvents #-}
 
@@ -177,7 +177,7 @@ getRecommendedEvents = api "user.getRecommendedEvents"
 -- Optional: 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/user.getShouts>
-getShouts :: Request f Send (User -> APIKey -> Ready)
+getShouts :: Request f (User -> APIKey -> Ready)
 getShouts = api "user.getShouts"
 {-# INLINE getShouts #-}
 
@@ -188,7 +188,7 @@ getShouts = api "user.getShouts"
 -- Optional: 'period', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/user.getTopAlbums>
-getTopAlbums :: Request f Send (User -> APIKey -> Ready)
+getTopAlbums :: Request f (User -> APIKey -> Ready)
 getTopAlbums = api "user.getTopAlbums"
 {-# INLINE getTopAlbums #-}
 
@@ -199,7 +199,7 @@ getTopAlbums = api "user.getTopAlbums"
 -- Optional: 'period', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/user.getTopArtists>
-getTopArtists :: Request f Send (User -> APIKey -> Ready)
+getTopArtists :: Request f (User -> APIKey -> Ready)
 getTopArtists = api "user.getTopArtists"
 {-# INLINE getTopArtists #-}
 
@@ -209,7 +209,7 @@ getTopArtists = api "user.getTopArtists"
 -- Optional: 'limit'
 --
 -- <http://www.last.fm/api/show/user.getTopTags>
-getTopTags :: Request f Send (User -> APIKey -> Ready)
+getTopTags :: Request f (User -> APIKey -> Ready)
 getTopTags = api "user.getTopTags"
 {-# INLINE getTopTags #-}
 
@@ -220,7 +220,7 @@ getTopTags = api "user.getTopTags"
 -- Optional: 'period', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/user.getTopTracks>
-getTopTracks :: Request f Send (User -> APIKey -> Ready)
+getTopTracks :: Request f (User -> APIKey -> Ready)
 getTopTracks = api "user.getTopTracks"
 {-# INLINE getTopTracks #-}
 
@@ -231,7 +231,7 @@ getTopTracks = api "user.getTopTracks"
 -- Optional: 'from', 'to'
 --
 -- <http://www.last.fm/api/show/user.getWeeklyAlbumChart>
-getWeeklyAlbumChart :: Request f Send (User -> APIKey -> Ready)
+getWeeklyAlbumChart :: Request f (User -> APIKey -> Ready)
 getWeeklyAlbumChart = api "user.getWeeklyAlbumChart"
 {-# INLINE getWeeklyAlbumChart #-}
 
@@ -242,7 +242,7 @@ getWeeklyAlbumChart = api "user.getWeeklyAlbumChart"
 -- Optional: 'from', 'to'
 --
 -- <http://www.last.fm/api/show/user.getWeeklyArtistChart>
-getWeeklyArtistChart :: Request f Send (User -> APIKey -> Ready)
+getWeeklyArtistChart :: Request f (User -> APIKey -> Ready)
 getWeeklyArtistChart = api "user.getWeeklyArtistChart"
 {-# INLINE getWeeklyArtistChart #-}
 
@@ -251,7 +251,7 @@ getWeeklyArtistChart = api "user.getWeeklyArtistChart"
 -- date ranges which can be sent to the chart services.
 --
 -- <http://www.last.fm/api/show/user.getWeeklyChartList>
-getWeeklyChartList :: Request f Send (User -> APIKey -> Ready)
+getWeeklyChartList :: Request f (User -> APIKey -> Ready)
 getWeeklyChartList = api "user.getWeeklyChartList"
 {-# INLINE getWeeklyChartList #-}
 
@@ -262,7 +262,7 @@ getWeeklyChartList = api "user.getWeeklyChartList"
 -- Optional: 'from', 'to'
 --
 -- <http://www.last.fm/api/show/user.getWeeklyTrackChart>
-getWeeklyTrackChart :: Request f Send (User -> APIKey -> Ready)
+getWeeklyTrackChart :: Request f (User -> APIKey -> Ready)
 getWeeklyTrackChart = api "user.getWeeklyTrackChart"
 {-# INLINE getWeeklyTrackChart #-}
 
@@ -270,6 +270,6 @@ getWeeklyTrackChart = api "user.getWeeklyTrackChart"
 -- | Shout on this user's shoutbox
 --
 -- <http://www.last.fm/api/show/user.shout>
-shout :: Request f Sign (User -> Message -> APIKey -> SessionKey -> Ready)
+shout :: Request f (User -> Message -> APIKey -> SessionKey -> Sign)
 shout = api "user.shout" <* post
 {-# INLINE shout #-}

@@ -31,7 +31,7 @@ main = do
 
 
 -- | Construct signed query
-query :: Request JSON Sign (APIKey -> SessionKey -> Ready) -> IO (Response JSON)
+query :: Request JSON (APIKey -> SessionKey -> Sign) -> IO (Response JSON)
 query r = lastfm $ sign secret (r <*> ak <*> sk <* json)
  where
   ak     = apiKey "__YOUR_API_KEY__"

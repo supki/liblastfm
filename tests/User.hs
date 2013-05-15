@@ -12,7 +12,7 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-auth ∷ Request JSON Sign APIKey → Request JSON Sign SessionKey → Secret → [Test]
+auth ∷ Request JSON APIKey → Request JSON SessionKey → Secret → [Test]
 auth ak sk s =
   [ testCase "User.getRecentStations" testGetRecentStations
   , testCase "User.getRecommendedArtists" testGetRecommendedArtists
@@ -33,7 +33,7 @@ auth ak sk s =
     shout <*> user "liblastfm" <*> message "test message" <*> ak <*> sk
 
 
-noauth ∷ Request JSON Send APIKey → [Test]
+noauth ∷ Request JSON APIKey → [Test]
 noauth ak =
   [ testCase "User.getArtistTracks" testGetArtistTracks
   , testCase "User.getBannedTracks" testGetBannedTracks

@@ -46,8 +46,8 @@ import Network.Lastfm.Internal
 
 class Supported (f :: Format) where
   type Response f
-  parse :: R f a t -> Lazy.ByteString -> C.ResponseHeaders -> Response f
-  base :: R f a t
+  parse :: R f -> Lazy.ByteString -> C.ResponseHeaders -> Response f
+  base :: R f
 
 
 instance Supported JSON where
@@ -81,7 +81,7 @@ newtype Secret = Secret Text deriving (Show, IsString)
 
 
 -- | Sign 'Request' with 'Secret'
-sign :: Secret -> Request f Sign Ready -> Request f Send Ready
+sign :: Secret -> Request f Sign -> Request f Ready
 sign (Secret s) = coerce . (<* signature)
  where
   signature = wrap $ \r@R { _query = q } ->
@@ -92,21 +92,21 @@ sign (Secret s) = coerce . (<* signature)
 
 
 -- | Send Request and parse Response
-lastfm :: Supported f => Request f Send Ready -> IO (Response f)
+lastfm :: Supported f => Request f Ready -> IO (Response f)
 lastfm = lastfm' . finalize
 
 
 -- | Get R from Request
 --
 -- That's rarely needed unless you want low-level requests manipulation
-finalize :: Supported f => Request f Send Ready -> R f Send Ready
+finalize :: Supported f => Request f Ready -> R f
 finalize = ($ base) . unwrap
 
 
 -- | Send R and parse Response
 --
 -- That's rarely needed unless you want low-level requests manipulation
-lastfm' :: Supported f => R f Send Ready -> IO (Response f)
+lastfm' :: Supported f => R f -> IO (Response f)
 lastfm' request =
   C.withManager $ \m -> C.parseUrl (render request) >>= \url -> do
     t <- C.httpLbs (url { C.method = _method request, C.responseTimeout = Just 10000000 }) m

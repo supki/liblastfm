@@ -12,7 +12,7 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-noauth ∷ Request JSON Send APIKey → [Test]
+noauth ∷ Request JSON APIKey → [Test]
 noauth ak =
   [ testCase "Geo.getEvents" testGetEvents
   , testCase "Geo.getMetroArtistChart" testGetMetroArtistChart

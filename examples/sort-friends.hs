@@ -74,7 +74,7 @@ pretty :: [(Text, Score)] -> IO ()
 pretty = mapM_ (\(n,s) -> T.putStrLn $ n <> ": " <> s) . take 5 . sortBy (flip compare `on` snd)
 
 
-query :: Request JSON Send (APIKey -> Ready) -> IO (Response JSON)
+query :: Request JSON (APIKey -> Ready) -> IO (Response JSON)
 query r = lastfm (r <*> apiKey "234fc6e0f41f6ef99b7bd62ebaf8d318" <* json)
 
 

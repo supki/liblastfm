@@ -22,7 +22,7 @@ import Network.Lastfm.Request
 -- Optional: 'longitude', 'latitude', 'location', 'distance', 'page', 'tag', 'festivalsonly', 'limit'
 --
 -- <http://www.last.fm/api/show/geo.getEvents>
-getEvents :: Request f Send (APIKey -> Ready)
+getEvents :: Request f (APIKey -> Ready)
 getEvents = api "geo.getEvents"
 {-# INLINE getEvents #-}
 
@@ -32,7 +32,7 @@ getEvents = api "geo.getEvents"
 -- Optional: 'start', 'end', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/geo.getMetroArtistChart>
-getMetroArtistChart :: Request f Send (Metro -> Country -> APIKey -> Ready)
+getMetroArtistChart :: Request f (Metro -> Country -> APIKey -> Ready)
 getMetroArtistChart = api "geo.getMetroArtistChart"
 {-# INLINE getMetroArtistChart #-}
 
@@ -42,7 +42,7 @@ getMetroArtistChart = api "geo.getMetroArtistChart"
 -- Optional: 'start', 'end', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/geo.getMetroHypeArtistChart>
-getMetroHypeArtistChart :: Request f Send (Metro -> Country -> APIKey -> Ready)
+getMetroHypeArtistChart :: Request f (Metro -> Country -> APIKey -> Ready)
 getMetroHypeArtistChart = api "geo.getMetroHypeArtistChart"
 {-# INLINE getMetroHypeArtistChart #-}
 
@@ -52,7 +52,7 @@ getMetroHypeArtistChart = api "geo.getMetroHypeArtistChart"
 -- Optional: 'start', 'end', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/geo.getMetroHypeTrackChart>
-getMetroHypeTrackChart :: Request f Send (Metro -> Country -> APIKey -> Ready)
+getMetroHypeTrackChart :: Request f (Metro -> Country -> APIKey -> Ready)
 getMetroHypeTrackChart = api "geo.getMetroHypeTrackChart"
 {-# INLINE getMetroHypeTrackChart #-}
 
@@ -62,7 +62,7 @@ getMetroHypeTrackChart = api "geo.getMetroHypeTrackChart"
 -- Optional: 'start', 'end', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/geo.getMetroTrackChart>
-getMetroTrackChart :: Request f Send (Metro -> Country -> APIKey -> Ready)
+getMetroTrackChart :: Request f (Metro -> Country -> APIKey -> Ready)
 getMetroTrackChart = api "geo.getMetroTrackChart"
 {-# INLINE getMetroTrackChart #-}
 
@@ -72,7 +72,7 @@ getMetroTrackChart = api "geo.getMetroTrackChart"
 -- Optional: 'start', 'end', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/geo.getMetroUniqueArtistChart>
-getMetroUniqueArtistChart :: Request f Send (Metro -> Country -> APIKey -> Ready)
+getMetroUniqueArtistChart :: Request f (Metro -> Country -> APIKey -> Ready)
 getMetroUniqueArtistChart = api "geo.getMetroUniqueArtistChart"
 {-# INLINE getMetroUniqueArtistChart #-}
 
@@ -82,7 +82,7 @@ getMetroUniqueArtistChart = api "geo.getMetroUniqueArtistChart"
 -- Optional: 'start', 'end', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/geo.getMetroUniqueTrackChart>
-getMetroUniqueTrackChart :: Request f Send (Metro -> Country -> APIKey -> Ready)
+getMetroUniqueTrackChart :: Request f (Metro -> Country -> APIKey -> Ready)
 getMetroUniqueTrackChart = api "geo.getMetroUniqueTrackChart"
 {-# INLINE getMetroUniqueTrackChart #-}
 
@@ -91,7 +91,7 @@ getMetroUniqueTrackChart = api "geo.getMetroUniqueTrackChart"
 -- expressed as date ranges which can be sent to the chart services.
 --
 -- <http://www.last.fm/api/show/geo.getMetroWeeklyChartlist>
-getMetroWeeklyChartlist :: Request f Send (Metro -> APIKey -> Ready)
+getMetroWeeklyChartlist :: Request f (Metro -> APIKey -> Ready)
 getMetroWeeklyChartlist = api "geo.getMetroWeeklyChartlist"
 {-# INLINE getMetroWeeklyChartlist #-}
 
@@ -101,7 +101,7 @@ getMetroWeeklyChartlist = api "geo.getMetroWeeklyChartlist"
 -- Optional: 'country'
 --
 -- <http://www.last.fm/api/show/geo.getMetros>
-getMetros :: Request f Send (APIKey -> Ready)
+getMetros :: Request f (APIKey -> Ready)
 getMetros = api "geo.getMetros"
 {-# INLINE getMetros #-}
 
@@ -111,7 +111,7 @@ getMetros = api "geo.getMetros"
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/geo.getTopArtists>
-getTopArtists :: Request f Send (Country -> APIKey -> Ready)
+getTopArtists :: Request f (Country -> APIKey -> Ready)
 getTopArtists = api "geo.getTopArtists"
 {-# INLINE getTopArtists #-}
 
@@ -121,6 +121,6 @@ getTopArtists = api "geo.getTopArtists"
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/geo.getTopTracks>
-getTopTracks :: Request f Send (Country -> APIKey -> Ready)
+getTopTracks :: Request f (Country -> APIKey -> Ready)
 getTopTracks = api "geo.getTopTracks"
 {-# INLINE getTopTracks #-}

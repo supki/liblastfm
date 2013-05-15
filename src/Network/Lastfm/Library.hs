@@ -21,7 +21,7 @@ import Network.Lastfm.Request
 -- | Add an album or collection of albums to a user's Last.fm library
 --
 -- <http://www.last.fm/api/show/library.addAlbum>
-addAlbum :: Request f Sign (Artist -> Album -> APIKey -> SessionKey -> Ready)
+addAlbum :: Request f (Artist -> Album -> APIKey -> SessionKey -> Sign)
 addAlbum = api "library.addAlbum" <* post
 {-# INLINE addAlbum #-}
 
@@ -29,7 +29,7 @@ addAlbum = api "library.addAlbum" <* post
 -- | Add an artist to a user's Last.fm library
 --
 -- <http://www.last.fm/api/show/library.addArtist>
-addArtist :: Request f Sign (Artist -> APIKey -> SessionKey -> Ready)
+addArtist :: Request f (Artist -> APIKey -> SessionKey -> Sign)
 addArtist = api "library.addArtist" <* post
 {-# INLINE addArtist #-}
 
@@ -37,7 +37,7 @@ addArtist = api "library.addArtist" <* post
 -- | Add a track to a user's Last.fm library
 --
 -- <http://www.last.fm/api/show/library.addTrack>
-addTrack :: Request f Sign (Artist -> Track -> APIKey -> SessionKey -> Ready)
+addTrack :: Request f (Artist -> Track -> APIKey -> SessionKey -> Sign)
 addTrack = api "library.addTrack" <* post
 {-# INLINE addTrack #-}
 
@@ -47,7 +47,7 @@ addTrack = api "library.addTrack" <* post
 -- Optional: 'artist', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/library.getAlbums>
-getAlbums :: Request f Send (User -> APIKey -> Ready)
+getAlbums :: Request f (User -> APIKey -> Ready)
 getAlbums = api "library.getAlbums"
 {-# INLINE getAlbums #-}
 
@@ -57,7 +57,7 @@ getAlbums = api "library.getAlbums"
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/library.getArtists>
-getArtists :: Request f Send (User -> APIKey -> Ready)
+getArtists :: Request f (User -> APIKey -> Ready)
 getArtists = api "library.getArtists"
 {-# INLINE getArtists #-}
 
@@ -67,7 +67,7 @@ getArtists = api "library.getArtists"
 -- Optional: 'artist', 'album', 'page', 'limit'
 --
 -- <http://www.last.fm/api/show/library.getTracks>
-getTracks :: Request f Send (User -> APIKey -> Ready)
+getTracks :: Request f (User -> APIKey -> Ready)
 getTracks = api "library.getTracks"
 {-# INLINE getTracks #-}
 
@@ -75,7 +75,7 @@ getTracks = api "library.getTracks"
 -- | Remove an album from a user's Last.fm library
 --
 -- <http://www.last.fm/api/show/library.removeAlbum>
-removeAlbum :: Request f Sign (Artist -> Album -> APIKey -> SessionKey -> Ready)
+removeAlbum :: Request f (Artist -> Album -> APIKey -> SessionKey -> Sign)
 removeAlbum = api "library.removeAlbum" <* post
 {-# INLINE removeAlbum #-}
 
@@ -83,7 +83,7 @@ removeAlbum = api "library.removeAlbum" <* post
 -- | Remove an artist from a user's Last.fm library
 --
 -- <http://www.last.fm/api/show/library.removeArtist>
-removeArtist :: Request f Sign (Artist -> APIKey -> SessionKey -> Ready)
+removeArtist :: Request f (Artist -> APIKey -> SessionKey -> Sign)
 removeArtist = api "library.removeArtist" <* post
 {-# INLINE removeArtist #-}
 
@@ -91,7 +91,7 @@ removeArtist = api "library.removeArtist" <* post
 -- | Remove a scrobble from a user's Last.fm library
 --
 -- <http://www.last.fm/api/show/library.removeScrobble>
-removeScrobble :: Request f Sign (Artist -> Track -> Timestamp -> APIKey -> SessionKey -> Ready)
+removeScrobble :: Request f (Artist -> Track -> Timestamp -> APIKey -> SessionKey -> Sign)
 removeScrobble = api "library.removeScrobble" <* post
 {-# INLINE removeScrobble #-}
 
@@ -99,6 +99,6 @@ removeScrobble = api "library.removeScrobble" <* post
 -- | Remove a track from a user's Last.fm library
 --
 -- <http://www.last.fm/api/show/library.removeTrack>
-removeTrack :: Request f Sign (Artist -> Track -> APIKey -> SessionKey -> Ready)
+removeTrack :: Request f (Artist -> Track -> APIKey -> SessionKey -> Sign)
 removeTrack = api "library.removeTrack" <* post
 {-# INLINE removeTrack #-}

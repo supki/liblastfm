@@ -1,5 +1,5 @@
 name: liblastfm
-version: 0.1.1.2
+version: 0.2.0.0
 synopsis: Lastfm API interface
 license: MIT
 license-file: LICENSE
@@ -22,6 +22,8 @@ library
                  pureMD5,
                  crypto-api,
                  network,
+                 contravariant,
+                 void,
                  aeson
   hs-source-dirs: src
   exposed-modules: Network.Lastfm

@@ -31,7 +31,7 @@ instance ArtistTrackOrMBID (Artist -> Track -> APIKey -> Ready)
 -- | Tag a track using a list of user supplied tags.
 --
 -- <http://www.last.fm/api/show/track.addTags>
-addTags :: Request f Sign (Artist -> Track -> [Tag] -> APIKey -> SessionKey -> Ready)
+addTags :: Request f (Artist -> Track -> [Tag] -> APIKey -> SessionKey -> Sign)
 addTags = api "track.addTags" <* post
 {-# INLINE addTags #-}
 
@@ -39,7 +39,7 @@ addTags = api "track.addTags" <* post
 -- | Ban a track for a given user profile.
 --
 -- <http://www.last.fm/api/show/track.ban>
-ban :: Request f Sign (Artist -> Track -> APIKey -> SessionKey -> Ready)
+ban :: Request f (Artist -> Track -> APIKey -> SessionKey -> Sign)
 ban = api "track.ban" <* post
 {-# INLINE ban #-}
 
@@ -49,7 +49,7 @@ ban = api "track.ban" <* post
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/track.getBuylinks>
-getBuyLinks :: ArtistTrackOrMBID t => Request f Send (Country -> t)
+getBuyLinks :: ArtistTrackOrMBID t => Request f (Country -> t)
 getBuyLinks = api "track.getBuyLinks"
 {-# INLINE getBuyLinks #-}
 
@@ -58,7 +58,7 @@ getBuyLinks = api "track.getBuyLinks"
 -- the supplied track has a correction to a canonical track.
 --
 -- <http://www.last.fm/api/show/track.getCorrection>
-getCorrection :: Request f Send (Artist -> Track -> APIKey -> Ready)
+getCorrection :: Request f (Artist -> Track -> APIKey -> Ready)
 getCorrection = api "track.getCorrection"
 {-# INLINE getCorrection #-}
 
@@ -68,7 +68,7 @@ getCorrection = api "track.getCorrection"
 -- elements, along with a 'rank' value between 0 and 1 reflecting the confidence for each match.
 --
 -- <http://www.last.fm/api/show/track.getFingerprintMetadata>
-getFingerprintMetadata :: Request f Send (Fingerprint -> APIKey -> Ready)
+getFingerprintMetadata :: Request f (Fingerprint -> APIKey -> Ready)
 getFingerprintMetadata = api "track.getFingerprintMetadata"
 {-# INLINE getFingerprintMetadata #-}
 
@@ -78,7 +78,7 @@ getFingerprintMetadata = api "track.getFingerprintMetadata"
 -- Optional: 'autocorrect', 'username'
 --
 -- <http://www.last.fm/api/show/track.getInfo>
-getInfo :: ArtistTrackOrMBID t => Request f Send t
+getInfo :: ArtistTrackOrMBID t => Request f t
 getInfo = api "track.getInfo"
 {-# INLINE getInfo #-}
 
@@ -88,7 +88,7 @@ getInfo = api "track.getInfo"
 -- Optional: 'autocorrect', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/track.getShouts>
-getShouts :: ArtistTrackOrMBID t => Request f Send t
+getShouts :: ArtistTrackOrMBID t => Request f t
 getShouts = api "track.getShouts"
 {-# INLINE getShouts #-}
 
@@ -98,7 +98,7 @@ getShouts = api "track.getShouts"
 -- Optional: 'autocorrect', 'limit'
 --
 -- <http://www.last.fm/api/show/track.getSimilar>
-getSimilar :: ArtistTrackOrMBID t => Request f Send t
+getSimilar :: ArtistTrackOrMBID t => Request f t
 getSimilar = api "track.getSimilar"
 {-# INLINE getSimilar #-}
 
@@ -108,7 +108,7 @@ getSimilar = api "track.getSimilar"
 -- Optional: 'autocorrect', 'user'
 --
 -- <http://www.last.fm/api/show/track.getTags>
-getTags :: ArtistTrackOrMBID t => Request f Send t
+getTags :: ArtistTrackOrMBID t => Request f t
 getTags = api "track.getTags"
 {-# INLINE getTags #-}
 
@@ -118,7 +118,7 @@ getTags = api "track.getTags"
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/track.getTopFans>
-getTopFans :: ArtistTrackOrMBID t => Request f Send t
+getTopFans :: ArtistTrackOrMBID t => Request f t
 getTopFans = api "track.getTopFans"
 {-# INLINE getTopFans #-}
 
@@ -128,7 +128,7 @@ getTopFans = api "track.getTopFans"
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/track.getTopTags>
-getTopTags :: ArtistTrackOrMBID t => Request f Send t
+getTopTags :: ArtistTrackOrMBID t => Request f t
 getTopTags = api "track.getTopTags"
 {-# INLINE getTopTags #-}
 
@@ -136,7 +136,7 @@ getTopTags = api "track.getTopTags"
 -- | Love a track for a user profile.
 --
 -- <http://www.last.fm/api/show/track.love>
-love :: Request f Sign (Artist -> Track -> APIKey -> SessionKey -> Ready)
+love :: Request f (Artist -> Track -> APIKey -> SessionKey -> Sign)
 love = api "track.love" <* post
 {-# INLINE love #-}
 
@@ -144,7 +144,7 @@ love = api "track.love" <* post
 -- | Remove a user's tag from a track.
 --
 -- <http://www.last.fm/api/show/track.removeTag>
-removeTag :: Request f Sign (Artist -> Track -> Tag -> APIKey -> SessionKey -> Ready)
+removeTag :: Request f (Artist -> Track -> Tag -> APIKey -> SessionKey -> Sign)
 removeTag = api "track.removeTag" <* post
 {-# INLINE removeTag #-}
 
@@ -155,7 +155,7 @@ removeTag = api "track.removeTag" <* post
 -- 'duration', 'mbid', 'streamId', 'trackNumber'
 --
 -- <http://www.last.fm/api/show/track.scrobble>
-scrobble :: Request f Sign (Artist -> Track -> Timestamp -> APIKey -> SessionKey -> Ready)
+scrobble :: Request f (Artist -> Track -> Timestamp -> APIKey -> SessionKey -> Sign)
 scrobble = api "track.scrobble" <* post
 {-# INLINE scrobble #-}
 
@@ -165,7 +165,7 @@ scrobble = api "track.scrobble" <* post
 -- Optional: 'artist', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/track.search>
-search :: Request f Send (Track -> APIKey -> Ready)
+search :: Request f (Track -> APIKey -> Ready)
 search = api "track.search"
 {-# INLINE search #-}
 
@@ -175,7 +175,7 @@ search = api "track.search"
 -- Optional: 'public', 'message', 'recipient'
 --
 -- <http://www.last.fm/api/show/track.share>
-share :: Request f Sign (Artist -> Track -> Recipient -> APIKey -> SessionKey -> Ready)
+share :: Request f (Artist -> Track -> Recipient -> APIKey -> SessionKey -> Sign)
 share = api "track.share" <* post
 {-# INLINE share #-}
 
@@ -183,7 +183,7 @@ share = api "track.share" <* post
 -- | Unban a track for a user profile.
 --
 -- <http://www.last.fm/api/show/track.unban>
-unban :: Request f Sign (Artist -> Track -> APIKey -> SessionKey -> Ready)
+unban :: Request f (Artist -> Track -> APIKey -> SessionKey -> Sign)
 unban = api "track.unban" <* post
 {-# INLINE unban #-}
 
@@ -191,7 +191,7 @@ unban = api "track.unban" <* post
 -- | Unlove a track for a user profile.
 --
 -- <http://www.last.fm/api/show/track.unlove>
-unlove :: Request f Sign (Artist -> Track -> APIKey -> SessionKey -> Ready)
+unlove :: Request f (Artist -> Track -> APIKey -> SessionKey -> Sign)
 unlove = api "track.unlove" <* post
 {-# INLINE unlove #-}
 
@@ -203,6 +203,6 @@ unlove = api "track.unlove" <* post
 -- 'duration', 'mbid', 'trackNumber'
 --
 -- <http://www.last.fm/api/show/track.updateNowPlaying>
-updateNowPlaying :: Request f Sign (Artist -> Track -> APIKey -> SessionKey -> Ready)
+updateNowPlaying :: Request f (Artist -> Track -> APIKey -> SessionKey -> Sign)
 updateNowPlaying = api "track.updateNowPlaying" <* post
 {-# INLINE updateNowPlaying #-}

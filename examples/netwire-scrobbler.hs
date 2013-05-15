@@ -21,10 +21,10 @@ import qualified Network.MPD as Y
 import           System.Locale (defaultTimeLocale)
 
 
-ak :: Request f a APIKey
+ak :: Request f APIKey
 ak = apiKey "__YOUR_API_KEY__"
 
-sk :: Request f Sign SessionKey
+sk :: Request f SessionKey
 sk = sessionKey "__YOUR_SESSION_KEY__"
 
 secret :: Secret

@@ -1,5 +1,5 @@
 name: liblastfm-examples
-version: 0.1.0.0
+version: 0.2.0.0
 synopsis: Examples for liblastfm
 license: MIT
 license-file: LICENSE
@@ -11,8 +11,9 @@ cabal-version: >= 1.10
 build-type: Simple
 
 executable sort-friends
+  default-language: Haskell2010
   build-depends: base >= 3 && < 5,
-                 liblastfm >= 0.1.0.0,
+                 liblastfm >= 0.2.0.0,
                  async,
                  text,
                  aeson,
@@ -24,6 +25,7 @@ executable sort-friends
                -threaded
 
 executable multitag-search
+  default-language: Haskell2010
   build-depends: base >= 3 && < 5,
                  liblastfm >= 0.1.0.0,
                  text,
@@ -34,6 +36,7 @@ executable multitag-search
                -fno-warn-unused-do-bind
 
 executable web-authentication
+  default-language: Haskell2010
   build-depends: base >= 3 && < 5,
                  liblastfm >= 0.1.0.0,
                  happstack-server,
@@ -45,6 +48,7 @@ executable web-authentication
                -fno-warn-unused-do-bind
 
 executable desktop-authentication
+  default-language: Haskell2010
   build-depends: base >= 3 && < 5,
                  liblastfm >= 0.1.0.0,
                  lens,
@@ -56,7 +60,7 @@ executable desktop-authentication
 executable netwire-scrobbler
   default-language: Haskell2010
   build-depends: base >= 3 && < 5,
-                 liblastfm >= 0.1.0.0,
+                 liblastfm >= 0.2.0.0,
                  old-locale,
                  time,
                  containers,
@@ -65,5 +69,27 @@ executable netwire-scrobbler
                  netwire,
                  libmpd
   main-is: netwire-scrobbler.hs
+  ghc-options: -Wall
+               -fno-warn-unused-do-bind
+
+executable playcount
+  default-language: Haskell2010
+  build-depends: base >= 3 && < 5,
+                 liblastfm >= 0.1.0.0,
+                 text,
+                 lens,
+                 lens-aeson
+  main-is: playcount.hs
+  ghc-options: -Wall
+               -fno-warn-unused-do-bind
+
+executable recommendations
+  default-language: Haskell2010
+  build-depends: base >= 3 && < 5,
+                 liblastfm >= 0.2.0.0,
+                 lens,
+                 aeson,
+                 aeson-lens
+  main-is: recommendations.hs
   ghc-options: -Wall
                -fno-warn-unused-do-bind

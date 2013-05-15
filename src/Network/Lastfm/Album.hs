@@ -1,5 +1,8 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 -- | Lastfm album API
 --
@@ -20,16 +23,16 @@ import Network.Lastfm.Request
 
 
 -- | Unify ('Artist' -> 'Album' -> …) and ('MBID' -> …)
-class ArtistAlbumOrMBID a
+class ArtistAlbumOrMBID r a | a -> r
 
-instance ArtistAlbumOrMBID (MBID -> APIKey -> Ready)
-instance ArtistAlbumOrMBID (Artist -> Album -> APIKey -> Ready)
+instance ArtistAlbumOrMBID r (MBID -> APIKey -> r)
+instance ArtistAlbumOrMBID r (Artist -> Album -> APIKey -> r)
 
 
 -- | Tag an album using a list of user supplied tags.
 --
 -- <http://www.last.fm/api/show/album.addTags>
-addTags :: Request f Sign (Artist -> Album -> [Tag] -> APIKey -> SessionKey -> Ready)
+addTags :: Request f (Artist -> Album -> [Tag] -> APIKey -> SessionKey -> Sign)
 addTags = api "album.addTags" <* post
 {-# INLINE addTags #-}
 
@@ -40,7 +43,7 @@ addTags = api "album.addTags" <* post
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/album.getBuylinks>
-getBuyLinks :: ArtistAlbumOrMBID t => Request f Send (Country -> t)
+getBuyLinks :: ArtistAlbumOrMBID Ready a => Request f (Country -> a)
 getBuyLinks = api "album.getBuyLinks"
 {-# INLINE getBuyLinks #-}
 
@@ -51,7 +54,7 @@ getBuyLinks = api "album.getBuyLinks"
 -- Optional: 'autocorrect', 'username', 'language'
 --
 -- <http://www.last.fm/api/show/album.getInfo>
-getInfo :: ArtistAlbumOrMBID t => Request f Send t
+getInfo :: ArtistAlbumOrMBID Ready a => Request f a
 getInfo = api "album.getInfo"
 {-# INLINE getInfo #-}
 
@@ -61,7 +64,7 @@ getInfo = api "album.getInfo"
 -- Optional: 'autocorrect', 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/album.getShouts>
-getShouts :: ArtistAlbumOrMBID t => Request f Send t
+getShouts :: ArtistAlbumOrMBID Ready a => Request f a
 getShouts = api "album.getShouts"
 {-# INLINE getShouts #-}
 
@@ -71,7 +74,7 @@ getShouts = api "album.getShouts"
 -- Optional: 'autocorrect', 'user'
 --
 -- <http://www.last.fm/api/show/album.getTags>
-getTags :: ArtistAlbumOrMBID t => Request f a t
+getTags :: ArtistAlbumOrMBID r a => Request f a
 getTags = api "album.getTags"
 {-# INLINE getTags #-}
 
@@ -81,7 +84,7 @@ getTags = api "album.getTags"
 -- Optional: 'autocorrect'
 --
 -- <http://www.last.fm/api/show/album.getTopTags>
-getTopTags :: ArtistAlbumOrMBID t => Request f Send t
+getTopTags :: ArtistAlbumOrMBID Ready a => Request f a
 getTopTags = api "album.getTopTags"
 {-# INLINE getTopTags #-}
 
@@ -89,7 +92,7 @@ getTopTags = api "album.getTopTags"
 -- | Remove a user's tag from an album.
 --
 -- <http://www.last.fm/api/show/album.removeTag>
-removeTag :: Request f Sign (Artist -> Album -> Tag -> APIKey -> SessionKey -> Ready)
+removeTag :: Request f (Artist -> Album -> Tag -> APIKey -> SessionKey -> Sign)
 removeTag = api "album.removeTag" <* post
 {-# INLINE removeTag #-}
 
@@ -99,7 +102,7 @@ removeTag = api "album.removeTag" <* post
 -- Optional: 'limit', 'page'
 --
 -- <http://www.last.fm/api/show/album.search>
-search :: Request f Send (Album -> APIKey -> Ready)
+search :: Request f (Album -> APIKey -> Ready)
 search = api "album.search"
 {-# INLINE search #-}
 
@@ -109,6 +112,6 @@ search = api "album.search"
 -- Optional: 'public', 'message', 'recipient'
 --
 -- <http://www.last.fm/api/show/album.share>
-share :: Request f Sign (Album -> Artist -> Recipient -> APIKey -> SessionKey -> Ready)
+share :: Request f (Album -> Artist -> Recipient -> APIKey -> SessionKey -> Sign)
 share = api "album.share" <* post
 {-# INLINE share #-}
