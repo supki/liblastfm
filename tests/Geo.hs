@@ -37,7 +37,7 @@ noauth ak =
     getMetroHypeArtistChart <*> metro "New York" <*> country "United States" <*> ak
 
   testGetMetroHypeTrackChart = check gt $
-    getMetroHypeTrackChart <*> metro "Ufa" <*> country "Russia" <*> ak
+    getMetroHypeTrackChart <*> metro "Moscow" <*> country "Russia" <*> ak
 
   testGetMetroTrackChart = check gt $
     getMetroTrackChart <*> metro "Boston" <*> country "United States" <*> ak
