@@ -9,45 +9,44 @@
 <body>
 <pre><a name="line-1"></a><span class='hs-comment'>{-# LANGUAGE DataKinds #-}</span>
 <a name="line-2"></a><span class='hs-comment'>{-# LANGUAGE OverloadedStrings #-}</span>
-<a name="line-3"></a><span class='hs-comment'>{-# LANGUAGE UnicodeSyntax #-}</span>
-<a name="line-4"></a><span class='hs-comment'>-- | Lastfm venue API</span>
-<a name="line-5"></a><span class='hs-comment'>--</span>
-<a name="line-6"></a><span class='hs-comment'>-- This module is intended to be imported qualified:</span>
-<a name="line-7"></a><span class='hs-comment'>--</span>
-<a name="line-8"></a><span class='hs-comment'>-- @</span>
-<a name="line-9"></a><span class='hs-comment'>-- import qualified Network.Lastfm.Venue as Venue</span>
-<a name="line-10"></a><span class='hs-comment'>-- @</span>
-<a name="line-11"></a><span class='hs-keyword'>module</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span><span class='hs-varop'>.</span><span class='hs-conid'>Venue</span>
-<a name="line-12"></a>  <span class='hs-layout'>(</span> <span class='hs-varid'>getEvents</span><span class='hs-layout'>,</span> <span class='hs-varid'>getPastEvents</span><span class='hs-layout'>,</span> <span class='hs-varid'>search</span>
-<a name="line-13"></a>  <span class='hs-layout'>)</span> <span class='hs-keyword'>where</span>
-<a name="line-14"></a>
-<a name="line-15"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span><span class='hs-varop'>.</span><span class='hs-conid'>Request</span>
+<a name="line-3"></a><span class='hs-comment'>-- | Lastfm venue API</span>
+<a name="line-4"></a><span class='hs-comment'>--</span>
+<a name="line-5"></a><span class='hs-comment'>-- This module is intended to be imported qualified:</span>
+<a name="line-6"></a><span class='hs-comment'>--</span>
+<a name="line-7"></a><span class='hs-comment'>-- @</span>
+<a name="line-8"></a><span class='hs-comment'>-- import qualified Network.Lastfm.Venue as Venue</span>
+<a name="line-9"></a><span class='hs-comment'>-- @</span>
+<a name="line-10"></a><span class='hs-keyword'>module</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span><span class='hs-varop'>.</span><span class='hs-conid'>Venue</span>
+<a name="line-11"></a>  <span class='hs-layout'>(</span> <span class='hs-varid'>getEvents</span><span class='hs-layout'>,</span> <span class='hs-varid'>getPastEvents</span><span class='hs-layout'>,</span> <span class='hs-varid'>search</span>
+<a name="line-12"></a>  <span class='hs-layout'>)</span> <span class='hs-keyword'>where</span>
+<a name="line-13"></a>
+<a name="line-14"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span><span class='hs-varop'>.</span><span class='hs-conid'>Request</span>
+<a name="line-15"></a>
 <a name="line-16"></a>
-<a name="line-17"></a>
-<a name="line-18"></a><a name="getEvents"></a><span class='hs-comment'>-- | Get a list of upcoming events at this venue.</span>
-<a name="line-19"></a><span class='hs-comment'>--</span>
-<a name="line-20"></a><span class='hs-comment'>-- Optional: 'festivalsonly'</span>
-<a name="line-21"></a><span class='hs-comment'>--</span>
-<a name="line-22"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/venue.getEvents">http://www.last.fm/api/show/venue.getEvents</a>&gt;</span>
-<a name="line-23"></a><span class='hs-definition'>getEvents</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>Venue</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-24"></a><span class='hs-definition'>getEvents</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"venue.getEvents"</span>
+<a name="line-17"></a><a name="getEvents"></a><span class='hs-comment'>-- | Get a list of upcoming events at this venue.</span>
+<a name="line-18"></a><span class='hs-comment'>--</span>
+<a name="line-19"></a><span class='hs-comment'>-- Optional: 'festivalsonly'</span>
+<a name="line-20"></a><span class='hs-comment'>--</span>
+<a name="line-21"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/venue.getEvents">http://www.last.fm/api/show/venue.getEvents</a>&gt;</span>
+<a name="line-22"></a><span class='hs-definition'>getEvents</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>Venue</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>APIKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-23"></a><span class='hs-definition'>getEvents</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"venue.getEvents"</span>
+<a name="line-24"></a>
 <a name="line-25"></a>
-<a name="line-26"></a>
-<a name="line-27"></a><a name="getPastEvents"></a><span class='hs-comment'>-- | Get a paginated list of all the events held at this venue in the past.</span>
-<a name="line-28"></a><span class='hs-comment'>--</span>
-<a name="line-29"></a><span class='hs-comment'>-- Optional: 'festivalsonly', 'page', 'limit'</span>
-<a name="line-30"></a><span class='hs-comment'>--</span>
-<a name="line-31"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/venue.getPastEvents">http://www.last.fm/api/show/venue.getPastEvents</a>&gt;</span>
-<a name="line-32"></a><span class='hs-definition'>getPastEvents</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>Venue</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-33"></a><span class='hs-definition'>getPastEvents</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"venue.getPastEvents"</span>
+<a name="line-26"></a><a name="getPastEvents"></a><span class='hs-comment'>-- | Get a paginated list of all the events held at this venue in the past.</span>
+<a name="line-27"></a><span class='hs-comment'>--</span>
+<a name="line-28"></a><span class='hs-comment'>-- Optional: 'festivalsonly', 'page', 'limit'</span>
+<a name="line-29"></a><span class='hs-comment'>--</span>
+<a name="line-30"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/venue.getPastEvents">http://www.last.fm/api/show/venue.getPastEvents</a>&gt;</span>
+<a name="line-31"></a><span class='hs-definition'>getPastEvents</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>Venue</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>APIKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-32"></a><span class='hs-definition'>getPastEvents</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"venue.getPastEvents"</span>
+<a name="line-33"></a>
 <a name="line-34"></a>
-<a name="line-35"></a>
-<a name="line-36"></a><a name="search"></a><span class='hs-comment'>-- | Search for a venue by venue name</span>
-<a name="line-37"></a><span class='hs-comment'>--</span>
-<a name="line-38"></a><span class='hs-comment'>-- Optional: 'page', 'limit', 'country'</span>
-<a name="line-39"></a><span class='hs-comment'>--</span>
-<a name="line-40"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/venue.search">http://www.last.fm/api/show/venue.search</a>&gt;</span>
-<a name="line-41"></a><span class='hs-definition'>search</span> <span class='hs-sel'>∷</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>VenueName</span> <span class='hs-sel'>→</span> <span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-42"></a><span class='hs-definition'>search</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"venue.search"</span>
+<a name="line-35"></a><a name="search"></a><span class='hs-comment'>-- | Search for a venue by venue name</span>
+<a name="line-36"></a><span class='hs-comment'>--</span>
+<a name="line-37"></a><span class='hs-comment'>-- Optional: 'page', 'limit', 'country'</span>
+<a name="line-38"></a><span class='hs-comment'>--</span>
+<a name="line-39"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/venue.search">http://www.last.fm/api/show/venue.search</a>&gt;</span>
+<a name="line-40"></a><span class='hs-definition'>search</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>VenueName</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>APIKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-41"></a><span class='hs-definition'>search</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"venue.search"</span>
 </pre></body>
 </html>

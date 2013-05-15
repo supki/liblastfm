@@ -9,29 +9,28 @@
 <body>
 <pre><a name="line-1"></a><span class='hs-comment'>{-# LANGUAGE DataKinds #-}</span>
 <a name="line-2"></a><span class='hs-comment'>{-# LANGUAGE OverloadedStrings #-}</span>
-<a name="line-3"></a><span class='hs-comment'>{-# LANGUAGE UnicodeSyntax #-}</span>
-<a name="line-4"></a><span class='hs-comment'>-- | Lastfm tasteometer API</span>
-<a name="line-5"></a><span class='hs-comment'>--</span>
-<a name="line-6"></a><span class='hs-comment'>-- This module is intended to be imported qualified:</span>
-<a name="line-7"></a><span class='hs-comment'>--</span>
-<a name="line-8"></a><span class='hs-comment'>-- @</span>
-<a name="line-9"></a><span class='hs-comment'>-- import qualified Network.Lastfm.Tasteometer as Tasteometer</span>
-<a name="line-10"></a><span class='hs-comment'>-- @</span>
-<a name="line-11"></a><span class='hs-keyword'>module</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span><span class='hs-varop'>.</span><span class='hs-conid'>Tasteometer</span> <span class='hs-keyword'>where</span>
-<a name="line-12"></a>
-<a name="line-13"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Control</span><span class='hs-varop'>.</span><span class='hs-conid'>Applicative</span>
-<a name="line-14"></a>
-<a name="line-15"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span><span class='hs-varop'>.</span><span class='hs-conid'>Request</span>
+<a name="line-3"></a><span class='hs-comment'>-- | Lastfm tasteometer API</span>
+<a name="line-4"></a><span class='hs-comment'>--</span>
+<a name="line-5"></a><span class='hs-comment'>-- This module is intended to be imported qualified:</span>
+<a name="line-6"></a><span class='hs-comment'>--</span>
+<a name="line-7"></a><span class='hs-comment'>-- @</span>
+<a name="line-8"></a><span class='hs-comment'>-- import qualified Network.Lastfm.Tasteometer as Tasteometer</span>
+<a name="line-9"></a><span class='hs-comment'>-- @</span>
+<a name="line-10"></a><span class='hs-keyword'>module</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span><span class='hs-varop'>.</span><span class='hs-conid'>Tasteometer</span> <span class='hs-keyword'>where</span>
+<a name="line-11"></a>
+<a name="line-12"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Control</span><span class='hs-varop'>.</span><span class='hs-conid'>Applicative</span>
+<a name="line-13"></a>
+<a name="line-14"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span><span class='hs-varop'>.</span><span class='hs-conid'>Request</span>
+<a name="line-15"></a>
 <a name="line-16"></a>
-<a name="line-17"></a>
-<a name="line-18"></a><a name="compare"></a><span class='hs-comment'>-- | Get a Tasteometer score from two inputs, along with a list of shared artists.</span>
-<a name="line-19"></a><span class='hs-comment'>-- If the input is a user some additional information is returned.</span>
-<a name="line-20"></a><span class='hs-comment'>--</span>
-<a name="line-21"></a><span class='hs-comment'>-- Optional: 'limit'</span>
-<a name="line-22"></a><span class='hs-comment'>--</span>
-<a name="line-23"></a><span class='hs-comment'>-- &lt;<a href="http://www.lastfm.ru/api/show/tasteometer.compare">http://www.lastfm.ru/api/show/tasteometer.compare</a>&gt;</span>
-<a name="line-24"></a><span class='hs-definition'>compare</span> <span class='hs-sel'>∷</span> <span class='hs-layout'>(</span><span class='hs-conid'>Targeted</span> <span class='hs-varid'>u</span><span class='hs-layout'>,</span> <span class='hs-conid'>Targeted</span> <span class='hs-varid'>v</span><span class='hs-layout'>)</span> <span class='hs-sel'>⇒</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-varid'>u</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-varid'>v</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>Send</span> <span class='hs-layout'>(</span><span class='hs-conid'>APIKey</span> <span class='hs-sel'>→</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-25"></a><span class='hs-definition'>compare</span> <span class='hs-varid'>u</span> <span class='hs-varid'>v</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"tasteometer.compare"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>comparison</span> <span class='hs-num'>1</span> <span class='hs-varid'>u</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>comparison</span> <span class='hs-num'>2</span> <span class='hs-varid'>v</span>
-<a name="line-26"></a><span class='hs-comment'>{-# INLINE compare #-}</span>
+<a name="line-17"></a><a name="compare"></a><span class='hs-comment'>-- | Get a Tasteometer score from two inputs, along with a list of shared artists.</span>
+<a name="line-18"></a><span class='hs-comment'>-- If the input is a user some additional information is returned.</span>
+<a name="line-19"></a><span class='hs-comment'>--</span>
+<a name="line-20"></a><span class='hs-comment'>-- Optional: 'limit'</span>
+<a name="line-21"></a><span class='hs-comment'>--</span>
+<a name="line-22"></a><span class='hs-comment'>-- &lt;<a href="http://www.lastfm.ru/api/show/tasteometer.compare">http://www.lastfm.ru/api/show/tasteometer.compare</a>&gt;</span>
+<a name="line-23"></a><span class='hs-definition'>compare</span> <span class='hs-keyglyph'>::</span> <span class='hs-layout'>(</span><span class='hs-conid'>Targeted</span> <span class='hs-varid'>u</span><span class='hs-layout'>,</span> <span class='hs-conid'>Targeted</span> <span class='hs-varid'>v</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=&gt;</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>u</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-varid'>v</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>APIKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-24"></a><span class='hs-definition'>compare</span> <span class='hs-varid'>u</span> <span class='hs-varid'>v</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"tasteometer.compare"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>comparison</span> <span class='hs-num'>1</span> <span class='hs-varid'>u</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>comparison</span> <span class='hs-num'>2</span> <span class='hs-varid'>v</span>
+<a name="line-25"></a><span class='hs-comment'>{-# INLINE compare #-}</span>
 </pre></body>
 </html>
