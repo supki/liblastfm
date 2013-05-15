@@ -80,7 +80,7 @@ noauth ak =
     getNeighbours <*> user "smpcln" <* limit 10 <*> ak
 
   testGetNewReleases = check gnr $
-    getNewReleases <*> user "smpcln" <*> ak
+    getNewReleases <*> user "rj" <*> ak
 
   testGetPastEvents = check gpe $
     getPastEvents <*> user "mokele" <* limit 5 <*> ak
