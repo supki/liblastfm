@@ -138,7 +138,7 @@ gpt o = parseJSON o >>= (.: "taggings") >>= (.: "artists") >>= (.: "artist") >>=
 gra o = parseJSON o >>= (.: "recommendations") >>= (.: "artist") >>= mapM (.: "name")
 gre o = do
   m <- parseJSON o >>= (.: "events")
-  (m .: "event" >>= mapM (.: "url")) <|> (m .: "event" >>= (.: "url"))
+  (m .: "event" >>= mapM (.: "url")) <|> (m .: "event" >>= fmap return . (.: "url"))
 grs o = parseJSON o >>= (.: "recentstations") >>= (.: "station") >>= mapM (.: "name")
 grt o = parseJSON o >>= (.: "recenttracks") >>= (.: "track") >>= mapM (.: "name")
 gs o = parseJSON o >>= (.: "shouts") >>= (.: "shout") >>= mapM (.: "body")
