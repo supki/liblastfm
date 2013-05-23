@@ -13,7 +13,9 @@ module Network.Lastfm.Internal
   ) where
 
 import Control.Applicative
+import Data.Foldable (Foldable(..))
 import Data.Monoid
+import Data.Traversable (Traversable(..))
 
 import           Data.ByteString (ByteString)
 import           Data.Functor.Contravariant (Contravariant(..))
@@ -67,6 +69,15 @@ instance Applicative (Request f) where
   pure x = Request (pure x)
   Request f <*> Request x = Request (f <*> x)
   {-# INLINE (<*>) #-}
+
+instance Foldable (Request f) where
+  foldMap _ (Request _) = mempty -- not sure why this instance isn't in base
+  {-# INLINE foldMap #-}
+
+instance Traversable (Request f) where
+  traverse _ (Request (Const x)) = pure (Request (Const x)) -- and that
+  {-# INLINE traverse #-}
+
 
 -- | Copypaste from "Control.Lens.Internal.Getter"
 coerce :: (Contravariant f, Functor f) => f a -> f b
