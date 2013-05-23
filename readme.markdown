@@ -49,7 +49,7 @@ How to parse responses is described [in wiki][8].
 ## FAQ
 **Q: I'm getting the following error. How do I fix it?**
 ```
-> Artist.getInfo <*> artist "Pink Floyd" <*> apiKey "1234567890"
+> Artist.getInfo <*> artist "Pink Floyd" <*> apiKey "29effec263316a1f8a97f753caaa83e0"
 
 <interactive>:8:27:
     Couldn't match expected type `Data.Text.Lazy.Internal.Text'
@@ -63,7 +63,7 @@ To enable it (either one works):
 
 **Q: I'm getting the following error. How do I fix it?**
 ```
-> lastfm (Artist.getInfo <*> artist "Pink Floyd" <*> apiKey "1234567890")
+> lastfm (Artist.getInfo <*> artist "Pink Floyd" <*> apiKey "29effec263316a1f8a97f753caaa83e0")
 
 <interactive>:13:1:
     No instance for (Network.Lastfm.Response.Supported f0)
@@ -79,6 +79,12 @@ To enable it (either one works):
 A: This error message indicates that GHC cannot infer response format for `Request`. 
 To fix it, add use `json` or `xml` helpers, depending on your needs
 
+```
+> lastfm (Artist.getInfo <*> artist "Pink Floyd" <*> apiKey "29effec263316a1f8a97f753caaa83e0" <* json)
+Just (Object fromList [("artist" ...
+> lastfm (Artist.getInfo <*> artist "Pink Floyd" <*> apiKey "29effec263316a1f8a97f753caaa83e0" <* xml)
+"<?xml version=\"1.0\" ...
+```
 -
 
  [1]: http://www.last.fm/
