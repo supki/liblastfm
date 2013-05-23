@@ -70,7 +70,7 @@ instance Applicative (Request f) where
 
 -- | Copypaste from "Control.Lens.Internal.Getter"
 coerce :: (Contravariant f, Functor f) => f a -> f b
-coerce a = absurd <$> contramap absurd a
+coerce = fmap absurd . contramap absurd
 {-# INLINE coerce #-}
 
 
