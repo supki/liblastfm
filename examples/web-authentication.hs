@@ -9,8 +9,8 @@ import Control.Monad
 import Data.IORef
 
 import Control.Lens
+import Control.Lens.Aeson
 import Control.Monad.IO.Class (liftIO)
-import Data.Aeson.Lens
 import Happstack.Server
 
 import Network.Lastfm
@@ -25,7 +25,7 @@ main = do
     , dir "save" $ do
         t <- lookText' "token"
         r <- liftIO . lastfm . sign s $ getSession <*> token t <*> apiKey ak <* json
-        case r ^. key "session" . key "key" . asText of
+        case r ^? _Just . key "session" . key "key" . _String of
           Just sk -> liftIO $ modifyIORef' sessions (sk:)
           Nothing -> return ()
         ok "Saved."
