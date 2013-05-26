@@ -22,7 +22,7 @@ Shows how to get user playcount.
 
 ### recommendations
 Shows how to use signed queries
-  * [aeson-lens][2]
+  * [lens-aeson][7]
 
 --
 

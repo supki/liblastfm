@@ -18,8 +18,10 @@ import           Data.Int (Int64)
 import           Data.Traversable (for)
 
 import           Control.Lens
+import           Control.Lens.Aeson
 import           Data.Aeson (Value)
-import qualified Data.Aeson.Lens as L
+import           Data.Text (Text)
+import qualified Data.Text.IO as T
 import           Network.Lastfm
 import qualified Network.Lastfm.User as User
 
@@ -27,7 +29,7 @@ import qualified Network.Lastfm.User as User
 main :: IO ()
 main = do
   r <- for [1..pages] $ \p -> parse `fmap` query (User.getRecommendedArtists <* page p)
-  mapM_ putStrLn (concat r)
+  mapM_ T.putStrLn (concat r)
 
 
 -- | Construct signed query
@@ -46,5 +48,5 @@ pages = total `div` 50 -- 50 is the default number of recommendations per page
 
 
 -- | Parse artist names from response
-parse :: Maybe Value -> [String]
-parse x = x ^. L.key "recommendations" . L.key "artist" ^.. L.traverseArray . L.key "name" . folded
+parse :: Maybe Value -> [Text]
+parse x = x ^.. _Just . key "recommendations" . key "artist" . _Array . folded . key "name" . _String
