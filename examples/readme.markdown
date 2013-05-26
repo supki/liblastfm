@@ -38,10 +38,11 @@ Demonstrates web application authentication flow.
 
 --
 
-### netwire-scrobbler
-Shows basic scrobbling techniques.
+### [scrobblers][8]
+Advanced scrobbling techniques.
   * [netwire][5]
   * [libmpd][6]
+  * [lens-aeson][7]
 
  [1]: http://hackage.haskell.org/package/async
  [2]: http://hackage.haskell.org/package/aeson-lens
@@ -50,3 +51,4 @@ Shows basic scrobbling techniques.
  [5]: http://hackage.haskell.org/package/netwire
  [6]: http://hackage.haskell.org/package/libmpd
  [7]: http://hackage.haskell.org/package/lens-aeson
+ [8]: https://github.com/supki/scrobblers

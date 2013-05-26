@@ -58,21 +58,6 @@ executable desktop-authentication
   ghc-options: -Wall
                -fno-warn-unused-do-bind
 
-executable netwire-scrobbler
-  default-language: Haskell2010
-  build-depends: base >= 3 && < 5,
-                 liblastfm >= 0.2.0.0,
-                 old-locale,
-                 time,
-                 containers,
-                 mtl,
-                 text,
-                 netwire,
-                 libmpd
-  main-is: netwire-scrobbler.hs
-  ghc-options: -Wall
-               -fno-warn-unused-do-bind
-
 executable playcount
   default-language: Haskell2010
   build-depends: base >= 3 && < 5,
