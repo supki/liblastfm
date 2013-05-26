@@ -28,6 +28,7 @@ Shows how to use signed queries
 
 ### desktop-authentication
 Demonstrates desktop application authentication flow.
+  * [lens-aeson][7]
 
 --
 

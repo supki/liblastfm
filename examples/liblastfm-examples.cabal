@@ -51,8 +51,9 @@ executable desktop-authentication
   default-language: Haskell2010
   build-depends: base >= 3 && < 5,
                  liblastfm >= 0.1.0.0,
+                 text,
                  lens,
-                 aeson-lens
+                 lens-aeson
   main-is: desktop-authentication.hs
   ghc-options: -Wall
                -fno-warn-unused-do-bind
