@@ -3,7 +3,7 @@
 ### sort-friends
 Shows how to work with lastfm api and async to speed up getting 5 most compliable friends.
   * [async][1]
-  * [aeson-lens][2]
+  * [lens-aeson][7]
 
 --
 
@@ -45,7 +45,6 @@ Advanced scrobbling techniques.
   * [lens-aeson][7]
 
  [1]: http://hackage.haskell.org/package/async
- [2]: http://hackage.haskell.org/package/aeson-lens
  [3]: http://hackage.haskell.org/package/aeson
  [4]: http://happstack.com
  [5]: http://hackage.haskell.org/package/netwire

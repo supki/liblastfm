@@ -25,17 +25,18 @@ module Main where
 
 import Data.Function (on)
 import Data.List (sortBy)
-import Data.Maybe (catMaybes, fromMaybe)
+import Data.Maybe (fromMaybe)
 import Data.Monoid ((<>))
 import Text.Read (readMaybe)
 
 import           Control.Concurrent.Async
 import           Control.Lens
+import           Control.Lens.Aeson
 import           Data.Aeson (Value)
-import           Data.Aeson.Lens
 import           Data.Text (Text)
+import qualified Data.Text as T
 import qualified Data.Text.IO as T
-import           Network.Lastfm
+import           Network.Lastfm hiding (to)
 import qualified Network.Lastfm.User as User
 import qualified Network.Lastfm.Tasteometer as Tasteometer
 
@@ -46,24 +47,24 @@ type Score = Text
 main :: IO ()
 main = pages >>= scores . names >>= pretty
  where
-  names = catMaybes .
-    toListOf (folded . traverseArray . key "name") . toListOf (folded . key "friends" . key "user")
+  names x = x ^.. folded . _Just . key "friends" . key "user" . _Array . folded . key "name" . _String
 
 
 pages :: IO [Maybe Value]
 pages = do
   first <- query (User.getFriends <*> user target)
-  let ps = fromMaybe 1 (readMaybe =<< first ^. total)
+  let ps = fromMaybe 1 (readMaybe =<< preview total first)
   (first :) <$> forConcurrently [2..ps] (\p -> query (User.getFriends <*> user target <* page p))
  where
-  total = key "friends" . key "@attr" . key "totalPages"
+  total = _Just . key "friends" . key "@attr" . key "totalPages" . _String . to T.unpack
 
 
 scores :: [Text] -> IO [(Text, Score)]
-scores xs = zip xs <$> forConcurrently xs (\x ->
-  fromMaybe "0" . view score <$> query (Tasteometer.compare (user target) (user x)))
+scores xs = zip xs <$> forConcurrently xs (\x -> do
+  r <- query (Tasteometer.compare (user target) (user x))
+  return (fromMaybe "0" (preview score r)))
  where
-  score = key "comparison" . key "result" . key "score"
+  score = _Just . key "comparison" . key "result" . key "score" . _String
 
 
 forConcurrently :: [a] -> (a -> IO b) -> IO [b]

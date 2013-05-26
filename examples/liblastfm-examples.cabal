@@ -18,7 +18,7 @@ executable sort-friends
                  text,
                  aeson,
                  lens,
-                 aeson-lens
+                 lens-aeson
   main-is: sort-friends.hs
   ghc-options: -Wall
                -fno-warn-unused-do-bind
