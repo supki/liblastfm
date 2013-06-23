@@ -12,6 +12,19 @@
 --
 -- Note that you can use any of them in your
 -- application despite their names
+--
+-- How to get session key for yourself for debug with GHCi:
+--
+-- >>> import Network.Lastfm
+-- >>> import Network.Lastfm.Authentication
+-- >>> :set -XOverloadedStrings
+-- >>> lastfm $ getToken <*> apiKey "__API_KEY__" <* json
+-- Just (Object fromList [("token",String "__TOKEN__")])
+-- >>> putStrLn . link $ apiKey "__API_KEY__" <* token "__TOKEN__"
+-- http://www.last.fm/api/auth/?api_key=__API_KEY__&token=__TOKEN__
+-- >>> -- Click that link ^^^
+-- >>> lastfm . sign "__SECRET__" $ getSession <*> token "__TOKEN__" <*> apiKey "__API_KEY__"  <* json
+-- Just (Object fromList [("session",Object fromList [("name",String "__USER__"),("subscriber",String "0"),("key",String "__SESSION_KEY__")])])
 module Network.Lastfm.Authentication
   ( -- * Helpers
     getToken, getSession, getMobileSession
