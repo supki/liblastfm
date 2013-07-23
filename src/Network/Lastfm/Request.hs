@@ -190,12 +190,12 @@ artist :: Text -> Request f Artist
 artist = add "artist"
 {-# INLINE artist #-}
 
--- | Add artist parameter
+-- | Add artists parameter
 artists :: [Text] -> Request f [Artist]
 artists = add "artists"
 {-# INLINE artists #-}
 
--- | Add artist parameter
+-- | Add album parameter
 album :: Text -> Request f Album
 album = add "album"
 {-# INLINE album #-}
