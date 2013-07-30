@@ -1,3 +1,9 @@
+0.3.0.0
+=======
+
+  * Support batch operations for `N.L.Track.scrobble`, `N.L.Library.{addAlbum,addArtist}`
+
 0.2.0.0
-====
- * Vastly simplified internal representations leading to simpler library interface
+=======
+
+  * Vastly simplified internal representations leading to simpler library interface
