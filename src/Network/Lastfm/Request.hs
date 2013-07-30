@@ -27,7 +27,7 @@ module Network.Lastfm.Request
   , TaggingType, taggingType, UseRecs, useRecs, Venue, venue, VenueName, venueName
   , Discovery, discovery, RTP, rtp, BuyLinks, buyLinks, Multiplier(..), multiplier
   , Bitrate(..), bitrate, Name, name, Station, station
-  , Targeted, comparison
+  , Targeted, comparison, Scrobble
   ) where
 
 import Control.Applicative
@@ -173,6 +173,7 @@ data ChosenByUser
 data TaggingType
 data RecentTracks
 data UseRecs
+data Scrobble
 data Group
 data Venue
 data VenueName

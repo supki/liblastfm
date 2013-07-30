@@ -6,7 +6,7 @@
 -- You shouldn't need to import this module unless you are doing something interesting.
 module Network.Lastfm.Internal
   ( Request(..), Format(..), Ready, Sign
-  , R(..), wrap, unwrap, render, coerce
+  , R(..), wrap, unwrap, absorbQuery, render, coerce
     -- * Lenses
   , host, method, query
   ) where
@@ -99,11 +99,20 @@ wrap :: (R f -> R f) -> Request f a
 wrap = Request . Const . Dual . Endo
 {-# INLINE wrap #-}
 
-
 -- | Unwrapping from interesting 'Monoid' ('R' -> 'R') instance
 unwrap :: Request f a -> R f -> R f
 unwrap = appEndo . getDual . getConst . unRequest
 {-# INLINE unwrap #-}
+
+
+-- | Absorbing a bunch of queries, useful in batch operations
+absorbQuery :: Foldable t => t (Request f b) -> Request f a
+absorbQuery rs = wrap $ \r ->
+  r { _query = _query r <> foldMap (_query . ($ rempty) . unwrap) rs }
+
+-- | Empty request
+rempty :: R f
+rempty = R mempty mempty mempty
 
 
 -- Miscellaneous instances

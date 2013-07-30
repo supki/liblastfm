@@ -25,6 +25,7 @@ library
     http-types,
     network,
     pureMD5,
+    semigroups,
     text,
     void
   hs-source-dirs: src

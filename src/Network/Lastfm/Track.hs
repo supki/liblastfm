@@ -1,6 +1,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 -- | Lastfm track API
 --
 -- This module is intended to be imported qualified:
@@ -12,12 +13,18 @@ module Network.Lastfm.Track
   ( ArtistTrackOrMBID
   , addTags, ban, getBuyLinks, getCorrection, getFingerprintMetadata
   , getInfo, getShouts, getSimilar, getTags, getTopFans
-  , getTopTags, love, removeTag, scrobble
+  , getTopTags, love, removeTag, scrobble, scrobbleBatch, this, Scrobble
   , search, share, unban, unlove, updateNowPlaying
   ) where
 
-import Control.Applicative
+import           Control.Applicative
+import           Data.List.NonEmpty (NonEmpty)
+import qualified Data.List.NonEmpty as N
+import qualified Data.Map as M
+import           Data.Monoid ((<>))
+import qualified Data.Text as T
 
+import Network.Lastfm.Internal (R(..), absorbQuery, wrap)
 import Network.Lastfm.Request
 
 
@@ -149,7 +156,7 @@ removeTag = api "track.removeTag" <* post
 {-# INLINE removeTag #-}
 
 
--- | Used to add a track-play to a user's profile.
+-- | Add played track to the user profile.
 --
 -- Optional: 'album', 'albumArtist', 'chosenByUser', 'context',
 -- 'duration', 'mbid', 'streamId', 'trackNumber'
@@ -159,6 +166,31 @@ scrobble :: Request f (Artist -> Track -> Timestamp -> APIKey -> SessionKey -> S
 scrobble = api "track.scrobble" <* post
 {-# INLINE scrobble #-}
 
+
+-- | Add played tracks to the user profile.
+--
+-- Scrobbles 50 first list elements
+--
+-- <http://www.last.fm/api/show/track.scrobble>
+scrobbleBatch
+  :: forall f. NonEmpty (Request f Scrobble) -> Request f (APIKey -> SessionKey -> Sign)
+scrobbleBatch batch = api "track.scrobble" <* scrobbles <* post
+ where
+  indexedWith :: Int -> Request f a -> Request f a
+  indexedWith n r = r <* wrap (\s ->
+    s { _query = M.mapKeys (\k -> k <> "[" <> T.pack (show n) <> "]") (_query s) })
+
+  scrobbles :: Request f (NonEmpty Scrobble)
+  scrobbles = absorbQuery (N.zipWith indexedWith (N.fromList [0..49]) batch)
+{-# INLINE scrobbleBatch #-}
+
+-- | What to scrobble?
+--
+-- Optional: 'album', 'albumArtist', 'chosenByUser', 'context',
+-- 'duration', 'mbid', 'streamId', 'trackNumber'
+this :: Request f (Artist -> Track -> Timestamp -> Scrobble)
+this = wrap id
+{-# INLINE this #-}
 
 -- | Search for a track by track name. Returns track matches sorted by relevance.
 --
