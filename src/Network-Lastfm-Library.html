@@ -17,99 +17,118 @@
 <a name="line-8"></a><span class='hs-comment'>-- import qualified Network.Lastfm.Library as Library</span>
 <a name="line-9"></a><span class='hs-comment'>-- @</span>
 <a name="line-10"></a><span class='hs-keyword'>module</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span><span class='hs-varop'>.</span><span class='hs-conid'>Library</span>
-<a name="line-11"></a>  <span class='hs-layout'>(</span> <span class='hs-varid'>addAlbum</span><span class='hs-layout'>,</span> <span class='hs-varid'>addArtist</span><span class='hs-layout'>,</span> <span class='hs-varid'>addTrack</span>
+<a name="line-11"></a>  <span class='hs-layout'>(</span> <span class='hs-varid'>addAlbum</span><span class='hs-layout'>,</span> <span class='hs-varid'>albumItem</span><span class='hs-layout'>,</span> <span class='hs-varid'>addArtist</span><span class='hs-layout'>,</span> <span class='hs-varid'>artistItem</span><span class='hs-layout'>,</span> <span class='hs-varid'>addTrack</span>
 <a name="line-12"></a>  <span class='hs-layout'>,</span> <span class='hs-varid'>getAlbums</span><span class='hs-layout'>,</span> <span class='hs-varid'>getArtists</span><span class='hs-layout'>,</span> <span class='hs-varid'>getTracks</span>
 <a name="line-13"></a>  <span class='hs-layout'>,</span> <span class='hs-varid'>removeAlbum</span><span class='hs-layout'>,</span> <span class='hs-varid'>removeArtist</span><span class='hs-layout'>,</span> <span class='hs-varid'>removeScrobble</span><span class='hs-layout'>,</span> <span class='hs-varid'>removeTrack</span>
 <a name="line-14"></a>  <span class='hs-layout'>)</span> <span class='hs-keyword'>where</span>
 <a name="line-15"></a>
 <a name="line-16"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Control</span><span class='hs-varop'>.</span><span class='hs-conid'>Applicative</span>
-<a name="line-17"></a>
-<a name="line-18"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span><span class='hs-varop'>.</span><span class='hs-conid'>Request</span>
+<a name="line-17"></a><span class='hs-keyword'>import</span>           <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>List</span><span class='hs-varop'>.</span><span class='hs-conid'>NonEmpty</span> <span class='hs-layout'>(</span><span class='hs-conid'>NonEmpty</span><span class='hs-layout'>)</span>
+<a name="line-18"></a><span class='hs-keyword'>import</span> <span class='hs-keyword'>qualified</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>List</span><span class='hs-varop'>.</span><span class='hs-conid'>NonEmpty</span> <span class='hs-keyword'>as</span> <span class='hs-conid'>N</span>
 <a name="line-19"></a>
-<a name="line-20"></a>
-<a name="line-21"></a><a name="addAlbum"></a><span class='hs-comment'>-- | Add an album or collection of albums to a user's Last.fm library</span>
-<a name="line-22"></a><span class='hs-comment'>--</span>
-<a name="line-23"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/library.addAlbum">http://www.last.fm/api/show/library.addAlbum</a>&gt;</span>
-<a name="line-24"></a><span class='hs-definition'>addAlbum</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Album</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>APIKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SessionKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Sign</span><span class='hs-layout'>)</span>
-<a name="line-25"></a><span class='hs-definition'>addAlbum</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"library.addAlbum"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
-<a name="line-26"></a><span class='hs-comment'>{-# INLINE addAlbum #-}</span>
-<a name="line-27"></a>
-<a name="line-28"></a>
-<a name="line-29"></a><a name="addArtist"></a><span class='hs-comment'>-- | Add an artist to a user's Last.fm library</span>
-<a name="line-30"></a><span class='hs-comment'>--</span>
-<a name="line-31"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/library.addArtist">http://www.last.fm/api/show/library.addArtist</a>&gt;</span>
-<a name="line-32"></a><span class='hs-definition'>addArtist</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>APIKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SessionKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Sign</span><span class='hs-layout'>)</span>
-<a name="line-33"></a><span class='hs-definition'>addArtist</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"library.addArtist"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
-<a name="line-34"></a><span class='hs-comment'>{-# INLINE addArtist #-}</span>
+<a name="line-20"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span><span class='hs-varop'>.</span><span class='hs-conid'>Internal</span> <span class='hs-layout'>(</span><span class='hs-varid'>absorbQuery</span><span class='hs-layout'>,</span> <span class='hs-varid'>indexedWith</span><span class='hs-layout'>,</span> <span class='hs-varid'>wrap</span><span class='hs-layout'>)</span>
+<a name="line-21"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Network</span><span class='hs-varop'>.</span><span class='hs-conid'>Lastfm</span><span class='hs-varop'>.</span><span class='hs-conid'>Request</span>
+<a name="line-22"></a>
+<a name="line-23"></a>
+<a name="line-24"></a>
+<a name="line-25"></a>
+<a name="line-26"></a><a name="addAlbum"></a><span class='hs-comment'>-- | Add an album or collection of albums to a user's Last.fm library</span>
+<a name="line-27"></a><span class='hs-comment'>--</span>
+<a name="line-28"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/library.addAlbum">http://www.last.fm/api/show/library.addAlbum</a>&gt;</span>
+<a name="line-29"></a><span class='hs-definition'>addAlbum</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>NonEmpty</span> <span class='hs-layout'>(</span><span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>LibraryAlbum</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>APIKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SessionKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Sign</span><span class='hs-layout'>)</span>
+<a name="line-30"></a><span class='hs-definition'>addAlbum</span> <span class='hs-varid'>batch</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"library.addAlbum"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>items</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
+<a name="line-31"></a> <span class='hs-keyword'>where</span>
+<a name="line-32"></a>  <span class='hs-varid'>items</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>absorbQuery</span> <span class='hs-layout'>(</span><span class='hs-conid'>N</span><span class='hs-varop'>.</span><span class='hs-varid'>zipWith</span> <span class='hs-varid'>indexedWith</span> <span class='hs-layout'>(</span><span class='hs-conid'>N</span><span class='hs-varop'>.</span><span class='hs-varid'>fromList</span> <span class='hs-keyglyph'>[</span><span class='hs-num'>0</span><span class='hs-keyglyph'>..</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>)</span> <span class='hs-varid'>batch</span><span class='hs-layout'>)</span>
+<a name="line-33"></a>  <span class='hs-comment'>{-# INLINE items #-}</span>
+<a name="line-34"></a><span class='hs-comment'>{-# INLINE addAlbum #-}</span>
 <a name="line-35"></a>
-<a name="line-36"></a>
-<a name="line-37"></a><a name="addTrack"></a><span class='hs-comment'>-- | Add a track to a user's Last.fm library</span>
-<a name="line-38"></a><span class='hs-comment'>--</span>
-<a name="line-39"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/library.addTrack">http://www.last.fm/api/show/library.addTrack</a>&gt;</span>
-<a name="line-40"></a><span class='hs-definition'>addTrack</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Track</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>APIKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SessionKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Sign</span><span class='hs-layout'>)</span>
-<a name="line-41"></a><span class='hs-definition'>addTrack</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"library.addTrack"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
-<a name="line-42"></a><span class='hs-comment'>{-# INLINE addTrack #-}</span>
-<a name="line-43"></a>
-<a name="line-44"></a>
-<a name="line-45"></a><a name="getAlbums"></a><span class='hs-comment'>-- | A paginated list of all the albums in a user's library, with play counts and tag counts.</span>
-<a name="line-46"></a><span class='hs-comment'>--</span>
-<a name="line-47"></a><span class='hs-comment'>-- Optional: 'artist', 'limit', 'page'</span>
-<a name="line-48"></a><span class='hs-comment'>--</span>
-<a name="line-49"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/library.getAlbums">http://www.last.fm/api/show/library.getAlbums</a>&gt;</span>
-<a name="line-50"></a><span class='hs-definition'>getAlbums</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>APIKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-51"></a><span class='hs-definition'>getAlbums</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"library.getAlbums"</span>
-<a name="line-52"></a><span class='hs-comment'>{-# INLINE getAlbums #-}</span>
-<a name="line-53"></a>
+<a name="line-36"></a><a name="albumItem"></a><span class='hs-definition'>albumItem</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Album</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>LibraryAlbum</span><span class='hs-layout'>)</span>
+<a name="line-37"></a><span class='hs-definition'>albumItem</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>wrap</span> <span class='hs-varid'>id</span>
+<a name="line-38"></a><span class='hs-comment'>{-# INLINE albumItem #-}</span>
+<a name="line-39"></a>
+<a name="line-40"></a>
+<a name="line-41"></a><a name="addArtist"></a><span class='hs-comment'>-- | Add an artist to a user's Last.fm library</span>
+<a name="line-42"></a><span class='hs-comment'>--</span>
+<a name="line-43"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/library.addArtist">http://www.last.fm/api/show/library.addArtist</a>&gt;</span>
+<a name="line-44"></a><span class='hs-definition'>addArtist</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>NonEmpty</span> <span class='hs-layout'>(</span><span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-conid'>LibraryArtist</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>APIKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SessionKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Sign</span><span class='hs-layout'>)</span>
+<a name="line-45"></a><span class='hs-definition'>addArtist</span> <span class='hs-varid'>batch</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"library.addArtist"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>items</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
+<a name="line-46"></a> <span class='hs-keyword'>where</span>
+<a name="line-47"></a>  <span class='hs-varid'>items</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>absorbQuery</span> <span class='hs-layout'>(</span><span class='hs-conid'>N</span><span class='hs-varop'>.</span><span class='hs-varid'>zipWith</span> <span class='hs-varid'>indexedWith</span> <span class='hs-layout'>(</span><span class='hs-conid'>N</span><span class='hs-varop'>.</span><span class='hs-varid'>fromList</span> <span class='hs-keyglyph'>[</span><span class='hs-num'>0</span><span class='hs-keyglyph'>..</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>)</span> <span class='hs-varid'>batch</span><span class='hs-layout'>)</span>
+<a name="line-48"></a>  <span class='hs-comment'>{-# INLINE items #-}</span>
+<a name="line-49"></a><span class='hs-comment'>{-# INLINE addArtist #-}</span>
+<a name="line-50"></a>
+<a name="line-51"></a><a name="artistItem"></a><span class='hs-definition'>artistItem</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>LibraryArtist</span><span class='hs-layout'>)</span>
+<a name="line-52"></a><span class='hs-definition'>artistItem</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>wrap</span> <span class='hs-varid'>id</span>
+<a name="line-53"></a><span class='hs-comment'>{-# INLINE artistItem #-}</span>
 <a name="line-54"></a>
-<a name="line-55"></a><a name="getArtists"></a><span class='hs-comment'>-- | A paginated list of all the artists in a user's library, with play counts and tag counts.</span>
-<a name="line-56"></a><span class='hs-comment'>--</span>
-<a name="line-57"></a><span class='hs-comment'>-- Optional: 'limit', 'page'</span>
-<a name="line-58"></a><span class='hs-comment'>--</span>
-<a name="line-59"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/library.getArtists">http://www.last.fm/api/show/library.getArtists</a>&gt;</span>
-<a name="line-60"></a><span class='hs-definition'>getArtists</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>APIKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-61"></a><span class='hs-definition'>getArtists</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"library.getArtists"</span>
-<a name="line-62"></a><span class='hs-comment'>{-# INLINE getArtists #-}</span>
+<a name="line-55"></a>
+<a name="line-56"></a><a name="addTrack"></a><span class='hs-comment'>-- | Add a track to a user's Last.fm library</span>
+<a name="line-57"></a><span class='hs-comment'>--</span>
+<a name="line-58"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/library.addTrack">http://www.last.fm/api/show/library.addTrack</a>&gt;</span>
+<a name="line-59"></a><span class='hs-definition'>addTrack</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Track</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>APIKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SessionKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Sign</span><span class='hs-layout'>)</span>
+<a name="line-60"></a><span class='hs-definition'>addTrack</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"library.addTrack"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
+<a name="line-61"></a><span class='hs-comment'>{-# INLINE addTrack #-}</span>
+<a name="line-62"></a>
 <a name="line-63"></a>
-<a name="line-64"></a>
-<a name="line-65"></a><a name="getTracks"></a><span class='hs-comment'>-- | A paginated list of all the tracks in a user's library, with play counts and tag counts.</span>
-<a name="line-66"></a><span class='hs-comment'>--</span>
-<a name="line-67"></a><span class='hs-comment'>-- Optional: 'artist', 'album', 'page', 'limit'</span>
-<a name="line-68"></a><span class='hs-comment'>--</span>
-<a name="line-69"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/library.getTracks">http://www.last.fm/api/show/library.getTracks</a>&gt;</span>
-<a name="line-70"></a><span class='hs-definition'>getTracks</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>APIKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
-<a name="line-71"></a><span class='hs-definition'>getTracks</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"library.getTracks"</span>
-<a name="line-72"></a><span class='hs-comment'>{-# INLINE getTracks #-}</span>
+<a name="line-64"></a><a name="getAlbums"></a><span class='hs-comment'>-- | A paginated list of all the albums in a user's library, with play counts and tag counts.</span>
+<a name="line-65"></a><span class='hs-comment'>--</span>
+<a name="line-66"></a><span class='hs-comment'>-- Optional: 'artist', 'limit', 'page'</span>
+<a name="line-67"></a><span class='hs-comment'>--</span>
+<a name="line-68"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/library.getAlbums">http://www.last.fm/api/show/library.getAlbums</a>&gt;</span>
+<a name="line-69"></a><span class='hs-definition'>getAlbums</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>APIKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-70"></a><span class='hs-definition'>getAlbums</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"library.getAlbums"</span>
+<a name="line-71"></a><span class='hs-comment'>{-# INLINE getAlbums #-}</span>
+<a name="line-72"></a>
 <a name="line-73"></a>
-<a name="line-74"></a>
-<a name="line-75"></a><a name="removeAlbum"></a><span class='hs-comment'>-- | Remove an album from a user's Last.fm library</span>
-<a name="line-76"></a><span class='hs-comment'>--</span>
-<a name="line-77"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/library.removeAlbum">http://www.last.fm/api/show/library.removeAlbum</a>&gt;</span>
-<a name="line-78"></a><span class='hs-definition'>removeAlbum</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Album</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>APIKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SessionKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Sign</span><span class='hs-layout'>)</span>
-<a name="line-79"></a><span class='hs-definition'>removeAlbum</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"library.removeAlbum"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
-<a name="line-80"></a><span class='hs-comment'>{-# INLINE removeAlbum #-}</span>
-<a name="line-81"></a>
+<a name="line-74"></a><a name="getArtists"></a><span class='hs-comment'>-- | A paginated list of all the artists in a user's library, with play counts and tag counts.</span>
+<a name="line-75"></a><span class='hs-comment'>--</span>
+<a name="line-76"></a><span class='hs-comment'>-- Optional: 'limit', 'page'</span>
+<a name="line-77"></a><span class='hs-comment'>--</span>
+<a name="line-78"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/library.getArtists">http://www.last.fm/api/show/library.getArtists</a>&gt;</span>
+<a name="line-79"></a><span class='hs-definition'>getArtists</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>APIKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-80"></a><span class='hs-definition'>getArtists</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"library.getArtists"</span>
+<a name="line-81"></a><span class='hs-comment'>{-# INLINE getArtists #-}</span>
 <a name="line-82"></a>
-<a name="line-83"></a><a name="removeArtist"></a><span class='hs-comment'>-- | Remove an artist from a user's Last.fm library</span>
-<a name="line-84"></a><span class='hs-comment'>--</span>
-<a name="line-85"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/library.removeArtist">http://www.last.fm/api/show/library.removeArtist</a>&gt;</span>
-<a name="line-86"></a><span class='hs-definition'>removeArtist</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>APIKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SessionKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Sign</span><span class='hs-layout'>)</span>
-<a name="line-87"></a><span class='hs-definition'>removeArtist</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"library.removeArtist"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
-<a name="line-88"></a><span class='hs-comment'>{-# INLINE removeArtist #-}</span>
-<a name="line-89"></a>
-<a name="line-90"></a>
-<a name="line-91"></a><a name="removeScrobble"></a><span class='hs-comment'>-- | Remove a scrobble from a user's Last.fm library</span>
-<a name="line-92"></a><span class='hs-comment'>--</span>
-<a name="line-93"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/library.removeScrobble">http://www.last.fm/api/show/library.removeScrobble</a>&gt;</span>
-<a name="line-94"></a><span class='hs-definition'>removeScrobble</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Track</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Timestamp</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>APIKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SessionKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Sign</span><span class='hs-layout'>)</span>
-<a name="line-95"></a><span class='hs-definition'>removeScrobble</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"library.removeScrobble"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
-<a name="line-96"></a><span class='hs-comment'>{-# INLINE removeScrobble #-}</span>
-<a name="line-97"></a>
-<a name="line-98"></a>
-<a name="line-99"></a><a name="removeTrack"></a><span class='hs-comment'>-- | Remove a track from a user's Last.fm library</span>
-<a name="line-100"></a><span class='hs-comment'>--</span>
-<a name="line-101"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/library.removeTrack">http://www.last.fm/api/show/library.removeTrack</a>&gt;</span>
-<a name="line-102"></a><span class='hs-definition'>removeTrack</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Track</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>APIKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SessionKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Sign</span><span class='hs-layout'>)</span>
-<a name="line-103"></a><span class='hs-definition'>removeTrack</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"library.removeTrack"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
-<a name="line-104"></a><span class='hs-comment'>{-# INLINE removeTrack #-}</span>
+<a name="line-83"></a>
+<a name="line-84"></a><a name="getTracks"></a><span class='hs-comment'>-- | A paginated list of all the tracks in a user's library, with play counts and tag counts.</span>
+<a name="line-85"></a><span class='hs-comment'>--</span>
+<a name="line-86"></a><span class='hs-comment'>-- Optional: 'artist', 'album', 'page', 'limit'</span>
+<a name="line-87"></a><span class='hs-comment'>--</span>
+<a name="line-88"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/library.getTracks">http://www.last.fm/api/show/library.getTracks</a>&gt;</span>
+<a name="line-89"></a><span class='hs-definition'>getTracks</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>User</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>APIKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Ready</span><span class='hs-layout'>)</span>
+<a name="line-90"></a><span class='hs-definition'>getTracks</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"library.getTracks"</span>
+<a name="line-91"></a><span class='hs-comment'>{-# INLINE getTracks #-}</span>
+<a name="line-92"></a>
+<a name="line-93"></a>
+<a name="line-94"></a><a name="removeAlbum"></a><span class='hs-comment'>-- | Remove an album from a user's Last.fm library</span>
+<a name="line-95"></a><span class='hs-comment'>--</span>
+<a name="line-96"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/library.removeAlbum">http://www.last.fm/api/show/library.removeAlbum</a>&gt;</span>
+<a name="line-97"></a><span class='hs-definition'>removeAlbum</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Album</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>APIKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SessionKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Sign</span><span class='hs-layout'>)</span>
+<a name="line-98"></a><span class='hs-definition'>removeAlbum</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"library.removeAlbum"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
+<a name="line-99"></a><span class='hs-comment'>{-# INLINE removeAlbum #-}</span>
+<a name="line-100"></a>
+<a name="line-101"></a>
+<a name="line-102"></a><a name="removeArtist"></a><span class='hs-comment'>-- | Remove an artist from a user's Last.fm library</span>
+<a name="line-103"></a><span class='hs-comment'>--</span>
+<a name="line-104"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/library.removeArtist">http://www.last.fm/api/show/library.removeArtist</a>&gt;</span>
+<a name="line-105"></a><span class='hs-definition'>removeArtist</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>APIKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SessionKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Sign</span><span class='hs-layout'>)</span>
+<a name="line-106"></a><span class='hs-definition'>removeArtist</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"library.removeArtist"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
+<a name="line-107"></a><span class='hs-comment'>{-# INLINE removeArtist #-}</span>
+<a name="line-108"></a>
+<a name="line-109"></a>
+<a name="line-110"></a><a name="removeScrobble"></a><span class='hs-comment'>-- | Remove a scrobble from a user's Last.fm library</span>
+<a name="line-111"></a><span class='hs-comment'>--</span>
+<a name="line-112"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/library.removeScrobble">http://www.last.fm/api/show/library.removeScrobble</a>&gt;</span>
+<a name="line-113"></a><span class='hs-definition'>removeScrobble</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Track</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Timestamp</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>APIKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SessionKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Sign</span><span class='hs-layout'>)</span>
+<a name="line-114"></a><span class='hs-definition'>removeScrobble</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"library.removeScrobble"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
+<a name="line-115"></a><span class='hs-comment'>{-# INLINE removeScrobble #-}</span>
+<a name="line-116"></a>
+<a name="line-117"></a>
+<a name="line-118"></a><a name="removeTrack"></a><span class='hs-comment'>-- | Remove a track from a user's Last.fm library</span>
+<a name="line-119"></a><span class='hs-comment'>--</span>
+<a name="line-120"></a><span class='hs-comment'>-- &lt;<a href="http://www.last.fm/api/show/library.removeTrack">http://www.last.fm/api/show/library.removeTrack</a>&gt;</span>
+<a name="line-121"></a><span class='hs-definition'>removeTrack</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Request</span> <span class='hs-varid'>f</span> <span class='hs-layout'>(</span><span class='hs-conid'>Artist</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Track</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>APIKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SessionKey</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Sign</span><span class='hs-layout'>)</span>
+<a name="line-122"></a><span class='hs-definition'>removeTrack</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>api</span> <span class='hs-str'>"library.removeTrack"</span> <span class='hs-varop'>&lt;*</span> <span class='hs-varid'>post</span>
+<a name="line-123"></a><span class='hs-comment'>{-# INLINE removeTrack #-}</span>
 </pre></body>
 </html>
