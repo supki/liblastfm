@@ -1,5 +1,8 @@
 dist
 cabal-dev
 examples
+.cabal-sandbox
+cabal.sandbox.config
+examples/.lastfm.conf
 lastfm-keys.json
 *.pyc
