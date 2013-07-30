@@ -24,10 +24,10 @@ auth ak sk s =
   ]
  where
   testAddAlbum = check ok . sign s $
-    addAlbum <*> artist "Franz Ferdinand" <*> album "Franz Ferdinand" <*> ak <*> sk
+    addAlbum (pure (albumItem <*> artist "Franz Ferdinand" <*> album "Franz Ferdinand")) <*> ak <*> sk
 
   testAddArtist = check ok . sign s $
-    addArtist <*> artist "Mobthrow" <*> ak <*> sk
+    addArtist (pure (artistItem <*> artist "Mobthrow")) <*> ak <*> sk
 
   testAddTrack = check ok . sign s $
     addTrack <*> artist "Eminem" <*> track "Kim" <*> ak <*> sk

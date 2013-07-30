@@ -27,7 +27,7 @@ module Network.Lastfm.Request
   , TaggingType, taggingType, UseRecs, useRecs, Venue, venue, VenueName, venueName
   , Discovery, discovery, RTP, rtp, BuyLinks, buyLinks, Multiplier(..), multiplier
   , Bitrate(..), bitrate, Name, name, Station, station
-  , Targeted, comparison, Scrobble
+  , Targeted, comparison, Scrobble, LibraryAlbum, LibraryArtist
   ) where
 
 import Control.Applicative
@@ -184,6 +184,8 @@ data Station
 data Discovery
 data RTP
 data BuyLinks
+data LibraryAlbum
+data LibraryArtist
 
 
 -- | Add artist parameter

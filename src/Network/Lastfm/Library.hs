@@ -8,30 +8,49 @@
 -- import qualified Network.Lastfm.Library as Library
 -- @
 module Network.Lastfm.Library
-  ( addAlbum, addArtist, addTrack
+  ( addAlbum, albumItem, addArtist, artistItem, addTrack
   , getAlbums, getArtists, getTracks
   , removeAlbum, removeArtist, removeScrobble, removeTrack
   ) where
 
 import Control.Applicative
+import           Data.List.NonEmpty (NonEmpty)
+import qualified Data.List.NonEmpty as N
 
+import Network.Lastfm.Internal (absorbQuery, indexedWith, wrap)
 import Network.Lastfm.Request
+
+
 
 
 -- | Add an album or collection of albums to a user's Last.fm library
 --
 -- <http://www.last.fm/api/show/library.addAlbum>
-addAlbum :: Request f (Artist -> Album -> APIKey -> SessionKey -> Sign)
-addAlbum = api "library.addAlbum" <* post
+addAlbum :: NonEmpty (Request f LibraryAlbum) -> Request f (APIKey -> SessionKey -> Sign)
+addAlbum batch = api "library.addAlbum" <* items <* post
+ where
+  items = absorbQuery (N.zipWith indexedWith (N.fromList [0..]) batch)
+  {-# INLINE items #-}
 {-# INLINE addAlbum #-}
+
+albumItem :: Request f (Artist -> Album -> LibraryAlbum)
+albumItem = wrap id
+{-# INLINE albumItem #-}
 
 
 -- | Add an artist to a user's Last.fm library
 --
 -- <http://www.last.fm/api/show/library.addArtist>
-addArtist :: Request f (Artist -> APIKey -> SessionKey -> Sign)
-addArtist = api "library.addArtist" <* post
+addArtist :: NonEmpty (Request f LibraryArtist) -> Request f (APIKey -> SessionKey -> Sign)
+addArtist batch = api "library.addArtist" <* items <* post
+ where
+  items = absorbQuery (N.zipWith indexedWith (N.fromList [0..]) batch)
+  {-# INLINE items #-}
 {-# INLINE addArtist #-}
+
+artistItem :: Request f (Artist -> LibraryArtist)
+artistItem = wrap id
+{-# INLINE artistItem #-}
 
 
 -- | Add a track to a user's Last.fm library

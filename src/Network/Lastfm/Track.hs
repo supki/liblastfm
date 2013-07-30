@@ -12,7 +12,7 @@ module Network.Lastfm.Track
   ( ArtistTrackOrMBID
   , addTags, ban, getBuyLinks, getCorrection, getFingerprintMetadata
   , getInfo, getShouts, getSimilar, getTags, getTopFans
-  , getTopTags, love, removeTag, scrobble, scrobbleBatch, this, Scrobble
+  , getTopTags, love, removeTag, scrobble, scrobbleBatch, item, Scrobble
   , search, share, unban, unlove, updateNowPlaying
   ) where
 
@@ -169,18 +169,20 @@ scrobble = api "track.scrobble" <* post
 --
 -- <http://www.last.fm/api/show/track.scrobble>
 scrobbleBatch :: NonEmpty (Request f Scrobble) -> Request f (APIKey -> SessionKey -> Sign)
-scrobbleBatch batch = api "track.scrobble" <* scrobbles <* post
+scrobbleBatch batch = api "track.scrobble" <* items <* post
  where
-  scrobbles = absorbQuery (N.zipWith indexedWith (N.fromList [0..49]) batch)
+  items = absorbQuery (N.zipWith indexedWith (N.fromList [0..49]) batch)
+  {-# INLINE items #-}
 {-# INLINE scrobbleBatch #-}
 
 -- | What to scrobble?
 --
 -- Optional: 'album', 'albumArtist', 'chosenByUser', 'context',
 -- 'duration', 'mbid', 'streamId', 'trackNumber'
-this :: Request f (Artist -> Track -> Timestamp -> Scrobble)
-this = wrap id
-{-# INLINE this #-}
+item :: Request f (Artist -> Track -> Timestamp -> Scrobble)
+item = wrap id
+{-# INLINE item #-}
+
 
 -- | Search for a track by track name. Returns track matches sorted by relevance.
 --
