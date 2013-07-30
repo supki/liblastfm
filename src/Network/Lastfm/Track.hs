@@ -1,7 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE ScopedTypeVariables #-}
 -- | Lastfm track API
 --
 -- This module is intended to be imported qualified:
@@ -20,11 +19,8 @@ module Network.Lastfm.Track
 import           Control.Applicative
 import           Data.List.NonEmpty (NonEmpty)
 import qualified Data.List.NonEmpty as N
-import qualified Data.Map as M
-import           Data.Monoid ((<>))
-import qualified Data.Text as T
 
-import Network.Lastfm.Internal (R(..), absorbQuery, wrap)
+import Network.Lastfm.Internal (absorbQuery, indexedWith, wrap)
 import Network.Lastfm.Request
 
 
@@ -172,15 +168,9 @@ scrobble = api "track.scrobble" <* post
 -- Scrobbles 50 first list elements
 --
 -- <http://www.last.fm/api/show/track.scrobble>
-scrobbleBatch
-  :: forall f. NonEmpty (Request f Scrobble) -> Request f (APIKey -> SessionKey -> Sign)
+scrobbleBatch :: NonEmpty (Request f Scrobble) -> Request f (APIKey -> SessionKey -> Sign)
 scrobbleBatch batch = api "track.scrobble" <* scrobbles <* post
  where
-  indexedWith :: Int -> Request f a -> Request f a
-  indexedWith n r = r <* wrap (\s ->
-    s { _query = M.mapKeys (\k -> k <> "[" <> T.pack (show n) <> "]") (_query s) })
-
-  scrobbles :: Request f (NonEmpty Scrobble)
   scrobbles = absorbQuery (N.zipWith indexedWith (N.fromList [0..49]) batch)
 {-# INLINE scrobbleBatch #-}
 

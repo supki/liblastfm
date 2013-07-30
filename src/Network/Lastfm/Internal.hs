@@ -6,7 +6,8 @@
 -- You shouldn't need to import this module unless you are doing something interesting.
 module Network.Lastfm.Internal
   ( Request(..), Format(..), Ready, Sign
-  , R(..), wrap, unwrap, absorbQuery, render, coerce
+  , R(..), wrap, unwrap, render, coerce
+  , absorbQuery, indexedWith
     -- * Lenses
   , host, method, query
   ) where
@@ -109,10 +110,18 @@ unwrap = appEndo . getDual . getConst . unRequest
 absorbQuery :: Foldable t => t (Request f b) -> Request f a
 absorbQuery rs = wrap $ \r ->
   r { _query = _query r <> foldMap (_query . ($ rempty) . unwrap) rs }
+{-# INLINE absorbQuery #-}
+
+-- | Transforming Request to the "array notation"
+indexedWith :: Int -> Request f a -> Request f a
+indexedWith n r = r <* wrap (\s ->
+  s { _query = M.mapKeys (\k -> k <> "[" <> T.pack (show n) <> "]") (_query s) })
+{-# INLINE indexedWith #-}
 
 -- | Empty request
 rempty :: R f
 rempty = R mempty mempty mempty
+{-# INLINE rempty #-}
 
 
 -- Miscellaneous instances
