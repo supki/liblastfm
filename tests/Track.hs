@@ -47,7 +47,7 @@ auth ak sk s =
     unlove <*> artist "Gojira" <*> track "Ocean" <*> ak <*> sk
 
   testScrobble = check ss . sign s $
-    scrobble <*> artist "Gojira" <*> track "Ocean" <*> timestamp 1300000000 <*> ak <*> sk
+    scrobble (pure (item <*> artist "Gojira" <*> track "Ocean" <*> timestamp 1300000000)) <*> ak <*> sk
 
   testUpdateNowPlaying = check np . sign s $
     updateNowPlaying <*> artist "Gojira" <*> track "Ocean" <*> ak <*> sk

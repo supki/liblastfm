@@ -12,7 +12,7 @@ module Network.Lastfm.Track
   ( ArtistTrackOrMBID
   , addTags, ban, getBuyLinks, getCorrection, getFingerprintMetadata
   , getInfo, getShouts, getSimilar, getTags, getTopFans
-  , getTopTags, love, removeTag, scrobble, scrobbleBatch, item, Scrobble
+  , getTopTags, love, removeTag, scrobble, item
   , search, share, unban, unlove, updateNowPlaying
   ) where
 
@@ -152,28 +152,17 @@ removeTag = api "track.removeTag" <* post
 {-# INLINE removeTag #-}
 
 
--- | Add played track to the user profile.
---
--- Optional: 'album', 'albumArtist', 'chosenByUser', 'context',
--- 'duration', 'mbid', 'streamId', 'trackNumber'
---
--- <http://www.last.fm/api/show/track.scrobble>
-scrobble :: Request f (Artist -> Track -> Timestamp -> APIKey -> SessionKey -> Sign)
-scrobble = api "track.scrobble" <* post
-{-# INLINE scrobble #-}
-
-
 -- | Add played tracks to the user profile.
 --
 -- Scrobbles 50 first list elements
 --
 -- <http://www.last.fm/api/show/track.scrobble>
-scrobbleBatch :: NonEmpty (Request f Scrobble) -> Request f (APIKey -> SessionKey -> Sign)
-scrobbleBatch batch = api "track.scrobble" <* items <* post
+scrobble :: NonEmpty (Request f Scrobble) -> Request f (APIKey -> SessionKey -> Sign)
+scrobble batch = api "track.scrobble" <* items <* post
  where
   items = absorbQuery (N.zipWith indexedWith (N.fromList [0..49]) batch)
   {-# INLINE items #-}
-{-# INLINE scrobbleBatch #-}
+{-# INLINE scrobble #-}
 
 -- | What to scrobble?
 --
