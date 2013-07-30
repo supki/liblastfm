@@ -164,7 +164,7 @@ scrobble batch = api "track.scrobble" <* items <* post
   {-# INLINE items #-}
 {-# INLINE scrobble #-}
 
--- | What to scrobble?
+-- | What track to scrobble?
 --
 -- Optional: 'album', 'albumArtist', 'chosenByUser', 'context',
 -- 'duration', 'mbid', 'streamId', 'trackNumber'

@@ -1,3 +1,4 @@
+-- | Lastfm API interface
 module Network.Lastfm
   ( -- * Utilities for constructing requests
     module Network.Lastfm.Request

@@ -33,6 +33,7 @@ addAlbum batch = api "library.addAlbum" <* items <* post
   {-# INLINE items #-}
 {-# INLINE addAlbum #-}
 
+-- | What artist to add to library?
 albumItem :: Request f (Artist -> Album -> LibraryAlbum)
 albumItem = wrap id
 {-# INLINE albumItem #-}
@@ -48,6 +49,7 @@ addArtist batch = api "library.addArtist" <* items <* post
   {-# INLINE items #-}
 {-# INLINE addArtist #-}
 
+-- | What album to add to library?
 artistItem :: Request f (Artist -> LibraryArtist)
 artistItem = wrap id
 {-# INLINE artistItem #-}
