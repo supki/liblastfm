@@ -1,8 +1,5 @@
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeFamilies #-}
 -- | Request sending and Response parsing
 module Network.Lastfm.Response
@@ -17,7 +14,7 @@ import Control.Applicative
 import Control.Exception (throw)
 import Control.Monad
 import Data.Monoid
-import Data.String (IsString)
+import Data.String (IsString(..))
 
 import           Crypto.Classes (hash')
 import           Data.Aeson ((.:), Value, decode, parseJSON)
@@ -55,8 +52,8 @@ instance Supported JSON where
   type Response JSON = Maybe Value
   parse _ b hs = do
     v <- decode b
-    case parseMaybe ((.: "error") <=< parseJSON) v of
-      Just (_ :: Int) ->
+    case parseMaybe ((.: "error") <=< parseJSON) v :: Maybe Int of
+      Just _ ->
         throw (C.StatusCodeException C.status400 (("Response", Strict.concat $ Lazy.toChunks b) : hs) (C.createCookieJar []))
       _ -> return v
   base = R
@@ -79,8 +76,10 @@ instance Supported XML where
 
 
 -- | Application secret
-newtype Secret = Secret Text deriving (Show, IsString)
+newtype Secret = Secret Text deriving (Show)
 
+instance IsString Secret where
+  fromString = Secret . fromString
 
 -- | Sign 'Request' with 'Secret'
 sign :: Secret -> Request f Sign -> Request f Ready
