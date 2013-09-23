@@ -31,6 +31,7 @@ module Network.Lastfm.Authentication
   , link
   ) where
 
+import Control.Applicative ((<*))
 import Data.Monoid
 
 import Network.Lastfm.Internal
@@ -45,7 +46,7 @@ getToken = api "auth.getToken"
 
 -- | Get session key
 getMobileSession :: Request f (Username -> Password -> APIKey -> Sign)
-getMobileSession = api "auth.getMobileSession"
+getMobileSession = api "auth.getMobileSession" <* post
 {-# INLINE getMobileSession #-}
 
 
