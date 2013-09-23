@@ -107,7 +107,11 @@ finalize = ($ base) . unwrap
 --
 -- That's rarely needed unless you want low-level requests manipulation
 lastfm' :: Supported f => R f -> IO (Response f)
-lastfm' request =
-  C.withManager $ \m -> C.parseUrl (render request) >>= \url -> do
-    t <- C.httpLbs (url { C.method = _method request, C.responseTimeout = Just 10000000 }) m
-    return $ parse request (C.responseBody t) (C.responseHeaders t)
+lastfm' request = C.withManager $ \manager -> do
+  req <- C.parseUrl (render request)
+  let req' = req
+       { C.method          = _method request
+       , C.responseTimeout = Just 10000000
+       }
+  res <- C.httpLbs req' manager
+  return $ parse request (C.responseBody res) (C.responseHeaders res)
