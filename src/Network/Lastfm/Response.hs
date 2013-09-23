@@ -25,6 +25,7 @@ import           Data.Aeson.Types (parseMaybe)
 import qualified Data.ByteString.Lazy as Lazy
 import qualified Data.ByteString as Strict
 import           Data.Digest.Pure.MD5 (MD5Digest)
+import           Data.Map (Map)
 import qualified Data.Map as M
 import           Data.Text (Text)
 import qualified Data.Text as T
@@ -68,6 +69,7 @@ instance Supported JSON where
 instance Supported XML where
   type Response XML = Lazy.ByteString
   parse _ b _ = b
+  {-# INLINE parse #-}
   base = R
     { _host = "https://ws.audioscrobbler.com/2.0/"
     , _method = "GET"
@@ -82,13 +84,24 @@ newtype Secret = Secret Text deriving (Show, IsString)
 
 -- | Sign 'Request' with 'Secret'
 sign :: Secret -> Request f Sign -> Request f Ready
-sign (Secret s) = coerce . (<* signature)
+sign s = coerce . (<* signature)
  where
-  signature = wrap $ \r@R { _query = q } ->
-    r { _query = M.insert "api_sig" (signer (foldr M.delete q ["format", "callback"])) q }
+  signature = wrap $
+    \r@R { _query = q } -> r { _query = api_sig s . authToken $ q }
 
-  signer = T.pack . show . (hash' :: Strict.ByteString -> MD5Digest) .
-    T.encodeUtf8 . M.foldrWithKey(\k v xs -> k <> v <> xs) s
+authToken :: Map Text Text -> Map Text Text
+authToken q = maybe q (M.delete "password") $ do
+  password <- M.lookup "password" q
+  username <- M.lookup "username" q
+  return (M.insert "authToken" (md5 (username <> (md5 password))) q)
+
+api_sig :: Secret -> Map Text Text -> Map Text Text
+api_sig (Secret s) q = M.insert "api_sig" (signer (foldr M.delete q ["format", "callback"])) q
+ where
+  signer = md5 . M.foldrWithKey(\k v xs -> k <> v <> xs) s
+
+md5 :: Text -> Text
+md5 = T.pack . show . (hash' :: Strict.ByteString -> MD5Digest) . T.encodeUtf8
 
 
 -- | Send Request and parse Response
