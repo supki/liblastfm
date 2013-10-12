@@ -6,8 +6,10 @@ module Network.Lastfm.Response
   ( -- * Sign Request
     -- $sign
     Secret(..), sign
-    -- * Get Response
-  , Response, lastfm, lastfm', finalize
+    -- * Get 'Response'
+  , Response, Supported, lastfm
+    -- ** Internal
+  , lastfm', finalize
   ) where
 
 import Control.Applicative
@@ -42,6 +44,10 @@ import Network.Lastfm.Internal
 -- described at <http://www.last.fm/api/authspec#8>
 
 
+-- | 'Supported' provides parsing for a chosen 'Format'
+--
+-- 'JSON' is parsed to aeson's 'Value', 'XML' is to lazy 'ByteString'
+-- (in other words, parsing XML is left to the user)
 class Supported (f :: Format) where
   type Response f
   parse :: R f -> Lazy.ByteString -> C.ResponseHeaders -> Response f
