@@ -7,7 +7,7 @@ module Network.Lastfm.Response
     -- $sign
     Secret(..), sign
     -- * Get 'Response'
-  , Response, Supported, lastfm
+  , Response, Supported, lastfm, lastfm_
     -- ** Internal
   , lastfm', finalize
   ) where
@@ -17,6 +17,7 @@ import Control.Exception (throw)
 import Control.Monad
 import Data.Monoid
 import Data.String (IsString(..))
+import Data.Proxy (Proxy(..))
 
 import           Crypto.Classes (hash')
 import           Data.Aeson ((.:), Value, decode, parseJSON)
@@ -50,7 +51,7 @@ import Network.Lastfm.Internal
 -- (in other words, parsing XML is left to the user)
 class Supported (f :: Format) where
   type Response f
-  parse :: R f -> Lazy.ByteString -> C.ResponseHeaders -> Response f
+  parse :: proxy f -> Lazy.ByteString -> C.ResponseHeaders -> Response f
   base :: R f
 
 
@@ -109,27 +110,27 @@ md5 :: Text -> Text
 md5 = T.pack . show . (hash' :: Strict.ByteString -> MD5Digest) . T.encodeUtf8
 
 
--- | Send Request and parse Response
+-- | Send 'Request' and parse the 'Response'
 lastfm :: Supported f => Request f Ready -> IO (Response f)
-lastfm = lastfm' . finalize
+lastfm = lastfm' parse . finalize
+
+-- | Send 'Request' without parsing the 'Response'
+lastfm_ :: Supported f => Request f Ready -> IO ()
+lastfm_ = lastfm' (\_ _ _ -> ()) . finalize
 
 
--- | Get R from Request
---
--- That's rarely needed unless you want low-level requests manipulation
+-- | Get 'R' from 'Request'
 finalize :: Supported f => Request f Ready -> R f
 finalize = ($ base) . unwrap
 
 
--- | Send R and parse Response
---
--- That's rarely needed unless you want low-level requests manipulation
-lastfm' :: Supported f => R f -> IO (Response f)
-lastfm' request = C.withManager $ \manager -> do
+-- | Send 'R' and parse 'Response' with the supplied function
+lastfm' :: Supported f => (Proxy f -> Lazy.ByteString -> C.ResponseHeaders -> a) -> R f -> IO a
+lastfm' f request = C.withManager $ \manager -> do
   req <- C.parseUrl (render request)
   let req' = req
        { C.method          = _method request
        , C.responseTimeout = Just 10000000
        }
   res <- C.httpLbs req' manager
-  return $ parse request (C.responseBody res) (C.responseHeaders res)
+  return $ f Proxy (C.responseBody res) (C.responseHeaders res)

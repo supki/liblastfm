@@ -26,6 +26,7 @@ library
     network,
     pureMD5,
     semigroups,
+    tagged,
     text,
     void
   hs-source-dirs: src
