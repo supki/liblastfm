@@ -1,5 +1,4 @@
 # liblastfm
-[![Build Status](https://secure.travis-ci.org/supki/liblastfm.png?branch=develop)](http://travis-ci.org/supki/liblastfm)
 [![Build Status](https://drone.io/github.com/supki/liblastfm/status.png)](https://drone.io/github.com/supki/liblastfm/latest)
 
 Complete API interface to [last.fm][1] service.  
