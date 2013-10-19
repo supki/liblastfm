@@ -1,7 +1,8 @@
 # liblastfm
 [![Build Status](https://drone.io/github.com/supki/liblastfm/status.png)](https://drone.io/github.com/supki/liblastfm/latest)
+[![Build Status](https://secure.travis-ci.org/supki/liblastfm.png?branch=develop)](http://travis-ci.org/supki/liblastfm)
 
-Complete API interface to [last.fm][1] service.  
+Complete API interface to [last.fm][1] service.
 Documentation is available in two flavours:
   * original [API reference][2]
   * liblastfm [haddocks][3]
@@ -21,13 +22,13 @@ Response format might be:
 To install either use hackage:
 
     % cabal install liblastfm
-    
+
 Or git:
 
     % git clone git@github.com:supki/liblastfm
     % cd liblastfm
     % cabal install
-    
+
 ## Usage
 Suppose, you need to use [`tag.search`](http://www.last.fm/api/show/tag.search) API method.
 First find it in liblastfm: `Tag` would be the name of the module and `search` would be the name of function. [Here it is][7].
@@ -45,7 +46,7 @@ To send constructed request use `lastfm`:
 
     ghci> lastfm $ Tag.search <*> tag "russian-folk" <* limit 10 <*> apiKey "29effec263316a1f8a97f753caaa83e0" <* json
     Just (Object fromList [("results",Object fromList [("tagmatches", ...
-    
+
 How to parse responses is described [in wiki][8].
 
 ## FAQ
@@ -78,7 +79,7 @@ To enable it (either one works):
       instance Network.Lastfm.Response.Supported 'JSON
         -- Defined at src/Network/Lastfm/Response.hs:51:10
 ```
-A: This error message indicates that GHC cannot infer response format for `Request`. 
+A: This error message indicates that GHC cannot infer response format for `Request`.
 To fix it, add use `json` or `xml` helpers, depending on your needs
 
 ```
