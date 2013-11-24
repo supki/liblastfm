@@ -4,11 +4,11 @@
 --
 -- Basically, lastfm provides 3 ways to authenticate user:
 --
---  - web application - <http://www.lastfm.ru/api/webauth>
+--  - web application - <http://www.last.fm/api/webauth>
 --
---  - desktop application - <http://www.lastfm.ru/api/desktopauth>
+--  - desktop application - <http://www.last.fm/api/desktopauth>
 --
---  - modile application - <http://www.lastfm.ru/api/mobileauth>
+--  - modile application - <http://www.last.fm/api/mobileauth>
 --
 -- Note that you can use any of them in your
 -- application despite their names
