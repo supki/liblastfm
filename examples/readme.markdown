@@ -40,7 +40,7 @@ Demonstrates [web application authentication][10] flow.
 
 ### mobile-authentication
 Demonstrates [mobile application authentication][11] flow.
-  * [happstack][4]
+  * [lens-aeson][7]
 
 --
 
