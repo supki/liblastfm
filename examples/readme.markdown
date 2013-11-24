@@ -27,13 +27,19 @@ Shows how to use signed queries
 --
 
 ### desktop-authentication
-Demonstrates desktop application authentication flow.
+Demonstrates [desktop application authentication][9] flow.
   * [lens-aeson][7]
 
 --
 
 ### web-authentication
-Demonstrates web application authentication flow.
+Demonstrates [web application authentication][10] flow.
+  * [happstack][4]
+
+--
+
+### mobile-authentication
+Demonstrates [mobile application authentication][11] flow.
   * [happstack][4]
 
 --
@@ -51,3 +57,7 @@ Advanced scrobbling techniques.
  [6]: http://hackage.haskell.org/package/libmpd
  [7]: http://hackage.haskell.org/package/lens-aeson
  [8]: https://github.com/supki/scrobblers
+ [9]: http://www.last.fm/api/desktopauth
+ [10]: http://www.last.fm/api/webauth
+ [11]: http://www.last.fm/api/mobileauth
+

@@ -59,6 +59,16 @@ executable desktop-authentication
   ghc-options: -Wall
                -fno-warn-unused-do-bind
 
+executable mobile-authentication
+  default-language: Haskell2010
+  build-depends: base >=3 && < 5,
+                 liblastfm >= 0.1.0.0,
+                 lens,
+                 lens-aeson,
+                 text
+  main-is: mobile-authentication.hs
+  ghc-options: -Wall
+
 executable playcount
   default-language: Haskell2010
   build-depends: base >= 3 && < 5,
