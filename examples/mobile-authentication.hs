@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
--- | Desktop application authentication flow example
+-- | Mobile application authentication flow example
 --
 -- Please remember to substitute __YOUR_API_KEY__,
 -- __YOUR_SECRET__, __USERNAME__ and __PASSWORD__
