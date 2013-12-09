@@ -1,34 +1,38 @@
-name: liblastfm
-version: 0.3.2.0
-synopsis: Lastfm API interface
-license: MIT
-license-file: LICENSE
-author: Matvey Aksenov, Dmitry Malikov
-maintainer: Matvey Aksenov <matvey.aksenov@gmail.com>
-category: Network APIs
+name:          liblastfm
+version:       0.3.2.0
+synopsis:      Lastfm API interface
+license:       MIT
+license-file:  LICENSE
+author:        Matvey Aksenov, Dmitry Malikov
+maintainer:    Matvey Aksenov <matvey.aksenov@gmail.com>
+category:      Network APIs
 description:
   Provides interface to Lastfm REST API, supports XML and JSON formats.
 cabal-version: >= 1.10
-build-type: Simple
+build-type:    Simple
+
+source-repository head
+  type:     git
+  location: https://github.com/supki/liblastfm
 
 library
   default-language: Haskell2010
   build-depends:
-    aeson,
-    base >= 3 && < 5,
-    bytestring,
-    cereal,
-    containers >= 0.5,
-    contravariant,
-    crypto-api,
-    http-conduit >= 1.9,
-    http-types,
-    network,
-    pureMD5,
-    semigroups,
-    tagged,
-    text,
-    void
+      aeson
+    , base >= 3 && < 5
+    , bytestring
+    , cereal
+    , containers >= 0.5
+    , contravariant
+    , crypto-api
+    , http-conduit >= 1.9
+    , http-types
+    , network
+    , pureMD5
+    , semigroups
+    , tagged
+    , text
+    , void
   hs-source-dirs: src
   exposed-modules:
     Network.Lastfm
@@ -59,15 +63,15 @@ library
 test-suite json
   default-language: Haskell2010
   build-depends:
-    aeson == 0.6.*,
-    attoparsec >= 0.10,
-    base >= 3 && < 5,
-    bytestring >= 0.9 && < 0.11,
-    HUnit,
-    liblastfm,
-    test-framework,
-    test-framework-hunit,
-    text
+      aeson == 0.6.*
+    , attoparsec >= 0.10
+    , base >= 3 && < 5
+    , bytestring >= 0.9 && < 0.11
+    , HUnit
+    , liblastfm
+    , test-framework
+    , test-framework-hunit
+    , text
   type: exitcode-stdio-1.0
   hs-source-dirs: tests
   main-is: json.hs
@@ -90,8 +94,3 @@ test-suite json
     -Wall
     -fno-warn-orphans
     -fno-warn-unused-do-bind
-
-
-source-repository head
-  type:     git
-  location: https://github.com/supki/liblastfm
