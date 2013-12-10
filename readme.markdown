@@ -1,4 +1,5 @@
 # liblastfm
+[![Hackage](https://budueba.com/hackage/liblastfm)](http://hackage.haskell.org/packages/liblastfm)
 [![Build Status](https://drone.io/github.com/supki/liblastfm/status.png)](https://drone.io/github.com/supki/liblastfm/latest)
 [![Build Status](https://secure.travis-ci.org/supki/liblastfm.png?branch=develop)](http://travis-ci.org/supki/liblastfm)
 
