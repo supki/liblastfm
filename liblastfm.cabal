@@ -10,6 +10,9 @@ description:
   Provides interface to Lastfm REST API, supports XML and JSON formats.
 cabal-version: >= 1.10
 build-type:    Simple
+extra-source-files:
+  README.md
+  CHANGELOG.md
 
 source-repository head
   type:     git

@@ -1,7 +1,8 @@
-0.3.1.0
+0.3.2.0
 =======
 
   * Fix `auth.getMobileSession` method
+  * Provide `lastfm_` function for making requests without parsing response. That is most useful for `POST` requests like `N.L.Track.love`
 
 0.3.0.0
 =======
