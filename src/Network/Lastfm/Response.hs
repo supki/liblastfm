@@ -1,24 +1,28 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
 -- | Request sending and Response parsing
 module Network.Lastfm.Response
-  ( -- * Sign Request
+  ( -- * Request signature
     -- $sign
     Secret(..), sign
     -- * Get 'Response'
-  , Response, Supported, lastfm, lastfm_
+  , Response, Supported, Format(..), lastfm, lastfm_
+    -- ** Errors
+  , LastfmError(..), _LastfmBadResponse, _LastfmEncodedError, _LastfmHttpException
     -- ** Internal
   , lastfm', finalize
+#ifdef TEST
+  , parse
+  , md5
+  , wrapHttpException
+#endif
   ) where
 
-import Control.Applicative
-import Control.Exception (throw)
-import Control.Monad
-import Data.Monoid
-import Data.String (IsString(..))
-import Data.Proxy (Proxy(..))
-
+import           Control.Applicative
+import           Control.Exception (handle)
+import           Control.Monad
 import           Crypto.Classes (hash')
 import           Data.Aeson ((.:), Value, decode, parseJSON)
 import           Data.Aeson.Types (parseMaybe)
@@ -27,21 +31,24 @@ import qualified Data.ByteString as Strict
 import           Data.Digest.Pure.MD5 (MD5Digest)
 import           Data.Map (Map)
 import qualified Data.Map as M
+import           Data.Monoid
+import           Data.Proxy (Proxy(..))
+import           Data.Profunctor (Choice, dimap, right')
+import           Data.String (IsString(..))
 import           Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import qualified Network.HTTP.Conduit as C
-import qualified Network.HTTP.Types as C
 
-import Network.Lastfm.Internal
+import           Network.Lastfm.Internal
 
 
 -- $sign
 --
--- Signing is important part of every
--- authentication requiring API request.
--- Basically, every such request is appended
--- with md5 footprint of its arguments as
+-- Signature is required for every
+-- authenticated API request. Basically,
+-- every such request appends the md5 footprint
+-- of its arguments to the query as
 -- described at <http://www.last.fm/api/authspec#8>
 
 
@@ -51,39 +58,88 @@ import Network.Lastfm.Internal
 -- (in other words, parsing XML is left to the user)
 class Supported (f :: Format) where
   type Response f
-  parse :: proxy f -> Lazy.ByteString -> C.ResponseHeaders -> Response f
+  parse :: proxy f -> Lazy.ByteString -> Either LastfmError (Response f)
   base :: R f
 
-
 instance Supported JSON where
-  type Response JSON = Maybe Value
-  parse _ b hs = do
-    v <- decode b
-    case parseMaybe ((.: "error") <=< parseJSON) v :: Maybe Int of
-      Just _ ->
-        throw (C.StatusCodeException C.status400 (("Response", Strict.concat $ Lazy.toChunks b) : hs) (C.createCookieJar []))
-      _ -> return v
+  type Response JSON = Value
+  parse _ b = case decode b of
+    Just v -> case parseMaybe ((.: "error") <=< parseJSON) v :: Maybe Int of
+      Just e  -> Left (LastfmEncodedError e)
+      Nothing -> Right v
+    Nothing -> Left (LastfmBadResponse b)
   base = R
-    { _host = "https://ws.audioscrobbler.com/2.0/"
+    { _host   = "https://ws.audioscrobbler.com/2.0/"
     , _method = "GET"
-    , _query = M.fromList [("format", "json")]
+    , _query  = M.fromList [("format", "json")]
     }
   {-# INLINE base #-}
 
 instance Supported XML where
   type Response XML = Lazy.ByteString
-  parse _ b _ = b
+  parse _ b = Right b
   {-# INLINE parse #-}
   base = R
-    { _host = "https://ws.audioscrobbler.com/2.0/"
+    { _host   = "https://ws.audioscrobbler.com/2.0/"
     , _method = "GET"
-    , _query = mempty
+    , _query  = mempty
     }
   {-# INLINE base #-}
 
+-- | Different ways last.fm response can be unusable
+data LastfmError =
+    -- | last.fm thinks it responded with something legible, but it really isn't
+    LastfmBadResponse Lazy.ByteString
+    -- | last.fm encoded error into the response and sent it along with HTTP 200 response code
+  | LastfmEncodedError Int
+    -- | http-conduit exception, wrapped
+  | LastfmHttpException C.HttpException
+    deriving (Show)
+
+-- | Admittedly, this isn't the best 'Eq' instance ever
+-- but not having 'Eq' 'C.HttpException' does not leave much a choice
+instance Eq LastfmError where
+  LastfmBadResponse bs  == LastfmBadResponse bs' = bs == bs'
+  LastfmEncodedError e  == LastfmEncodedError e' = e == e'
+  LastfmHttpException _ == LastfmHttpException _ = True
+  _                     == _                     = False
+
+-- | This is a @ Prism' 'LastfmError' 'Lazy.ByteString' @ in disguise
+_LastfmBadResponse
+  :: (Choice p, Applicative m)
+  => p Lazy.ByteString (m Lazy.ByteString) -> p LastfmError (m LastfmError)
+_LastfmBadResponse = dimap go (either pure (fmap LastfmBadResponse)) . right'
+ where
+  go (LastfmBadResponse bs) = Right bs
+  go x                      = Left x
+  {-# INLINE go #-}
+{-# INLINE _LastfmBadResponse #-}
+
+-- | This is a @ Prism' 'LastfmError' 'Int' @ in disguise
+_LastfmEncodedError
+  :: (Choice p, Applicative m)
+  => p Int (m Int) -> p LastfmError (m LastfmError)
+_LastfmEncodedError = dimap go (either pure (fmap LastfmEncodedError)) . right'
+ where
+  go (LastfmEncodedError n) = Right n
+  go x                      = Left x
+  {-# INLINE go #-}
+{-# INLINE _LastfmEncodedError #-}
+
+-- | This is a @ Prism' 'LastfmError' 'C.HttpException' @ in disguise
+_LastfmHttpException
+  :: (Choice p, Applicative m)
+  => p C.HttpException (m C.HttpException) -> p LastfmError (m LastfmError)
+_LastfmHttpException = dimap go (either pure (fmap LastfmHttpException)) . right'
+ where
+  go (LastfmHttpException e) = Right e
+  go x                       = Left x
+  {-# INLINE go #-}
+{-# INLINE _LastfmHttpException #-}
+
 
 -- | Application secret
-newtype Secret = Secret Text deriving (Show)
+newtype Secret = Secret Text deriving (Show, Eq)
 
 instance IsString Secret where
   fromString = Secret . fromString
@@ -106,26 +162,27 @@ api_sig (Secret s) q = M.insert "api_sig" (signer (foldr M.delete q ["format", "
  where
   signer = md5 . M.foldrWithKey(\k v xs -> k <> v <> xs) s
 
+-- | Get supplied string md5 hash hex representation
 md5 :: Text -> Text
 md5 = T.pack . show . (hash' :: Strict.ByteString -> MD5Digest) . T.encodeUtf8
 
 
 -- | Send 'Request' and parse the 'Response'
-lastfm :: Supported f => Request f Ready -> IO (Response f)
-lastfm = lastfm' parse . finalize
+--
+-- Also catches 'C.HttpException's thrown by http-conduit
+lastfm :: Supported f => Request f Ready -> IO (Either LastfmError (Response f))
+lastfm = wrapHttpException . lastfm' parse . finalize
 
 -- | Send 'Request' without parsing the 'Response'
 lastfm_ :: Supported f => Request f Ready -> IO ()
-lastfm_ = lastfm' (\_ _ _ -> ()) . finalize
+lastfm_ = lastfm' (\_ _ -> ()) . finalize
 
-
--- | Get 'R' from 'Request'
-finalize :: Supported f => Request f Ready -> R f
-finalize = ($ base) . unwrap
-
+-- | Handle http-conduit's 'C.HttpException' by wrapping it
+wrapHttpException :: IO (Either LastfmError a) -> IO (Either LastfmError a)
+wrapHttpException = handle (return . Left . LastfmHttpException)
 
 -- | Send 'R' and parse 'Response' with the supplied function
-lastfm' :: Supported f => (Proxy f -> Lazy.ByteString -> C.ResponseHeaders -> a) -> R f -> IO a
+lastfm' :: Supported f => (Proxy f -> Lazy.ByteString -> a) -> R f -> IO a
 lastfm' f request = C.withManager $ \manager -> do
   req <- C.parseUrl (render request)
   let req' = req
@@ -133,4 +190,8 @@ lastfm' f request = C.withManager $ \manager -> do
        , C.responseTimeout = Just 10000000
        }
   res <- C.httpLbs req' manager
-  return $ f Proxy (C.responseBody res) (C.responseHeaders res)
+  return $ f Proxy (C.responseBody res)
+
+-- | Get 'R' from 'Request'
+finalize :: Supported f => Request f Ready -> R f
+finalize = ($ base) . unwrap

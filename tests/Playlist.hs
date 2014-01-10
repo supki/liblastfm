@@ -21,9 +21,10 @@ auth ak sk s =
  where
   ak' = "29effec263316a1f8a97f753caaa83e0"
 
+  -- Poo
   testAddTrack =
     do r ← lastfm $ getPlaylists <*> user "liblastfm" <*> apiKey ak' <* json
-       case parseMaybe pl =<< r of
+       case parseMaybe pl =<< either (const Nothing) Just r of
          Nothing → error "M"
          Just r' → let pid = read $ head r' in check ok . sign s $
            addTrack <*> playlist pid <*> artist "Ruby my dear" <*> track "Chazz" <*> ak <*> sk

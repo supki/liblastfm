@@ -1,2 +1,2 @@
-let g:hdevtools_options = '-g -isrc -g -itests -g -Wall -g -fno-warn-unused-do-bind -g -fno-warn-type-defaults -g -package-db=.cabal-sandbox/x86_64-linux-ghc-7.6.2-packages.conf.d'
+let g:hdevtools_options = '-g -isrc -g -itests -g -Wall -g -fno-warn-unused-do-bind -g -fno-warn-type-defaults -g -package-db=.cabal-sandbox/x86_64-linux-ghc-7.6.2-packages.conf.d -g -DTEST'
 

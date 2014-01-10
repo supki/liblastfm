@@ -4,7 +4,7 @@
 module Common where
 
 import Data.Aeson.Types
-import Network.Lastfm
+import Network.Lastfm (Request, Format(..), Ready, lastfm)
 import Test.HUnit
 
 
@@ -12,8 +12,8 @@ check ∷ (Value → Parser a) → Request JSON Ready → Assertion
 check p q = do
   r ← lastfm q
   case parse p `fmap` r of
-    Just (Success _) → assertBool "success" True
-    _                → assertFailure $ "Got: " ++ show r
+    Right (Success _) → assertBool "success" True
+    _                 → assertFailure $ "Got: " ++ show r
 
 
 ok ∷ Value → Parser String
