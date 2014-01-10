@@ -1,6 +1,5 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UnicodeSyntax #-}
 module Track (auth, noauth) where
 
 import Data.Aeson.Types
@@ -12,7 +11,7 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-auth ∷ Request JSON APIKey → Request JSON SessionKey → Secret → [Test]
+auth :: Request JSON APIKey -> Request JSON SessionKey -> Secret -> [Test]
 auth ak sk s =
   [ testCase "Track.addTags" testAddTags
   , testCase "Track.ban" testBan
@@ -53,7 +52,7 @@ auth ak sk s =
     updateNowPlaying <*> artist "Gojira" <*> track "Ocean" <*> ak <*> sk
 
 
-noauth ∷ Request JSON APIKey → [Test]
+noauth :: Request JSON APIKey -> [Test]
 noauth ak =
   [ testCase "Track.getBuylinks" testGetBuylinks
   , testCase "Track.getCorrection" testGetCorrection
@@ -116,8 +115,8 @@ noauth ak =
     search <*> track "Believe" <* limit 12 <*> ak
 
 
-gc, gi, gt, ss, np ∷ Value → Parser String
-gbl, gfm, gsh, gsi{-, gta-}, gtf, gtt, s' ∷ Value → Parser [String]
+gc, gi, gt, ss, np :: Value -> Parser String
+gbl, gfm, gsh, gsi{-, gta-}, gtf, gtt, s' :: Value -> Parser [String]
 gbl o = parseJSON o >>= (.: "affiliations") >>= (.: "downloads") >>= (.: "affiliation") >>= mapM (.: "supplierName")
 gc o = parseJSON o >>= (.: "corrections") >>= (.: "correction") >>= (.: "track") >>= (.: "artist") >>= (.: "name")
 gfm o = parseJSON o >>= (.: "tracks") >>= (.: "track") >>= mapM (.: "name")

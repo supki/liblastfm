@@ -1,6 +1,5 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UnicodeSyntax #-}
 module Library (auth, noauth) where
 
 import Data.Aeson.Types
@@ -12,7 +11,7 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-auth ∷ Request JSON APIKey → Request JSON SessionKey → Secret → [Test]
+auth :: Request JSON APIKey -> Request JSON SessionKey -> Secret -> [Test]
 auth ak sk s =
   [ testCase "Library.addAlbum" testAddAlbum
   , testCase "Library.addArtist" testAddArtist
@@ -45,7 +44,7 @@ auth ak sk s =
     removeScrobble <*> artist "Gojira" <*> track "Ocean" <*> timestamp 1328905590 <*> ak <*> sk
 
 
-noauth ∷ Request JSON APIKey → [Test]
+noauth :: Request JSON APIKey -> [Test]
 noauth ak =
   [ testCase "Library.getAlbums" testGetAlbums
   , testCase "Library.getArtists" testGetArtists
@@ -62,7 +61,7 @@ noauth ak =
     getTracks <*> user "smpcln" <* artist "Burzum" <* limit 4 <*> ak
 
 
-ga, gar, gt ∷ Value → Parser [String]
+ga, gar, gt :: Value -> Parser [String]
 ga o = parseJSON o >>= (.: "albums") >>= (.: "album") >>= mapM (.: "name")
 gar o = parseJSON o >>= (.: "artists") >>= (.: "artist") >>= mapM (.: "name")
 gt o = parseJSON o >>= (.: "tracks") >>= (.: "track") >>= mapM (.: "name")

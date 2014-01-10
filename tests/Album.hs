@@ -1,6 +1,5 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UnicodeSyntax #-}
 module Album (auth, noauth) where
 
 import Data.Aeson.Types
@@ -12,7 +11,7 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-auth ∷ Request JSON APIKey → Request JSON SessionKey → Secret → [Test]
+auth :: Request JSON APIKey -> Request JSON SessionKey -> Secret -> [Test]
 auth ak sk s =
   [ testCase "Album.addTags" testAddTags
   , testCase "Album.getTags-authenticated" testGetTagsAuth
@@ -37,7 +36,7 @@ auth ak sk s =
       <*> ak <*> sk
 
 
-noauth ∷ Request JSON APIKey → [Test]
+noauth :: Request JSON APIKey -> [Test]
 noauth ak =
   [ testCase "Album.getBuyLinks" testGetBuylinks
   , testCase "Album.getBuyLinks_mbid" testGetBuylinks_mbid
@@ -81,7 +80,7 @@ noauth ak =
     search <*> album "wall" <* limit 5 <*> ak
 
 
-gbl, gi, gs, gt, gtt, se ∷ Value → Parser [String]
+gbl, gi, gs, gt, gtt, se :: Value -> Parser [String]
 gbl o = parseJSON o >>= (.: "affiliations") >>= (.: "physicals") >>= (.: "affiliation") >>= mapM (.: "supplierName")
 gi o = parseJSON o >>= (.: "album") >>= (.: "toptags") >>= (.: "tag") >>= mapM (.: "name")
 gs o = parseJSON o >>= (.: "shouts") >>= (.: "shout") >>= mapM (.: "body")

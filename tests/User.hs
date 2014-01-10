@@ -1,6 +1,5 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UnicodeSyntax #-}
 module User (auth, noauth) where
 
 import Data.Aeson.Types
@@ -12,7 +11,7 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-auth ∷ Request JSON APIKey → Request JSON SessionKey → Secret → [Test]
+auth :: Request JSON APIKey -> Request JSON SessionKey -> Secret -> [Test]
 auth ak sk s =
   [ testCase "User.getRecentStations" testGetRecentStations
   , testCase "User.getRecommendedArtists" testGetRecommendedArtists
@@ -33,7 +32,7 @@ auth ak sk s =
     shout <*> user "liblastfm" <*> message "test message" <*> ak <*> sk
 
 
-noauth ∷ Request JSON APIKey → [Test]
+noauth :: Request JSON APIKey -> [Test]
 noauth ak =
   [ testCase "User.getArtistTracks" testGetArtistTracks
   , testCase "User.getBannedTracks" testGetBannedTracks
@@ -122,8 +121,8 @@ noauth ak =
     getWeeklyTrackChart <*> user "smpcln" <*> ak
 
 
-gpc ∷ Value → Parser String
-gat, gbt, ge, gf, glt, gn, gnr, gp, gpe, gpt, gra, gre, grs, grt, gs, gtal, gtar, gtta, gttr, gwalc, gwarc, gwcl, gwtc ∷ Value → Parser [String]
+gpc :: Value -> Parser String
+gat, gbt, ge, gf, glt, gn, gnr, gp, gpe, gpt, gra, gre, grs, grt, gs, gtal, gtar, gtta, gttr, gwalc, gwarc, gwcl, gwtc :: Value -> Parser [String]
 gat o = parseJSON o >>= (.: "artisttracks") >>= (.: "track") >>= mapM (.: "name")
 gbt o = parseJSON o >>= (.: "bannedtracks") >>= (.: "track") >>= mapM (.: "name")
 ge o = parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (.: "venue") >>= mapM (.: "url")

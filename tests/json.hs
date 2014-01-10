@@ -1,5 +1,4 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UnicodeSyntax #-}
 module Main where
 
 import Control.Applicative
@@ -27,14 +26,14 @@ import qualified User as User
 import qualified Venue as Venue
 
 
-main ∷ IO ()
+main :: IO ()
 main =
-  do keys ← B.readFile "tests/lastfm-keys.json"
+  do keys <- B.readFile "tests/lastfm-keys.json"
      case decode keys of
-       Just (Keys ak sk s) →
+       Just (Keys ak sk s) ->
          defaultMainWithOpts (auth <> noauth) (mempty { ropt_threads = Just 20 })
           where
-           auth = mconcat . map (\f → f (apiKey ak) (sessionKey sk) (Secret s)) $
+           auth = mconcat . map (\f -> f (apiKey ak) (sessionKey sk) (Secret s)) $
              [ Album.auth
              , Artist.auth
              , Event.auth
@@ -43,7 +42,7 @@ main =
              , Track.auth
              , User.auth
              ]
-           noauth = mconcat . map (\f → f (apiKey ak)) $
+           noauth = mconcat . map (\f -> f (apiKey ak)) $
              [ Album.noauth
              , Artist.noauth
              , Chart.noauth
@@ -57,7 +56,7 @@ main =
              , User.noauth
              , Venue.noauth
              ]
-       Nothing → exitWith (ExitFailure 1)
+       Nothing -> exitWith (ExitFailure 1)
 
 
 data Keys = Keys Text Text Text

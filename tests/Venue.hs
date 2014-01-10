@@ -1,6 +1,5 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UnicodeSyntax #-}
 module Venue (noauth) where
 
 import Data.Aeson.Types
@@ -12,7 +11,7 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-noauth ∷ Request JSON APIKey → [Test]
+noauth :: Request JSON APIKey -> [Test]
 noauth ak =
   [ testCase "Venue.getEvents" testGetEvents
   , testCase "Venue.getPastEvents" testGetPastEvents
@@ -29,7 +28,7 @@ noauth ak =
     search <*> venueName "Arena" <*> ak
 
 
-ge, gpe, se ∷ Value → Parser [String]
-ge o = parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (\t → (t .: "venue") >>= (.: "name"))
+ge, gpe, se :: Value -> Parser [String]
+ge o = parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (\t -> (t .: "venue") >>= (.: "name"))
 gpe o = parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (.: "title")
 se o = parseJSON o >>= (.: "results") >>= (.: "venuematches") >>= (.: "venue") >>= mapM (.: "id")

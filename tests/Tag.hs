@@ -1,6 +1,5 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UnicodeSyntax #-}
 module Tag (noauth) where
 
 import Data.Aeson.Types
@@ -12,7 +11,7 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-noauth ∷ Request JSON APIKey → [Test]
+noauth :: Request JSON APIKey -> [Test]
 noauth ak =
   [ testCase "Tag.getInfo" testGetInfo
   , testCase "Tag.getSimilar" testGetSimilar
@@ -53,11 +52,11 @@ noauth ak =
     search <*> tag "depressive" <* limit 3 <*> ak
 
 
-gi ∷ Value → Parser String
-gs, gta, gtar, gtt, gttr, gwac, se ∷ Value → Parser [String]
-gc ∷ Value → Parser [(String, String)]
+gi :: Value -> Parser String
+gs, gta, gtar, gtt, gttr, gwac, se :: Value -> Parser [String]
+gc :: Value -> Parser [(String, String)]
 gi o = parseJSON o >>= (.: "tag") >>= (.: "taggings")
-gc o = parseJSON o >>= (.: "weeklychartlist") >>= (.: "chart") >>= mapM (\t → (,) <$> (t .: "from") <*> (t .: "to"))
+gc o = parseJSON o >>= (.: "weeklychartlist") >>= (.: "chart") >>= mapM (\t -> (,) <$> (t .: "from") <*> (t .: "to"))
 gs o = parseJSON o >>= (.: "similartags") >>= (.: "tag") >>= mapM (.: "name")
 gta o = parseJSON o >>= (.: "topalbums") >>= (.: "album") >>= mapM (.: "url")
 gtar o = parseJSON o >>= (.: "topartists") >>= (.: "artist") >>= mapM (.: "url")

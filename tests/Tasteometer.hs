@@ -1,6 +1,5 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UnicodeSyntax #-}
 module Tasteometer (noauth) where
 
 import           Data.Aeson.Types
@@ -12,7 +11,7 @@ import           Test.Framework.Providers.HUnit
 import Common
 
 
-noauth ∷ Request JSON APIKey → [Test]
+noauth :: Request JSON APIKey -> [Test]
 noauth ak =
   [ testCase "Tasteometer.compare"    testCompare
   , testCase "Tasteometer.compare'"   testCompare'
@@ -30,5 +29,5 @@ noauth ak =
     T.compare (artists ["enduser", "venetian snares"]) (artists ["enduser", "venetian snares"]) <*> ak
 
 
-cs ∷ Value → Parser String
+cs :: Value -> Parser String
 cs o = parseJSON o >>= (.: "comparison") >>= (.: "result") >>= (.: "score")

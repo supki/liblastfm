@@ -1,6 +1,5 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UnicodeSyntax #-}
 module Chart (noauth) where
 
 import Data.Aeson.Types
@@ -12,7 +11,7 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-noauth ∷ Request JSON APIKey → [Test]
+noauth :: Request JSON APIKey -> [Test]
 noauth ak =
   [ testCase "Chart.getHypedArtists" testGetHypedArtists
   , testCase "Chart.getHypedTracks" testGetHypedTracks
@@ -41,7 +40,7 @@ noauth ak =
     getTopTracks <* limit 2 <*> ak
 
 
-ga, gt, gta ∷ Value → Parser [String]
+ga, gt, gta :: Value -> Parser [String]
 ga o = parseJSON o >>= (.: "artists") >>= (.: "artist") >>= mapM (.: "name")
 gt o = parseJSON o >>= (.: "tracks") >>= (.: "track") >>= mapM (.: "name")
 gta o = parseJSON o >>= (.: "tags") >>= (.: "tag") >>= mapM (.: "name")

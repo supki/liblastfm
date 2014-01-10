@@ -1,6 +1,5 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UnicodeSyntax #-}
 module Geo (noauth) where
 
 import Data.Aeson.Types
@@ -12,7 +11,7 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-noauth ∷ Request JSON APIKey → [Test]
+noauth :: Request JSON APIKey -> [Test]
 noauth ak =
   [ testCase "Geo.getEvents" testGetEvents
   , testCase "Geo.getMetroArtistChart" testGetMetroArtistChart
@@ -61,10 +60,10 @@ noauth ak =
     getTopTracks <*> country "Ukraine" <* limit 2 <*> ak
 
 
-ga, ge, gm, gt ∷ Value → Parser [String]
-gc ∷ Value → Parser [(String, String)]
+ga, ge, gm, gt :: Value -> Parser [String]
+gc :: Value -> Parser [(String, String)]
 ga o = parseJSON o >>= (.: "topartists") >>= (.: "artist") >>= mapM (.: "name")
-gc o = parseJSON o >>= (.: "weeklychartlist") >>= (.: "chart") >>= mapM (\t → (,) <$> (t .: "from") <*> (t .: "to"))
+gc o = parseJSON o >>= (.: "weeklychartlist") >>= (.: "chart") >>= mapM (\t -> (,) <$> (t .: "from") <*> (t .: "to"))
 ge o = parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (.: "id")
 gm o = parseJSON o >>= (.: "metros") >>= (.: "metro") >>= mapM (.: "name")
 gt o = parseJSON o >>= (.: "toptracks") >>= (.: "track") >>= mapM (.: "name")

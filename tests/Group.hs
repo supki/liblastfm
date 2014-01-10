@@ -1,6 +1,5 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UnicodeSyntax #-}
 module Group (noauth) where
 
 import Data.Aeson.Types
@@ -12,7 +11,7 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-noauth ∷ Request JSON APIKey → [Test]
+noauth :: Request JSON APIKey -> [Test]
 noauth ak =
   [ testCase "Group.getHype" testGetHype
   , testCase "Group.getMembers" testGetMembers
@@ -43,11 +42,11 @@ noauth ak =
     getWeeklyTrackChart <*> group g <*> ak
 
 
-ga, gar, gh, gm, gt ∷ Value → Parser [String]
-gc ∷ Value → Parser [(String, String)]
+ga, gar, gh, gm, gt :: Value -> Parser [String]
+gc :: Value -> Parser [(String, String)]
 ga o = parseJSON o >>= (.: "weeklyalbumchart") >>= (.: "album") >>= mapM (.: "playcount")
 gar o = parseJSON o >>= (.: "weeklyartistchart") >>= (.: "artist") >>= mapM (.: "name")
-gc o = parseJSON o >>= (.: "weeklychartlist") >>= (.: "chart") >>= mapM (\t → (,) <$> (t .: "from") <*> (t .: "to"))
+gc o = parseJSON o >>= (.: "weeklychartlist") >>= (.: "chart") >>= mapM (\t -> (,) <$> (t .: "from") <*> (t .: "to"))
 gh o = parseJSON o >>= (.: "weeklyartistchart") >>= (.: "artist") >>= mapM (.: "mbid")
 gm o = parseJSON o >>= (.: "members") >>= (.: "user") >>= mapM (.: "name")
 gt o = parseJSON o >>= (.: "weeklytrackchart") >>= (.: "track") >>= mapM (.: "url")

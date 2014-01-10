@@ -1,6 +1,5 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UnicodeSyntax #-}
 module Artist (auth, noauth) where
 
 import Data.Aeson.Types
@@ -12,7 +11,7 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-auth ∷ Request JSON APIKey → Request JSON SessionKey → Secret → [Test]
+auth :: Request JSON APIKey -> Request JSON SessionKey -> Secret -> [Test]
 auth ak sk s =
   [ testCase "Artist.addTags" testAddTags
   , testCase "Artist.getTags-authenticated" testGetTagsAuth
@@ -33,7 +32,7 @@ auth ak sk s =
     share <*> artist "Sleep" <*> recipient "liblastfm" <* message "Just listen!" <*> ak <*> sk
 
 
-noauth ∷ Request JSON APIKey → [Test]
+noauth :: Request JSON APIKey -> [Test]
 noauth ak =
   [ testCase "Artist.getCorrection" testGetCorrection
   , testCase "Artist.getEvents" testGetEvents
@@ -123,10 +122,10 @@ noauth ak =
     search <*> artist "Mesh" <* limit 3 <*> ak
 
 
-gc, gin, gp ∷ Value → Parser String
-ge, gpe, gs, gsi, gt, gta, gtf, gtt, gttr, se ∷ Value → Parser [String]
+gc, gin, gp :: Value -> Parser String
+ge, gpe, gs, gsi, gt, gta, gtf, gtt, gttr, se :: Value -> Parser [String]
 gc o = parseJSON o >>= (.: "corrections") >>= (.: "correction") >>= (.: "artist") >>= (.: "name")
-ge o = parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (\o' → (o' .: "venue") >>= (.: "name"))
+ge o = parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (\o' -> (o' .: "venue") >>= (.: "name"))
 gin o = parseJSON o >>= (.: "artist") >>= (.: "stats") >>= (.: "listeners")
 gp o = parseJSON o >>= (.: "rss") >>= (.: "channel") >>= (.: "description")
 gpe o = parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (.: "title")

@@ -1,6 +1,5 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UnicodeSyntax #-}
 module Event (auth, noauth) where
 
 import Data.Aeson.Types
@@ -12,7 +11,7 @@ import Test.Framework.Providers.HUnit
 import Common
 
 
-auth ∷ Request JSON APIKey → Request JSON SessionKey → Secret → [Test]
+auth :: Request JSON APIKey -> Request JSON SessionKey -> Secret -> [Test]
 auth ak sk s =
   [ testCase "Event.attend" testAttend
   , testCase "Event.share" testShare
@@ -25,7 +24,7 @@ auth ak sk s =
     share <*> event 3142549 <*> recipient "liblastfm" <* message "Just listen!" <*> ak <*> sk
 
 
-noauth ∷ Request JSON APIKey → [Test]
+noauth :: Request JSON APIKey -> [Test]
 noauth ak =
   [ testCase "Event.getAttendees" testGetAttendees
   , testCase "Event.getInfo" testGetInfo
@@ -42,8 +41,8 @@ noauth ak =
     getShouts <*> event 3142549 <* limit 1 <*> ak
 
 
-gi, gs ∷ Value → Parser String
-ga ∷ Value → Parser [String]
+gi, gs :: Value -> Parser String
+ga :: Value -> Parser [String]
 ga o = parseJSON o >>= (.: "attendees") >>= (.: "user") >>= mapM (.: "name")
 gi o = parseJSON o >>= (.: "event") >>= (.: "venue") >>= (.: "location") >>= (.: "city")
 gs o = parseJSON o >>= (.: "shouts") >>= (.: "shout") >>= (.: "body")
