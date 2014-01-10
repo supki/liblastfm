@@ -1,5 +1,4 @@
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE NoMonomorphismRestriction #-}
 {-# LANGUAGE OverloadedStrings #-}
 {- This example shows how to extract all
  - user friends, get their similarity score and
@@ -21,24 +20,21 @@
  - Notice: you may want to adjust maximum open files limit
  - if testing on users with relatively large friends count
  -}
-module Main where
-
-import Data.Function (on)
-import Data.List (sortBy)
-import Data.Maybe (fromMaybe)
-import Data.Monoid ((<>))
-import Text.Read (readMaybe)
-
-import           Control.Concurrent.Async
-import           Control.Lens
-import           Control.Lens.Aeson
-import           Data.Aeson (Value)
-import           Data.Text (Text)
-import qualified Data.Text as T
-import qualified Data.Text.IO as T
-import           Network.Lastfm hiding (to)
-import qualified Network.Lastfm.User as User
-import qualified Network.Lastfm.Tasteometer as Tasteometer
+import           Control.Concurrent.Async                  -- async
+import           Control.Lens                              -- lens
+import           Control.Lens.Aeson                        -- lens-aeson
+import           Data.Aeson (Value)                        -- aeson
+import           Data.Function (on)                        -- base
+import           Data.List (sortBy)                        -- base
+import           Data.Maybe (fromMaybe)                    -- base
+import           Data.Monoid ((<>))                        -- base
+import           Data.Text (Text)                          -- text
+import           Data.Text.Lens (unpacked)                 -- lens
+import qualified Data.Text.IO as Text                      -- text
+import           Network.Lastfm hiding (to)                -- liblastfm
+import qualified Network.Lastfm.User as User               -- liblastfm
+import qualified Network.Lastfm.Tasteometer as Tasteometer -- liblastfm
+import           Text.Read (readMaybe)                     -- base
 
 
 type Score = Text
@@ -47,37 +43,31 @@ type Score = Text
 main :: IO ()
 main = pages >>= scores . names >>= pretty
  where
-  names x = x ^.. folded . _Just . key "friends" . key "user" . _Array . folded . key "name" . _String
+  names x = x ^.. folded.folded.key "friends".key "user"._Array.folded.key "name"._String
 
-
-pages :: IO [Maybe Value]
+pages :: IO [Either LastfmError Value]
 pages = do
   first <- query (User.getFriends <*> user target)
-  let ps = fromMaybe 1 (readMaybe =<< preview total first)
+  let ps = fromMaybe 1 (preview total first)
   (first :) <$> forConcurrently [2..ps] (\p -> query (User.getFriends <*> user target <* page p))
  where
-  total = _Just . key "friends" . key "@attr" . key "totalPages" . _String . to T.unpack
-
+  total = folded.key "friends".key "@attr".key "totalPages"._String.unpacked.to readMaybe.folded
 
 scores :: [Text] -> IO [(Text, Score)]
 scores xs = zip xs <$> forConcurrently xs (\x -> do
   r <- query (Tasteometer.compare (user target) (user x))
   return (fromMaybe "0" (preview score r)))
  where
-  score = _Just . key "comparison" . key "result" . key "score" . _String
-
+  score = folded.key "comparison".key "result".key "score"._String
 
 forConcurrently :: [a] -> (a -> IO b) -> IO [b]
 forConcurrently = flip mapConcurrently
 
-
 pretty :: [(Text, Score)] -> IO ()
-pretty = mapM_ (\(n,s) -> T.putStrLn $ n <> ": " <> s) . take 5 . sortBy (flip compare `on` snd)
+pretty = mapM_ (\(n,s) -> Text.putStrLn $ n <> ": " <> s) . take 5 . sortBy (flip compare `on` snd)
 
-
-query :: Request JSON (APIKey -> Ready) -> IO (Response JSON)
+query :: Request JSON (APIKey -> Ready) -> IO (Either LastfmError (Response JSON))
 query r = lastfm (r <*> apiKey "234fc6e0f41f6ef99b7bd62ebaf8d318" <* json)
-
 
 target :: Text
 target = "MCDOOMDESTROYER"

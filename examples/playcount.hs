@@ -1,4 +1,3 @@
-#!/usr/bin/runhaskell
 {-# LANGUAGE OverloadedStrings #-}
 {- This example shows how to get user playcount with lens-aeson
  -
@@ -12,22 +11,21 @@
  - >>> ^C
  - $>
  -}
-import           Control.Monad
-import           Data.Maybe
-import qualified System.IO as IO
-
-import           Control.Lens
-import           Control.Lens.Aeson
-import           Data.Text (Text)
-import qualified Data.Text.IO as T
-import           Network.Lastfm
-import qualified Network.Lastfm.User as U
+import           Control.Lens                -- lens
+import           Control.Lens.Aeson          -- lens-aeson
+import           Control.Monad               -- base
+import           Data.Maybe                  -- base
+import           Data.Text (Text)            -- text
+import qualified Data.Text.IO as Text        -- text
+import           Network.Lastfm              -- liblastfm
+import qualified Network.Lastfm.User as User -- liblastfm
+import           System.IO (hFlush, stdout)  -- base
 
 
 main :: IO ()
-main = forever $ T.putStr ">>> " >> IO.hFlush IO.stdout >> T.getLine >>= playcount >>= T.putStrLn
-
+main = forever $ Text.putStr ">>> " >> hFlush stdout >> Text.getLine >>= playcount >>= Text.putStrLn
 
 playcount :: Text -> IO Text
-playcount u = lastfm (U.getInfo <*> user u <*> apiKey "29effec263316a1f8a97f753caaa83e0" <* json) <&> \rsp ->
-  fromMaybe "Playcount not found" (rsp ^? _Just . key "user" . key "playcount" . _String)
+playcount u =
+  lastfm (User.getInfo <*> user u <*> apiKey "29effec263316a1f8a97f753caaa83e0" <* json) <&> \rsp ->
+    fromMaybe "Playcount not found" (rsp ^? folded.key "user".key "playcount"._String)
