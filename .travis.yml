@@ -2,5 +2,5 @@ language: haskell
 
 script:
     - cabal install
-    - cabal test spec
+    - cabal configure && cabal test spec
     - cabal install examples/liblastfm-examples.cabal
