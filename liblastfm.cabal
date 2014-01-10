@@ -29,7 +29,6 @@ library
     , contravariant
     , crypto-api
     , http-conduit >= 1.9
-    , http-types
     , network
     , profunctors
     , pureMD5
@@ -98,3 +97,36 @@ test-suite json
     -Wall
     -fno-warn-orphans
     -fno-warn-unused-do-bind
+
+test-suite spec
+  default-language: Haskell2010
+  build-depends:
+      aeson
+    , base >= 3 && < 5
+    , bytestring
+    , cereal
+    , containers
+    , contravariant
+    , crypto-api
+    , hspec
+    , hspec-expectations-lens
+    , http-conduit
+    , lens
+    , lens-aeson
+    , network
+    , profunctors
+    , pureMD5
+    , tagged
+    , text
+    , void
+  type: exitcode-stdio-1.0
+  hs-source-dirs:
+    src
+    tests
+  main-is: Spec.hs
+  other-modules:
+    Network.Lastfm.ResponseSpec
+  ghc-options:
+    -Wall
+  cpp-options:
+    -DTEST

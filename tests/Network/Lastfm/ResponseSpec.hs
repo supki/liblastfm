@@ -15,6 +15,7 @@ import Network.HTTP.Conduit (HttpException(..))
 
 import Network.Lastfm.Response
 
+
 instance Eq HttpException where
   _ == _ = True
 
