@@ -28,6 +28,11 @@ source-repository head
   type:     git
   location: https://github.com/supki/liblastfm
 
+flag test-api
+  description: a real API test
+  default: False
+  manual: True
+
 library
   default-language: Haskell2010
   build-depends:
@@ -75,6 +80,8 @@ library
 
 
 test-suite api
+  if !flag(test-api)
+    buildable: False
   default-language: Haskell2010
   build-depends:
       aeson
