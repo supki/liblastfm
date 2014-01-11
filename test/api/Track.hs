@@ -53,8 +53,8 @@ auth ak sk s =
     updateNowPlaying <*> artist "Gojira" <*> track "Ocean" <*> ak <*> sk
 
 
-noauth :: Request JSON APIKey -> [Test]
-noauth ak =
+noauth :: [Test]
+noauth =
   [ testCase "Track.getBuylinks" testGetBuylinks
   , testCase "Track.getCorrection" testGetCorrection
   , testCase "Track.getFingerprintMetadata" testGetFingerprintMetadata
@@ -74,46 +74,46 @@ noauth ak =
   ]
  where
   testGetBuylinks = query gbl $
-    getBuyLinks <*> country "United Kingdom" <*> artist "Pink Floyd" <*> track "Brain Damage" <*> ak
+    getBuyLinks <*> country "United Kingdom" <*> artist "Pink Floyd" <*> track "Brain Damage" <*> publicKey
 
   testGetCorrection = query gc $
-    getCorrection <*> artist "Pink Ployd" <*> track "Brain Damage" <*> ak
+    getCorrection <*> artist "Pink Ployd" <*> track "Brain Damage" <*> publicKey
 
   testGetFingerprintMetadata = query gfm $
-    getFingerprintMetadata <*> fingerprint 1234 <*> ak
+    getFingerprintMetadata <*> fingerprint 1234 <*> publicKey
 
   testGetInfo = query gi $
-    getInfo <*> artist "Pink Floyd" <*> track "Comfortably Numb" <* username "aswalrus" <*> ak
+    getInfo <*> artist "Pink Floyd" <*> track "Comfortably Numb" <* username "aswalrus" <*> publicKey
   testGetInfo_mbid = query gi $
-    getInfo <*> mbid "52d7c9ff-6ae4-48a6-acec-4c1a486f8c92" <* username "aswalrus" <*> ak
+    getInfo <*> mbid "52d7c9ff-6ae4-48a6-acec-4c1a486f8c92" <* username "aswalrus" <*> publicKey
 
   testGetShouts = query gsh $
-    getShouts <*> artist "Pink Floyd" <*> track "Comfortably Numb" <* limit 7 <*> ak
+    getShouts <*> artist "Pink Floyd" <*> track "Comfortably Numb" <* limit 7 <*> publicKey
   testGetShouts_mbid = query gsh $
-    getShouts <*> mbid "52d7c9ff-6ae4-48a6-acec-4c1a486f8c92" <* limit 7 <*> ak
+    getShouts <*> mbid "52d7c9ff-6ae4-48a6-acec-4c1a486f8c92" <* limit 7 <*> publicKey
 
   testGetSimilar = query gsi $
-    getSimilar <*> artist "Pink Floyd" <*> track "Comfortably Numb" <* limit 4 <*> ak
+    getSimilar <*> artist "Pink Floyd" <*> track "Comfortably Numb" <* limit 4 <*> publicKey
   testGetSimilar_mbid = query gsi $
-    getSimilar <*> mbid "52d7c9ff-6ae4-48a6-acec-4c1a486f8c92" <* limit 4 <*> ak
+    getSimilar <*> mbid "52d7c9ff-6ae4-48a6-acec-4c1a486f8c92" <* limit 4 <*> publicKey
 
   testGetTags = query gt $
-    getTags <*> artist "Jefferson Airplane" <*> track "White Rabbit" <* user "liblastfm" <*> ak
+    getTags <*> artist "Jefferson Airplane" <*> track "White Rabbit" <* user "liblastfm" <*> publicKey
   testGetTags_mbid = query gt $
-    getTags <*> mbid "001b3337-faf4-421a-a11f-45e0b60a7703"  <* user "liblastfm" <*> ak
+    getTags <*> mbid "001b3337-faf4-421a-a11f-45e0b60a7703"  <* user "liblastfm" <*> publicKey
 
   testGetTopFans = query gtf $
-    getTopFans <*> artist "Pink Floyd" <*> track "Comfortably Numb" <*> ak
+    getTopFans <*> artist "Pink Floyd" <*> track "Comfortably Numb" <*> publicKey
   testGetTopFans_mbid = query gtf $
-    getTopFans <*> mbid "52d7c9ff-6ae4-48a6-acec-4c1a486f8c92" <*> ak
+    getTopFans <*> mbid "52d7c9ff-6ae4-48a6-acec-4c1a486f8c92" <*> publicKey
 
   testGetTopTags = query gtt $
-    getTopTags <*> artist "Pink Floyd" <*> track "Comfortably Numb" <*> ak
+    getTopTags <*> artist "Pink Floyd" <*> track "Comfortably Numb" <*> publicKey
   testGetTopTags_mbid = query gtt $
-    getTopTags <*> mbid "52d7c9ff-6ae4-48a6-acec-4c1a486f8c92" <*> ak
+    getTopTags <*> mbid "52d7c9ff-6ae4-48a6-acec-4c1a486f8c92" <*> publicKey
 
   testSearch = query s' $
-    search <*> track "Believe" <* limit 12 <*> ak
+    search <*> track "Believe" <* limit 12 <*> publicKey
 
 
 gbl, gc, gfm, gi, gsh, gsi, gt, gtf, gtt, np, s', ss :: Query Text

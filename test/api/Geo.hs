@@ -12,8 +12,8 @@ import Test.Framework.Providers.HUnit
 import Helper
 
 
-noauth :: Request JSON APIKey -> [Test]
-noauth ak =
+noauth :: [Test]
+noauth =
   [ testCase "Geo.getEvents" testGetEvents
   , testCase "Geo.getMetroArtistChart" testGetMetroArtistChart
   , testCase "Geo.getMetroHypeArtistChart" testGetMetroHypeArtistChart
@@ -28,37 +28,37 @@ noauth ak =
   ]
  where
   testGetEvents = query ge $
-    getEvents <* location "Moscow" <* limit 5 <*> ak
+    getEvents <* location "Moscow" <* limit 5 <*> publicKey
 
   testGetMetroArtistChart = query ga $
-    getMetroArtistChart <*> metro "Saint Petersburg" <*> country "Russia" <*> ak
+    getMetroArtistChart <*> metro "Saint Petersburg" <*> country "Russia" <*> publicKey
 
   testGetMetroHypeArtistChart = query ga $
-    getMetroHypeArtistChart <*> metro "New York" <*> country "United States" <*> ak
+    getMetroHypeArtistChart <*> metro "New York" <*> country "United States" <*> publicKey
 
   testGetMetroHypeTrackChart = query gt $
-    getMetroHypeTrackChart <*> metro "Moscow" <*> country "Russia" <*> ak
+    getMetroHypeTrackChart <*> metro "Moscow" <*> country "Russia" <*> publicKey
 
   testGetMetroTrackChart = query gt $
-    getMetroTrackChart <*> metro "Boston" <*> country "United States" <*> ak
+    getMetroTrackChart <*> metro "Boston" <*> country "United States" <*> publicKey
 
   testGetMetroUniqueArtistChart = query ga $
-    getMetroUniqueArtistChart <*> metro "Minsk" <*> country "Belarus" <*> ak
+    getMetroUniqueArtistChart <*> metro "Minsk" <*> country "Belarus" <*> publicKey
 
   testGetMetroUniqueTrackChart = query gt $
-    getMetroUniqueTrackChart <*> metro "Moscow" <*> country "Russia" <*> ak
+    getMetroUniqueTrackChart <*> metro "Moscow" <*> country "Russia" <*> publicKey
 
   testGetMetroWeeklyChartlist = query gc $
-    getMetroWeeklyChartlist <*> metro "Moscow" <*> ak
+    getMetroWeeklyChartlist <*> metro "Moscow" <*> publicKey
 
   testGetMetros = query gm $
-    getMetros <* country "Russia" <*> ak
+    getMetros <* country "Russia" <*> publicKey
 
   testGetTopArtists = query ga $
-    getTopArtists <*> country "Belarus" <* limit 3 <*> ak
+    getTopArtists <*> country "Belarus" <* limit 3 <*> publicKey
 
   testGetTopTracks = query gt $
-    getTopTracks <*> country "Ukraine" <* limit 2 <*> ak
+    getTopTracks <*> country "Ukraine" <* limit 2 <*> publicKey
 
 
 ga, gc, ge, gm, gt :: Query Text

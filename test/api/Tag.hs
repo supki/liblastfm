@@ -12,8 +12,8 @@ import Test.Framework.Providers.HUnit
 import Helper
 
 
-noauth :: Request JSON APIKey -> [Test]
-noauth ak =
+noauth :: [Test]
+noauth =
   [ testCase "Tag.getInfo" testGetInfo
   , testCase "Tag.getSimilar" testGetSimilar
   , testCase "Tag.getTopAlbums" testGetTopAlbums
@@ -26,31 +26,31 @@ noauth ak =
   ]
  where
   testGetInfo = query gi $
-    getInfo <*> tag "depressive" <*> ak
+    getInfo <*> tag "depressive" <*> publicKey
 
   testGetSimilar = query gs $
-    getSimilar <*> tag "depressive" <*> ak
+    getSimilar <*> tag "depressive" <*> publicKey
 
   testGetTopAlbums = query gta $
-    getTopAlbums <*> tag "depressive" <* limit 2 <*> ak
+    getTopAlbums <*> tag "depressive" <* limit 2 <*> publicKey
 
   testGetTopArtists = query gtar $
-    getTopArtists <*> tag "depressive" <* limit 3 <*> ak
+    getTopArtists <*> tag "depressive" <* limit 3 <*> publicKey
 
   testGetTopTags = query gtt $
-    getTopTags <*> ak
+    getTopTags <*> publicKey
 
   testGetTopTracks = query gttr $
-    getTopTracks <*> tag "depressive" <* limit 2 <*> ak
+    getTopTracks <*> tag "depressive" <* limit 2 <*> publicKey
 
   testGetWeeklyArtistChart = query gwac $
-    getWeeklyArtistChart <*> tag "depressive" <* limit 3 <*> ak
+    getWeeklyArtistChart <*> tag "depressive" <* limit 3 <*> publicKey
 
   testGetWeeklyChartList = query gc $
-    getWeeklyChartList <*> tag "depressive" <*> ak
+    getWeeklyChartList <*> tag "depressive" <*> publicKey
 
   testSearch = query se $
-    search <*> tag "depressive" <* limit 3 <*> ak
+    search <*> tag "depressive" <* limit 3 <*> publicKey
 
 
 gc, gi, gs, gta, gtar, gtt, gttr, gwac, se :: Query Text

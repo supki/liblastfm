@@ -12,8 +12,8 @@ import Test.Framework.Providers.HUnit
 import Helper
 
 
-noauth :: Request JSON APIKey -> [Test]
-noauth ak =
+noauth :: [Test]
+noauth =
   [ testCase "Group.getHype" testGetHype
   , testCase "Group.getMembers" testGetMembers
   , testCase "Group.getWeeklyAlbumChart" testGetWeeklyAlbumChart
@@ -25,22 +25,22 @@ noauth ak =
   g = "People with no social lives that listen to more music than is healthy who are slightly scared of spiders and can never seem to find a pen"
 
   testGetHype = query gh $
-    getHype <*> group g <*> ak
+    getHype <*> group g <*> publicKey
 
   testGetMembers = query gm $
-    getMembers <*> group g <* limit 10 <*> ak
+    getMembers <*> group g <* limit 10 <*> publicKey
 
   testGetWeeklyAlbumChart = query ga $
-    getWeeklyAlbumChart <*> group g <*> ak
+    getWeeklyAlbumChart <*> group g <*> publicKey
 
   testGetWeeklyArtistChart = query gar $
-    getWeeklyArtistChart <*> group g <*> ak
+    getWeeklyArtistChart <*> group g <*> publicKey
 
   testGetWeeklyChartList = query gc $
-    getWeeklyChartList <*> group g <*> ak
+    getWeeklyChartList <*> group g <*> publicKey
 
   testGetWeeklyTrackChart = query gt $
-    getWeeklyTrackChart <*> group g <*> ak
+    getWeeklyTrackChart <*> group g <*> publicKey
 
 
 ga, gar, gc, gh, gm, gt :: Query Text

@@ -5,7 +5,7 @@ import           Data.Aeson
 import           Data.Monoid
 import           Data.Text (Text)
 import           Network.Lastfm
-import           System.Exit (ExitCode(ExitFailure), exitWith)
+import           System.Exit (exitFailure)
 import           Test.Framework
 
 import qualified Album
@@ -24,36 +24,36 @@ import qualified Venue
 
 
 main :: IO ()
-main =
-  do keys <- ByteString.readFile "test/api/lastfm-keys.json"
-     case decode keys of
-       Just (Keys ak sk s) ->
-         defaultMainWithOpts (auth <> noauth) (mempty { ropt_threads = Just 20 })
-          where
-           auth = mconcat . map (\f -> f (apiKey ak) (sessionKey sk) (Secret s)) $
-             [ Album.auth
-             , Artist.auth
-             , Event.auth
-             , Library.auth
-             , Playlist.auth
-             , Track.auth
-             , User.auth
-             ]
-           noauth = mconcat . map (\f -> f (apiKey ak)) $
-             [ Album.noauth
-             , Artist.noauth
-             , Chart.noauth
-             , Event.noauth
-             , Geo.noauth
-             , Group.noauth
-             , Library.noauth
-             , Tag.noauth
-             , Tasteometer.noauth
-             , Track.noauth
-             , User.noauth
-             , Venue.noauth
-             ]
-       Nothing -> exitWith (ExitFailure 1)
+main = do
+  keys <- ByteString.readFile "test/api/lastfm-keys.json"
+  case decode keys of
+    Just (Keys ak sk s) ->
+      defaultMainWithOpts (auth ++ noauth) (mempty { ropt_threads = Just 20 })
+       where
+        auth = concatMap (\f -> f (apiKey ak) (sessionKey sk) (Secret s))
+          [ Album.auth
+          , Artist.auth
+          , Event.auth
+          , Library.auth
+          , Playlist.auth
+          , Track.auth
+          , User.auth
+          ]
+        noauth = concat
+          [ Album.noauth
+          , Artist.noauth
+          , Chart.noauth
+          , Event.noauth
+          , Geo.noauth
+          , Group.noauth
+          , Library.noauth
+          , Tag.noauth
+          , Tasteometer.noauth
+          , Track.noauth
+          , User.noauth
+          , Venue.noauth
+          ]
+    Nothing -> exitFailure
 
 
 data Keys = Keys Text Text Text

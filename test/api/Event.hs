@@ -25,21 +25,21 @@ auth ak sk s =
     share <*> event 3142549 <*> recipient "liblastfm" <* message "Just listen!" <*> ak <*> sk
 
 
-noauth :: Request JSON APIKey -> [Test]
-noauth ak =
+noauth :: [Test]
+noauth =
   [ testCase "Event.getAttendees" testGetAttendees
   , testCase "Event.getInfo" testGetInfo
   , testCase "Event.getShouts" testGetShouts
   ]
  where
   testGetAttendees = query ga $
-    getAttendees <*> event 3142549 <* limit 2 <*> ak
+    getAttendees <*> event 3142549 <* limit 2 <*> publicKey
 
   testGetInfo = query gi $
-    getInfo <*> event 3142549 <*> ak
+    getInfo <*> event 3142549 <*> publicKey
 
   testGetShouts = query gs $
-    getShouts <*> event 3142549 <* limit 1 <*> ak
+    getShouts <*> event 3142549 <* limit 1 <*> publicKey
 
 
 ga, gi, gs :: Query Text

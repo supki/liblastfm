@@ -33,8 +33,8 @@ auth ak sk s =
     shout <*> user "liblastfm" <*> message "test message" <*> ak <*> sk
 
 
-noauth :: Request JSON APIKey -> [Test]
-noauth ak =
+noauth :: [Test]
+noauth =
   [ testCase "User.getArtistTracks" testGetArtistTracks
   , testCase "User.getBannedTracks" testGetBannedTracks
   , testCase "User.getEvents" testGetEvents
@@ -59,67 +59,67 @@ noauth ak =
   ]
  where
   testGetArtistTracks = query gat $
-    getArtistTracks <*> user "smpcln" <*> artist "Dvar" <*> ak
+    getArtistTracks <*> user "smpcln" <*> artist "Dvar" <*> publicKey
 
   testGetBannedTracks = query gbt $
-    getBannedTracks <*> user "smpcln" <* limit 10 <*> ak
+    getBannedTracks <*> user "smpcln" <* limit 10 <*> publicKey
 
   testGetEvents = query ge $
-    getEvents <*> user "chansonnier" <* limit 5 <*> ak
+    getEvents <*> user "chansonnier" <* limit 5 <*> publicKey
 
   testGetFriends = query gf $
-    getFriends <*> user "smpcln" <* limit 10 <*> ak
+    getFriends <*> user "smpcln" <* limit 10 <*> publicKey
 
   testGetPlayCount = query gpc $
-    getInfo <*> user "smpcln" <*> ak
+    getInfo <*> user "smpcln" <*> publicKey
 
   testGetLovedTracks = query glt $
-    getLovedTracks <*> user "smpcln" <* limit 10 <*> ak
+    getLovedTracks <*> user "smpcln" <* limit 10 <*> publicKey
 
   testGetNeighbours = query gn $
-    getNeighbours <*> user "smpcln" <* limit 10 <*> ak
+    getNeighbours <*> user "smpcln" <* limit 10 <*> publicKey
 
   testGetNewReleases = query gnr $
-    getNewReleases <*> user "rj" <*> ak
+    getNewReleases <*> user "rj" <*> publicKey
 
   testGetPastEvents = query gpe $
-    getPastEvents <*> user "mokele" <* limit 5 <*> ak
+    getPastEvents <*> user "mokele" <* limit 5 <*> publicKey
 
   testGetPersonalTags = query gpt $
-    getPersonalTags <*> user "crackedcore" <*> tag "rhythmic noise" <*> taggingType "artist" <* limit 10 <*> ak
+    getPersonalTags <*> user "crackedcore" <*> tag "rhythmic noise" <*> taggingType "artist" <* limit 10 <*> publicKey
 
   testGetPlaylists = query gp $
-    getPlaylists <*> user "mokele" <*> ak
+    getPlaylists <*> user "mokele" <*> publicKey
 
   testGetRecentTracks = query grt $
-    getRecentTracks <*> user "smpcln" <* limit 10 <*> ak
+    getRecentTracks <*> user "smpcln" <* limit 10 <*> publicKey
 
   testGetShouts = query gs $
-    getShouts <*> user "smpcln" <* limit 2 <*> ak
+    getShouts <*> user "smpcln" <* limit 2 <*> publicKey
 
   testGetTopAlbums = query gtal $
-    getTopAlbums <*> user "smpcln" <* limit 5 <*> ak
+    getTopAlbums <*> user "smpcln" <* limit 5 <*> publicKey
 
   testGetTopArtists = query gtar $
-    getTopArtists <*> user "smpcln" <* limit 5 <*> ak
+    getTopArtists <*> user "smpcln" <* limit 5 <*> publicKey
 
   testGetTopTags = query gtta $
-    getTopTags <*> user "smpcln" <* limit 10 <*> ak
+    getTopTags <*> user "smpcln" <* limit 10 <*> publicKey
 
   testGetTopTracks = query gttr $
-    getTopTracks <*> user "smpcln" <* limit 10 <*> ak
+    getTopTracks <*> user "smpcln" <* limit 10 <*> publicKey
 
   testGetWeeklyAlbumChart = query gwalc $
-    getWeeklyAlbumChart <*> user "smpcln" <*> ak
+    getWeeklyAlbumChart <*> user "smpcln" <*> publicKey
 
   testGetWeeklyArtistChart = query gwarc $
-    getWeeklyArtistChart <*> user "smpcln" <*> ak
+    getWeeklyArtistChart <*> user "smpcln" <*> publicKey
 
   testGetWeeklyChartList = query gwcl $
-    getWeeklyChartList <*> user "smpcln" <*> ak
+    getWeeklyChartList <*> user "smpcln" <*> publicKey
 
   testGetWeeklyTrackChart = query gwtc $
-    getWeeklyTrackChart <*> user "smpcln" <*> ak
+    getWeeklyTrackChart <*> user "smpcln" <*> publicKey
 
 
 gat, gbt, ge, gf, glt, gn, gnr, gp, gpe, gpt, gra, gpc, gre, grs, grt, gs, gtal, gtar, gtta, gttr, gwalc, gwarc, gwcl, gwtc :: Query Text

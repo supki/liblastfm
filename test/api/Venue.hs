@@ -12,21 +12,21 @@ import Test.Framework.Providers.HUnit
 import Helper
 
 
-noauth :: Request JSON APIKey -> [Test]
-noauth ak =
+noauth :: [Test]
+noauth =
   [ testCase "Venue.getEvents" testGetEvents
   , testCase "Venue.getPastEvents" testGetPastEvents
   , testCase "Venue.search" testSearch
   ]
  where
   testGetEvents = query ge $
-    getEvents <*> venue 9163107 <*> ak
+    getEvents <*> venue 9163107 <*> publicKey
 
   testGetPastEvents = query gpe $
-    getPastEvents <*> venue 9163107 <* limit 2 <*> ak
+    getPastEvents <*> venue 9163107 <* limit 2 <*> publicKey
 
   testSearch = query se $
-    search <*> venueName "Arena" <*> ak
+    search <*> venueName "Arena" <*> publicKey
 
 
 ge, gpe, se :: Query Text

@@ -12,8 +12,8 @@ import           Test.Framework.Providers.HUnit
 import           Helper
 
 
-noauth :: Request JSON APIKey -> [Test]
-noauth ak =
+noauth :: [Test]
+noauth =
   [ testCase "Tasteometer.compare"    testCompare
   , testCase "Tasteometer.compare'"   testCompare'
   , testCase "Tasteometer.compare''"  testCompare''
@@ -21,13 +21,13 @@ noauth ak =
   ]
  where
   testCompare = query cs $
-    T.compare (user "smpcln") (user "MCDOOMDESTROYER") <*> ak
+    T.compare (user "smpcln") (user "MCDOOMDESTROYER") <*> publicKey
   testCompare' = query cs $
-    T.compare (user "smpcln") (artists ["enduser", "venetian snares"]) <*> ak
+    T.compare (user "smpcln") (artists ["enduser", "venetian snares"]) <*> publicKey
   testCompare'' = query cs $
-    T.compare (artists ["enduser", "venetian snares"]) (user "smpcln") <*> ak
+    T.compare (artists ["enduser", "venetian snares"]) (user "smpcln") <*> publicKey
   testCompare''' = query cs $
-    T.compare (artists ["enduser", "venetian snares"]) (artists ["enduser", "venetian snares"]) <*> ak
+    T.compare (artists ["enduser", "venetian snares"]) (artists ["enduser", "venetian snares"]) <*> publicKey
 
 
 cs :: Query Text

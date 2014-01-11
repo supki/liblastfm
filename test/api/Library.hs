@@ -45,21 +45,21 @@ auth ak sk s =
     removeScrobble <*> artist "Gojira" <*> track "Ocean" <*> timestamp 1328905590 <*> ak <*> sk
 
 
-noauth :: Request JSON APIKey -> [Test]
-noauth ak =
+noauth :: [Test]
+noauth =
   [ testCase "Library.getAlbums" testGetAlbums
   , testCase "Library.getArtists" testGetArtists
   , testCase "Library.getTracks" testGetTracks
   ]
  where
   testGetAlbums = query ga $
-    getAlbums <*> user "smpcln" <* artist "Burzum" <* limit 5 <*> ak
+    getAlbums <*> user "smpcln" <* artist "Burzum" <* limit 5 <*> publicKey
 
   testGetArtists = query gar $
-    getArtists <*> user "smpcln" <* limit 7 <*> ak
+    getArtists <*> user "smpcln" <* limit 7 <*> publicKey
 
   testGetTracks = query gt $
-    getTracks <*> user "smpcln" <* artist "Burzum" <* limit 4 <*> ak
+    getTracks <*> user "smpcln" <* artist "Burzum" <* limit 4 <*> publicKey
 
 
 ga, gar, gt :: Query Text
