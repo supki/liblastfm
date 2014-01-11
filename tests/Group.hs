@@ -2,13 +2,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Group (noauth) where
 
-import Data.Aeson.Types
+import Control.Lens.Aeson
+import Data.Text (Text)
 import Network.Lastfm
 import Network.Lastfm.Group
 import Test.Framework
 import Test.Framework.Providers.HUnit
 
-import Common
+import Helper
 
 
 noauth :: Request JSON APIKey -> [Test]
@@ -23,30 +24,29 @@ noauth ak =
  where
   g = "People with no social lives that listen to more music than is healthy who are slightly scared of spiders and can never seem to find a pen"
 
-  testGetHype = check gh $
+  testGetHype = query gh $
     getHype <*> group g <*> ak
 
-  testGetMembers = check gm $
+  testGetMembers = query gm $
     getMembers <*> group g <* limit 10 <*> ak
 
-  testGetWeeklyAlbumChart = check ga $
+  testGetWeeklyAlbumChart = query ga $
     getWeeklyAlbumChart <*> group g <*> ak
 
-  testGetWeeklyArtistChart = check gar $
+  testGetWeeklyArtistChart = query gar $
     getWeeklyArtistChart <*> group g <*> ak
 
-  testGetWeeklyChartList = check gc $
+  testGetWeeklyChartList = query gc $
     getWeeklyChartList <*> group g <*> ak
 
-  testGetWeeklyTrackChart = check gt $
+  testGetWeeklyTrackChart = query gt $
     getWeeklyTrackChart <*> group g <*> ak
 
 
-ga, gar, gh, gm, gt :: Value -> Parser [String]
-gc :: Value -> Parser [(String, String)]
-ga o = parseJSON o >>= (.: "weeklyalbumchart") >>= (.: "album") >>= mapM (.: "playcount")
-gar o = parseJSON o >>= (.: "weeklyartistchart") >>= (.: "artist") >>= mapM (.: "name")
-gc o = parseJSON o >>= (.: "weeklychartlist") >>= (.: "chart") >>= mapM (\t -> (,) <$> (t .: "from") <*> (t .: "to"))
-gh o = parseJSON o >>= (.: "weeklyartistchart") >>= (.: "artist") >>= mapM (.: "mbid")
-gm o = parseJSON o >>= (.: "members") >>= (.: "user") >>= mapM (.: "name")
-gt o = parseJSON o >>= (.: "weeklytrackchart") >>= (.: "track") >>= mapM (.: "url")
+ga, gar, gc, gh, gm, gt :: Query Text
+ga  = key "weeklyalbumchart".key "album".values.key "playcount"._String
+gar = key "weeklyartistchart".key "artist".values.key "name"._String
+gc  = key "weeklychartlist".key "chart".values.key "from"._String
+gh  = key "weeklyartistchart".key "artist".values.key "mbid"._String
+gm  = key "members".key "user".values.key "name"._String
+gt  = key "weeklytrackchart".key "track".values.key "url"._String

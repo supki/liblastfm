@@ -2,13 +2,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Venue (noauth) where
 
-import Data.Aeson.Types
+import Control.Lens.Aeson
+import Data.Text (Text)
 import Network.Lastfm
 import Network.Lastfm.Venue
 import Test.Framework
 import Test.Framework.Providers.HUnit
 
-import Common
+import Helper
 
 
 noauth :: Request JSON APIKey -> [Test]
@@ -18,17 +19,17 @@ noauth ak =
   , testCase "Venue.search" testSearch
   ]
  where
-  testGetEvents = check ge $
+  testGetEvents = query ge $
     getEvents <*> venue 9163107 <*> ak
 
-  testGetPastEvents = check gpe $
+  testGetPastEvents = query gpe $
     getPastEvents <*> venue 9163107 <* limit 2 <*> ak
 
-  testSearch = check se $
+  testSearch = query se $
     search <*> venueName "Arena" <*> ak
 
 
-ge, gpe, se :: Value -> Parser [String]
-ge o = parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (\t -> (t .: "venue") >>= (.: "name"))
-gpe o = parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (.: "title")
-se o = parseJSON o >>= (.: "results") >>= (.: "venuematches") >>= (.: "venue") >>= mapM (.: "id")
+ge, gpe, se :: Query Text
+ge  = key "events".key "event".values.key "venue".key "name"._String
+gpe = key "events".key "event".values.key "title"._String
+se  = key "results".key "venuematches".key "venue".values.key "id"._String

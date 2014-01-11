@@ -2,13 +2,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Track (auth, noauth) where
 
-import Data.Aeson.Types
+import Control.Lens.Aeson
+import Data.Text (Text)
 import Network.Lastfm
 import Network.Lastfm.Track
 import Test.Framework
 import Test.Framework.Providers.HUnit
 
-import Common
+import Helper
 
 
 auth :: Request JSON APIKey -> Request JSON SessionKey -> Secret -> [Test]
@@ -24,31 +25,31 @@ auth ak sk s =
   , testCase "Track.updateNowPlaying" testUpdateNowPlaying
   ]
  where
-  testAddTags = check ok . sign s $
+  testAddTags = query ok . sign s $
     addTags <*> artist "Jefferson Airplane" <*> track "White rabbit" <*> tags ["60s", "awesome"] <*> ak <*> sk
 
-  testBan = check ok . sign s $
+  testBan = query ok . sign s $
     ban <*> artist "Eminem" <*> track "Kim" <*> ak <*> sk
 
-  testLove = check ok . sign s $
+  testLove = query ok . sign s $
     love <*> artist "Gojira" <*> track "Ocean" <*> ak <*> sk
 
-  testRemoveTag = check ok . sign s $
+  testRemoveTag = query ok . sign s $
     removeTag <*> artist "Jefferson Airplane" <*> track "White rabbit" <*> tag "awesome" <*> ak <*> sk
 
-  testShare = check ok . sign s $
+  testShare = query ok . sign s $
     share <*> artist "Led Zeppelin" <*> track "When the Levee Breaks" <*> recipient "liblastfm" <* message "Just listen!" <*> ak <*> sk
 
-  testUnban = check ok . sign s $
+  testUnban = query ok . sign s $
     unban <*> artist "Eminem" <*> track "Kim" <*> ak <*> sk
 
-  testUnlove = check ok . sign s $
+  testUnlove = query ok . sign s $
     unlove <*> artist "Gojira" <*> track "Ocean" <*> ak <*> sk
 
-  testScrobble = check ss . sign s $
+  testScrobble = query ss . sign s $
     scrobble (pure (item <*> artist "Gojira" <*> track "Ocean" <*> timestamp 1300000000)) <*> ak <*> sk
 
-  testUpdateNowPlaying = check np . sign s $
+  testUpdateNowPlaying = query np . sign s $
     updateNowPlaying <*> artist "Gojira" <*> track "Ocean" <*> ak <*> sk
 
 
@@ -72,60 +73,59 @@ noauth ak =
   , testCase "Track.search" testSearch
   ]
  where
-  testGetBuylinks = check gbl $
+  testGetBuylinks = query gbl $
     getBuyLinks <*> country "United Kingdom" <*> artist "Pink Floyd" <*> track "Brain Damage" <*> ak
 
-  testGetCorrection = check gc $
+  testGetCorrection = query gc $
     getCorrection <*> artist "Pink Ployd" <*> track "Brain Damage" <*> ak
 
-  testGetFingerprintMetadata = check gfm $
+  testGetFingerprintMetadata = query gfm $
     getFingerprintMetadata <*> fingerprint 1234 <*> ak
 
-  testGetInfo = check gi $
+  testGetInfo = query gi $
     getInfo <*> artist "Pink Floyd" <*> track "Comfortably Numb" <* username "aswalrus" <*> ak
-  testGetInfo_mbid = check gi $
+  testGetInfo_mbid = query gi $
     getInfo <*> mbid "52d7c9ff-6ae4-48a6-acec-4c1a486f8c92" <* username "aswalrus" <*> ak
 
-  testGetShouts = check gsh $
+  testGetShouts = query gsh $
     getShouts <*> artist "Pink Floyd" <*> track "Comfortably Numb" <* limit 7 <*> ak
-  testGetShouts_mbid = check gsh $
+  testGetShouts_mbid = query gsh $
     getShouts <*> mbid "52d7c9ff-6ae4-48a6-acec-4c1a486f8c92" <* limit 7 <*> ak
 
-  testGetSimilar = check gsi $
+  testGetSimilar = query gsi $
     getSimilar <*> artist "Pink Floyd" <*> track "Comfortably Numb" <* limit 4 <*> ak
-  testGetSimilar_mbid = check gsi $
+  testGetSimilar_mbid = query gsi $
     getSimilar <*> mbid "52d7c9ff-6ae4-48a6-acec-4c1a486f8c92" <* limit 4 <*> ak
 
-  testGetTags = check gt $
+  testGetTags = query gt $
     getTags <*> artist "Jefferson Airplane" <*> track "White Rabbit" <* user "liblastfm" <*> ak
-  testGetTags_mbid = check gt $
+  testGetTags_mbid = query gt $
     getTags <*> mbid "001b3337-faf4-421a-a11f-45e0b60a7703"  <* user "liblastfm" <*> ak
 
-  testGetTopFans = check gtf $
+  testGetTopFans = query gtf $
     getTopFans <*> artist "Pink Floyd" <*> track "Comfortably Numb" <*> ak
-  testGetTopFans_mbid = check gtf $
+  testGetTopFans_mbid = query gtf $
     getTopFans <*> mbid "52d7c9ff-6ae4-48a6-acec-4c1a486f8c92" <*> ak
 
-  testGetTopTags = check gtt $
+  testGetTopTags = query gtt $
     getTopTags <*> artist "Pink Floyd" <*> track "Comfortably Numb" <*> ak
-  testGetTopTags_mbid = check gtt $
+  testGetTopTags_mbid = query gtt $
     getTopTags <*> mbid "52d7c9ff-6ae4-48a6-acec-4c1a486f8c92" <*> ak
 
-  testSearch = check s' $
+  testSearch = query s' $
     search <*> track "Believe" <* limit 12 <*> ak
 
 
-gc, gi, gt, ss, np :: Value -> Parser String
-gbl, gfm, gsh, gsi{-, gta-}, gtf, gtt, s' :: Value -> Parser [String]
-gbl o = parseJSON o >>= (.: "affiliations") >>= (.: "downloads") >>= (.: "affiliation") >>= mapM (.: "supplierName")
-gc o = parseJSON o >>= (.: "corrections") >>= (.: "correction") >>= (.: "track") >>= (.: "artist") >>= (.: "name")
-gfm o = parseJSON o >>= (.: "tracks") >>= (.: "track") >>= mapM (.: "name")
-gi o = parseJSON o >>= (.: "track") >>= (.: "userplaycount")
-gsh o = parseJSON o >>= (.: "shouts") >>= (.: "shout") >>= mapM (.: "author")
-gsi o = parseJSON o >>= (.: "similartracks") >>= (.: "track") >>= mapM (.: "name")
-gt o = parseJSON o >>= (.: "tags") >>= (.: "@attr") >>= (.: "track")
-gtf o = parseJSON o >>= (.: "topfans") >>= (.: "user") >>= mapM (.: "name")
-gtt o = parseJSON o >>= (.: "toptags") >>= (.: "tag") >>= mapM (.: "name")
-s' o = parseJSON o >>= (.: "results") >>= (.: "trackmatches") >>= (.: "track") >>= mapM (.: "name")
-ss o = parseJSON o >>= (.: "scrobbles") >>= (.: "scrobble") >>= (.: "track") >>= (.: "#text")
-np o = parseJSON o >>= (.: "nowplaying") >>= (.: "track") >>= (.: "#text")
+gbl, gc, gfm, gi, gsh, gsi, gt, gtf, gtt, np, s', ss :: Query Text
+gbl = key "affiliations".key "downloads".key "affiliation".values.key "supplierName"._String
+gc  = key "corrections".key "correction".key "track".key "artist".key "name"._String
+gfm = key "tracks".key "track".values.key "name"._String
+gi  = key "track".key "userplaycount"._String
+gsh = key "shouts".key "shout".values.key "author"._String
+gsi = key "similartracks".key "track".values.key "name"._String
+gt  = key "tags".key "@attr".key "track"._String
+gtf = key "topfans".key "user".values.key "name"._String
+gtt = key "toptags".key "tag".values.key "name"._String
+s'  = key "results".key "trackmatches".key "track".values.key "name"._String
+ss  = key "scrobbles".key "scrobble".key "track".key "#text"._String
+np  = key "nowplaying".key "track".key "#text"._String

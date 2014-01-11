@@ -2,13 +2,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Artist (auth, noauth) where
 
-import Data.Aeson.Types
+import Control.Lens.Aeson
+import Data.Text (Text)
 import Network.Lastfm
 import Network.Lastfm.Artist
 import Test.Framework
 import Test.Framework.Providers.HUnit
 
-import Common
+import Helper
 
 
 auth :: Request JSON APIKey -> Request JSON SessionKey -> Secret -> [Test]
@@ -19,16 +20,16 @@ auth ak sk s =
   , testCase "Artist.share" testShare
   ]
  where
-  testAddTags = check ok . sign s $
+  testAddTags = query ok . sign s $
     addTags <*> artist "Егор Летов" <*> tags ["russian", "black metal"] <*> ak <*> sk
 
-  testGetTagsAuth = check gt . sign s $
+  testGetTagsAuth = query gt . sign s $
     getTags <*> artist "Егор Летов" <*> ak <* sk
 
-  testRemoveTag = check ok . sign s $
+  testRemoveTag = query ok . sign s $
     removeTag <*> artist "Егор Летов" <*> tag "russian" <*> ak <*> sk
 
-  testShare = check ok . sign s $
+  testShare = query ok . sign s $
     share <*> artist "Sleep" <*> recipient "liblastfm" <* message "Just listen!" <*> ak <*> sk
 
 
@@ -60,80 +61,81 @@ noauth ak =
   , testCase "Artist.search" testSearch
   ]
  where
-  testGetCorrection = check gc $
+  testGetCorrection = query gc $
     getCorrection <*> artist "Meshugah" <*> ak
 
-  testGetEvents = check ge $
+  testGetEvents = query ge $
     getEvents <*> artist "Meshuggah" <* limit 2 <*> ak
-  testGetEvents_mbid = check ge $
+  testGetEvents_mbid = query ge $
     getEvents <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 2 <*> ak
 
-  testGetInfo = check gin $
+  testGetInfo = query gin $
     getInfo <*> artist "Meshuggah" <*> ak
-  testGetInfo_mbid = check gin $
+  testGetInfo_mbid = query gin $
     getInfo <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <*> ak
 
-  testGetPastEvents = check gpe $
+  testGetPastEvents = query gpe $
     getPastEvents <*> artist "Meshuggah" <* autocorrect True <*> ak
-  testGetPastEvents_mbid = check gpe $
+  testGetPastEvents_mbid = query gpe $
     getPastEvents <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* autocorrect True <*> ak
 
-  testGetPodcast = check gp $
+  testGetPodcast = query gp $
     getPodcast <*> artist "Meshuggah" <*> ak
-  testGetPodcast_mbid = check gp $
+  testGetPodcast_mbid = query gp $
     getPodcast <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <*> ak
 
-  testGetShouts = check gs $
+  testGetShouts = query gs $
     getShouts <*> artist "Meshuggah" <* limit 5 <*> ak
-  testGetShouts_mbid = check gs $
+  testGetShouts_mbid = query gs $
     getShouts <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 5 <*> ak
 
-  testGetSimilar = check gsi $
+  testGetSimilar = query gsi $
     getSimilar <*> artist "Meshuggah" <* limit 3 <*> ak
-  testGetSimilar_mbid = check gsi $
+  testGetSimilar_mbid = query gsi $
     getSimilar <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 3 <*> ak
 
-  testGetTags = check gt $
+  testGetTags = query gt $
     getTags <*> artist "Егор Летов" <* user "liblastfm" <*> ak
-  testGetTags_mbid = check gt $
+  testGetTags_mbid = query gt $
     getTags <*> mbid "cfb3d32e-d095-4d63-946d-9daf06932180" <* user "liblastfm" <*> ak
 
-  testGetTopAlbums = check gta $
+  testGetTopAlbums = query gta $
     getTopAlbums <*> artist "Meshuggah" <* limit 3 <*> ak
-  testGetTopAlbums_mbid = check gta $
+  testGetTopAlbums_mbid = query gta $
     getTopAlbums <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 3 <*> ak
 
-  testGetTopFans = check gtf $
+  testGetTopFans = query gtf $
     getTopFans <*> artist "Meshuggah" <*> ak
-  testGetTopFans_mbid = check gtf $
+  testGetTopFans_mbid = query gtf $
     getTopFans <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <*> ak
 
-  testGetTopTags = check gtt $
+  testGetTopTags = query gtt $
     getTopTags <*> artist "Meshuggah" <*> ak
-  testGetTopTags_mbid = check gtt $
+  testGetTopTags_mbid = query gtt $
     getTopTags <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <*> ak
 
-  testGetTopTracks = check gttr $
+  testGetTopTracks = query gttr $
     getTopTracks <*> artist "Meshuggah" <* limit 3 <*> ak
-  testGetTopTracks_mbid = check gttr $
+  testGetTopTracks_mbid = query gttr $
     getTopTracks <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 3 <*> ak
 
-  testSearch = check se $
+  testSearch = query se $
     search <*> artist "Mesh" <* limit 3 <*> ak
 
 
-gc, gin, gp :: Value -> Parser String
-ge, gpe, gs, gsi, gt, gta, gtf, gtt, gttr, se :: Value -> Parser [String]
-gc o = parseJSON o >>= (.: "corrections") >>= (.: "correction") >>= (.: "artist") >>= (.: "name")
-ge o = parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (\o' -> (o' .: "venue") >>= (.: "name"))
-gin o = parseJSON o >>= (.: "artist") >>= (.: "stats") >>= (.: "listeners")
-gp o = parseJSON o >>= (.: "rss") >>= (.: "channel") >>= (.: "description")
-gpe o = parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (.: "title")
-gs o = parseJSON o >>= (.: "shouts") >>= (.: "shout") >>= mapM (.: "author")
-gsi o = parseJSON o >>= (.: "similarartists") >>= (.: "artist") >>= mapM (.: "name")
-gt o = parseJSON o >>= (.: "tags") >>= (.: "tag") >>= mapM (.: "name")
-gta o = parseJSON o >>= (.: "topalbums") >>= (.: "album") >>= mapM (.: "name")
-gtf o = parseJSON o >>= (.: "topfans") >>= (.: "user") >>= mapM (.: "name")
-gtt o = parseJSON o >>= (.: "toptags") >>= (.: "tag") >>= mapM (.: "name")
-gttr o = parseJSON o >>= (.: "toptracks") >>= (.: "track") >>= mapM (.: "name")
-se o = parseJSON o >>= (.: "results") >>= (.: "artistmatches") >>= (.: "artist") >>= mapM (.: "name")
+
+gc, gin, gp :: Query Text
+ge, gpe, gs, gsi, gt, gta, gtf, gtt, gttr, se :: Query Text
+gc   = key "corrections".key "correction".key "artist".key "name"._String
+ge   = key "events".key "artist"._String
+gin  = key "artist".key "stats".key "listeners"._String
+gp   = key "rss".key "channel".key "description"._String
+gpe  = key "events".key "event".values.key "title"._String
+gs   = key "shouts".key "shout".values.key "author"._String
+gsi  = key "similarartists".key "artist".values.key "name"._String
+gt   = key "tags".key "tag".values.key "name"._String
+gta  = key "topalbums".key "album".values.key "name"._String
+gtf  = key "topfans".key "user".values.key "name"._String
+gtt  = key "toptags".key "tag".values.key "name"._String
+gttr = key "toptracks".key "track".values.key "name"._String
+se   = key "results".key "artistmatches".key "artist".values.key "name"._String

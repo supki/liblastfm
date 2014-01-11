@@ -2,13 +2,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Chart (noauth) where
 
-import Data.Aeson.Types
+import Control.Lens.Aeson
+import Data.Text (Text)
 import Network.Lastfm
 import Network.Lastfm.Chart
 import Test.Framework
 import Test.Framework.Providers.HUnit
 
-import Common
+import Helper
 
 
 noauth :: Request JSON APIKey -> [Test]
@@ -21,26 +22,15 @@ noauth ak =
   , testCase "Chart.getTopTracks" testGetTopTracks
   ]
  where
-  testGetHypedArtists = check ga $
-    getHypedArtists <* limit 3 <*> ak
-
-  testGetHypedTracks = check gt $
-    getHypedTracks <* limit 2 <*> ak
-
-  testGetLovedTracks = check gt $
-    getLovedTracks <* limit 3 <*> ak
-
-  testGetTopArtists = check ga $
-    getTopArtists <* limit 4 <*> ak
-
-  testGetTopTags = check gta $
-    getTopTags <* limit 5 <*> ak
-
-  testGetTopTracks = check gt $
-    getTopTracks <* limit 2 <*> ak
+  testGetHypedArtists = query ga  (getHypedArtists <* limit 3 <*> ak)
+  testGetHypedTracks  = query gt  (getHypedTracks <* limit 2 <*> ak)
+  testGetLovedTracks  = query gt  (getLovedTracks <* limit 3 <*> ak)
+  testGetTopArtists   = query ga  (getTopArtists <* limit 4 <*> ak)
+  testGetTopTags      = query gta (getTopTags <* limit 5 <*> ak)
+  testGetTopTracks    = query gt  (getTopTracks <* limit 2 <*> ak)
 
 
-ga, gt, gta :: Value -> Parser [String]
-ga o = parseJSON o >>= (.: "artists") >>= (.: "artist") >>= mapM (.: "name")
-gt o = parseJSON o >>= (.: "tracks") >>= (.: "track") >>= mapM (.: "name")
-gta o = parseJSON o >>= (.: "tags") >>= (.: "tag") >>= mapM (.: "name")
+ga, gt, gta :: Query Text
+ga  = key "artists".key "artist".values.key "name"._String
+gt  = key "tracks".key "track".values.key "name"._String
+gta = key "tags".key "tag".values.key "name"._String

@@ -2,13 +2,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 module User (auth, noauth) where
 
-import Data.Aeson.Types
+import Control.Lens.Aeson
+import Data.Text (Text)
 import Network.Lastfm
 import Network.Lastfm.User
 import Test.Framework
 import Test.Framework.Providers.HUnit
 
-import Common
+import Helper
 
 
 auth :: Request JSON APIKey -> Request JSON SessionKey -> Secret -> [Test]
@@ -19,16 +20,16 @@ auth ak sk s =
   , testCase "User.shout" testShout
   ]
  where
-  testGetRecentStations = check grs . sign s $
+  testGetRecentStations = query grs . sign s $
     getRecentStations <*> user "liblastfm" <* limit 10 <*> ak <*> sk
 
-  testGetRecommendedArtists = check gra . sign s $
+  testGetRecommendedArtists = query gra . sign s $
     getRecommendedArtists <* limit 10 <*> ak <*> sk
 
-  testGetRecommendedEvents = check gre . sign s $
+  testGetRecommendedEvents = query gre . sign s $
     getRecommendedEvents <* limit 10 <*> ak <*> sk
 
-  testShout = check ok . sign s $
+  testShout = query ok . sign s $
     shout <*> user "liblastfm" <*> message "test message" <*> ak <*> sk
 
 
@@ -57,95 +58,92 @@ noauth ak =
   , testCase "User.getWeeklyTrackChart" testGetWeeklyTrackChart
   ]
  where
-  testGetArtistTracks = check gat $
+  testGetArtistTracks = query gat $
     getArtistTracks <*> user "smpcln" <*> artist "Dvar" <*> ak
 
-  testGetBannedTracks = check gbt $
+  testGetBannedTracks = query gbt $
     getBannedTracks <*> user "smpcln" <* limit 10 <*> ak
 
-  testGetEvents = check ge $
+  testGetEvents = query ge $
     getEvents <*> user "chansonnier" <* limit 5 <*> ak
 
-  testGetFriends = check gf $
+  testGetFriends = query gf $
     getFriends <*> user "smpcln" <* limit 10 <*> ak
 
-  testGetPlayCount = check gpc $
+  testGetPlayCount = query gpc $
     getInfo <*> user "smpcln" <*> ak
 
-  testGetLovedTracks = check glt $
+  testGetLovedTracks = query glt $
     getLovedTracks <*> user "smpcln" <* limit 10 <*> ak
 
-  testGetNeighbours = check gn $
+  testGetNeighbours = query gn $
     getNeighbours <*> user "smpcln" <* limit 10 <*> ak
 
-  testGetNewReleases = check gnr $
+  testGetNewReleases = query gnr $
     getNewReleases <*> user "rj" <*> ak
 
-  testGetPastEvents = check gpe $
+  testGetPastEvents = query gpe $
     getPastEvents <*> user "mokele" <* limit 5 <*> ak
 
-  testGetPersonalTags = check gpt $
+  testGetPersonalTags = query gpt $
     getPersonalTags <*> user "crackedcore" <*> tag "rhythmic noise" <*> taggingType "artist" <* limit 10 <*> ak
 
-  testGetPlaylists = check gp $
+  testGetPlaylists = query gp $
     getPlaylists <*> user "mokele" <*> ak
 
-  testGetRecentTracks = check grt $
+  testGetRecentTracks = query grt $
     getRecentTracks <*> user "smpcln" <* limit 10 <*> ak
 
-  testGetShouts = check gs $
+  testGetShouts = query gs $
     getShouts <*> user "smpcln" <* limit 2 <*> ak
 
-  testGetTopAlbums = check gtal $
+  testGetTopAlbums = query gtal $
     getTopAlbums <*> user "smpcln" <* limit 5 <*> ak
 
-  testGetTopArtists = check gtar $
+  testGetTopArtists = query gtar $
     getTopArtists <*> user "smpcln" <* limit 5 <*> ak
 
-  testGetTopTags = check gtta $
+  testGetTopTags = query gtta $
     getTopTags <*> user "smpcln" <* limit 10 <*> ak
 
-  testGetTopTracks = check gttr $
+  testGetTopTracks = query gttr $
     getTopTracks <*> user "smpcln" <* limit 10 <*> ak
 
-  testGetWeeklyAlbumChart = check gwalc $
+  testGetWeeklyAlbumChart = query gwalc $
     getWeeklyAlbumChart <*> user "smpcln" <*> ak
 
-  testGetWeeklyArtistChart = check gwarc $
+  testGetWeeklyArtistChart = query gwarc $
     getWeeklyArtistChart <*> user "smpcln" <*> ak
 
-  testGetWeeklyChartList = check gwcl $
+  testGetWeeklyChartList = query gwcl $
     getWeeklyChartList <*> user "smpcln" <*> ak
 
-  testGetWeeklyTrackChart = check gwtc $
+  testGetWeeklyTrackChart = query gwtc $
     getWeeklyTrackChart <*> user "smpcln" <*> ak
 
 
-gpc :: Value -> Parser String
-gat, gbt, ge, gf, glt, gn, gnr, gp, gpe, gpt, gra, gre, grs, grt, gs, gtal, gtar, gtta, gttr, gwalc, gwarc, gwcl, gwtc :: Value -> Parser [String]
-gat o = parseJSON o >>= (.: "artisttracks") >>= (.: "track") >>= mapM (.: "name")
-gbt o = parseJSON o >>= (.: "bannedtracks") >>= (.: "track") >>= mapM (.: "name")
-ge o = parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (.: "venue") >>= mapM (.: "url")
-gf o = parseJSON o >>= (.: "friends") >>= (.: "user") >>= mapM (.: "name")
-glt o = parseJSON o >>= (.: "lovedtracks") >>= (.: "track") >>= mapM (.: "name")
-gn o = parseJSON o >>= (.: "neighbours") >>= (.: "user") >>= mapM (.: "name")
-gnr o = parseJSON o >>= (.: "albums") >>= (.: "album") >>= mapM (.: "url")
-gp o = parseJSON o >>= (.: "playlists") >>= (.: "playlist") >>= mapM (.: "title")
-gpc o = parseJSON o >>= (.: "user") >>= (.: "playcount")
-gpe o = parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (.: "url")
-gpt o = parseJSON o >>= (.: "taggings") >>= (.: "artists") >>= (.: "artist") >>= mapM (.: "name")
-gra o = parseJSON o >>= (.: "recommendations") >>= (.: "artist") >>= mapM (.: "name")
-gre o = do
-  m <- parseJSON o >>= (.: "events")
-  (m .: "event" >>= mapM (.: "url")) <|> (m .: "event" >>= fmap return . (.: "url"))
-grs o = parseJSON o >>= (.: "recentstations") >>= (.: "station") >>= mapM (.: "name")
-grt o = parseJSON o >>= (.: "recenttracks") >>= (.: "track") >>= mapM (.: "name")
-gs o = parseJSON o >>= (.: "shouts") >>= (.: "shout") >>= mapM (.: "body")
-gtal o = parseJSON o >>= (.: "topalbums") >>= (.: "album") >>= mapM (.: "artist") >>= mapM (.: "name")
-gtar o = parseJSON o >>= (.: "topartists") >>= (.: "artist") >>= mapM (.: "name")
-gtta o = parseJSON o >>= (.: "toptags") >>= (.: "tag") >>= mapM (.: "name")
-gttr o = parseJSON o >>= (.: "toptracks") >>= (.: "track") >>= mapM (.: "url")
-gwalc o = parseJSON o >>= (.: "weeklyalbumchart") >>= (.: "album") >>= mapM (.: "url")
-gwarc o = parseJSON o >>= (.: "weeklyartistchart") >>= (.: "artist") >>= mapM (.: "url")
-gwcl o = take 5 `fmap` (parseJSON o >>= (.: "weeklychartlist") >>= (.: "chart") >>= mapM (.: "from"))
-gwtc o = parseJSON o >>= (.: "weeklytrackchart") >>= (.: "track") >>= mapM (.: "url")
+gat, gbt, ge, gf, glt, gn, gnr, gp, gpe, gpt, gra, gpc, gre, grs, grt, gs, gtal, gtar, gtta, gttr, gwalc, gwarc, gwcl, gwtc :: Query Text
+gat   = key "artisttracks".key "track".values.key "name"._String
+gbt   = key "bannedtracks".key "track".values.key "name"._String
+ge    = key "events".key "event".values.key "venue".key "url"._String
+gf    = key "friends".key "user".values.key "name"._String
+glt   = key "lovedtracks".key "track".values.key "name"._String
+gn    = key "neighbours".key "user".values.key "name"._String
+gnr   = key "albums".key "album".values.key "url"._String
+gp    = key "playlists".key "playlist".values.key "title"._String
+gpc   = key "user".key "playcount"._String
+gpe   = key "events".key "event".values.key "url"._String
+gpt   = key "taggings".key "artists".key "artist".values.key "name"._String
+gra   = key "recommendations".key "artist".values.key "name"._String
+gre   = key "events".key "event".key "url"._String
+grs   = key "recentstations".key "station".values.key "name"._String
+grt   = key "recenttracks".key "track".values.key "name"._String
+gs    = key "shouts".key "shout".values.key "body"._String
+gtal  = key "topalbums".key "album".values.key "artist".key "name"._String
+gtar  = key "topartists".key "artist".values.key "name"._String
+gtta  = key "toptags".key "tag".values.key "name"._String
+gttr  = key "toptracks".key "track".values.key "url"._String
+gwalc = key "weeklyalbumchart".key "album".values.key "url"._String
+gwarc = key "weeklyartistchart".key "artist".values.key "url"._String
+gwcl  = key "weeklychartlist".key "chart".values.key "from"._String
+gwtc  = key "weeklytrackchart".key "track".values.key "url"._String

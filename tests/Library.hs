@@ -2,13 +2,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Library (auth, noauth) where
 
-import Data.Aeson.Types
+import Control.Lens.Aeson
+import Data.Text (Text)
 import Network.Lastfm
 import Network.Lastfm.Library
 import Test.Framework
 import Test.Framework.Providers.HUnit
 
-import Common
+import Helper
 
 
 auth :: Request JSON APIKey -> Request JSON SessionKey -> Secret -> [Test]
@@ -22,25 +23,25 @@ auth ak sk s =
   , testCase "Library.removeScrobble" testRemoveScrobble
   ]
  where
-  testAddAlbum = check ok . sign s $
+  testAddAlbum = query ok . sign s $
     addAlbum (pure (albumItem <*> artist "Franz Ferdinand" <*> album "Franz Ferdinand")) <*> ak <*> sk
 
-  testAddArtist = check ok . sign s $
+  testAddArtist = query ok . sign s $
     addArtist (pure (artistItem <*> artist "Mobthrow")) <*> ak <*> sk
 
-  testAddTrack = check ok . sign s $
+  testAddTrack = query ok . sign s $
     addTrack <*> artist "Eminem" <*> track "Kim" <*> ak <*> sk
 
-  testRemoveAlbum = check ok . sign s $
+  testRemoveAlbum = query ok . sign s $
     removeAlbum <*> artist "Franz Ferdinand" <*> album "Franz Ferdinand" <*> ak <*> sk
 
-  testRemoveArtist = check ok . sign s $
+  testRemoveArtist = query ok . sign s $
     removeArtist <*> artist "Burzum" <*> ak <*> sk
 
-  testRemoveTrack = check ok . sign s $
+  testRemoveTrack = query ok . sign s $
     removeTrack <*> artist "Eminem" <*> track "Kim" <*> ak <*> sk
 
-  testRemoveScrobble = check ok . sign s $
+  testRemoveScrobble = query ok . sign s $
     removeScrobble <*> artist "Gojira" <*> track "Ocean" <*> timestamp 1328905590 <*> ak <*> sk
 
 
@@ -51,17 +52,17 @@ noauth ak =
   , testCase "Library.getTracks" testGetTracks
   ]
  where
-  testGetAlbums = check ga $
+  testGetAlbums = query ga $
     getAlbums <*> user "smpcln" <* artist "Burzum" <* limit 5 <*> ak
 
-  testGetArtists = check gar $
+  testGetArtists = query gar $
     getArtists <*> user "smpcln" <* limit 7 <*> ak
 
-  testGetTracks = check gt $
+  testGetTracks = query gt $
     getTracks <*> user "smpcln" <* artist "Burzum" <* limit 4 <*> ak
 
 
-ga, gar, gt :: Value -> Parser [String]
-ga o = parseJSON o >>= (.: "albums") >>= (.: "album") >>= mapM (.: "name")
-gar o = parseJSON o >>= (.: "artists") >>= (.: "artist") >>= mapM (.: "name")
-gt o = parseJSON o >>= (.: "tracks") >>= (.: "track") >>= mapM (.: "name")
+ga, gar, gt :: Query Text
+ga  = key "albums".key "album".values.key "name"._String
+gar = key "artists".key "artist".values.key "name"._String
+gt  = key "tracks".key "track".values.key "name"._String

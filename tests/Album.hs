@@ -2,13 +2,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Album (auth, noauth) where
 
-import Data.Aeson.Types
+import Control.Lens.Aeson
+import Data.Text (Text)
 import Network.Lastfm
 import Network.Lastfm.Album
 import Test.Framework
 import Test.Framework.Providers.HUnit
 
-import Common
+import Helper
 
 
 auth :: Request JSON APIKey -> Request JSON SessionKey -> Secret -> [Test]
@@ -19,19 +20,19 @@ auth ak sk s =
   , testCase "Album.share" testShare
   ]
  where
-  testAddTags = check ok . sign s $
+  testAddTags = query ok . sign s $
     addTags <*> artist "Pink Floyd" <*> album "The Wall" <*> tags ["70s", "awesome", "classic"]
       <*> ak <*> sk
 
-  testGetTagsAuth = check gt . sign s $
+  testGetTagsAuth = query gt . sign s $
     getTags <*> artist "Pink Floyd" <*> album "The Wall"
       <*> ak <* sk
 
-  testRemoveTag = check ok . sign s $
+  testRemoveTag = query ok . sign s $
     removeTag <*> artist "Pink Floyd" <*> album "The Wall" <*> tag "awesome"
       <*> ak <*> sk
 
-  testShare = check ok . sign s $
+  testShare = query ok . sign s $
     share <*> album "Jerusalem" <*> artist "Sleep" <*> recipient "liblastfm" <* message "Just listen!"
       <*> ak <*> sk
 
@@ -51,39 +52,39 @@ noauth ak =
   , testCase "Album.search" testSearch
   ]
  where
-  testGetBuylinks = check gbl $
+  testGetBuylinks = query gbl $
     getBuyLinks <*> country "United Kingdom" <*> artist "Pink Floyd" <*> album "The Wall" <*> ak
-  testGetBuylinks_mbid = check gbl $
+  testGetBuylinks_mbid = query gbl $
     getBuyLinks <*> country "United Kingdom" <*> mbid "816abcd3-924a-3565-92b9-7ab750688f34" <*> ak
 
-  testGetInfo = check gi $
+  testGetInfo = query gi $
     getInfo <*> artist "Pink Floyd" <*> album "The Wall" <*> ak
-  testGetInfo_mbid = check gi $
+  testGetInfo_mbid = query gi $
     getInfo <*> mbid "816abcd3-924a-3565-92b9-7ab750688f34" <*> ak
 
-  testGetShouts = check gs $
+  testGetShouts = query gs $
     getShouts <*> artist "Pink Floyd" <*> album "The Wall" <* limit 7 <*> ak
-  testGetShouts_mbid = check gs $
+  testGetShouts_mbid = query gs $
     getShouts <*> mbid "816abcd3-924a-3565-92b9-7ab750688f34" <* limit 7 <*> ak
 
-  testGetTags = check gt $
+  testGetTags = query gt $
     getTags <*> artist "Pink Floyd" <*> album "The Wall" <* user "liblastfm" <*> ak
-  testGetTags_mbid = check gt $
+  testGetTags_mbid = query gt $
     getTags <*> mbid "816abcd3-924a-3565-92b9-7ab750688f34" <* user "liblastfm" <*> ak
 
-  testGetTopTags = check gtt $
+  testGetTopTags = query gtt $
     getTopTags <*> artist "Pink Floyd" <*> album "The Wall" <*> ak
-  testGetTopTags_mbid = check gtt $
+  testGetTopTags_mbid = query gtt $
     getTopTags <*> mbid "816abcd3-924a-3565-92b9-7ab750688f34" <*> ak
 
-  testSearch = check se $
+  testSearch = query se $
     search <*> album "wall" <* limit 5 <*> ak
 
 
-gbl, gi, gs, gt, gtt, se :: Value -> Parser [String]
-gbl o = parseJSON o >>= (.: "affiliations") >>= (.: "physicals") >>= (.: "affiliation") >>= mapM (.: "supplierName")
-gi o = parseJSON o >>= (.: "album") >>= (.: "toptags") >>= (.: "tag") >>= mapM (.: "name")
-gs o = parseJSON o >>= (.: "shouts") >>= (.: "shout") >>= mapM (.: "body")
-gt o = parseJSON o >>= (.: "tags") >>= (.: "tag") >>= mapM (.: "name")
-gtt o = parseJSON o >>= (.: "toptags") >>= (.: "tag") >>= mapM (.: "count")
-se o = parseJSON o >>= (.: "results") >>= (.: "albummatches") >>= (.: "album") >>= mapM (.: "name")
+gbl, gi, gs, gt, gtt, se :: Query Text
+gbl = key "affiliations".key "physicals".key "affiliation".values.key "supplierName"._String
+gi  = key "album".key "toptags".key "tag".values.key "name"._String
+gs  = key "shouts".key "shout".values.key "body"._String
+gt  = key "tags".key "tag".values.key "name"._String
+gtt = key "toptags".key "tag".values.key "count"._String
+se  = key "results".key "albummatches".key "album".values.key "name"._String

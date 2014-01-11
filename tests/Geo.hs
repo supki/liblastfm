@@ -2,13 +2,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Geo (noauth) where
 
-import Data.Aeson.Types
+import Control.Lens.Aeson
+import Data.Text (Text)
 import Network.Lastfm
 import Network.Lastfm.Geo
 import Test.Framework
 import Test.Framework.Providers.HUnit
 
-import Common
+import Helper
 
 
 noauth :: Request JSON APIKey -> [Test]
@@ -26,44 +27,43 @@ noauth ak =
   , testCase "Geo.getTopTracks" testGetTopTracks
   ]
  where
-  testGetEvents = check ge $
+  testGetEvents = query ge $
     getEvents <* location "Moscow" <* limit 5 <*> ak
 
-  testGetMetroArtistChart = check ga $
+  testGetMetroArtistChart = query ga $
     getMetroArtistChart <*> metro "Saint Petersburg" <*> country "Russia" <*> ak
 
-  testGetMetroHypeArtistChart = check ga $
+  testGetMetroHypeArtistChart = query ga $
     getMetroHypeArtistChart <*> metro "New York" <*> country "United States" <*> ak
 
-  testGetMetroHypeTrackChart = check gt $
+  testGetMetroHypeTrackChart = query gt $
     getMetroHypeTrackChart <*> metro "Moscow" <*> country "Russia" <*> ak
 
-  testGetMetroTrackChart = check gt $
+  testGetMetroTrackChart = query gt $
     getMetroTrackChart <*> metro "Boston" <*> country "United States" <*> ak
 
-  testGetMetroUniqueArtistChart = check ga $
+  testGetMetroUniqueArtistChart = query ga $
     getMetroUniqueArtistChart <*> metro "Minsk" <*> country "Belarus" <*> ak
 
-  testGetMetroUniqueTrackChart = check gt $
+  testGetMetroUniqueTrackChart = query gt $
     getMetroUniqueTrackChart <*> metro "Moscow" <*> country "Russia" <*> ak
 
-  testGetMetroWeeklyChartlist = check gc $
+  testGetMetroWeeklyChartlist = query gc $
     getMetroWeeklyChartlist <*> metro "Moscow" <*> ak
 
-  testGetMetros = check gm $
+  testGetMetros = query gm $
     getMetros <* country "Russia" <*> ak
 
-  testGetTopArtists = check ga $
+  testGetTopArtists = query ga $
     getTopArtists <*> country "Belarus" <* limit 3 <*> ak
 
-  testGetTopTracks = check gt $
+  testGetTopTracks = query gt $
     getTopTracks <*> country "Ukraine" <* limit 2 <*> ak
 
 
-ga, ge, gm, gt :: Value -> Parser [String]
-gc :: Value -> Parser [(String, String)]
-ga o = parseJSON o >>= (.: "topartists") >>= (.: "artist") >>= mapM (.: "name")
-gc o = parseJSON o >>= (.: "weeklychartlist") >>= (.: "chart") >>= mapM (\t -> (,) <$> (t .: "from") <*> (t .: "to"))
-ge o = parseJSON o >>= (.: "events") >>= (.: "event") >>= mapM (.: "id")
-gm o = parseJSON o >>= (.: "metros") >>= (.: "metro") >>= mapM (.: "name")
-gt o = parseJSON o >>= (.: "toptracks") >>= (.: "track") >>= mapM (.: "name")
+ga, gc, ge, gm, gt :: Query Text
+ga = key "topartists".key "artist".values.key "name"._String
+gc = key "weeklychartlist".key "chart".values.key "from"._String
+ge = key "events".key "event".values.key "id"._String
+gm = key "metros".key "metro".values.key "name"._String
+gt = key "toptracks".key "track".values.key "name"._String
