@@ -1,34 +1,31 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Main where
-
-import Control.Applicative
-import Data.Monoid
-import System.Exit (ExitCode(ExitFailure), exitWith)
-
-import qualified Data.ByteString.Lazy as B
+import           Control.Applicative
+import qualified Data.ByteString.Lazy as ByteString
 import           Data.Aeson
+import           Data.Monoid
 import           Data.Text (Text)
 import           Network.Lastfm
+import           System.Exit (ExitCode(ExitFailure), exitWith)
 import           Test.Framework
 
-import qualified Album as Album
-import qualified Artist as Artist
-import qualified Chart as Chart
-import qualified Event as Event
-import qualified Geo as Geo
-import qualified Group as Group
-import qualified Library as Library
-import qualified Playlist as Playlist
-import qualified Tag as Tag
-import qualified Tasteometer as Tasteometer
-import qualified Track as Track
-import qualified User as User
-import qualified Venue as Venue
+import qualified Album
+import qualified Artist
+import qualified Chart
+import qualified Event
+import qualified Geo
+import qualified Group
+import qualified Library
+import qualified Playlist
+import qualified Tag
+import qualified Tasteometer
+import qualified Track
+import qualified User
+import qualified Venue
 
 
 main :: IO ()
 main =
-  do keys <- B.readFile "tests/lastfm-keys.json"
+  do keys <- ByteString.readFile "test/api/lastfm-keys.json"
      case decode keys of
        Just (Keys ak sk s) ->
          defaultMainWithOpts (auth <> noauth) (mempty { ropt_threads = Just 20 })
