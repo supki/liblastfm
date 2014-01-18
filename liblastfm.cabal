@@ -129,7 +129,7 @@ test-suite spec
     , contravariant
     , crypto-api
     , hspec
-    , hspec-expectations-lens
+    , hspec-expectations-lens >= 0.2.0.0
     , http-conduit
     , lens
     , lens-aeson

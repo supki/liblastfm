@@ -42,8 +42,7 @@ executable web-authentication
                  lens-aeson,
                  happstack-server,
                  transformers,
-                 lens,
-                 aeson-lens
+                 lens
   main-is: web-authentication.hs
   ghc-options: -Wall
                -fno-warn-unused-do-bind

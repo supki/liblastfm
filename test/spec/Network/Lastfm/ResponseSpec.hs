@@ -5,12 +5,12 @@
 module Network.Lastfm.ResponseSpec (spec) where
 
 import Control.Exception (ArithException(DivideByZero), throwIO)
+import Control.Exception.Lens
 import Control.Lens
 import Control.Lens.Aeson
 import Data.Proxy (Proxy(..))
 import Data.Void (Void)
-import Test.Hspec
-import Test.Hspec.Expectations.Lens
+import Test.Hspec.Lens
 import Network.HTTP.Conduit (HttpException(..))
 
 import Network.Lastfm.Response
@@ -38,8 +38,7 @@ spec = do
       val `shouldPreview` ResponseTimeout `through` _Left._LastfmHttpException
 
     it "does not catch other exceptions" $
-      wrapHttpException (throwIO DivideByZero)
-        `shouldThrow` (\case DivideByZero -> True; _ -> False)
+      wrapHttpException (throwIO DivideByZero) `shouldThrow` _DivideByZero
 
   describe "parse" $ do
     context "JSON" $ do
