@@ -1,4 +1,5 @@
-# liblastfm
+liblastfm
+=========
 [![Hackage](https://budueba.com/hackage/liblastfm)](http://hackage.haskell.org/package/liblastfm)
 [![Build Status](https://drone.io/github.com/supki/liblastfm/status.png)](https://drone.io/github.com/supki/liblastfm/latest)
 [![Build Status](https://secure.travis-ci.org/supki/liblastfm.png?branch=develop)](http://travis-ci.org/supki/liblastfm)
@@ -10,7 +11,8 @@ Documentation is available in two flavours:
 
   * liblastfm [haddocks][liblastfm/haddocks]
 
-## General introduction
+Introduction
+------------
 liblastfm provides Applicative interface for constructing requests. Also, it handles all machinery needed to prepare request for sending:
 
   * [signing][last.fm/sign]
@@ -19,14 +21,15 @@ liblastfm provides Applicative interface for constructing requests. Also, it han
 
   * miscellaneous stuff like choosing correct HTTP method, etc
 
-Once request is ready, liblastfm may send it and get you back a response.
+Once request is ready, liblastfm can send it and get you back a response.
 Response format might be:
 
   * [aeson][aeson] `Value` for json queries
 
   * raw `ByteString` for xml queries
 
-## Installation
+Installation
+------------
 To install either use hackage:
 
     % cabal install liblastfm
@@ -37,13 +40,14 @@ Or git:
     % cd liblastfm
     % cabal install
 
-## Usage
+Usage
+-----
 Suppose, you need to use [`tag.search`][last.fm/api-usage] API method.
 First find it in liblastfm: `Tag` would be the name of the module and `search` would be the name of function. [Here it is][liblastfm/haddocks-usage].
 So import a couple of modules:
 
-    ghci> import Network.Lastfm -- a bunch of useful utilities
-    ghci> import qualified Network.Lastfm.Tag as Tag -- for Tag.search
+    >>> import           Network.Lastfm            -- a bunch of useful utilities
+    >>> import qualified Network.Lastfm.Tag as Tag -- for Tag.search
 
 Now you may you applicative `<*>` for required and `<*` or `*>` for optional parameters to construct
 desired request:
@@ -52,17 +56,18 @@ desired request:
 
 To send constructed request use `lastfm`:
 
-    ghci> lastfm $ Tag.search <*> tag "russian-folk" <* limit 10 <*> apiKey "29effec263316a1f8a97f753caaa83e0" <* json
+    >>> lastfm $ Tag.search <*> tag "russian-folk" <* limit 10 <*> apiKey "29effec263316a1f8a97f753caaa83e0" <* json
     Just (Object fromList [("results",Object fromList [("tagmatches", ...
 
 [Wiki][liblastfm/wiki] describes how to parse responses.
 
-## FAQ
+FAQ
+---
 
 **Q: I'm getting the following error. How do I fix it?**
 
 ```
-> Artist.getInfo <*> artist "Pink Floyd" <*> apiKey "29effec263316a1f8a97f753caaa83e0"
+>>> Artist.getInfo <*> artist "Pink Floyd" <*> apiKey "29effec263316a1f8a97f753caaa83e0"
 
 <interactive>:8:27:
     Couldn't match expected type `Data.Text.Lazy.Internal.Text'
@@ -81,7 +86,7 @@ To enable it (either one works):
 **Q: I'm getting the following error. How do I fix it?**
 
 ```
-> lastfm (Artist.getInfo <*> artist "Pink Floyd" <*> apiKey "29effec263316a1f8a97f753caaa83e0")
+>>> lastfm (Artist.getInfo <*> artist "Pink Floyd" <*> apiKey "29effec263316a1f8a97f753caaa83e0")
 
 <interactive>:13:1:
     No instance for (Network.Lastfm.Response.Supported f0)
@@ -99,11 +104,28 @@ A: This error message indicates that GHC cannot infer response format for the `R
 To fix it, add use `json` or `xml` helpers, depending on your needs
 
 ```
-> lastfm (Artist.getInfo <*> artist "Pink Floyd" <*> apiKey "29effec263316a1f8a97f753caaa83e0" <* json)
+>>> lastfm (Artist.getInfo <*> artist "Pink Floyd" <*> apiKey "29effec263316a1f8a97f753caaa83e0" <* json)
 Just (Object fromList [("artist" ...
-> lastfm (Artist.getInfo <*> artist "Pink Floyd" <*> apiKey "29effec263316a1f8a97f753caaa83e0" <* xml)
+>>> lastfm (Artist.getInfo <*> artist "Pink Floyd" <*> apiKey "29effec263316a1f8a97f753caaa83e0" <* xml)
 "<?xml version=\"1.0\" ...
 ```
+
+A note on testing
+-----------------
+
+To test Lastfm API compatibility (`api` test suite)—specifically, authentication requiring
+examples—you will need to set `HASKELL_LIBLASTFM_APIKEY`, `HASKELL_LIBLASTFM_SESSIONKEY`,
+and `HASKELL_LIBLASTFM_SECRET` environment variables to your api key, session key, and
+secret respectively; for example (bash):
+
+```bash
+export HASKELL_LIBLASTFM_APIKEY="__API_KEY__"
+export HASKELL_LIBLASTFM_SESSIONKEY="__SESSION_KEY__"
+export HASKELL_LIBLASTFM_SECRET="__SECRET__"
+```
+
+Please, consult Lastfm API documentation and  `examples/*-authentication.hs`
+examples if you don't know where to get your credentials.
 
  [last.fm]: http://www.last.fm/
  [last.fm/api]: http://www.last.fm/api/intro

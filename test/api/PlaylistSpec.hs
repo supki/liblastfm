@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-module Playlist (auth) where
+module PlaylistSpec (spec) where
 
 import Control.Lens
 import Control.Lens.Aeson
@@ -10,37 +10,35 @@ import Data.Text.Lens (unpacked)
 import Network.Lastfm hiding (to)
 import Network.Lastfm.Playlist
 import Network.Lastfm.User
-import Test.Framework
-import Test.Framework.Providers.HUnit
+import Test.Hspec
 import Test.HUnit (assertFailure)
 import Text.Printf
 import Text.Read (readMaybe)
 
-import Helper
+import SpecHelper
 
 
-auth :: Request JSON APIKey -> Request JSON SessionKey -> Secret -> [Test]
-auth ak sk s =
-  [ testCase "Playlist.create"   testCreate -- Order matters.
-  , testCase "Playlist.addTrack" testAddTrack
-  ]
- where
-  ak' = "29effec263316a1f8a97f753caaa83e0"
+spec :: Spec
+spec = do
+  it "Playlist.create" $ -- Order matters.
+    query pn . sign privateSecret $
+      create <* title "Awesome playlist"
+      <*> privateAPIKey <*> privateSessionKey
 
-  testAddTrack = do
-    r <- lastfm $ getPlaylists <*> user "liblastfm" <*> apiKey ak' <* json
+  it "Playlist.addTrack" $ do
+    r <- lastfm $ getPlaylists <*> user "liblastfm" <*> ak' <* json
     case r of
       Left e ->
         assertFailure (printf "last.fm error: %s" (show e))
       Right val ->
         case preview pl val of
-          Just (Just pid) -> query ok . sign s $
-            addTrack <*> playlist pid <*> artist "Ruby my dear" <*> track "Chazz" <*> ak <*> sk
+          Just (Just pid) -> query_ . sign privateSecret $
+            addTrack <*> playlist pid <*> artist "Ruby my dear" <*> track "Chazz"
+            <*> privateAPIKey <*> privateSessionKey
           _ -> assertFailure (printf "bad JSON object: %s" (show val))
 
-  testCreate = query pn . sign s $
-    create <* title "Awesome playlist" <*> ak <*> sk
-
+ak' :: Request f APIKey
+ak' = apiKey "29effec263316a1f8a97f753caaa83e0"
 
 pl :: Query (Maybe Int64)
 pl = key "playlists".key "playlist".values.key "id"._String.unpacked.to readMaybe
