@@ -22,9 +22,8 @@ module Network.Lastfm.Response
 
 import           Control.Applicative
 import           Control.Exception (handle)
-import           Control.Monad
 import           Crypto.Classes (hash')
-import           Data.Aeson ((.:), Value, decode, parseJSON)
+import           Data.Aeson ((.:), Value(..), decode)
 import           Data.Aeson.Types (parseMaybe)
 import qualified Data.ByteString.Lazy as Lazy
 import qualified Data.ByteString as Strict
@@ -64,10 +63,16 @@ class Supported (f :: Format) where
 instance Supported JSON where
   type Response JSON = Value
   parse _ b = case decode b of
-    Just v -> case parseMaybe ((.: "error") <=< parseJSON) v :: Maybe Int of
-      Just e  -> Left (LastfmEncodedError e)
+    Just v -> case parseMaybe errorParser v of
+      Just e  -> Left e
       Nothing -> Right v
     Nothing -> Left (LastfmBadResponse b)
+   where
+    errorParser (Object o) = do
+      code <- o .: "error"
+      msg  <- o .: "message"
+      return (LastfmEncodedError code msg)
+    errorParser _ = empty
   base = R
     { _host   = "https://ws.audioscrobbler.com/2.0/"
     , _method = "GET"
@@ -90,8 +95,8 @@ instance Supported XML where
 data LastfmError =
     -- | last.fm thinks it responded with something legible, but it really isn't
     LastfmBadResponse Lazy.ByteString
-    -- | last.fm encoded error into the response and sent it along with HTTP 200 response code
-  | LastfmEncodedError Int
+    -- | last.fm error code and message string
+  | LastfmEncodedError Int String
     -- | http-conduit exception, wrapped
   | LastfmHttpException C.HttpException
     deriving (Show)
@@ -99,10 +104,10 @@ data LastfmError =
 -- | Admittedly, this isn't the best 'Eq' instance ever
 -- but not having 'Eq' 'C.HttpException' does not leave much a choice
 instance Eq LastfmError where
-  LastfmBadResponse bs  == LastfmBadResponse bs' = bs == bs'
-  LastfmEncodedError e  == LastfmEncodedError e' = e == e'
-  LastfmHttpException _ == LastfmHttpException _ = True
-  _                     == _                     = False
+  LastfmBadResponse bs   == LastfmBadResponse bs'   = bs == bs'
+  LastfmEncodedError e s == LastfmEncodedError e' t = e == e' && s == t
+  LastfmHttpException _  == LastfmHttpException _   = True
+  _                      == _                       = False
 
 -- | This is a @ Prism' 'LastfmError' 'Lazy.ByteString' @ in disguise
 _LastfmBadResponse
@@ -118,11 +123,11 @@ _LastfmBadResponse = dimap go (either pure (fmap LastfmBadResponse)) . right'
 -- | This is a @ Prism' 'LastfmError' 'Int' @ in disguise
 _LastfmEncodedError
   :: (Choice p, Applicative m)
-  => p Int (m Int) -> p LastfmError (m LastfmError)
-_LastfmEncodedError = dimap go (either pure (fmap LastfmEncodedError)) . right'
+  => p (Int, String) (m (Int, String)) -> p LastfmError (m LastfmError)
+_LastfmEncodedError = dimap go (either pure (fmap (uncurry LastfmEncodedError))) . right'
  where
-  go (LastfmEncodedError n) = Right n
-  go x                      = Left x
+  go (LastfmEncodedError n v) = Right (n, v)
+  go x                        = Left x
   {-# INLINE go #-}
 {-# INLINE _LastfmEncodedError #-}
 
