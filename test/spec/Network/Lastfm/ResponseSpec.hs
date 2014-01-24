@@ -59,9 +59,9 @@ spec = do
 
       it "handles input with encoded errors" $
         let
-          encodedError = "{ \"error\": 5 }"
+          encodedError = "{ \"error\": 5, \"message\": \"foo\" }"
         in
-          parse proxy encodedError `shouldPreview` 5 `through` _Left._LastfmEncodedError
+          parse proxy encodedError `shouldPreview` (5, "foo") `through` _Left._LastfmEncodedError
 
     context "XML" $ do
       let proxy :: Proxy XML
