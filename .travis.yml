@@ -1,4 +1,7 @@
 language: haskell
 
 script:
-    - cabal install --enable-tests liblastfm.cabal examples/liblastfm-examples.cabal
+    - cabal install configure --enable-tests
+    - cabal build
+    - cabal test spec
+    - cabal install liblastfm.cabal examples/liblastfm-examples.cabal
