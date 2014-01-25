@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-module PlaylistSpec (spec) where
+module Json.PlaylistSpec (spec) where
 
 import Control.Lens
 import Control.Lens.Aeson

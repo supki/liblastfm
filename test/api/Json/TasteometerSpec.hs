@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-module TasteometerSpec (spec) where
+module Json.TasteometerSpec (spec) where
 
 import           Control.Lens.Aeson
 import           Data.Text (Text)

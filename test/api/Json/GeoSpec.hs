@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-module GeoSpec (spec) where
+module Json.GeoSpec (spec) where
 
 import Control.Lens.Aeson
 import Data.Text (Text)

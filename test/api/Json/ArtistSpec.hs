@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-module ArtistSpec (spec) where
+module Json.ArtistSpec (spec) where
 
 import Control.Lens.Aeson
 import Data.Text (Text)

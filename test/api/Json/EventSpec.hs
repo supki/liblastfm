@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-module EventSpec (spec) where
+module Json.EventSpec (spec) where
 
 import Control.Lens.Aeson
 import Network.Lastfm

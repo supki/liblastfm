@@ -98,19 +98,19 @@ test-suite api
   main-is: Spec.hs
   other-modules:
     SpecHelper
-    AlbumSpec
-    ArtistSpec
-    ChartSpec
-    EventSpec
-    GeoSpec
-    GroupSpec
-    LibrarySpec
-    PlaylistSpec
-    TagSpec
-    TasteometerSpec
-    TrackSpec
-    UserSpec
-    VenueSpec
+    Json.AlbumSpec
+    Json.ArtistSpec
+    Json.ChartSpec
+    Json.EventSpec
+    Json.GeoSpec
+    Json.GroupSpec
+    Json.LibrarySpec
+    Json.PlaylistSpec
+    Json.TagSpec
+    Json.TasteometerSpec
+    Json.TrackSpec
+    Json.UserSpec
+    Json.VenueSpec
   ghc-options:
     -Wall
     -fno-warn-orphans

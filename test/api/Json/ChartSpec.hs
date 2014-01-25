@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-module ChartSpec (spec) where
+module Json.ChartSpec (spec) where
 
 import Control.Lens.Aeson
 import Data.Text (Text)

@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-module GroupSpec (spec) where
+module Json.GroupSpec (spec) where
 
 import Control.Lens.Aeson
 import Network.Lastfm

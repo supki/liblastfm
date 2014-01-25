@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-module TrackSpec (spec) where
+module Json.TrackSpec (spec) where
 
 import Control.Lens.Aeson
 import Data.Text (Text)

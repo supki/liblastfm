@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-module TagSpec (spec) where
+module Json.TagSpec (spec) where
 
 import Control.Lens.Aeson
 import Network.Lastfm

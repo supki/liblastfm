@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-module UserSpec (spec) where
+module Json.UserSpec (spec) where
 
 import Control.Lens.Aeson
 import Network.Lastfm

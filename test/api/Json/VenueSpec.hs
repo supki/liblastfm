@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-module VenueSpec (spec) where
+module Json.VenueSpec (spec) where
 
 import Control.Lens.Aeson
 import Network.Lastfm

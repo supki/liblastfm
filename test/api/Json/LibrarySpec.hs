@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-module LibrarySpec (spec) where
+module Json.LibrarySpec (spec) where
 
 import Control.Lens.Aeson
 import Network.Lastfm
