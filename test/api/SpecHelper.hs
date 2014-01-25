@@ -11,6 +11,7 @@ module SpecHelper
   , shouldHaveJson
   , shouldHaveJson_
   , shouldHaveXml
+  , shouldHaveXml_
     -- * public data
   , publicly
   , publicKey
@@ -33,6 +34,7 @@ import System.IO.Unsafe (unsafePerformIO)
 import Test.Hspec
 import Test.HUnit (assertFailure)
 import Text.Printf
+import Text.Xml.Lens
 
 infixl 1 `shouldHaveJson`, `shouldHaveXml`
 
@@ -56,6 +58,9 @@ shouldHaveXml = shouldHaveResponse
 -- | Check success stuff for POST requests
 shouldHaveJson_ :: Request JSON Ready -> Expectation
 shouldHaveJson_ l = shouldHaveResponse l (key "status".only "ok")
+
+shouldHaveXml_ :: Request XML Ready -> Expectation
+shouldHaveXml_ l = shouldHaveResponse l (root.attributed (ix "status".only "ok"))
 
 -- | Make a request using public API key
 publicly :: Request f (APIKey -> Ready) -> Request f Ready
