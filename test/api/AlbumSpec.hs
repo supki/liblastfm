@@ -13,74 +13,94 @@ import SpecHelper
 
 spec :: Spec
 spec = do
-  it "Album.addTags" $
-    query_ . sign privateSecret $
+  it "addTags" $
+    shouldHaveJson_ . privately $
       addTags <*> artist "Pink Floyd" <*> album "The Wall" <*> tags ["70s", "awesome", "classic"]
-        <*> privateAPIKey <*> privateSessionKey
 
-  it "Album.getTags-authenticated" $
-    query gt . sign privateSecret $
-      getTags <*> artist "Pink Floyd" <*> album "The Wall"
-        <*> privateAPIKey <* privateSessionKey
+  it "getTags-authenticated" $
+    privately (getTags <*> artist "Pink Floyd" <*> album "The Wall")
+   `shouldHaveJson`
+    key "tags".key "tag".values.key "name"._String
 
-  it "Album.removeTag" $
-    query_ . sign privateSecret $
+  it "removeTag" $
+    shouldHaveJson_ .  privately $
       removeTag <*> artist "Pink Floyd" <*> album "The Wall" <*> tag "awesome"
-        <*> privateAPIKey <*> privateSessionKey
 
-  it "Album.share" $
-    query_ . sign privateSecret $
+  it "share" $
+    shouldHaveJson_ .  privately $
       share <*> album "Jerusalem" <*> artist "Sleep" <*> recipient "liblastfm" <* message "Just listen!"
-        <*> privateAPIKey <*> privateSessionKey
 
-  it "Album.getBuyLinks" $
-    query gbl $
-      getBuyLinks <*> country "United Kingdom" <*> artist "Pink Floyd" <*> album "The Wall" <*> publicKey
+  describe "getBuyLinks*" $ do
+    let jsonQuery :: Query JSON Text
+        jsonQuery = key "affiliations".key "physicals".key "affiliation".values.key "supplierName"._String
 
-  it "Album.getBuyLinks_mbid" $
-    query gbl $
-      getBuyLinks <*> country "United Kingdom" <*> mbid "816abcd3-924a-3565-92b9-7ab750688f34" <*> publicKey
+    it "getBuyLinks" $
+      publicly (getBuyLinks <*> country "United Kingdom" <*> artist "Pink Floyd" <*> album "The Wall")
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Album.getInfo" $
-    query gi $
-      getInfo <*> artist "Pink Floyd" <*> album "The Wall" <*> publicKey
+    it "getBuyLinks_mbid" $
+      publicly (getBuyLinks <*> country "United Kingdom" <*> mbid "816abcd3-924a-3565-92b9-7ab750688f34")
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Album.getInfo_mbid" $
-    query gi $
-      getInfo <*> mbid "816abcd3-924a-3565-92b9-7ab750688f34" <*> publicKey
+  describe "getInfo*" $ do
+    let jsonQuery :: Query JSON Text
+        jsonQuery = key "album".key "toptags".key "tag".values.key "name"._String
 
-  it "Album.getShouts" $
-    query gs $
-      getShouts <*> artist "Pink Floyd" <*> album "The Wall" <* limit 7 <*> publicKey
+    it "getInfo" $
+      publicly (getInfo <*> artist "Pink Floyd" <*> album "The Wall")
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Album.getShouts_mbid" $
-    query gs $
-      getShouts <*> mbid "816abcd3-924a-3565-92b9-7ab750688f34" <* limit 7 <*> publicKey
+    it "getInfo_mbid" $
+      publicly (getInfo <*> mbid "816abcd3-924a-3565-92b9-7ab750688f34")
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Album.getTags" $
-    query gt $
-      getTags <*> artist "Pink Floyd" <*> album "The Wall" <* user "liblastfm" <*> publicKey
+  describe "getShouts*" $ do
+    let jsonQuery :: Query JSON Text
+        jsonQuery = key "shouts".key "shout".values.key "body"._String
 
-  it "Album.getTags_mbid" $
-    query gt $
-      getTags <*> mbid "816abcd3-924a-3565-92b9-7ab750688f34" <* user "liblastfm" <*> publicKey
+    it "getShouts" $
+      publicly (getShouts <*> artist "Pink Floyd" <*> album "The Wall" <* limit 7)
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Album.getTopTags" $
-    query gtt $
-      getTopTags <*> artist "Pink Floyd" <*> album "The Wall" <*> publicKey
+    it "getShouts_mbid" $
+      publicly (getShouts <*> mbid "816abcd3-924a-3565-92b9-7ab750688f34" <* limit 7)
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Album.getTopTags_mbid" $
-    query gtt $
-      getTopTags <*> mbid "816abcd3-924a-3565-92b9-7ab750688f34" <*> publicKey
+  describe "getTags*" $ do
+    let jsonQuery :: Query JSON Text
+        jsonQuery = key "tags".key "tag".values.key "name"._String
 
-  it "Album.search" $
-    query se $
-      search <*> album "wall" <* limit 5 <*> publicKey
+    it "getTags" $
+      publicly (getTags <*> artist "Pink Floyd" <*> album "The Wall" <* user "liblastfm")
+     `shouldHaveJson`
+      jsonQuery
 
-gbl, gi, gs, gt, gtt, se :: Query Text
-gbl = key "affiliations".key "physicals".key "affiliation".values.key "supplierName"._String
-gi  = key "album".key "toptags".key "tag".values.key "name"._String
-gs  = key "shouts".key "shout".values.key "body"._String
-gt  = key "tags".key "tag".values.key "name"._String
-gtt = key "toptags".key "tag".values.key "count"._String
-se  = key "results".key "albummatches".key "album".values.key "name"._String
+    it "getTags_mbid" $
+      publicly (getTags <*> mbid "816abcd3-924a-3565-92b9-7ab750688f34" <* user "liblastfm")
+     `shouldHaveJson`
+      jsonQuery
+
+  describe "getTopTags*" $ do
+    let jsonQuery :: Query JSON Text
+        jsonQuery = key "toptags".key "tag".values.key "count"._String
+
+    it "getTopTags" $
+      publicly (getTopTags <*> artist "Pink Floyd" <*> album "The Wall")
+     `shouldHaveJson`
+      jsonQuery
+
+    it "getTopTags_mbid" $
+      publicly (getTopTags <*> mbid "816abcd3-924a-3565-92b9-7ab750688f34")
+     `shouldHaveJson`
+      jsonQuery
+
+  it "search" $
+    publicly (search <*> album "wall" <* limit 5)
+   `shouldHaveJson`
+    key "results".key "albummatches".key "album".values.key "name"._String

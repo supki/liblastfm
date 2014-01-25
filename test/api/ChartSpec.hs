@@ -13,31 +13,40 @@ import SpecHelper
 
 spec :: Spec
 spec = do
-  it "Chart.getHypedArtists" $
-    query ga $
-      getHypedArtists <* limit 3 <*> publicKey
+  describe "get*Artists" $ do
+    let jsonQuery :: Query JSON Text
+        jsonQuery = key "artists".key "artist".values.key "name"._String
 
-  it "Chart.getHypedTracks" $
-    query gt $
-      getHypedTracks <* limit 2 <*> publicKey
+    it "getHypedArtists" $
+      publicly (getHypedArtists <* limit 3)
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Chart.getLovedTracks" $
-    query gt $
-      getLovedTracks <* limit 3 <*> publicKey
+    it "getTopArtists" $
+      publicly (getTopArtists <* limit 4)
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Chart.getTopArtists" $
-    query ga $
-      getTopArtists <* limit 4 <*> publicKey
+  describe "get*Tracks" $ do
+    let jsonQuery :: Query JSON Text
+        jsonQuery = key "tracks".key "track".values.key "name"._String
 
-  it "Chart.getTopTags" $
-    query gta $
-      getTopTags <* limit 5 <*> publicKey
+    it "getHypedTracks" $
+      publicly (getHypedTracks <* limit 2)
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Chart.getTopTracks" $
-    query gt $
-      getTopTracks <* limit 2 <*> publicKey
+    it "getLovedTracks" $
+      publicly (getLovedTracks <* limit 3)
+     `shouldHaveJson`
+      jsonQuery
 
-ga, gt, gta :: Query Text
-ga  = key "artists".key "artist".values.key "name"._String
-gt  = key "tracks".key "track".values.key "name"._String
-gta = key "tags".key "tag".values.key "name"._String
+    it "getTopTracks" $
+      publicly (getTopTracks <* limit 2)
+     `shouldHaveJson`
+      jsonQuery
+
+  it "getTopTags" $
+    publicly (getTopTags <* limit 5)
+   `shouldHaveJson`
+    key "tags".key "tag".values.key "name"._String

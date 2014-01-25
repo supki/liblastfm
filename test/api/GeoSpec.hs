@@ -13,53 +13,65 @@ import SpecHelper
 
 spec :: Spec
 spec = do
-  it "Geo.getEvents" $
-    query ge $
-      getEvents <* location "Moscow" <* limit 5 <*> publicKey
+  it "getEvents" $
+    publicly (getEvents <* location "Moscow" <* limit 5)
+   `shouldHaveJson`
+    key "events".key "event".values.key "id"._String
 
-  it "Geo.getMetroArtistChart" $
-    query ga $
-      getMetroArtistChart <*> metro "Saint Petersburg" <*> country "Russia" <*> publicKey
+  describe "get*Artist*" $ do
+    let jsonQuery :: Query JSON Text
+        jsonQuery = key "topartists".key "artist".values.key "name"._String
 
-  it "Geo.getMetroHypeArtistChart" $
-    query ga $
-      getMetroHypeArtistChart <*> metro "New York" <*> country "United States" <*> publicKey
+    it "getMetroArtistChart" $
+      publicly (getMetroArtistChart <*> metro "Saint Petersburg" <*> country "Russia")
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Geo.getMetroHypeTrackChart" $
-    query gt $
-      getMetroHypeTrackChart <*> metro "Moscow" <*> country "Russia" <*> publicKey
+    it "getMetroHypeArtistChart" $
+      publicly (getMetroHypeArtistChart <*> metro "New York" <*> country "United States")
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Geo.getMetroTrackChart" $
-    query gt $
-      getMetroTrackChart <*> metro "Boston" <*> country "United States" <*> publicKey
+    it "getMetroUniqueArtistChart" $
+      publicly (getMetroUniqueArtistChart <*> metro "Minsk" <*> country "Belarus")
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Geo.getMetroUniqueArtistChart" $
-    query ga $
-      getMetroUniqueArtistChart <*> metro "Minsk" <*> country "Belarus" <*> publicKey
+    it "getTopArtists" $
+      publicly (getTopArtists <*> country "Belarus" <* limit 3)
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Geo.getMetroUniqueTrackChart" $
-    query gt $
-      getMetroUniqueTrackChart <*> metro "Moscow" <*> country "Russia" <*> publicKey
+  it "getMetroWeeklyChartlist" $
+    publicly (getMetroWeeklyChartlist <*> metro "Moscow")
+   `shouldHaveJson`
+    key "weeklychartlist".key "chart".values.key "from"._String
 
-  it "Geo.getMetroWeeklyChartlist" $
-    query gc $
-      getMetroWeeklyChartlist <*> metro "Moscow" <*> publicKey
+  it "getMetros" $
+    publicly (getMetros <* country "Russia")
+   `shouldHaveJson`
+    key "metros".key "metro".values.key "name"._String
 
-  it "Geo.getMetros" $
-    query gm $
-      getMetros <* country "Russia" <*> publicKey
+  describe "get*Track*" $ do
+    let jsonQuery :: Query JSON Text
+        jsonQuery = key "toptracks".key "track".values.key "name"._String
 
-  it "Geo.getTopArtists" $
-    query ga $
-      getTopArtists <*> country "Belarus" <* limit 3 <*> publicKey
+    it "getTopTracks" $
+      publicly (getTopTracks <*> country "Ukraine" <* limit 2)
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Geo.getTopTracks" $
-    query gt $
-      getTopTracks <*> country "Ukraine" <* limit 2 <*> publicKey
+    it "getMetroUniqueTrackChart" $
+      publicly (getMetroUniqueTrackChart <*> metro "Moscow" <*> country "Russia")
+     `shouldHaveJson`
+      jsonQuery
 
-ga, gc, ge, gm, gt :: Query Text
-ga = key "topartists".key "artist".values.key "name"._String
-gc = key "weeklychartlist".key "chart".values.key "from"._String
-ge = key "events".key "event".values.key "id"._String
-gm = key "metros".key "metro".values.key "name"._String
-gt = key "toptracks".key "track".values.key "name"._String
+    it "getMetroHypeTrackChart" $
+      publicly (getMetroHypeTrackChart <*> metro "Moscow" <*> country "Russia")
+     `shouldHaveJson`
+      jsonQuery
+
+    it "getMetroTrackChart" $
+      publicly (getMetroTrackChart <*> metro "Boston" <*> country "United States")
+     `shouldHaveJson`
+      jsonQuery

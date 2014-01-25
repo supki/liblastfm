@@ -13,134 +13,183 @@ import SpecHelper
 
 spec :: Spec
 spec = do
-  it "Artist.addTags" $
-    query_ . sign privateSecret $
+  it "addTags" $
+    shouldHaveJson_ . privately $
       addTags <*> artist "Егор Летов" <*> tags ["russian", "black metal"]
-      <*> privateAPIKey <*> privateSessionKey
 
-  it "Artist.getTags-authenticated" $
-    query gt . sign privateSecret $
-      getTags <*> artist "Егор Летов"
-      <*> privateAPIKey <* privateSessionKey
+  it "getTags-authenticated" $
+    privately (getTags <*> artist "Егор Летов")
+   `shouldHaveJson`
+    key "tags".key "tag".values.key "name"._String
 
-  it "Artist.removeTag" $
-    query_ . sign privateSecret $
+  it "removeTag" $
+    shouldHaveJson_ . privately $
       removeTag <*> artist "Егор Летов" <*> tag "russian"
-      <*> privateAPIKey <*> privateSessionKey
 
-  it "Artist.share" $
-    query_ . sign privateSecret $
+  it "share" $
+    shouldHaveJson_ . privately $
       share <*> artist "Sleep" <*> recipient "liblastfm" <* message "Just listen!"
-      <*> privateAPIKey <*> privateSessionKey
 
-  it "Artist.getCorrection" $
-    query gc $
-      getCorrection <*> artist "Meshugah" <*> publicKey
+  it "getCorrection" $
+    publicly (getCorrection <*> artist "Meshugah")
+   `shouldHaveJson`
+    key "corrections".key "correction".key "artist".key "name"._String
 
-  it "Artist.getEvents" $
-    query ge $
-      getEvents <*> artist "Meshuggah" <* limit 2 <*> publicKey
+  describe "getEvents*" $ do
+    let jsonQuery :: Query JSON Text
+        jsonQuery = key "events".key "artist"._String
 
-  it "Artist.getEvents_mbid" $
-    query ge $
-      getEvents <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 2 <*> publicKey
+    it "getEvents" $
+      publicly (getEvents <*> artist "Meshuggah" <* limit 2)
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Artist.getInfo" $
-    query gin $
-      getInfo <*> artist "Meshuggah" <*> publicKey
+    it "getEvents_mbid" $
+      publicly (getEvents <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 2)
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Artist.getInfo_mbid" $
-    query gin $
-      getInfo <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <*> publicKey
+  describe "getInfo*" $ do
+    let jsonQuery :: Query JSON Text
+        jsonQuery = key "artist".key "stats".key "listeners"._String
 
-  it "Artist.getPastEvents" $
-    query gpe $
-      getPastEvents <*> artist "Meshuggah" <* autocorrect True <*> publicKey
+    it "getInfo" $
+      publicly (getInfo <*> artist "Meshuggah")
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Artist.getPastEvents_mbid" $
-    query gpe $
-      getPastEvents <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* autocorrect True <*> publicKey
+    it "getInfo_mbid" $
+      publicly (getInfo <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413")
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Artist.getPodcast" $
-    query gp $
-      getPodcast <*> artist "Meshuggah" <*> publicKey
+  describe "getPastEvents*" $ do
+    let jsonQuery :: Query JSON Text
+        jsonQuery = key "events".key "event".values.key "title"._String
 
-  it "Artist.getPodcast_mbid" $
-    query gp $
-      getPodcast <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <*> publicKey
+    it "getPastEvents" $
+      publicly (getPastEvents <*> artist "Meshuggah" <* autocorrect True)
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Artist.getShouts" $
-    query gs $
-      getShouts <*> artist "Meshuggah" <* limit 5 <*> publicKey
+    it "getPastEvents_mbid" $
+      publicly (getPastEvents <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* autocorrect True)
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Artist.getShouts_mbid" $
-    query gs $
-      getShouts <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 5 <*> publicKey
+  describe "getPodcast*" $ do
+    let jsonQuery :: Query JSON Text
+        jsonQuery = key "rss".key "channel".key "description"._String
 
-  it "Artist.getSimilar" $
-    query gsi $
-      getSimilar <*> artist "Meshuggah" <* limit 3 <*> publicKey
+    it "getPodcast" $
+      publicly (getPodcast <*> artist "Meshuggah")
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Artist.getSimilar_mbid" $
-    query gsi $
-      getSimilar <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 3 <*> publicKey
+    it "getPodcast_mbid" $
+      publicly (getPodcast <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413")
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Artist.getTags" $
-    query gt $
-      getTags <*> artist "Егор Летов" <* user "liblastfm" <*> publicKey
+  describe "getShouts*" $ do
+    let jsonQuery :: Query JSON Text
+        jsonQuery = key "shouts".key "shout".values.key "author"._String
 
-  it "Artist.getTags_mbid" $
-    query gt $
-      getTags <*> mbid "cfb3d32e-d095-4d63-946d-9daf06932180" <* user "liblastfm" <*> publicKey
+    it "getShouts" $
+      publicly (getShouts <*> artist "Meshuggah" <* limit 5)
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Artist.getTopAlbums" $
-    query gta $
-      getTopAlbums <*> artist "Meshuggah" <* limit 3 <*> publicKey
+    it "getShouts_mbid" $
+      publicly (getShouts <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 5)
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Artist.getTopAlbums_mbid" $
-    query gta $
-      getTopAlbums <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 3 <*> publicKey
+  describe "getSimilar*" $ do
+    let jsonQuery :: Query JSON Text
+        jsonQuery = key "similarartists".key "artist".values.key "name"._String
 
-  it "Artist.getTopFans" $
-    query gtf $
-      getTopFans <*> artist "Meshuggah" <*> publicKey
+    it "getSimilar" $
+      publicly (getSimilar <*> artist "Meshuggah" <* limit 3)
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Artist.getTopFans_mbid" $
-    query gtf $
-      getTopFans <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <*> publicKey
+    it "getSimilar_mbid" $
+      publicly (getSimilar <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 3)
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Artist.getTopTags" $
-    query gtt $
-      getTopTags <*> artist "Meshuggah" <*> publicKey
+  describe "getTags*" $ do
+    let jsonQuery :: Query JSON Text
+        jsonQuery = key "tags".key "tag".values.key "name"._String
 
-  it "Artist.getTopTags_mbid" $
-    query gtt $
-      getTopTags <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <*> publicKey
+    it "getTags" $
+      publicly (getTags <*> artist "Егор Летов" <* user "liblastfm")
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Artist.getTopTracks" $
-    query gttr $
-      getTopTracks <*> artist "Meshuggah" <* limit 3 <*> publicKey
+    it "getTags_mbid" $
+      publicly (getTags <*> mbid "cfb3d32e-d095-4d63-946d-9daf06932180" <* user "liblastfm")
+     `shouldHaveJson`
+      jsonQuery
 
-  it "Artist.getTopTracks_mbid" $
-    query gttr $
-      getTopTracks <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 3 <*> publicKey
+  describe "getTopAlbums*" $ do
+    let jsonQuery :: Query JSON Text
+        jsonQuery = key "topalbums".key "album".values.key "name"._String
 
-  it "Artist.search" $
-    query se $
-      search <*> artist "Mesh" <* limit 3 <*> publicKey
+    it "getTopAlbums" $
+      publicly (getTopAlbums <*> artist "Meshuggah" <* limit 3)
+     `shouldHaveJson`
+      jsonQuery
 
-gc, gin, gp :: Query Text
-ge, gpe, gs, gsi, gt, gta, gtf, gtt, gttr, se :: Query Text
-gc   = key "corrections".key "correction".key "artist".key "name"._String
-ge   = key "events".key "artist"._String
-gin  = key "artist".key "stats".key "listeners"._String
-gp   = key "rss".key "channel".key "description"._String
-gpe  = key "events".key "event".values.key "title"._String
-gs   = key "shouts".key "shout".values.key "author"._String
-gsi  = key "similarartists".key "artist".values.key "name"._String
-gt   = key "tags".key "tag".values.key "name"._String
-gta  = key "topalbums".key "album".values.key "name"._String
-gtf  = key "topfans".key "user".values.key "name"._String
-gtt  = key "toptags".key "tag".values.key "name"._String
-gttr = key "toptracks".key "track".values.key "name"._String
-se   = key "results".key "artistmatches".key "artist".values.key "name"._String
+    it "getTopAlbums_mbid" $
+      publicly (getTopAlbums <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 3)
+     `shouldHaveJson`
+      jsonQuery
+
+  describe "getTopFans*" $ do
+    let jsonQuery :: Query JSON Text
+        jsonQuery = key "topfans".key "user".values.key "name"._String
+
+    it "getTopFans" $
+      publicly (getTopFans <*> artist "Meshuggah")
+     `shouldHaveJson`
+      jsonQuery
+
+    it "getTopFans_mbid" $
+      publicly (getTopFans <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413")
+     `shouldHaveJson`
+      jsonQuery
+
+  describe "getTopTags*" $ do
+    let jsonQuery :: Query JSON Text
+        jsonQuery = key "toptags".key "tag".values.key "name"._String
+
+    it "getTopTags" $
+      publicly (getTopTags <*> artist "Meshuggah")
+     `shouldHaveJson`
+      jsonQuery
+
+    it "getTopTags_mbid" $
+      publicly (getTopTags <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413")
+     `shouldHaveJson`
+      jsonQuery
+
+  describe "getTopTracks*" $ do
+    let jsonQuery :: Query JSON Text
+        jsonQuery = key "toptracks".key "track".values.key "name"._String
+
+    it "getTopTracks" $
+      publicly (getTopTracks <*> artist "Meshuggah" <* limit 3)
+     `shouldHaveJson`
+      jsonQuery
+
+    it "getTopTracks_mbid" $
+      publicly (getTopTracks <*> mbid "cf8b3b8c-118e-4136-8d1d-c37091173413" <* limit 3)
+     `shouldHaveJson`
+      jsonQuery
+
+  it "search" $
+    publicly (search <*> artist "Mesh" <* limit 3)
+   `shouldHaveJson`
+    key "results".key "artistmatches".key "artist".values.key "name"._String

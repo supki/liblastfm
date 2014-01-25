@@ -1,13 +1,22 @@
+{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes #-}
--- {-# LANGUAGE RankNTypes #-}
 module SpecHelper
-  ( Query
-  , query
-  , query_
+  ( -- * Expectations
+    Query
+  , shouldHaveResponse
+  , shouldHaveJson
+  , shouldHaveJson_
+  , shouldHaveXml
+    -- * public data
+  , publicly
   , publicKey
+    -- * private data
+    -- $awful
+  , privately
   , privateAPIKey
   , privateSessionKey
   , privateSecret
@@ -25,20 +34,32 @@ import Test.Hspec
 import Test.HUnit (assertFailure)
 import Text.Printf
 
+infixl 1 `shouldHaveJson`, `shouldHaveXml`
 
-type Query a = Fold (Response JSON) a
+
+type Query f a = Fold (Response f) a
 
 -- | Inspect 'Response' with 'Query'
-query :: Query a -> Request JSON Ready -> Expectation
-query l q = do
+shouldHaveResponse :: (Show (Response f), Supported f) => Request f Ready -> Query f a -> Expectation
+shouldHaveResponse q l = do
   r <- lastfm q
   case preview (_Right.l) r of
     Just _  -> return ()
     Nothing -> assertFailure (printf "Query failed on %s" (show r))
 
+shouldHaveJson :: Request JSON Ready -> Query JSON a -> Expectation
+shouldHaveJson = shouldHaveResponse
+
+shouldHaveXml :: Request XML Ready -> Query XML a -> Expectation
+shouldHaveXml = shouldHaveResponse
+
 -- | Check success stuff for POST requests
-query_ :: Request JSON Ready -> Expectation
-query_ = query (key "status".only "ok")
+shouldHaveJson_ :: Request JSON Ready -> Expectation
+shouldHaveJson_ l = shouldHaveResponse l (key "status".only "ok")
+
+-- | Make a request using public API key
+publicly :: Request f (APIKey -> Ready) -> Request f Ready
+publicly r = r <*> publicKey
 
 -- | API Key used for requests that do not require authentification
 publicKey :: Request f APIKey
@@ -51,13 +72,9 @@ instance Exception EnvironmentMissing
 
 -- $awful
 
--- | Get an environment variable or throw a 'EnvironmentMissing' exception
-liblastfmEnv :: String -> Text
-liblastfmEnv var = unsafePerformIO $ do
-  mv <- lookupEnv var
-  case mv of
-    Just v  -> return (pack v)
-    Nothing -> throwIO (EnvironmentMissing var)
+-- | Make a request signed by a secret using private API and session keys
+privately :: Request f (APIKey -> SessionKey -> Sign) -> Request f Ready
+privately r = sign privateSecret $ r <*> privateAPIKey <*> privateSessionKey
 
 privateAPIKey :: Request f APIKey
 privateAPIKey = apiKey (liblastfmEnv "HASKELL_LIBLASTFM_APIKEY")
@@ -67,3 +84,11 @@ privateSessionKey = sessionKey (liblastfmEnv "HASKELL_LIBLASTFM_SESSIONKEY")
 
 privateSecret :: Secret
 privateSecret = Secret (liblastfmEnv "HASKELL_LIBLASTFM_SECRET")
+
+-- | Get an environment variable or throw a 'EnvironmentMissing' exception
+liblastfmEnv :: String -> Text
+liblastfmEnv var = unsafePerformIO $ do
+  mv <- lookupEnv var
+  case mv of
+    Just v  -> return (pack v)
+    Nothing -> throwIO (EnvironmentMissing var)

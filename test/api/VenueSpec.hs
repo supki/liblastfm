@@ -3,7 +3,6 @@
 module VenueSpec (spec) where
 
 import Control.Lens.Aeson
-import Data.Text (Text)
 import Network.Lastfm
 import Network.Lastfm.Venue
 import Test.Hspec
@@ -13,19 +12,17 @@ import SpecHelper
 
 spec :: Spec
 spec = do
-  it "Venue.getEvents" $
-    query ge $
-      getEvents <*> venue 9163107 <*> publicKey
+  it "getEvents" $
+    publicly (getEvents <*> venue 9163107)
+   `shouldHaveJson`
+    key "events".key "event".values.key "venue".key "name"._String
 
-  it "Venue.getPastEvents" $
-    query gpe $
-      getPastEvents <*> venue 9163107 <* limit 2 <*> publicKey
+  it "getPastEvents" $
+    publicly (getPastEvents <*> venue 9163107 <* limit 2)
+   `shouldHaveJson`
+    key "events".key "event".values.key "title"._String
 
-  it "Venue.search" $
-    query se $
-      search <*> venueName "Arena" <*> publicKey
-
-ge, gpe, se :: Query Text
-ge  = key "events".key "event".values.key "venue".key "name"._String
-gpe = key "events".key "event".values.key "title"._String
-se  = key "results".key "venuematches".key "venue".values.key "id"._String
+  it "search" $
+    publicly (search <*> venueName "Arena")
+   `shouldHaveJson`
+    key "results".key "venuematches".key "venue".values.key "id"._String

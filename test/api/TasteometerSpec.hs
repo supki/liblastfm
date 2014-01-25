@@ -5,7 +5,7 @@ module TasteometerSpec (spec) where
 import           Control.Lens.Aeson
 import           Data.Text (Text)
 import           Network.Lastfm
-import qualified Network.Lastfm.Tasteometer as T
+import qualified Network.Lastfm.Tasteometer as Taste
 import           Test.Hspec
 
 import           SpecHelper
@@ -13,21 +13,25 @@ import           SpecHelper
 
 spec :: Spec
 spec = do
-  it "Tasteometer.compare" $
-    query cs $
-      T.compare (user "smpcln") (user "MCDOOMDESTROYER") <*> publicKey
+  it "compare" $
+    publicly (Taste.compare (user "smpcln") (user "MCDOOMDESTROYER"))
+   `shouldHaveJson`
+    jsonQuery
 
-  it "Tasteometer.compare" $
-    query cs $
-      T.compare (user "smpcln") (artists ["enduser", "venetian snares"]) <*> publicKey
+  it "compare" $
+    publicly (Taste.compare (user "smpcln") (artists ["enduser", "venetian snares"]))
+   `shouldHaveJson`
+    jsonQuery
 
-  it "Tasteometer.compare" $
-    query cs $
-      T.compare (artists ["enduser", "venetian snares"]) (user "smpcln") <*> publicKey
+  it "compare" $
+    publicly (Taste.compare (artists ["enduser", "venetian snares"]) (user "smpcln"))
+   `shouldHaveJson`
+    jsonQuery
 
-  it "Tasteometer.compare" $
-    query cs $
-      T.compare (artists ["enduser", "venetian snares"]) (artists ["enduser", "venetian snares"]) <*> publicKey
+  it "compare" $
+    publicly (Taste.compare (artists ["enduser", "venetian snares"]) (artists ["enduser", "venetian snares"]))
+   `shouldHaveJson`
+    jsonQuery
 
-cs :: Query Text
-cs = key "comparison".key "result".key "score"._String
+jsonQuery :: Query JSON Text
+jsonQuery = key "comparison".key "result".key "score"._String

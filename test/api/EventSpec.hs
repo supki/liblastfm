@@ -3,7 +3,6 @@
 module EventSpec (spec) where
 
 import Control.Lens.Aeson
-import Data.Text (Text)
 import Network.Lastfm
 import Network.Lastfm.Event
 import Test.Hspec
@@ -13,29 +12,25 @@ import SpecHelper
 
 spec :: Spec
 spec = do
-  it "Event.attend" $
-    query_ . sign privateSecret $
+  it "attend" $
+    shouldHaveJson_ . privately $
       attend <*> event 3142549 <*> status Attending
-      <*> privateAPIKey <*> privateSessionKey
 
-  it "Event.share" $
-    query_ . sign privateSecret $
+  it "share" $
+    shouldHaveJson_ . privately $
       share <*> event 3142549 <*> recipient "liblastfm" <* message "Just listen!"
-      <*> privateAPIKey <*> privateSessionKey
 
-  it "Event.getAttendees" $
-    query ga $
-      getAttendees <*> event 3142549 <* limit 2 <*> publicKey
+  it "getAttendees" $
+    publicly (getAttendees <*> event 3142549 <* limit 2)
+   `shouldHaveJson`
+    key "attendees".key "user".values.key "name"._String
 
-  it "Event.getInfo" $
-    query gi $
-      getInfo <*> event 3142549 <*> publicKey
+  it "getInfo" $
+    publicly (getInfo <*> event 3142549)
+   `shouldHaveJson`
+    key "event".key "venue".key "location".key "city"._String
 
-  it "Event.getShouts" $
-    query gs $
-      getShouts <*> event 3142549 <* limit 1 <*> publicKey
-
-ga, gi, gs :: Query Text
-ga = key "attendees".key "user".values.key "name"._String
-gi = key "event".key "venue".key "location".key "city"._String
-gs = key "shouts".key "shout".key "body"._String
+  it "getShouts" $
+    publicly (getShouts <*> event 3142549 <* limit 1)
+   `shouldHaveJson`
+    key "shouts".key "shout".key "body"._String
