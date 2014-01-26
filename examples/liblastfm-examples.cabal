@@ -1,5 +1,5 @@
 name: liblastfm-examples
-version: 0.2.0.0
+version: 0.4.0.0
 synopsis: Examples for liblastfm
 license: MIT
 license-file: LICENSE
@@ -12,81 +12,94 @@ build-type: Simple
 
 executable sort-friends
   default-language: Haskell2010
-  build-depends: base >= 3 && < 5,
-                 liblastfm >= 0.2.0.0,
-                 async,
-                 text,
-                 aeson,
-                 lens,
-                 lens-aeson
+  build-depends:
+      base             >= 4 && < 5
+    , liblastfm        >= 0.4.0.0
+    , async
+    , text
+    , aeson
+    , lens
+    , lens-aeson
   main-is: sort-friends.hs
-  ghc-options: -Wall
-               -fno-warn-unused-do-bind
-               -threaded
+  ghc-options:
+    -Wall
+    -fno-warn-unused-do-bind
+    -threaded
 
 executable multitag-search
   default-language: Haskell2010
-  build-depends: base >= 3 && < 5,
-                 liblastfm >= 0.1.0.0,
-                 text,
-                 lens,
-                 aeson
+  build-depends:
+      base             >= 4 && < 5
+    , liblastfm        >= 0.4.0.0
+    , text
+    , lens
+    , aeson
   main-is: multitag-search.hs
-  ghc-options: -Wall
-               -fno-warn-unused-do-bind
+  ghc-options:
+    -Wall
+    -fno-warn-unused-do-bind
 
 executable web-authentication
   default-language: Haskell2010
-  build-depends: base >= 3 && < 5,
-                 liblastfm >= 0.1.0.0,
-                 lens-aeson,
-                 happstack-server,
-                 transformers,
-                 lens
+  build-depends:
+      base             >= 4 && < 5
+    , liblastfm        >= 0.4.0.0
+    , lens-aeson
+    , happstack-server >= 7.3
+    , transformers
+    , lens
   main-is: web-authentication.hs
-  ghc-options: -Wall
-               -fno-warn-unused-do-bind
+  ghc-options:
+    -Wall
+    -fno-warn-unused-do-bind
 
 executable desktop-authentication
   default-language: Haskell2010
-  build-depends: base >= 3 && < 5,
-                 liblastfm >= 0.1.0.0,
-                 text,
-                 lens,
-                 lens-aeson
+  build-depends:
+      base             >= 4 && < 5
+    , liblastfm        >= 0.4.0.0
+    , text
+    , lens
+    , lens-aeson
   main-is: desktop-authentication.hs
-  ghc-options: -Wall
-               -fno-warn-unused-do-bind
+  ghc-options:
+    -Wall
+    -fno-warn-unused-do-bind
 
 executable mobile-authentication
   default-language: Haskell2010
-  build-depends: base >=3 && < 5,
-                 liblastfm >= 0.1.0.0,
-                 lens,
-                 lens-aeson,
-                 text
+  build-depends:
+      base             >= 4 && < 5
+    , liblastfm        >= 0.4.0.0
+    , lens
+    , lens-aeson
+    , text
   main-is: mobile-authentication.hs
-  ghc-options: -Wall
+  ghc-options:
+    -Wall
 
 executable playcount
   default-language: Haskell2010
-  build-depends: base >= 3 && < 5,
-                 liblastfm >= 0.1.0.0,
-                 text,
-                 lens,
-                 lens-aeson
+  build-depends:
+      base             >= 4 && < 5
+    , liblastfm        >= 0.4.0.0
+    , text
+    , lens
+    , lens-aeson
   main-is: playcount.hs
-  ghc-options: -Wall
-               -fno-warn-unused-do-bind
+  ghc-options:
+    -Wall
+    -fno-warn-unused-do-bind
 
 executable recommendations
   default-language: Haskell2010
-  build-depends: base >= 3 && < 5,
-                 liblastfm >= 0.2.0.0,
-                 text,
-                 aeson,
-                 lens,
-                 lens-aeson
+  build-depends:
+      base             >= 4 && < 5
+    , liblastfm        >= 0.4.0.0
+    , text
+    , aeson
+    , lens
+    , lens-aeson
   main-is: recommendations.hs
   ghc-options: -Wall
                -fno-warn-unused-do-bind
