@@ -50,6 +50,7 @@ library
     , tagged
     , text
     , void
+    , xml-conduit   >= 1.1
   hs-source-dirs:
    src
   exposed-modules:
@@ -150,6 +151,8 @@ test-suite spec
     , tagged
     , text
     , void
+    , xml-conduit
+    , xml-html-conduit-lens
   type: exitcode-stdio-1.0
   hs-source-dirs:
     src

@@ -1,3 +1,4 @@
+{-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -38,6 +39,7 @@ import           Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import qualified Network.HTTP.Conduit as C
+import           Text.XML (Document, parseLBS, def)
 
 import           Network.Lastfm.Internal
 
@@ -81,8 +83,12 @@ instance Supported JSON where
   {-# INLINE base #-}
 
 instance Supported XML where
-  type Response XML = Lazy.ByteString
-  parse _ b = Right b
+  type Response XML = Document
+  parse _ b = case parseLBS def b of
+    Left _ ->
+      Left (LastfmBadResponse b)
+    Right v ->
+      Right v
   {-# INLINE parse #-}
   base = R
     { _host   = "https://ws.audioscrobbler.com/2.0/"
@@ -165,7 +171,7 @@ authToken q = maybe q (M.delete "password") $ do
 api_sig :: Secret -> Map Text Text -> Map Text Text
 api_sig (Secret s) q = M.insert "api_sig" (signer (foldr M.delete q ["format", "callback"])) q
  where
-  signer = md5 . M.foldrWithKey(\k v xs -> k <> v <> xs) s
+  signer = md5 . M.foldrWithKey (\k v xs -> k <> v <> xs) s
 
 -- | Get supplied string md5 hash hex representation
 md5 :: Text -> Text

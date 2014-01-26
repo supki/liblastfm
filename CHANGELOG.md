@@ -3,6 +3,7 @@
 
   * Fancier error handling, i.e. all errors are presented as ADTs instead of exceptions
   * `HttpException`s are catched by `lastfm`
+  * XML responses are parsed to xml-conduit's `Document`
 
 0.3.2.0
 =======

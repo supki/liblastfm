@@ -26,7 +26,7 @@ Response format might be:
 
   * [aeson][aeson] `Value` for json queries
 
-  * raw `ByteString` for xml queries
+  * [xml-conduit][xml-conduit] `Document` for xml queries
 
 Installation
 ------------
@@ -103,13 +103,6 @@ To enable it (either one works):
 A: This error message indicates that GHC cannot infer response format for the `Request`.
 To fix it, add use `json` or `xml` helpers, depending on your needs
 
-```
->>> lastfm (Artist.getInfo <*> artist "Pink Floyd" <*> apiKey "29effec263316a1f8a97f753caaa83e0" <* json)
-Just (Object fromList [("artist" ...
->>> lastfm (Artist.getInfo <*> artist "Pink Floyd" <*> apiKey "29effec263316a1f8a97f753caaa83e0" <* xml)
-"<?xml version=\"1.0\" ...
-```
-
 A note on testing
 -----------------
 
@@ -135,3 +128,4 @@ examples if you don't know where to get your credentials.
  [liblastfm/haddocks-usage]: http://supki.github.com/liblastfm/Network-Lastfm-Tag.html#v:search
  [liblastfm/wiki]: https://github.com/supki/liblastfm/wiki/How-to-parse-JSON-response
  [aeson]: http://hackage.haskell.org/package/aeson
+ [xml-conduit]: http://hackage.haskell.org/package/xml-conduit

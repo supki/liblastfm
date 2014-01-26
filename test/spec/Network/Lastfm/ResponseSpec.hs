@@ -11,6 +11,7 @@ import Control.Lens.Aeson
 import Data.Proxy (Proxy(..))
 import Data.Void (Void)
 import Test.Hspec.Lens
+import Text.Xml.Lens
 import Network.HTTP.Conduit (HttpException(..))
 
 import Network.Lastfm.Response
@@ -49,7 +50,7 @@ spec = do
         let
           good = "{ \"a\": { \"b\": 4 } }"
         in
-          parse proxy good `shouldPreview` 4 `through` _Right.key"a".key"b"._Integer
+          parse proxy good `shouldPreview` 4 `through` _Right.key "a".key "b"._Integer
 
       it "handles malformed input" $
         let
@@ -67,8 +68,20 @@ spec = do
       let proxy :: Proxy XML
           proxy = Proxy
 
-      it "pretty much always returns the input" $
+      it "handles good input" $
         let
-          bad = "not an xml"
+          good = "<root><foo><bar>baz</bar></foo></root>"
         in
-          parse proxy bad `shouldBe` Right bad
+          parse proxy good `shouldPreview` "baz" `through` _Right.root.node "foo".node "bar".text
+
+      it "handles malformed input" $
+        let
+          malformed = "not a xml"
+        in
+          parse proxy malformed `shouldPreview` malformed `through` _Left._LastfmBadResponse
+
+      -- it "handles input with encoded errors" $
+      --   let
+      --     encodedError = "<lfm><error code=\"5\">foo</error></lfm>"
+      --   in
+      --     parse proxy encodedError `shouldPreview` (5, "foo") `through` _Left._LastfmEncodedError
