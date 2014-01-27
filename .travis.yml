@@ -1,11 +1,7 @@
 language: haskell
 
-before_install:
-    - git clone https://github.com/supki/xml-html-conduit-lens
-
 install:
-    - cabal install --enable-tests --only-dependencies -ftest-api liblastfm.cabal xml-html-conduit-lens/xml-html-conduit-lens.cabal examples/liblastfm-examples.cabal
-    - cabal install xml-html-conduit-lens/
+    - cabal install --enable-tests --only-dependencies -ftest-api liblastfm.cabal examples/liblastfm-examples.cabal
 
 script:
     - cabal configure --enable-tests -ftest-api
