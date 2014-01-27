@@ -43,6 +43,7 @@ library
     , contravariant
     , crypto-api
     , http-conduit  >= 1.9
+    , http-types
     , network
     , profunctors
     , pureMD5

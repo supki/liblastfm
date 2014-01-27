@@ -35,11 +35,11 @@ spec = do
 
   describe "wrapHttpException" $ do
     it "catches 'HttpException'" $ do
-      val <- wrapHttpException (throwIO ResponseTimeout) :: IO (Either LastfmError Void)
-      val `shouldPreview` ResponseTimeout `through` _Left._LastfmHttpException
+      val <- wrapExceptions (throwIO ResponseTimeout) :: IO (Either LastfmError Void)
+      val `shouldPreview` ResponseTimeout `through` _Left._LastfmHttpError
 
     it "does not catch other exceptions" $
-      wrapHttpException (throwIO DivideByZero) `shouldThrow` _DivideByZero
+      wrapExceptions (throwIO DivideByZero) `shouldThrow` _DivideByZero
 
   describe "parse" $ do
     context "JSON" $ do
@@ -50,19 +50,25 @@ spec = do
         let
           good = "{ \"a\": { \"b\": 4 } }"
         in
-          parse proxy good `shouldPreview` 4 `through` _Right.key "a".key "b"._Integer
+          parse proxy good 200 `shouldPreview` 4 `through` _Right.key "a".key "b"._Integer
 
       it "handles malformed input" $
         let
           malformed = "not a json"
         in
-          parse proxy malformed `shouldPreview` malformed `through` _Left._LastfmBadResponse
+          parse proxy malformed 200 `shouldPreview` malformed `through` _Left._LastfmBadResponse
 
       it "handles input with encoded errors" $
         let
           encodedError = "{ \"error\": 5, \"message\": \"foo\" }"
         in
-          parse proxy encodedError `shouldPreview` (5, "foo") `through` _Left._LastfmEncodedError
+          parse proxy encodedError 200 `shouldPreview` (5, "foo") `through` _Left._LastfmEncodedError
+
+      it "handles input with non-200 status code" $
+        let
+          bad = "{ \"foo\": 4 }"
+        in
+          parse proxy bad 400 `shouldPreview` (400, bad) `through` _Left._LastfmStatusCodeError
 
     context "XML" $ do
       let proxy :: Proxy XML
@@ -72,16 +78,22 @@ spec = do
         let
           good = "<root><foo><bar>baz</bar></foo></root>"
         in
-          parse proxy good `shouldPreview` "baz" `through` _Right.root.node "foo".node "bar".text
+          parse proxy good 200 `shouldPreview` "baz" `through` _Right.root.node "foo".node "bar".text
 
       it "handles malformed input" $
         let
           malformed = "not a xml"
         in
-          parse proxy malformed `shouldPreview` malformed `through` _Left._LastfmBadResponse
+          parse proxy malformed 200 `shouldPreview` malformed `through` _Left._LastfmBadResponse
 
-      -- it "handles input with encoded errors" $
-      --   let
-      --     encodedError = "<lfm><error code=\"5\">foo</error></lfm>"
-      --   in
-      --     parse proxy encodedError `shouldPreview` (5, "foo") `through` _Left._LastfmEncodedError
+      it "handles input with encoded errors" $
+        let
+          encodedError = "<lfm><error code=\"5\">foo</error></lfm>"
+        in
+          parse proxy encodedError 200 `shouldPreview` (5, "foo") `through` _Left._LastfmEncodedError
+
+      it "handles input with non-200 status code" $
+        let
+          bad = "<foo>4</foo>"
+        in
+          parse proxy bad 400 `shouldPreview` (400, bad) `through` _Left._LastfmStatusCodeError
