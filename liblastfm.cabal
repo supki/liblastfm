@@ -144,6 +144,7 @@ test-suite spec
     , hspec
     , hspec-expectations-lens >= 0.2.0.0
     , http-conduit
+    , http-types
     , lens
     , lens-aeson
     , network
