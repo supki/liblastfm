@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Json.TagSpec (spec) where
 
-import Control.Lens.Aeson
+import Data.Aeson.Lens
 import Network.Lastfm
 import Network.Lastfm.Tag
 import Test.Hspec

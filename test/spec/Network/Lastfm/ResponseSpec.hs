@@ -7,7 +7,7 @@ module Network.Lastfm.ResponseSpec (spec) where
 import Control.Exception (ArithException(DivideByZero), throwIO)
 import Control.Exception.Lens
 import Control.Lens
-import Control.Lens.Aeson
+import Data.Aeson.Lens
 import Data.Proxy (Proxy(..))
 import Data.Void (Void)
 import Test.Hspec.Lens

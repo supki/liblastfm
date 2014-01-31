@@ -5,7 +5,7 @@
 -- __YOUR_SECRET__, __USERNAME__ and __PASSWORD__
 -- for real values
 import           Control.Lens                  -- lens
-import           Control.Lens.Aeson            -- lens-aeson
+import           Data.Aeson.Lens               -- lens
 import qualified Data.Text as Text             -- text
 import qualified Data.Text.IO as Text          -- text
 import           Network.Lastfm                -- liblastfm

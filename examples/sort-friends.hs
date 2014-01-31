@@ -22,7 +22,7 @@
  -}
 import           Control.Concurrent.Async                  -- async
 import           Control.Lens                              -- lens
-import           Control.Lens.Aeson                        -- lens-aeson
+import           Data.Aeson.Lens                           -- lens
 import           Data.Aeson (Value)                        -- aeson
 import           Data.Function (on)                        -- base
 import           Data.List (sortBy)                        -- base

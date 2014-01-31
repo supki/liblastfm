@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Json.GroupSpec (spec) where
 
-import Control.Lens.Aeson
+import Data.Aeson.Lens
 import Network.Lastfm
 import Network.Lastfm.Group
 import Test.Hspec

@@ -3,7 +3,7 @@
 module Json.PlaylistSpec (spec) where
 
 import Control.Lens
-import Control.Lens.Aeson
+import Data.Aeson.Lens
 import Data.Int (Int64)
 import Data.Text.Lens (unpacked)
 import Network.Lastfm hiding (to)

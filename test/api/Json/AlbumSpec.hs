@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Json.AlbumSpec (spec) where
 
-import Control.Lens.Aeson
+import Data.Aeson.Lens
 import Data.Text (Text)
 import Network.Lastfm
 import Network.Lastfm.Album

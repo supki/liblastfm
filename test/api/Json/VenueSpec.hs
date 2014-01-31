@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Json.VenueSpec (spec) where
 
-import Control.Lens.Aeson
+import Data.Aeson.Lens
 import Network.Lastfm
 import Network.Lastfm.Venue
 import Test.Hspec

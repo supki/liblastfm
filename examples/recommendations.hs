@@ -14,7 +14,7 @@
  -}
 
 import           Control.Lens                -- lens
-import           Control.Lens.Aeson          -- lens-aeson
+import           Data.Aeson.Lens             -- lens
 import           Data.Traversable (for)      -- base
 import           Data.Aeson (Value)          -- aeson
 import           Data.Foldable (Foldable)    -- base

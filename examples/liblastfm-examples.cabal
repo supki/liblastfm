@@ -18,8 +18,7 @@ executable sort-friends
     , async
     , text
     , aeson
-    , lens
-    , lens-aeson
+    , lens             >= 4.0
   main-is: sort-friends.hs
   ghc-options:
     -Wall
@@ -32,7 +31,7 @@ executable multitag-search
       base             >= 4 && < 5
     , liblastfm        >= 0.4.0.0
     , text
-    , lens
+    , lens             >= 4.0
     , aeson
   main-is: multitag-search.hs
   ghc-options:
@@ -44,10 +43,9 @@ executable web-authentication
   build-depends:
       base             >= 4 && < 5
     , liblastfm        >= 0.4.0.0
-    , lens-aeson
+    , lens             >= 4.0
     , happstack-server >= 7.3
     , transformers
-    , lens
   main-is: web-authentication.hs
   ghc-options:
     -Wall
@@ -59,8 +57,7 @@ executable desktop-authentication
       base             >= 4 && < 5
     , liblastfm        >= 0.4.0.0
     , text
-    , lens
-    , lens-aeson
+    , lens             >= 4.0
   main-is: desktop-authentication.hs
   ghc-options:
     -Wall
@@ -71,8 +68,7 @@ executable mobile-authentication
   build-depends:
       base             >= 4 && < 5
     , liblastfm        >= 0.4.0.0
-    , lens
-    , lens-aeson
+    , lens             >= 4.0
     , text
   main-is: mobile-authentication.hs
   ghc-options:
@@ -84,8 +80,7 @@ executable playcount
       base             >= 4 && < 5
     , liblastfm        >= 0.4.0.0
     , text
-    , lens
-    , lens-aeson
+    , lens             >= 4.0
   main-is: playcount.hs
   ghc-options:
     -Wall
@@ -98,8 +93,7 @@ executable recommendations
     , liblastfm        >= 0.4.0.0
     , text
     , aeson
-    , lens
-    , lens-aeson
+    , lens             >= 4.0
   main-is: recommendations.hs
   ghc-options: -Wall
                -fno-warn-unused-do-bind

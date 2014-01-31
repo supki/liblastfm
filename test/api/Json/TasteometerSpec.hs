@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Json.TasteometerSpec (spec) where
 
-import           Control.Lens.Aeson
+import           Data.Aeson.Lens
 import           Data.Text (Text)
 import           Network.Lastfm
 import qualified Network.Lastfm.Tasteometer as Taste

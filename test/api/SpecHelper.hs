@@ -25,7 +25,7 @@ module SpecHelper
 
 import Control.Exception (Exception, throwIO)
 import Control.Lens
-import Control.Lens.Aeson
+import Data.Aeson.Lens
 import Data.Text (Text, pack)
 import Data.Typeable (Typeable)
 import Network.Lastfm

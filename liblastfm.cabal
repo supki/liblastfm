@@ -79,7 +79,6 @@ library
     -fno-warn-unused-do-bind
     -funbox-strict-fields
 
-
 test-suite api
   if !flag(test-api)
     buildable: False
@@ -88,8 +87,7 @@ test-suite api
       base                  >= 4 && < 5
     , bytestring
     , HUnit
-    , lens
-    , lens-aeson            >= 0.1.2
+    , lens                  >= 4.0
     , liblastfm
     , hspec
     , text
@@ -142,11 +140,10 @@ test-suite spec
     , contravariant
     , crypto-api
     , hspec
-    , hspec-expectations-lens >= 0.2.0.0
+    , hspec-expectations-lens >= 0.3.0.0
     , http-conduit
     , http-types
-    , lens
-    , lens-aeson
+    , lens                    >= 4.0
     , network
     , profunctors
     , pureMD5
@@ -154,7 +151,7 @@ test-suite spec
     , text
     , void
     , xml-conduit
-    , xml-html-conduit-lens
+    , xml-html-conduit-lens   >= 0.2.0.0
   type: exitcode-stdio-1.0
   hs-source-dirs:
     src

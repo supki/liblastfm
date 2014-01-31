@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Json.TrackSpec (spec) where
 
-import Control.Lens.Aeson
+import Data.Aeson.Lens
 import Data.Text (Text)
 import Network.Lastfm
 import Network.Lastfm.Track
