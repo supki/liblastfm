@@ -1,8 +1,8 @@
 liblastfm
 =========
-[![Hackage](https://budueba.com/hackage/liblastfm)](http://hackage.haskell.org/package/liblastfm)
+[![Hackage](https://budueba.com/hackage/liblastfm)](https://hackage.haskell.org/package/liblastfm)
 [![Build Status](https://drone.io/github.com/supki/liblastfm/status.png)](https://drone.io/github.com/supki/liblastfm/latest)
-[![Build Status](https://secure.travis-ci.org/supki/liblastfm.png?branch=develop)](http://travis-ci.org/supki/liblastfm)
+[![Build Status](https://secure.travis-ci.org/supki/liblastfm.png?branch=develop)](https://travis-ci.org/supki/liblastfm)
 
 Complete API interface to [last.fm][last.fm] service.
 Documentation is available in two flavours:
@@ -127,5 +127,5 @@ examples if you don't know where to get your credentials.
  [liblastfm/haddocks]: http://supki.github.io/liblastfm/
  [liblastfm/haddocks-usage]: http://supki.github.com/liblastfm/Network-Lastfm-Tag.html#v:search
  [liblastfm/wiki]: https://github.com/supki/liblastfm/wiki/How-to-parse-JSON-response
- [aeson]: http://hackage.haskell.org/package/aeson
- [xml-conduit]: http://hackage.haskell.org/package/xml-conduit
+ [aeson]: https://hackage.haskell.org/package/aeson
+ [xml-conduit]: https://hackage.haskell.org/package/xml-conduit
