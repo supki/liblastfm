@@ -70,12 +70,12 @@ Advanced scrobbling techniques.
 
   * [lens-aeson][lens-aeson]
 
- [aeson]: http://hackage.haskell.org/package/aeson
- [async]: http://hackage.haskell.org/package/async
- [happstack-server]: http://hackage.haskell.org/package/happstack-server
- [lens-aeson]: http://hackage.haskell.org/package/lens-aeson
- [libmpd]: http://hackage.haskell.org/package/libmpd
- [netwire]: http://hackage.haskell.org/package/netwire
+ [aeson]: https://hackage.haskell.org/package/aeson
+ [async]: https://hackage.haskell.org/package/async
+ [happstack-server]: https://hackage.haskell.org/package/happstack-server
+ [lens-aeson]: https://hackage.haskell.org/package/lens-aeson
+ [libmpd]: https://hackage.haskell.org/package/libmpd
+ [netwire]: https://hackage.haskell.org/package/netwire
  [scrobblers]: https://github.com/supki/scrobblers
  [last.fm/desktop]: http://www.last.fm/api/desktopauth
  [last.fm/web]: http://www.last.fm/api/webauth
