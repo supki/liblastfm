@@ -4,12 +4,11 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Network.Lastfm.ResponseSpec (spec) where
 
-import Control.Exception (ArithException(DivideByZero), throwIO)
+import Control.Exception (ArithException(..), evaluate, throwIO, try)
 import Control.Exception.Lens
 import Control.Lens
 import Data.Aeson.Lens
 import Data.Proxy (Proxy(..))
-import Data.Void (Void)
 import Test.Hspec.Lens
 import Text.Xml.Lens
 import Network.HTTP.Conduit (HttpException(..))
@@ -33,13 +32,16 @@ spec = do
     it "calculates the right hash for a unicode string" $
       md5 "ДМИТРИЙ МАЛИКОВ" `shouldBe` "e02e5affef1004a02d9762619dc2a585"
 
-  describe "wrapHttpException" $ do
+  describe "try for LastfmError" $ do
+    let tryLastfmError :: IO a -> IO (Either LastfmError a)
+        tryLastfmError = try
+
     it "catches 'HttpException'" $ do
-      val <- wrapExceptions (throwIO ResponseTimeout) :: IO (Either LastfmError Void)
-      val `shouldPreview` ResponseTimeout `through` _Left._LastfmHttpError
+      val <- tryLastfmError (throwIO ResponseTimeout) :: IO (Either LastfmError ())
+      val `shouldHave` _Left._LastfmHttpError.only ResponseTimeout
 
     it "does not catch other exceptions" $
-      wrapExceptions (throwIO DivideByZero) `shouldThrow` _DivideByZero
+      tryLastfmError (throwIO DivideByZero) `shouldThrow` _DivideByZero
 
   describe "parse" $ do
     context "JSON" $ do
@@ -50,25 +52,25 @@ spec = do
         let
           good = "{ \"a\": { \"b\": 4 } }"
         in
-          parse proxy good 200 `shouldPreview` 4 `through` _Right.key "a".key "b"._Integer
+          parse proxy good 200 `shouldHave` key "a".key "b"._Integer.only 4
 
       it "handles malformed input" $
         let
           malformed = "not a json"
         in
-          parse proxy malformed 200 `shouldPreview` malformed `through` _Left._LastfmBadResponse
+          evaluate (parse proxy malformed 200) `shouldThrow` _LastfmBadResponse.only malformed
 
       it "handles input with encoded errors" $
         let
           encodedError = "{ \"error\": 5, \"message\": \"foo\" }"
         in
-          parse proxy encodedError 200 `shouldPreview` (5, "foo") `through` _Left._LastfmEncodedError
+          evaluate (parse proxy encodedError 200) `shouldThrow` _LastfmEncodedError.only (5, "foo")
 
       it "handles input with non-200 status code" $
         let
           bad = "{ \"foo\": 4 }"
         in
-          parse proxy bad 400 `shouldPreview` (400, bad) `through` _Left._LastfmStatusCodeError
+          evaluate (parse proxy bad 400) `shouldThrow` _LastfmStatusCodeError.only (400, bad)
 
     context "XML" $ do
       let proxy :: Proxy XML
@@ -78,22 +80,22 @@ spec = do
         let
           good = "<root><foo><bar>baz</bar></foo></root>"
         in
-          parse proxy good 200 `shouldPreview` "baz" `through` _Right.root.node "foo".node "bar".text
+          parse proxy good 200 `shouldHave` root.node "foo".node "bar".text.only "baz"
 
       it "handles malformed input" $
         let
           malformed = "not a xml"
         in
-          parse proxy malformed 200 `shouldPreview` malformed `through` _Left._LastfmBadResponse
+          evaluate (parse proxy malformed 200) `shouldThrow` _LastfmBadResponse.only malformed
 
       it "handles input with encoded errors" $
         let
           encodedError = "<lfm><error code=\"5\">foo</error></lfm>"
         in
-          parse proxy encodedError 200 `shouldPreview` (5, "foo") `through` _Left._LastfmEncodedError
+          evaluate (parse proxy encodedError 200) `shouldThrow` _LastfmEncodedError.only (5, "foo")
 
       it "handles input with non-200 status code" $
         let
           bad = "<foo>4</foo>"
         in
-          parse proxy bad 400 `shouldPreview` (400, bad) `through` _Left._LastfmStatusCodeError
+          evaluate (parse proxy bad 400) `shouldThrow` _LastfmStatusCodeError.only (400, bad)

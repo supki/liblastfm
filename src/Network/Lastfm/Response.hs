@@ -22,12 +22,11 @@ module Network.Lastfm.Response
 #ifdef TEST
   , parse
   , md5
-  , wrapExceptions
 #endif
   ) where
 
 import           Control.Applicative
-import           Control.Exception (SomeException, Exception, handle)
+import           Control.Exception (SomeException(..), Exception(..), try, throw)
 import           Crypto.Classes (hash')
 import           Data.Aeson ((.:), Value(..), decode)
 import           Data.Aeson.Types (parseMaybe)
@@ -44,7 +43,7 @@ import           Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import qualified Data.Text.Read as T
-import           Data.Typeable (Typeable)
+import           Data.Typeable (Typeable, cast)
 import qualified Network.HTTP.Conduit as N
 import qualified Network.HTTP.Types as N
 import           Text.XML (Document, parseLBS, def)
@@ -68,7 +67,7 @@ import           Network.Lastfm.Internal
 -- (in other words, parsing XML is left to the user)
 class Supported (f :: Format) where
   type Response f
-  parse :: proxy f -> Lazy.ByteString -> Int -> Either LastfmError (Response f)
+  parse :: proxy f -> Lazy.ByteString -> Int -> Response f
   errorResponse :: proxy f -> Response f -> Maybe LastfmError
   base :: R f
 
@@ -77,10 +76,10 @@ instance Supported JSON where
 
   parse p body code = case decode body of
     Just v
-      | Just e <- errorResponse p v -> Left e
-      | code /= 200                -> Left (LastfmStatusCodeError code body)
-      | otherwise                  -> Right v
-    Nothing -> Left (LastfmBadResponse body)
+      | Just e <- errorResponse p v -> throw e
+      | code /= 200                -> throw (LastfmStatusCodeError code body)
+      | otherwise                  -> v
+    Nothing -> throw (LastfmBadResponse body)
 
   errorResponse _ = parseMaybe $ \(Object o) -> do
     code <- o .: "error"
@@ -98,10 +97,10 @@ instance Supported XML where
 
   parse p body code = case parseLBS def body of
     Right v
-      | Just e <- errorResponse p v -> Left e
-      |  code /= 200               -> Left (LastfmStatusCodeError code body)
-      | otherwise                  -> Right v
-    Left _ -> Left (LastfmBadResponse body)
+      | Just e <- errorResponse p v -> throw e
+      |  code /= 200               -> throw (LastfmStatusCodeError code body)
+      | otherwise                  -> v
+    Left _ -> throw (LastfmBadResponse body)
 
   errorResponse _ doc = case fromDocument doc of
     cur
@@ -139,13 +138,27 @@ instance Eq LastfmError where
   LastfmHttpError _         == LastfmHttpError _          = True
   _                         == _                          = False
 
-instance Exception LastfmError
+instance Exception LastfmError where
+  fromException e@(SomeException se)
+    | Just e' <- fromException e = Just (LastfmHttpError e')
+    | otherwise                 = cast se
+
+class AsLastfmError t where
+  _LastfmError :: (Choice p, Applicative m) => p LastfmError (m LastfmError) -> p t (m t)
+
+instance AsLastfmError LastfmError where
+  _LastfmError = id
+  {-# INLINE _LastfmError #-}
+
+instance AsLastfmError SomeException where
+  _LastfmError = dimap (\e -> maybe (Left e) Right (fromException e)) (either pure (fmap toException)) . right'
+  {-# INLINE _LastfmError #-}
 
 -- | This is a @ Prism' 'LastfmError' 'Lazy.ByteString' @ in disguise
 _LastfmBadResponse
-  :: (Choice p, Applicative m)
-  => p Lazy.ByteString (m Lazy.ByteString) -> p LastfmError (m LastfmError)
-_LastfmBadResponse = dimap go (either pure (fmap LastfmBadResponse)) . right' where
+  :: (Choice p, Applicative m, AsLastfmError e)
+  => p Lazy.ByteString (m Lazy.ByteString) -> p e (m e)
+_LastfmBadResponse = _LastfmError . dimap go (either pure (fmap LastfmBadResponse)) . right' where
   go (LastfmBadResponse bs) = Right bs
   go x                      = Left x
   {-# INLINE go #-}
@@ -153,9 +166,9 @@ _LastfmBadResponse = dimap go (either pure (fmap LastfmBadResponse)) . right' wh
 
 -- | This is a @ Prism' 'LastfmError' ('Int', 'String') @ in disguise
 _LastfmEncodedError
-  :: (Choice p, Applicative m)
-  => p (Int, Text) (m (Int, Text)) -> p LastfmError (m LastfmError)
-_LastfmEncodedError = dimap go (either pure (fmap (uncurry LastfmEncodedError))) . right' where
+  :: (Choice p, Applicative m, AsLastfmError e)
+  => p (Int, Text) (m (Int, Text)) -> p e (m e)
+_LastfmEncodedError = _LastfmError . dimap go (either pure (fmap (uncurry LastfmEncodedError))) . right' where
   go (LastfmEncodedError n v) = Right (n, v)
   go x                        = Left x
   {-# INLINE go #-}
@@ -163,9 +176,9 @@ _LastfmEncodedError = dimap go (either pure (fmap (uncurry LastfmEncodedError)))
 
 -- | This is a @ Prism' 'LastfmError' ('Int', 'Lazy.ByteString') @ in disguise
 _LastfmStatusCodeError
-  :: (Choice p, Applicative m)
-  => p (Int, Lazy.ByteString) (m (Int, Lazy.ByteString)) -> p LastfmError (m LastfmError)
-_LastfmStatusCodeError = dimap go (either pure (fmap (uncurry LastfmStatusCodeError))) . right' where
+  :: (Choice p, Applicative m, AsLastfmError e)
+  => p (Int, Lazy.ByteString) (m (Int, Lazy.ByteString)) -> p e (m e)
+_LastfmStatusCodeError = _LastfmError . dimap go (either pure (fmap (uncurry LastfmStatusCodeError))) . right' where
   go (LastfmStatusCodeError e s) = Right (e, s)
   go x                           = Left x
   {-# INLINE go #-}
@@ -173,9 +186,9 @@ _LastfmStatusCodeError = dimap go (either pure (fmap (uncurry LastfmStatusCodeEr
 
 -- | This is a @ Prism' 'LastfmError' 'C.HttpException' @ in disguise
 _LastfmHttpError
-  :: (Choice p, Applicative m)
-  => p N.HttpException (m N.HttpException) -> p LastfmError (m LastfmError)
-_LastfmHttpError = dimap go (either pure (fmap LastfmHttpError)) . right' where
+  :: (Choice p, Applicative m, AsLastfmError e)
+  => p N.HttpException (m N.HttpException) -> p e (m e)
+_LastfmHttpError = _LastfmError . dimap go (either pure (fmap LastfmHttpError)) . right' where
   go (LastfmHttpError e) = Right e
   go x                   = Left x
   {-# INLINE go #-}
@@ -215,17 +228,13 @@ md5 = T.pack . show . (hash' :: Strict.ByteString -> MD5Digest) . T.encodeUtf8
 --
 -- Also catches 'C.HttpException's thrown by http-conduit
 lastfm :: Supported f => Request f Ready -> IO (Either LastfmError (Response f))
-lastfm = wrapExceptions . lastfm' parse (\_ _ _ -> Nothing) . finalize
+lastfm = try . lastfm' parse (\_ _ _ -> Nothing) . finalize
 
 -- | Send 'Request' without parsing the 'Response'
 --
 -- Does not interfere with exceptions in any way
 lastfm_ :: Supported f => Request f Ready -> IO ()
 lastfm_ = lastfm' (\_ _ _ -> ()) (N.checkStatus def) . finalize
-
--- | Handle http-conduit's 'C.HttpException' by wrapping it
-wrapExceptions :: IO (Either LastfmError a) -> IO (Either LastfmError a)
-wrapExceptions = handle $ \ex -> return (Left (LastfmHttpError ex))
 
 -- | Send 'R' and parse 'Response' with the supplied function
 lastfm'
