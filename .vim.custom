@@ -24,4 +24,11 @@ let g:hdevtools_options = s:hdevtools_options
 	\ ] + s:discover_cabal_sandbox(".cabal-sandbox/*.conf.d")
 	\ )
 
-
+let g:vim_flipping_substitutions =
+	\ { 'src/Main(\.l?hs)':      'test/Spec\1'
+	\ , 'test/Spec(\.l?hs)':     'src/Main\1'
+	\ , 'src/(.+)(\.l?hs)':      'test/spec/\1Spec\2'
+	\ , 'test/spec/(.+)Spec(\.l?hs)': 'src/\1\2'
+	\ , 'test/api/Json/(.+\.l?hs)': 'test/api/Xml/\1'
+	\ , 'test/api/Xml/(.+\.l?hs)': 'test/api/Json/\1'
+	\ }
