@@ -3,6 +3,7 @@
 module Xml.ArtistSpec (spec) where
 
 import Data.Text (Text)
+import Data.Traversable (traverse)
 import Network.Lastfm
 import Network.Lastfm.Artist
 import Test.Hspec
@@ -37,7 +38,7 @@ spec = do
 
   describe "getEvents*" $ do
     let xmlQuery :: Query XML Text
-        xmlQuery = root.node "events".attr "artist"
+        xmlQuery = root.node "events".attr "artist".traverse
 
     it "getEvents" $
       publicly (getEvents <*> artist "Meshuggah" <* limit 2)

@@ -3,6 +3,7 @@
 module Xml.TrackSpec (spec) where
 
 import Data.Text (Text)
+import Data.Traversable (traverse)
 import Network.Lastfm
 import Network.Lastfm.Track
 import Test.Hspec
@@ -110,7 +111,7 @@ spec = do
 
   describe "getTags*" $ do
     let xmlQuery :: Query XML Text
-        xmlQuery = root.node "tags".attr "track"
+        xmlQuery = root.node "tags".attr "track".traverse
 
     it "getTags" $
       publicly (getTags <*> artist "Jefferson Airplane" <*> track "White Rabbit" <* user "liblastfm")

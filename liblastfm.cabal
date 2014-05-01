@@ -91,7 +91,7 @@ test-suite api
     , liblastfm
     , hspec
     , text
-    , xml-html-conduit-lens
+    , xml-html-conduit-lens >= 0.3
   type: exitcode-stdio-1.0
   hs-source-dirs:
     test/api
@@ -151,7 +151,7 @@ test-suite spec
     , text
     , void
     , xml-conduit
-    , xml-html-conduit-lens   >= 0.2.0.0
+    , xml-html-conduit-lens   >= 0.3
   type: exitcode-stdio-1.0
   hs-source-dirs:
     src
