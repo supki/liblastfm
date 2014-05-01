@@ -2,6 +2,7 @@ dist
 cabal-dev
 .cabal-sandbox
 cabal.sandbox.config
+cabal.config
 examples/.lastfm.conf
 lastfm-keys.json
 lastfm.credentials
