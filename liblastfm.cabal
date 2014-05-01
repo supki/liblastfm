@@ -87,7 +87,7 @@ test-suite api
       base                  >= 4 && < 5
     , bytestring
     , HUnit
-    , lens                  >= 4.0
+    , lens                  >= 4.0.1
     , liblastfm
     , hspec
     , text

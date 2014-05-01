@@ -1,8 +1,5 @@
 language: haskell
 
-before_install:
-    - cabal install cpphs
-
 install:
     - cabal install --enable-tests --only-dependencies -ftest-api liblastfm.cabal examples/liblastfm-examples.cabal
 
