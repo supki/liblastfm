@@ -89,15 +89,12 @@ To enable it (either one works):
 >>> lastfm (Artist.getInfo <*> artist "Pink Floyd" <*> apiKey "29effec263316a1f8a97f753caaa83e0")
 
 <interactive>:13:1:
-    No instance for (Network.Lastfm.Response.Supported f0)
-      arising from a use of `lastfm'
-    The type variable `f0' is ambiguous
-    Possible fix: add a type signature that fixes these type variable(s)
-    Note: there are several potential instances:
-      instance Network.Lastfm.Response.Supported 'XML
-        -- Defined at src/Network/Lastfm/Response.hs:66:10
-      instance Network.Lastfm.Response.Supported 'JSON
-        -- Defined at src/Network/Lastfm/Response.hs:51:10
+    No instance for (Show (IO (Either LastfmError r0)))
+      arising from a use of `print'
+    Possible fix:
+      add an instance declaration for (Show (IO (Either LastfmError r0)))
+    In the first argument of `print', namely `it'
+    In a stmt of an interactive GHCi command: print it
 ```
 
 A: This error message indicates that GHC cannot infer response format for the `Request`.

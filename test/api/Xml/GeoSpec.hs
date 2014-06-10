@@ -19,7 +19,7 @@ spec = do
     root.node "events".node "event".node "id".text
 
   describe "get*Artist*" $ do
-    let xmlQuery :: Query XML Text
+    let xmlQuery :: Fold Document Text
         xmlQuery = root.node "topartists".node "artist".node "name".text
 
     it "getMetroArtistChart" $
@@ -53,7 +53,7 @@ spec = do
     root.node "metros".node "metro".node "name".text
 
   describe "get*Track*" $ do
-    let xmlQuery :: Query XML Text
+    let xmlQuery :: Fold Document Text
         xmlQuery = root.node "toptracks".node "track".node "name".text
 
     it "getTopTracks" $

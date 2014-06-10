@@ -31,7 +31,7 @@ spec = do
       share <*> album "Jerusalem" <*> artist "Sleep" <*> recipient "liblastfm" <* message "Just listen!"
 
   describe "getBuyLinks*" $ do
-    let xmlQuery :: Query XML Text
+    let xmlQuery :: Fold Document Text
         xmlQuery = root.node "affiliations".node "physicals".node "affiliation".node "supplierName".text
 
     it "getBuyLinks" $
@@ -45,7 +45,7 @@ spec = do
       xmlQuery
 
   describe "getInfo*" $ do
-    let jsonQuery :: Query XML Text
+    let jsonQuery :: Fold Document Text
         jsonQuery = root.node "album".node "toptags".node "tag".node "name".text
 
     it "getInfo" $
@@ -59,7 +59,7 @@ spec = do
       jsonQuery
 
   describe "getShouts*" $ do
-    let xmlQuery :: Query XML Text
+    let xmlQuery :: Fold Document Text
         xmlQuery = root.node "shouts".node "shout".node "body".text
 
     it "getShouts" $
@@ -73,7 +73,7 @@ spec = do
       xmlQuery
 
   describe "getTags*" $ do
-    let xmlQuery :: Query XML Text
+    let xmlQuery :: Fold Document Text
         xmlQuery = root.node "tags".node "tag".node "name".text
 
     it "getTags" $
@@ -87,7 +87,7 @@ spec = do
       xmlQuery
 
   describe "getTopTags*" $ do
-    let xmlQuery :: Query XML Text
+    let xmlQuery :: Fold Document Text
         xmlQuery = root.node "toptags".node "tag".node "count".text
 
     it "getTopTags" $

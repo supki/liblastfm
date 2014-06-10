@@ -14,7 +14,7 @@ import SpecHelper
 spec :: Spec
 spec = do
   describe "get*Artists" $ do
-    let xmlQuery :: Query XML Text
+    let xmlQuery :: Fold Document Text
         xmlQuery = root.node "artists".node "artist".node "name".text
 
     it "getHypedArtists" $
@@ -28,7 +28,7 @@ spec = do
       xmlQuery
 
   describe "get*Tracks" $ do
-    let xmlQuery :: Query XML Text
+    let xmlQuery :: Fold Document Text
         xmlQuery = root.node "tracks".node "track".node "name".text
 
     it "getHypedTracks" $

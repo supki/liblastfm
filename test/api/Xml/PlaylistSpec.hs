@@ -38,5 +38,5 @@ spec = do
 ak' :: Request f APIKey
 ak' = apiKey "29effec263316a1f8a97f753caaa83e0"
 
-pl :: Query XML (Maybe Int64)
+pl :: Fold Document (Maybe Int64)
 pl = root.node "playlists".node "playlist".node "id".text.unpacked.to readMaybe

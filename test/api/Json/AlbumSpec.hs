@@ -2,6 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Json.AlbumSpec (spec) where
 
+import Data.Aeson (Value)
 import Data.Aeson.Lens
 import Data.Text (Text)
 import Network.Lastfm
@@ -31,7 +32,7 @@ spec = do
       share <*> album "Jerusalem" <*> artist "Sleep" <*> recipient "liblastfm" <* message "Just listen!"
 
   describe "getBuyLinks*" $ do
-    let jsonQuery :: Query JSON Text
+    let jsonQuery :: Fold Value Text
         jsonQuery = key "affiliations".key "physicals".key "affiliation".values.key "supplierName"._String
 
     it "getBuyLinks" $
@@ -45,7 +46,7 @@ spec = do
       jsonQuery
 
   describe "getInfo*" $ do
-    let jsonQuery :: Query JSON Text
+    let jsonQuery :: Fold Value Text
         jsonQuery = key "album".key "toptags".key "tag".values.key "name"._String
 
     it "getInfo" $
@@ -59,7 +60,7 @@ spec = do
       jsonQuery
 
   describe "getShouts*" $ do
-    let jsonQuery :: Query JSON Text
+    let jsonQuery :: Fold Value Text
         jsonQuery = key "shouts".key "shout".values.key "body"._String
 
     it "getShouts" $
@@ -73,7 +74,7 @@ spec = do
       jsonQuery
 
   describe "getTags*" $ do
-    let jsonQuery :: Query JSON Text
+    let jsonQuery :: Fold Value Text
         jsonQuery = key "tags".key "tag".values.key "name"._String
 
     it "getTags" $
@@ -87,7 +88,7 @@ spec = do
       jsonQuery
 
   describe "getTopTags*" $ do
-    let jsonQuery :: Query JSON Text
+    let jsonQuery :: Fold Value Text
         jsonQuery = key "toptags".key "tag".values.key "count"._String
 
     it "getTopTags" $

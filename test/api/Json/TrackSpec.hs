@@ -2,6 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Json.TrackSpec (spec) where
 
+import Data.Aeson (Value)
 import Data.Aeson.Lens
 import Data.Text (Text)
 import Network.Lastfm
@@ -67,7 +68,7 @@ spec = do
     key "tracks".key "track".values.key "name"._String
 
   describe "getInfo*" $ do
-    let jsonQuery :: Query JSON Text
+    let jsonQuery :: Fold Value Text
         jsonQuery = key "track".key "userplaycount"._String
 
     it "getInfo" $
@@ -81,7 +82,7 @@ spec = do
       jsonQuery
 
   describe "getShouts*" $ do
-    let jsonQuery :: Query JSON Text
+    let jsonQuery :: Fold Value Text
         jsonQuery = key "shouts".key "shout".values.key "author"._String
 
     it "getShouts" $
@@ -95,7 +96,7 @@ spec = do
       jsonQuery
 
   describe "getSimilar*" $ do
-    let jsonQuery :: Query JSON Text
+    let jsonQuery :: Fold Value Text
         jsonQuery = key "similartracks".key "track".values.key "name"._String
 
     it "getSimilar" $
@@ -109,7 +110,7 @@ spec = do
       jsonQuery
 
   describe "getTags*" $ do
-    let jsonQuery :: Query JSON Text
+    let jsonQuery :: Fold Value Text
         jsonQuery = key "tags".key "@attr".key "track"._String
 
     it "getTags" $
@@ -123,7 +124,7 @@ spec = do
       jsonQuery
 
   describe "getTopFans*" $ do
-    let jsonQuery :: Query JSON Text
+    let jsonQuery :: Fold Value Text
         jsonQuery = key "topfans".key "user".values.key "name"._String
 
     it "getTopFans" $
@@ -137,7 +138,7 @@ spec = do
       jsonQuery
 
   describe "getTopTags*" $ do
-    let jsonQuery :: Query JSON Text
+    let jsonQuery :: Fold Value Text
         jsonQuery = key "toptags".key "tag".values.key "name"._String
 
     it "getTopTags" $

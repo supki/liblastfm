@@ -37,7 +37,7 @@ spec = do
     root.node "corrections".node "correction".node "artist".node "name".text
 
   describe "getEvents*" $ do
-    let xmlQuery :: Query XML Text
+    let xmlQuery :: Fold Document Text
         xmlQuery = root.node "events".attr "artist".traverse
 
     it "getEvents" $
@@ -51,7 +51,7 @@ spec = do
       xmlQuery
 
   describe "getInfo*" $ do
-    let xmlQuery :: Query XML Text
+    let xmlQuery :: Fold Document Text
         xmlQuery = root.node "artist".node "stats".node "listeners".text
 
     it "getInfo" $
@@ -65,7 +65,7 @@ spec = do
       xmlQuery
 
   describe "getPastEvents*" $ do
-    let xmlQuery :: Query XML Text
+    let xmlQuery :: Fold Document Text
         xmlQuery = root.node "events".node "event".node "title".text
 
     it "getPastEvents" $
@@ -79,7 +79,7 @@ spec = do
       xmlQuery
 
   describe "getPodcast*" $ do
-    let xmlQuery :: Query XML Text
+    let xmlQuery :: Fold Document Text
         xmlQuery = root.node "rss".node "channel".node "description".text
 
     it "getPodcast" $
@@ -93,7 +93,7 @@ spec = do
       xmlQuery
 
   describe "getShouts*" $ do
-    let xmlQuery :: Query XML Text
+    let xmlQuery :: Fold Document Text
         xmlQuery = root.node "shouts".node "shout".node "author".text
 
     it "getShouts" $
@@ -107,7 +107,7 @@ spec = do
       xmlQuery
 
   describe "getSimilar*" $ do
-    let xmlQuery :: Query XML Text
+    let xmlQuery :: Fold Document Text
         xmlQuery = root.node "similarartists".node "artist".node "name".text
 
     it "getSimilar" $
@@ -121,7 +121,7 @@ spec = do
       xmlQuery
 
   describe "getTags*" $ do
-    let xmlQuery :: Query XML Text
+    let xmlQuery :: Fold Document Text
         xmlQuery = root.node "tags".node "tag".node "name".text
 
     it "getTags" $
@@ -135,7 +135,7 @@ spec = do
       xmlQuery
 
   describe "getTopAlbums*" $ do
-    let xmlQuery :: Query XML Text
+    let xmlQuery :: Fold Document Text
         xmlQuery = root.node "topalbums".node "album".node "name".text
 
     it "getTopAlbums" $
@@ -149,7 +149,7 @@ spec = do
       xmlQuery
 
   describe "getTopFans*" $ do
-    let xmlQuery :: Query XML Text
+    let xmlQuery :: Fold Document Text
         xmlQuery = root.node "topfans".node "user".node "name".text
 
     it "getTopFans" $
@@ -163,7 +163,7 @@ spec = do
       xmlQuery
 
   describe "getTopTags*" $ do
-    let xmlQuery :: Query XML Text
+    let xmlQuery :: Fold Document Text
         xmlQuery = root.node "toptags".node "tag".node "name".text
 
     it "getTopTags" $
@@ -177,7 +177,7 @@ spec = do
       xmlQuery
 
   describe "getTopTracks*" $ do
-    let xmlQuery :: Query XML Text
+    let xmlQuery :: Fold Document Text
         xmlQuery = root.node "toptracks".node "track".node "name".text
 
     it "getTopTracks" $

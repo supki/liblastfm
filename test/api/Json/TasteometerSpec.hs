@@ -2,6 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Json.TasteometerSpec (spec) where
 
+import           Data.Aeson (Value)
 import           Data.Aeson.Lens
 import           Data.Text (Text)
 import           Network.Lastfm
@@ -33,5 +34,5 @@ spec = do
    `shouldHaveJson`
     jsonQuery
 
-jsonQuery :: Query JSON Text
+jsonQuery :: Fold Value Text
 jsonQuery = key "comparison".key "result".key "score"._String

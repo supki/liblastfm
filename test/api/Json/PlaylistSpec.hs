@@ -3,6 +3,7 @@
 module Json.PlaylistSpec (spec) where
 
 import Control.Lens
+import Data.Aeson (Value)
 import Data.Aeson.Lens
 import Data.Int (Int64)
 import Data.Text.Lens (unpacked)
@@ -38,5 +39,5 @@ spec = do
 ak' :: Request f APIKey
 ak' = apiKey "29effec263316a1f8a97f753caaa83e0"
 
-pl :: Query JSON (Maybe Int64)
+pl :: Fold Value (Maybe Int64)
 pl = key "playlists".key "playlist".values.key "id"._String.unpacked.to readMaybe

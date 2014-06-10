@@ -66,7 +66,7 @@ forConcurrently = flip mapConcurrently
 pretty :: [(Text, Score)] -> IO ()
 pretty = mapM_ (\(n,s) -> Text.putStrLn $ n <> ": " <> s) . take 5 . sortBy (flip compare `on` snd)
 
-query :: Request JSON (APIKey -> Ready) -> IO (Either LastfmError (Response JSON))
+query :: Request JSON (APIKey -> Ready) -> IO (Either LastfmError Value)
 query r = lastfm (r <*> apiKey "234fc6e0f41f6ef99b7bd62ebaf8d318" <* json)
 
 target :: Text

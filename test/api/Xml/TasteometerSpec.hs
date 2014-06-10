@@ -33,5 +33,5 @@ spec = do
    `shouldHaveXml`
     xmlQuery
 
-xmlQuery :: Query XML Text
+xmlQuery :: Fold Document Text
 xmlQuery = root.node "comparison".node "result".node "score".text

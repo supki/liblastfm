@@ -6,7 +6,7 @@
 {-# LANGUAGE RankNTypes #-}
 module SpecHelper
   ( -- * Expectations
-    Query
+    Fold
   , shouldHaveResponse
   , shouldHaveJson
   , shouldHaveJson_
@@ -25,6 +25,7 @@ module SpecHelper
 
 import Control.Exception (Exception, throwIO)
 import Control.Lens
+import Data.Aeson (Value)
 import Data.Aeson.Lens
 import Data.Text (Text, pack)
 import Data.Typeable (Typeable)
@@ -39,20 +40,18 @@ import Text.Xml.Lens
 infixl 1 `shouldHaveJson`, `shouldHaveXml`
 
 
-type Query f a = Fold (Response f) a
-
 -- | Inspect 'Response' with 'Query'
-shouldHaveResponse :: (Show (Response f), Supported f) => Request f Ready -> Query f a -> Expectation
+shouldHaveResponse :: (Show r, Supported f r) => Request f Ready -> Fold r a -> Expectation
 shouldHaveResponse q l = do
   r <- lastfm q
   case preview (_Right.l) r of
     Just _  -> return ()
     Nothing -> assertFailure (printf "Query failed on %s" (show r))
 
-shouldHaveJson :: Request JSON Ready -> Query JSON a -> Expectation
+shouldHaveJson :: Request JSON Ready -> Fold Value a -> Expectation
 shouldHaveJson = shouldHaveResponse
 
-shouldHaveXml :: Request XML Ready -> Query XML a -> Expectation
+shouldHaveXml :: Request XML Ready -> Fold Document a -> Expectation
 shouldHaveXml = shouldHaveResponse
 
 -- | Check success stuff for POST requests

@@ -2,6 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Json.ChartSpec (spec) where
 
+import Data.Aeson (Value)
 import Data.Aeson.Lens
 import Data.Text (Text)
 import Network.Lastfm
@@ -14,7 +15,7 @@ import SpecHelper
 spec :: Spec
 spec = do
   describe "get*Artists" $ do
-    let jsonQuery :: Query JSON Text
+    let jsonQuery :: Fold Value Text
         jsonQuery = key "artists".key "artist".values.key "name"._String
 
     it "getHypedArtists" $
@@ -28,7 +29,7 @@ spec = do
       jsonQuery
 
   describe "get*Tracks" $ do
-    let jsonQuery :: Query JSON Text
+    let jsonQuery :: Fold Value Text
         jsonQuery = key "tracks".key "track".values.key "name"._String
 
     it "getHypedTracks" $

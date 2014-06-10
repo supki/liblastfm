@@ -2,6 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Json.GeoSpec (spec) where
 
+import Data.Aeson (Value)
 import Data.Aeson.Lens
 import Data.Text (Text)
 import Network.Lastfm
@@ -19,7 +20,7 @@ spec = do
     key "events".key "event".values.key "id"._String
 
   describe "get*Artist*" $ do
-    let jsonQuery :: Query JSON Text
+    let jsonQuery :: Fold Value Text
         jsonQuery = key "topartists".key "artist".values.key "name"._String
 
     it "getMetroArtistChart" $
@@ -53,7 +54,7 @@ spec = do
     key "metros".key "metro".values.key "name"._String
 
   describe "get*Track*" $ do
-    let jsonQuery :: Query JSON Text
+    let jsonQuery :: Fold Value Text
         jsonQuery = key "toptracks".key "track".values.key "name"._String
 
     it "getTopTracks" $

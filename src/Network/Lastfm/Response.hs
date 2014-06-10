@@ -1,16 +1,17 @@
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeFamilies #-}
 -- | Request sending and Response parsing
 module Network.Lastfm.Response
   ( -- * Request signature
     -- $sign
     Secret(..), sign
     -- * Get 'Response'
-  , Response, Supported, Format(..), lastfm, lastfm_
+  , Supported, Format(..), lastfm, lastfm_
     -- ** Errors
   , LastfmError(..)
   , _LastfmBadResponse
@@ -66,15 +67,12 @@ import           Network.Lastfm.Internal
 --
 -- 'JSON' is parsed to aeson's 'Value', 'XML' is to lazy 'ByteString'
 -- (in other words, parsing XML is left to the user)
-class Supported (f :: Format) where
-  type Response f
-  parse :: proxy f -> Lazy.ByteString -> Int -> Response f
-  errorResponse :: proxy f -> Response f -> Maybe LastfmError
+class Supported f r | f -> r, r -> f where
+  parse :: proxy f -> Lazy.ByteString -> Int -> r
+  errorResponse :: proxy f -> r -> Maybe LastfmError
   base :: R f
 
-instance Supported JSON where
-  type Response JSON = Value
-
+instance Supported JSON Value where
   parse p body code = case decode body of
     Just v
       | Just e <- errorResponse p v -> throw e
@@ -93,9 +91,7 @@ instance Supported JSON where
     , _query  = M.fromList [("format", "json")]
     }
 
-instance Supported XML where
-  type Response XML = Document
-
+instance Supported XML Document where
   parse p body code = case parseLBS def body of
     Right v
       | Just e <- errorResponse p v -> throw e
@@ -228,18 +224,18 @@ md5 = T.pack . show . (hash' :: Strict.ByteString -> MD5Digest) . T.encodeUtf8
 -- | Send 'Request' and parse the 'Response'
 --
 -- Also catches 'C.HttpException's thrown by http-conduit
-lastfm :: Supported f => Request f Ready -> IO (Either LastfmError (Response f))
+lastfm :: Supported f r => Request f Ready -> IO (Either LastfmError r)
 lastfm = try . lastfm' parse (\_ _ _ -> Nothing) . finalize
 
 -- | Send 'Request' without parsing the 'Response'
 --
 -- Does not interfere with exceptions in any way
-lastfm_ :: Supported f => Request f Ready -> IO ()
+lastfm_ :: Supported f r => Request f Ready -> IO ()
 lastfm_ = lastfm' (\_ _ _ -> ()) (N.checkStatus def) . finalize
 
 -- | Send 'R' and parse 'Response' with the supplied function
 lastfm'
-  :: Supported f
+  :: Supported f r
   => (Proxy f -> Lazy.ByteString -> Int -> a)
   -> (N.Status -> [N.Header] -> N.CookieJar -> Maybe SomeException)
   -> R f
@@ -255,5 +251,5 @@ lastfm' parser handler request = N.withManager N.tlsManagerSettings $ \manager -
   return $ parser Proxy (N.responseBody res) (N.statusCode (N.responseStatus res))
 
 -- | Get 'R' from 'Request'
-finalize :: Supported f => Request f Ready -> R f
+finalize :: Supported f r => Request f Ready -> R f
 finalize = ($ base) . unwrap
