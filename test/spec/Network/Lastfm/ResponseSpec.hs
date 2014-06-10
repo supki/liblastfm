@@ -11,7 +11,7 @@ import Data.Aeson.Lens
 import Data.Proxy (Proxy(..))
 import Test.Hspec.Lens
 import Text.Xml.Lens
-import Network.HTTP.Conduit (HttpException(..))
+import Network.HTTP.Client (HttpException(..))
 
 import Network.Lastfm.Response
 

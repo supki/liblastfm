@@ -36,15 +36,16 @@ import           Data.Digest.Pure.MD5 (MD5Digest)
 import           Data.Map (Map)
 import qualified Data.Map as M
 import           Data.Monoid
-import           Data.Proxy (Proxy(..))
 import           Data.Profunctor (Choice, dimap, right')
+import           Data.Proxy (Proxy(..))
 import           Data.String (IsString(..))
 import           Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import qualified Data.Text.Read as T
 import           Data.Typeable (Typeable, cast)
-import qualified Network.HTTP.Conduit as N
+import qualified Network.HTTP.Client as N
+import qualified Network.HTTP.Client.TLS as N
 import qualified Network.HTTP.Types as N
 import           Text.XML (Document, parseLBS, def)
 import           Text.XML.Cursor
@@ -243,7 +244,7 @@ lastfm'
   -> (N.Status -> [N.Header] -> N.CookieJar -> Maybe SomeException)
   -> R f
   -> IO a
-lastfm' parser handler request = N.withManager $ \manager -> do
+lastfm' parser handler request = N.withManager N.tlsManagerSettings $ \manager -> do
   req <- N.parseUrl (render request)
   let req' = req
        { N.method          = _method request
