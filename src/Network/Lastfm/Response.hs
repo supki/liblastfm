@@ -68,38 +68,26 @@ import           Network.Lastfm.Internal
 -- 'JSON' is parsed to aeson's 'Value', 'XML' is to lazy 'ByteString'
 -- (in other words, parsing XML is left to the user)
 class Supported f r | f -> r, r -> f where
-  parse :: proxy f -> Lazy.ByteString -> Int -> r
-  errorResponse :: proxy f -> r -> Maybe LastfmError
-  base :: R f
+  prepareRequest :: R f -> R f
+  parseResponseBody :: Lazy.ByteString -> Maybe r
+  parseResponseEncodedError  :: r -> Maybe LastfmError
 
 instance Supported JSON Value where
-  parse p body code = case decode body of
-    Just v
-      | Just e <- errorResponse p v -> throw e
-      | code /= 200                -> throw (LastfmStatusCodeError code body)
-      | otherwise                  -> v
-    Nothing -> throw (LastfmBadResponse body)
+  prepareRequest r = r { _query = _query r `M.union` M.singleton "format" "json" }
 
-  errorResponse _ = parseMaybe $ \(Object o) -> do
+  parseResponseBody = decode
+
+  parseResponseEncodedError = parseMaybe $ \(Object o) -> do
     code <- o .: "error"
     msg  <- o .: "message"
     return (LastfmEncodedError code msg)
 
-  base = R
-    { _host   = "https://ws.audioscrobbler.com/2.0/"
-    , _method = "GET"
-    , _query  = M.fromList [("format", "json")]
-    }
-
 instance Supported XML Document where
-  parse p body code = case parseLBS def body of
-    Right v
-      | Just e <- errorResponse p v -> throw e
-      |  code /= 200               -> throw (LastfmStatusCodeError code body)
-      | otherwise                  -> v
-    Left _ -> throw (LastfmBadResponse body)
+  prepareRequest = id
 
-  errorResponse _ doc = case fromDocument doc of
+  parseResponseBody = either (const Nothing) Just . parseLBS def
+
+  parseResponseEncodedError doc = case fromDocument doc of
     cur
       | [mcode]         <- cur $| element "lfm" >=> child >=> element "error" >=> attribute "code"
       , Right (code, _) <- T.decimal mcode
@@ -108,11 +96,25 @@ instance Supported XML Document where
       |
       otherwise -> Nothing
 
-  base = R
-    { _host   = "https://ws.audioscrobbler.com/2.0/"
-    , _method = "GET"
-    , _query  = mempty
-    }
+parse :: Supported f r => proxy f -> Lazy.ByteString -> Int -> r
+parse _ body httpCode = case parseResponseBody body of
+  Just v
+    | Just e <- parseResponseEncodedError v ->
+      throw e
+    | httpCode /= 200 ->
+      throw (LastfmStatusCodeError httpCode body)
+    | otherwise ->
+      v
+  Nothing ->
+    throw (LastfmBadResponse body)
+
+base :: R f
+base = R
+  { _host   = "https://ws.audioscrobbler.com/2.0/"
+  , _method = "GET"
+  , _query  = mempty
+  }
+
 
 -- | Different ways last.fm response can be unusable
 data LastfmError =
