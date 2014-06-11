@@ -37,7 +37,6 @@ import           Data.Map (Map)
 import qualified Data.Map as M
 import           Data.Monoid
 import           Data.Profunctor (Choice, dimap, right')
-import           Data.Proxy (Proxy(..))
 import           Data.String (IsString(..))
 import           Data.Text (Text)
 import qualified Data.Text as T
@@ -94,8 +93,8 @@ instance Supported XML Document where
       |
       otherwise -> Nothing
 
-parse :: Supported f r => proxy f -> Lazy.ByteString -> Either LastfmError r
-parse _ body = case parseResponseBody body of
+parse :: Supported f r => Lazy.ByteString -> Either LastfmError r
+parse body = case parseResponseBody body of
   Just v
     | Just e <- parseResponseEncodedError v ->
       Left e
@@ -212,12 +211,12 @@ lastfm = lastfmWith parse . finalize
 
 -- | Send 'Request' without parsing the 'Response'
 lastfm_ :: Supported f r => Request f Ready -> IO (Either LastfmError ())
-lastfm_ = lastfmWith (\_ _ -> Right ()) . finalize
+lastfm_ = lastfmWith (\_ -> Right ()) . finalize
 
 -- | Send 'R' and parse 'Response' with the supplied parser
 lastfmWith
   :: Supported f r
-  => (Proxy f -> Lazy.ByteString -> Either LastfmError a)
+  => (Lazy.ByteString -> Either LastfmError a)
   -> R f
   -> IO (Either LastfmError a)
 lastfmWith p r = N.withManager N.tlsManagerSettings $ \manager -> do
@@ -226,7 +225,7 @@ lastfmWith p r = N.withManager N.tlsManagerSettings $ \manager -> do
        { N.method          = _method r
        , N.responseTimeout = Just 10000000
        }
-  p Proxy . N.responseBody <$> N.httpLbs req' manager
+  p . N.responseBody <$> N.httpLbs req' manager
  `catch`
   (return . Left)
 

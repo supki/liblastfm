@@ -48,7 +48,6 @@ library
     , profunctors
     , pureMD5
     , semigroups
-    , tagged
     , text
     , void
     , xml-conduit     >= 1.1
@@ -148,7 +147,6 @@ test-suite spec
     , network
     , profunctors
     , pureMD5
-    , tagged
     , text
     , void
     , xml-conduit
