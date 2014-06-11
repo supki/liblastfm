@@ -44,7 +44,6 @@ library
     , crypto-api
     , http-client     >= 0.3
     , http-client-tls >= 0.2
-    , http-types
     , network
     , profunctors
     , pureMD5
@@ -145,7 +144,6 @@ test-suite spec
     , hspec-expectations-lens >= 0.3.0.0
     , http-client
     , http-client-tls
-    , http-types
     , lens                    >= 4.0
     , network
     , profunctors
