@@ -6,18 +6,23 @@
 {-# LANGUAGE OverloadedStrings #-}
 -- | Request sending and Response parsing
 module Network.Lastfm.Response
-  ( -- * Request signature
+  ( -- * Compute request signature
     -- $sign
-    Secret(..), sign
-    -- * Get 'Response'
-  , Supported, Format(..), lastfm, lastfm_
+    Secret(..)
+  , sign
+    -- * Get response
+  , Supported
+  , Format(..)
+  , lastfm
+  , lastfm_
     -- ** Errors
   , LastfmError(..)
   , _LastfmBadResponse
   , _LastfmEncodedError
   , _LastfmHttpError
     -- ** Internal
-  , lastfmWith, finalize
+  , lastfmWith
+  , finalize
 #ifdef TEST
   , parse
   , md5
@@ -52,17 +57,17 @@ import           Network.Lastfm.Internal
 
 -- $sign
 --
--- Signature is required for every
+-- The signature is required for every
 -- authenticated API request. Basically,
 -- every such request appends the md5 footprint
 -- of its arguments to the query as
 -- described at <http://www.last.fm/api/authspec#8>
 
 
--- | 'Supported' provides parsing for a chosen 'Format'
+-- | 'Supported' provides parsing for the chosen 'Format'
 --
--- 'JSON' is parsed to aeson's 'Value', 'XML' is to lazy 'ByteString'
--- (in other words, parsing XML is left to the user)
+-- 'JSON' is parsed to 'Value' type from aeson, while 'XML'
+-- is parsed to 'Document' from xml-conduit
 class Supported f r | f -> r, r -> f where
   prepareRequest :: R f -> R f
   parseResponseBody :: Lazy.ByteString -> Maybe r
@@ -70,9 +75,7 @@ class Supported f r | f -> r, r -> f where
 
 instance Supported JSON Value where
   prepareRequest r = r { _query = M.singleton "format" "json" `M.union` _query r }
-
   parseResponseBody = decode
-
   parseResponseEncodedError = parseMaybe $ \(Object o) -> do
     code <- o .: "error"
     msg  <- o .: "message"
@@ -80,9 +83,7 @@ instance Supported JSON Value where
 
 instance Supported XML Document where
   prepareRequest = id
-
   parseResponseBody = either (const Nothing) Just . parseLBS def
-
   parseResponseEncodedError doc = case fromDocument doc of
     cur
       | [mcode]         <- cur $| element "lfm" >=> child >=> element "error" >=> attribute "code"
@@ -95,12 +96,9 @@ instance Supported XML Document where
 parse :: Supported f r => Lazy.ByteString -> Either LastfmError r
 parse body = case parseResponseBody body of
   Just v
-    | Just e <- parseResponseEncodedError v ->
-      Left e
-    | otherwise ->
-      Right v
-  Nothing ->
-    Left (LastfmBadResponse body)
+    | Just e <- parseResponseEncodedError v -> Left e
+    | otherwise -> Right v
+  Nothing -> Left (LastfmBadResponse body)
 
 base :: R f
 base = R
@@ -116,7 +114,7 @@ data LastfmError =
     LastfmBadResponse Lazy.ByteString
     -- | last.fm error code and message string
   | LastfmEncodedError Int Text
-    -- | http-conduit exception, wrapped
+    -- | wrapped http-conduit exception
   | LastfmHttpError N.HttpException
     deriving (Show, Typeable)
 
@@ -181,7 +179,7 @@ newtype Secret = Secret Text deriving (Show, Eq, Typeable)
 instance IsString Secret where
   fromString = Secret . fromString
 
--- | Sign 'Request' with 'Secret'
+-- | Sign the 'Request' with the 'Secret' so it's ready to be sent
 sign :: Secret -> Request f Sign -> Request f Ready
 sign s = coerce . (<* signature)
  where
@@ -204,15 +202,15 @@ md5 :: Text -> Text
 md5 = T.pack . show . (hash' :: Strict.ByteString -> MD5Digest) . T.encodeUtf8
 
 
--- | Send 'Request' and parse the 'Response'
+-- | Send the 'Request' and parse the 'Response'
 lastfm :: Supported f r => Request f Ready -> IO (Either LastfmError r)
 lastfm = lastfmWith parse . finalize
 
--- | Send 'Request' without parsing the 'Response'
+-- | Send the 'Request' without parsing the 'Response'
 lastfm_ :: Supported f r => Request f Ready -> IO (Either LastfmError ())
 lastfm_ = lastfmWith (\_ -> Right ()) . finalize
 
--- | Send 'R' and parse 'Response' with the supplied parser
+-- | Send the 'R' and parse the 'Response' with the supplied parser
 lastfmWith
   :: Supported f r
   => (Lazy.ByteString -> Either LastfmError a)
@@ -228,6 +226,6 @@ lastfmWith p r = N.withManager N.tlsManagerSettings $ \manager -> do
  `catch`
   (return . Left)
 
--- | Get 'R' from 'Request'
+-- | Get the 'R' from the 'Request'
 finalize :: Supported f r => Request f Ready -> R f
 finalize x = (prepareRequest . unwrap x) base

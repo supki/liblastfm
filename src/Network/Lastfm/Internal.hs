@@ -1,30 +1,41 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE KindSignatures #-}
 -- | liblastfm internals
 --
 -- You shouldn't need to import this module unless you are doing something interesting.
 module Network.Lastfm.Internal
-  ( Request(..), Format(..), Ready, Sign
-  , R(..), wrap, unwrap, render, coerce
-  , absorbQuery, indexedWith
+  ( Request(..)
+  , Format(..)
+  , Ready
+  , Sign
+  , R(..)
+  , wrap
+  , unwrap
+  , render
+  , coerce
+  , absorbQuery
+  , indexedWith
     -- * Lenses
-  , host, method, query
+  , host
+  , method
+  , query
   ) where
 
-import Control.Applicative
-import Data.Foldable (Foldable(..))
-import Data.Monoid
-import Data.Traversable (Traversable(..))
-
+import           Control.Applicative
 import           Data.ByteString (ByteString)
+import           Data.Foldable (Foldable(..))
 import           Data.Functor.Contravariant (Contravariant(..))
 import           Data.Map.Strict (Map)
 import qualified Data.Map.Strict as M
+import           Data.Monoid
 import           Data.Serialize (Serialize(..))
 import           Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
+import           Data.Traversable (Traversable(..))
+import           Data.Typeable (Typeable)
 import           Data.Void (absurd)
 import           Network.URI (escapeURIChar, isUnreserved)
 
@@ -36,7 +47,7 @@ data R (f :: Format) = R
   { _host   :: {-# UNPACK #-} !Text
   , _method :: {-# UNPACK #-} !ByteString
   , _query  :: !(Map Text Text)
-  }
+  } deriving (Typeable)
 
 -- | Response format: either JSON or XML
 data Format = JSON | XML
@@ -50,12 +61,12 @@ data Sign
 
 -- | Lastfm API request data type
 --
--- @a@ is authentication state. Might be 'Send' which indicates
--- that you may send this request already or 'Sign', when request signature
--- isn't computed yet
+-- @a@ is the authentication state. Can be 'Ready', which means this 'Request' is
+-- ready to be sent, or 'Sign', if the request signature hasn't been computed yet
 --
--- @f@ is response format. liblastfm currently supports 'JSON' or 'XML'
+-- @f@ is the response format (liblastfm supports both 'JSON' and 'XML')
 newtype Request f a = Request { unRequest :: Const (Dual (Endo (R f))) a }
+    deriving (Typeable)
 
 instance Functor (Request f) where
   fmap f (Request x) = Request (fmap f x)
@@ -130,16 +141,16 @@ instance Serialize (R f) where
   put r = do
     put $ T.encodeUtf8 (_host r)
     put $ _method r
-    put $ mapmap T.encodeUtf8 T.encodeUtf8 (_query r)
+    put $ bimap T.encodeUtf8 T.encodeUtf8 (_query r)
   get = do
     h <- T.decodeUtf8 <$> get
     m <- get
-    q <- mapmap T.decodeUtf8 T.decodeUtf8 <$> get
+    q <- bimap T.decodeUtf8 T.decodeUtf8 <$> get
     return R { _host = h, _method = m, _query = q }
 
-mapmap :: (Ord s, Ord t) => (s -> t) -> (a -> b) -> Map s a -> Map t b
-mapmap f g = M.mapKeys f . M.map g
-{-# INLINE mapmap #-}
+bimap :: (Ord s, Ord t) => (s -> t) -> (a -> b) -> Map s a -> Map t b
+bimap f g = M.mapKeys f . M.map g
+{-# INLINE bimap #-}
 
 
 -- | 'Request' '_host'
