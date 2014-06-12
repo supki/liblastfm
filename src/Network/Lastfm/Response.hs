@@ -71,7 +71,7 @@ class Supported f r | f -> r, r -> f where
   parseResponseEncodedError :: r -> Maybe LastfmError
 
 instance Supported JSON Value where
-  prepareRequest r = r { _query = _query r `M.union` M.singleton "format" "json" }
+  prepareRequest r = r { _query = M.singleton "format" "json" `M.union` _query r }
 
   parseResponseBody = decode
 
@@ -232,4 +232,4 @@ lastfmWith p r = N.withManager N.tlsManagerSettings $ \manager -> do
 
 -- | Get 'R' from 'Request'
 finalize :: Supported f r => Request f Ready -> R f
-finalize = ($ base) . unwrap
+finalize x = (prepareRequest . unwrap x) base
