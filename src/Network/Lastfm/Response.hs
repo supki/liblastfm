@@ -1,7 +1,6 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -187,16 +186,16 @@ sign :: Secret -> Request f Sign -> Request f Ready
 sign s = coerce . (<* signature)
  where
   signature = wrap $
-    \r@R { _query = q } -> r { _query = api_sig s . authToken $ q }
+    \r@R { _query = q } -> r { _query = apiSig s . authToken $ q }
 
 authToken :: Map Text Text -> Map Text Text
 authToken q = maybe q (M.delete "password") $ do
   password <- M.lookup "password" q
   username <- M.lookup "username" q
-  return (M.insert "authToken" (md5 (username <> (md5 password))) q)
+  return (M.insert "authToken" (md5 (username <> md5 password)) q)
 
-api_sig :: Secret -> Map Text Text -> Map Text Text
-api_sig (Secret s) q = M.insert "api_sig" (signer (foldr M.delete q ["format", "callback"])) q
+apiSig :: Secret -> Map Text Text -> Map Text Text
+apiSig (Secret s) q = M.insert "api_sig" (signer (foldr M.delete q ["format", "callback"])) q
  where
   signer = md5 . M.foldrWithKey (\k v xs -> k <> v <> xs) s
 
