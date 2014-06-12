@@ -1,5 +1,8 @@
+{-# LANGUAGE CPP #-}
+#if __GLASGOW_HASKELL__ >= 708
+{-# LANGUAGE AutoDeriveTypeable #-}
+#endif
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE KindSignatures #-}
 -- | liblastfm internals
@@ -35,7 +38,6 @@ import           Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import           Data.Traversable (Traversable(..))
-import           Data.Typeable (Typeable)
 import           Data.Void (absurd)
 import           Network.URI (escapeURIChar, isUnreserved)
 
@@ -47,7 +49,7 @@ data R (f :: Format) = R
   { _host   :: {-# UNPACK #-} !Text
   , _method :: {-# UNPACK #-} !ByteString
   , _query  :: !(Map Text Text)
-  } deriving (Typeable)
+  }
 
 -- | Response format: either JSON or XML
 data Format = JSON | XML
@@ -66,7 +68,6 @@ data Sign
 --
 -- @f@ is the response format (liblastfm supports both 'JSON' and 'XML')
 newtype Request f a = Request { unRequest :: Const (Dual (Endo (R f))) a }
-    deriving (Typeable)
 
 instance Functor (Request f) where
   fmap f (Request x) = Request (fmap f x)
