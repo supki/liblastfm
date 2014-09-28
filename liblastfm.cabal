@@ -44,7 +44,6 @@ library
     , crypto-api
     , http-client     >= 0.3
     , http-client-tls >= 0.2
-    , network
     , network-uri
     , profunctors
     , pureMD5
@@ -147,7 +146,6 @@ test-suite spec
     , http-client-tls
     , lens                    >= 4.4
     , lens-aeson              >= 1.0.0.1
-    , network
     , network-uri
     , profunctors
     , pureMD5
