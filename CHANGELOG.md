@@ -1,3 +1,10 @@
+0.4.1.0
+=======
+
+  * Updated `lens` dependency
+
+  * Switched to `network-uri` package
+
 0.4.0.0
 =======
 
