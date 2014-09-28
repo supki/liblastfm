@@ -4,7 +4,7 @@
 -- Please remember to substitute __YOUR_API_KEY__,
 -- __YOUR_SECRET__ and __YOUR_CALLBACK__ for real values
 import Control.Lens                    -- lens
-import Data.Aeson.Lens                 -- lens
+import Data.Aeson.Lens                 -- lens-aeson
 import Control.Monad                   -- base
 import Control.Monad.IO.Class (liftIO) -- transformers
 import Data.IORef                      -- base

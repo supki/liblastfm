@@ -12,7 +12,7 @@
  - $>
  -}
 import           Control.Lens                -- lens
-import           Data.Aeson.Lens             -- lens
+import           Data.Aeson.Lens             -- lens-aeson
 import           Control.Monad               -- base
 import           Data.Maybe                  -- base
 import           Data.Text (Text)            -- text

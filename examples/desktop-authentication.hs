@@ -4,7 +4,7 @@
 -- Please remember to substitute __YOUR_API_KEY__
 -- and __YOUR_SECRET__ for real values
 import Control.Lens                  -- lens
-import Data.Aeson.Lens               -- lens
+import Data.Aeson.Lens               -- lens-aeson
 import Data.Foldable (for_)          -- base
 import Data.Text (unpack)            -- text
 import Network.Lastfm                -- liblastfm
