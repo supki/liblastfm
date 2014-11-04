@@ -12,8 +12,8 @@ import           Network.Lastfm                -- liblastfm
 import           Network.Lastfm.Authentication -- liblastfm
 
 main :: IO ()
-main = do
-  r <- lastfm . sign s $ getMobileSession <*> username u <*> password p <*> apiKey ak <* json
+main = withConnection $ \conn -> do
+  r <- lastfm conn . sign s $ getMobileSession <*> username u <*> password p <*> apiKey ak <* json
   let maybeSk = r ^? folded.key "session".key "key"._String
   Text.putStrLn $ case maybeSk of
     Just sk -> "Mobile session key: " `Text.append` sk

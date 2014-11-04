@@ -14,13 +14,13 @@ import Network.Lastfm.Authentication   -- liblastfm
 
 
 main :: IO ()
-main = do
+main = withConnection $ \conn -> do
   sessions <- newIORef []
   simpleHTTP nullConf $ msum
     [ dir "authenticate" $ seeOther (link $ apiKey ak <* callback "__YOUR_CALLBACK__") ""
     , dir "save" $ do
         t <- lookText' "token"
-        r <- liftIO . lastfm . sign s $ getSession <*> token t <*> apiKey ak <* json
+        r <- liftIO . lastfm conn . sign s $ getSession <*> token t <*> apiKey ak <* json
         case r ^? folded.key "session".key "key"._String of
           Just sk -> liftIO $ modifyIORef' sessions (sk:)
           Nothing -> return ()

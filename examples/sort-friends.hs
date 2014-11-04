@@ -41,21 +41,22 @@ type Score = Text
 
 
 main :: IO ()
-main = pages >>= scores . names >>= pretty
+main = withConnection $ \conn ->
+  pages conn >>= scores conn . names >>= pretty
  where
   names x = x ^.. folded.folded.key "friends".key "user"._Array.folded.key "name"._String
 
-pages :: IO [Either LastfmError Value]
-pages = do
-  first <- query (User.getFriends <*> user target)
+pages :: Connection -> IO [Either LastfmError Value]
+pages conn = do
+  first <- query conn (User.getFriends <*> user target)
   let ps = fromMaybe 1 (preview total first)
-  (first :) <$> forConcurrently [2..ps] (\p -> query (User.getFriends <*> user target <* page p))
+  (first :) <$> forConcurrently [2..ps] (\p -> query conn (User.getFriends <*> user target <* page p))
  where
   total = folded.key "friends".key "@attr".key "totalPages"._String.unpacked.to readMaybe.folded
 
-scores :: [Text] -> IO [(Text, Score)]
-scores xs = zip xs <$> forConcurrently xs (\x -> do
-  r <- query (Tasteometer.compare (user target) (user x))
+scores :: Connection -> [Text] -> IO [(Text, Score)]
+scores conn xs = zip xs <$> forConcurrently xs (\x -> do
+  r <- query conn (Tasteometer.compare (user target) (user x))
   return (fromMaybe "0" (preview score r)))
  where
   score = folded.key "comparison".key "result".key "score"._String
@@ -66,8 +67,8 @@ forConcurrently = flip mapConcurrently
 pretty :: [(Text, Score)] -> IO ()
 pretty = mapM_ (\(n,s) -> Text.putStrLn $ n <> ": " <> s) . take 5 . sortBy (flip compare `on` snd)
 
-query :: Request JSON (APIKey -> Ready) -> IO (Either LastfmError Value)
-query r = lastfm (r <*> apiKey "234fc6e0f41f6ef99b7bd62ebaf8d318" <* json)
+query :: Connection -> Request JSON (APIKey -> Ready) -> IO (Either LastfmError Value)
+query conn r = lastfm conn (r <*> apiKey "234fc6e0f41f6ef99b7bd62ebaf8d318" <* json)
 
 target :: Text
 target = "MCDOOMDESTROYER"

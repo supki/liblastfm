@@ -12,11 +12,7 @@ cabal.mkDerivation (self: rec {
     aeson cereal contravariant cryptoApi httpClient httpClientTls
     networkUri profunctors pureMD5 semigroups text void xmlConduit
   ];
-  testDepends = [
-    aeson cereal contravariant cryptoApi hspec hspecExpectationsLens
-    httpClient httpClientTls HUnit lens lensAeson networkUri
-    profunctors pureMD5 text void xmlConduit xmlHtmlConduitLens
-  ];
+  testDepends = buildDepends ++ [ hspec hspecExpectationsLens HUnit lens lensAeson xmlHtmlConduitLens ];
   meta = {
     description = "Lastfm API interface";
     license = self.stdenv.lib.licenses.mit;

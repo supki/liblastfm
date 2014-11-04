@@ -12,12 +12,12 @@ import Network.Lastfm.Authentication -- liblastfm
 
 
 main :: IO ()
-main = do
-  r <- lastfm $ getToken <*> apiKey ak <* json
+main = withConnection $ \conn -> do
+  r <- lastfm conn $ getToken <*> apiKey ak <* json
   for_ (r ^? folded.key "token"._String) $ \t -> do
     putStrLn $ "approve: " ++ link (apiKey ak <* token t)
     _ <- getChar
-    r' <- lastfm . sign s $ getSession <*> token t <*> apiKey ak <* json
+    r' <- lastfm conn . sign s $ getSession <*> token t <*> apiKey ak <* json
     for_ (r' ^? folded.key "session".key "key"._String) $ \sk ->
       putStrLn $ "session key: " ++ unpack sk
  where

@@ -26,13 +26,13 @@ import qualified Network.Lastfm.User as User -- liblastfm
 
 
 main :: IO ()
-main = do
-  r <- for [1..pages] $ \p -> parse `fmap` query (User.getRecommendedArtists <* page p)
+main = withConnection $ \conn -> do
+  r <- for [1..pages] $ \p -> parse `fmap` query conn (User.getRecommendedArtists <* page p)
   mapM_ Text.putStrLn (concat r)
 
 -- Construct signed query
-query :: Request JSON (APIKey -> SessionKey -> Sign) -> IO (Either LastfmError Value)
-query r = lastfm $ sign secret (r <*> ak <*> sk <* json)
+query :: Connection -> Request JSON (APIKey -> SessionKey -> Sign) -> IO (Either LastfmError Value)
+query conn r = lastfm conn $ sign secret (r <*> ak <*> sk <* json)
  where
   ak     = apiKey "__YOUR_API_KEY__"
   sk     = sessionKey "__YOUR_SESSION_KEY__"
@@ -45,4 +45,4 @@ pages = total `div` 50 -- 50 is the default number of recommendations per page
 
 -- Parse artist names from response
 parse :: Foldable f => f Value -> [Text]
-parse x = x ^.. folded.key "recommendations".key "artist"._Array.folded.key "name"._String
+parse x = x ^.. folded.key "recommendations".key "artist".values.key "name"._String
