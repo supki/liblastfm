@@ -10,19 +10,18 @@ module Network.Lastfm.Response
     -- $sign
     Secret(..)
   , sign
-    -- * Get response
-  , Supported
-  , Format(..)
+    -- * Perform requests
+  , Connection
+  , withConnection
   , lastfm
   , lastfm_
+  , Supported
+  , Format(..)
     -- ** Errors
   , LastfmError(..)
   , _LastfmBadResponse
   , _LastfmEncodedError
   , _LastfmHttpError
-    -- ** Internal
-  , lastfmWith
-  , finalize
 #ifdef TEST
   , parse
   , md5
@@ -47,8 +46,8 @@ import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import qualified Data.Text.Read as T
 import           Data.Typeable (Typeable, cast)
-import qualified Network.HTTP.Client as N
-import qualified Network.HTTP.Client.TLS as N
+import qualified Network.HTTP.Client as Http
+import qualified Network.HTTP.Client.TLS as Http
 import           Text.XML (Document, parseLBS, def)
 import           Text.XML.Cursor
 
@@ -115,7 +114,7 @@ data LastfmError =
     -- | last.fm error code and message string
   | LastfmEncodedError Int Text
     -- | wrapped http-conduit exception
-  | LastfmHttpError N.HttpException
+  | LastfmHttpError Http.HttpException
     deriving (Show, Typeable)
 
 -- | Admittedly, this isn't the best 'Eq' instance ever
@@ -165,7 +164,7 @@ _LastfmEncodedError = _LastfmError . dimap go (either pure (fmap (uncurry Lastfm
 -- | This is a @ Prism' 'LastfmError' 'C.HttpException' @ in disguise
 _LastfmHttpError
   :: (Choice p, Applicative m, AsLastfmError e)
-  => p N.HttpException (m N.HttpException) -> p e (m e)
+  => p Http.HttpException (m Http.HttpException) -> p e (m e)
 _LastfmHttpError = _LastfmError . dimap go (either pure (fmap LastfmHttpError)) . right' where
   go (LastfmHttpError e) = Right e
   go x                   = Left x
@@ -202,27 +201,36 @@ md5 :: Text -> Text
 md5 = T.pack . show . (hash' :: Strict.ByteString -> MD5Digest) . T.encodeUtf8
 
 
--- | Send the 'Request' and parse the 'Response'
-lastfm :: Supported f r => Request f Ready -> IO (Either LastfmError r)
-lastfm = lastfmWith parse . finalize
+-- | Lastfm connection manager
+newtype Connection = Connection Http.Manager
 
--- | Send the 'Request' without parsing the 'Response'
-lastfm_ :: Supported f r => Request f Ready -> IO (Either LastfmError ())
-lastfm_ = lastfmWith (\_ -> Right ()) . finalize
+-- | Creating an HTTPS connection manager is expensive; it's advised to use
+-- a single 'Connection' for all communications with last.fm
+withConnection :: (Connection -> IO a) -> IO a
+withConnection f = Http.withManager Http.tlsManagerSettings (f . Connection)
+
+-- | Perform the 'Request' and parse the response
+lastfm :: Supported f r => Connection -> Request f Ready -> IO (Either LastfmError r)
+lastfm man = lastfmWith man parse . finalize
+
+-- | Perform the 'Request' ignoring any responses
+lastfm_ :: Supported f r => Connection -> Request f Ready -> IO (Either LastfmError ())
+lastfm_ man = lastfmWith man (\_ -> Right ()) . finalize
 
 -- | Send the 'R' and parse the 'Response' with the supplied parser
 lastfmWith
   :: Supported f r
-  => (Lazy.ByteString -> Either LastfmError a)
+  => Connection
+  -> (Lazy.ByteString -> Either LastfmError a)
   -> R f
   -> IO (Either LastfmError a)
-lastfmWith p r = N.withManager N.tlsManagerSettings $ \manager -> do
-  req <- N.parseUrl (render r)
+lastfmWith (Connection man) p r = do
+  req <- Http.parseUrl (render r)
   let req' = req
-       { N.method          = _method r
-       , N.responseTimeout = Just 10000000
+       { Http.method          = _method r
+       , Http.responseTimeout = Just 10000000
        }
-  p . N.responseBody <$> N.httpLbs req' manager
+  p . Http.responseBody <$> Http.httpLbs req' man
  `catch`
   (return . Left)
 

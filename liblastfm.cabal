@@ -1,5 +1,5 @@
 name:          liblastfm
-version:       0.4.1.0
+version:       0.5.0
 synopsis:      Lastfm API interface
 license:       MIT
 license-file:  LICENSE
@@ -33,7 +33,8 @@ flag test-api
   manual: True
 
 library
-  default-language: Haskell2010
+  default-language:
+    Haskell2010
   build-depends:
       aeson
     , base            >= 4 && < 5
@@ -81,22 +82,27 @@ library
 test-suite api
   if !flag(test-api)
     buildable: False
-  default-language: Haskell2010
+  default-language:
+    Haskell2010
+  type:
+    exitcode-stdio-1.0
   build-depends:
       aeson
     , base                  >= 4 && < 5
     , bytestring
     , HUnit
+    , http-client
+    , http-client-tls
     , lens-aeson            >= 1.0.0.1
     , lens                  >= 4.4
     , liblastfm
     , hspec
     , text
     , xml-html-conduit-lens >= 0.3
-  type: exitcode-stdio-1.0
   hs-source-dirs:
     test/api
-  main-is: Spec.hs
+  main-is:
+    Spec.hs
   other-modules:
     SpecHelper
     Json.AlbumSpec
@@ -131,7 +137,10 @@ test-suite api
     -fno-warn-unused-do-bind
 
 test-suite spec
-  default-language: Haskell2010
+  default-language:
+    Haskell2010
+  type:
+    exitcode-stdio-1.0
   build-depends:
       aeson
     , base                    >= 4 && < 5
@@ -153,11 +162,11 @@ test-suite spec
     , void
     , xml-conduit
     , xml-html-conduit-lens   >= 0.3
-  type: exitcode-stdio-1.0
   hs-source-dirs:
     src
     test/spec
-  main-is: Spec.hs
+  main-is:
+    Spec.hs
   other-modules:
     Network.Lastfm.ResponseSpec
   ghc-options:

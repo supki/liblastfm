@@ -25,7 +25,7 @@ spec = do
     root.node "playlists".node "playlist".node "title".text
 
   it "addTrack" $ do
-    r <- lastfm $ getPlaylists <*> user "liblastfm" <*> ak' <* Network.Lastfm.xml
+    r <- lastfm man $ getPlaylists <*> user "liblastfm" <*> ak' <* Network.Lastfm.xml
     case r of
       Left e ->
         assertFailure (printf "last.fm error: %s" (show e))

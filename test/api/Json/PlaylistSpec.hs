@@ -26,7 +26,7 @@ spec = do
     key "playlists".key "playlist".key "title"._String
 
   it "addTrack" $ do
-    r <- lastfm $ getPlaylists <*> user "liblastfm" <*> ak' <* json
+    r <- lastfm man $ getPlaylists <*> user "liblastfm" <*> ak' <* json
     case r of
       Left e ->
         assertFailure (printf "last.fm error: %s" (show e))

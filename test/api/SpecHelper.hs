@@ -21,21 +21,26 @@ module SpecHelper
   , privateAPIKey
   , privateSessionKey
   , privateSecret
+    -- $really-awful
+  , man
   ) where
 
-import Control.Exception (Exception, throwIO)
-import Control.Lens
-import Data.Aeson (Value)
-import Data.Aeson.Lens
-import Data.Text (Text, pack)
-import Data.Typeable (Typeable)
-import Network.Lastfm
-import System.Environment
-import System.IO.Unsafe (unsafePerformIO)
-import Test.Hspec
-import Test.HUnit (assertFailure)
-import Text.Printf
-import Text.Xml.Lens
+import           Control.Exception (Exception, throwIO)
+import           Control.Lens
+import           Data.Aeson (Value)
+import           Data.Aeson.Lens
+import           Data.Text (Text, pack)
+import           Data.Typeable (Typeable)
+import qualified Network.HTTP.Client as Http
+import qualified Network.HTTP.Client.TLS as Http
+import           Network.Lastfm
+import           System.Environment
+import           System.IO.Unsafe (unsafePerformIO)
+import           Test.Hspec
+import           Test.HUnit (assertFailure)
+import           Text.Printf
+import           Text.Xml.Lens
+import           Unsafe.Coerce (unsafeCoerce)
 
 infixl 1 `shouldHaveJson`, `shouldHaveXml`
 
@@ -43,7 +48,7 @@ infixl 1 `shouldHaveJson`, `shouldHaveXml`
 -- | Inspect 'Response' with 'Query'
 shouldHaveResponse :: (Show r, Supported f r) => Request f Ready -> Fold r a -> Expectation
 shouldHaveResponse q l = do
-  r <- lastfm q
+  r <- lastfm man q
   case preview (_Right.l) r of
     Just _  -> return ()
     Nothing -> assertFailure (printf "Query failed on %s" (show r))
@@ -96,3 +101,8 @@ liblastfmEnv var = unsafePerformIO $ do
   case mv of
     Just v  -> return (pack v)
     Nothing -> throwIO (EnvironmentMissing var)
+
+-- $really-awful
+
+man :: Connection
+man = unsafeCoerce (unsafePerformIO (Http.newManager Http.tlsManagerSettings))

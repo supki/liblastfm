@@ -7,3 +7,6 @@ examples/.lastfm.conf
 lastfm-keys.json
 lastfm.credentials
 *.pyc
+result
+env.nix
+Gemfile.lock
