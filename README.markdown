@@ -1,7 +1,7 @@
 liblastfm
 =========
 [![Hackage](https://budueba.com/hackage/liblastfm)](https://hackage.haskell.org/package/liblastfm)
-[![Build Status](https://secure.travis-ci.org/supki/liblastfm.png?branch=develop)](https://travis-ci.org/supki/liblastfm)
+[![Build Status](https://secure.travis-ci.org/supki/liblastfm.png?branch=master)](https://travis-ci.org/supki/liblastfm)
 
 Complete API interface to [last.fm][last.fm] service.
 Documentation is available in two flavours:

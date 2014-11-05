@@ -11,17 +11,17 @@ description:
 cabal-version: >= 1.10
 build-type:    Simple
 extra-source-files:
-  README.md
-  CHANGELOG.md
-  examples/README.md
-  examples/desktop-authentication.hs
-  examples/liblastfm-examples.cabal
-  examples/mobile-authentication.hs
-  examples/multitag-search.hs
-  examples/playcount.hs
-  examples/recommendations.hs
-  examples/sort-friends.hs
-  examples/web-authentication.hs
+  README.markdown
+  CHANGELOG.markdown
+  example/README.markdown
+  example/desktop-authentication.hs
+  example/liblastfm-examples.cabal
+  example/mobile-authentication.hs
+  example/multitag-search.hs
+  example/playcount.hs
+  example/recommendations.hs
+  example/sort-friends.hs
+  example/web-authentication.hs
 
 source-repository head
   type:     git

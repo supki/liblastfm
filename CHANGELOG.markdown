@@ -1,5 +1,5 @@
 0.5.0
-=======
+=====
 
   * Fixed `http-client`'s `Manager` misuse: every call to `lastfm*` takes a
     `Connection` parameter now and multiple calls should share it.

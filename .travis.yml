@@ -1,14 +1,14 @@
 language: haskell
 
 ghc:
-    - 7.8
-    - 7.6
+  - 7.8
 
 install:
-    - cabal install --enable-tests --only-dependencies -ftest-api liblastfm.cabal examples/liblastfm-examples.cabal
+  - cabal install --enable-tests --only-dependencies -ftest-api liblastfm.cabal example/liblastfm-examples.cabal
 
 script:
-    - cabal configure --enable-tests -ftest-api
-    - cabal build
-    - cabal test spec
-    - cabal install liblastfm.cabal examples/liblastfm-examples.cabal
+ - cabal configure --enable-tests -ftest-api
+ - cabal build
+ - cabal test spec
+ - cabal install liblastfm.cabal example/liblastfm-examples.cabal
+ - cabal sdist
