@@ -1,21 +1,20 @@
-{ cabal, aeson, cereal, contravariant, cryptoApi, hspec
-, hspecExpectationsLens, httpClient, httpClientTls, HUnit, lens
-, lensAeson, networkUri, profunctors, pureMD5, semigroups, text
-, void, xmlConduit, xmlHtmlConduitLens
-}:
+{ haskellPackages ? (import <nixpkgs> {}).haskellPackages }:
 
-cabal.mkDerivation (self: rec {
+haskellPackages.cabal.mkDerivation (self: rec {
   pname = "liblastfm";
   version = "0.5.0";
   src = ./.;
-  buildDepends = [
+  buildDepends = with haskellPackages; [
     aeson cereal contravariant cryptoApi httpClient httpClientTls
     networkUri profunctors pureMD5 semigroups text void xmlConduit
   ];
-  testDepends = buildDepends ++ [ hspec hspecExpectationsLens HUnit lens lensAeson xmlHtmlConduitLens ];
+  testDepends = with haskellPackages; buildDepends ++ [
+    hspec hspecExpectationsLens HUnit lens lensAeson xmlHtmlConduitLens
+  ];
   meta = {
     description = "Lastfm API interface";
     license = self.stdenv.lib.licenses.mit;
     platforms = self.ghc.meta.platforms;
   };
+  doCheck = false;
 })
