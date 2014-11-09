@@ -16,5 +16,4 @@ haskellPackages.cabal.mkDerivation (self: rec {
     license = self.stdenv.lib.licenses.mit;
     platforms = self.ghc.meta.platforms;
   };
-  doCheck = false;
 })

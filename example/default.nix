@@ -1,6 +1,9 @@
 { haskellPackages ? (import <nixpkgs> {}).haskellPackages }:
 
-let liblastfm = import ../. {}; in
+let
+  liblastfm = (import <nixpkgs> {})
+    .stdenv.lib.overrideDerivation (import ../. {}) (_: { doCheck = false; } );
+in
 
 haskellPackages.cabal.mkDerivation (self: {
   pname = "liblastfm-examples";
