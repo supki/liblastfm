@@ -4,8 +4,6 @@
   * Fixed `http-client`'s `Manager` misuse: every call to `lastfm*` takes a
     `Connection` parameter now and multiple calls should share it.
 
-  * Switched to `network-uri` package
-
 0.4.1.0
 =======
 
