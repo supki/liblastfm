@@ -1,8 +1,12 @@
 dist
 cabal-dev
-examples
 .cabal-sandbox
 cabal.sandbox.config
+cabal.config
 examples/.lastfm.conf
 lastfm-keys.json
+lastfm.credentials
 *.pyc
+result
+env.nix
+Gemfile.lock
