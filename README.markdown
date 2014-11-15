@@ -55,8 +55,8 @@ desired request:
 
 To send constructed request use `lastfm`:
 
-    >>> lastfm $ Tag.search <*> tag "russian-folk" <* limit 10 <*> apiKey "29effec263316a1f8a97f753caaa83e0" <* json
-    Just (Object fromList [("results",Object fromList [("tagmatches", ...
+    >>> withConnection $ flip lastfm $ Tag.search <*> tag "russian-folk" <* limit 10 <*> apiKey "29effec263316a1f8a97f753caaa83e0" <* json
+    Right (Object (fromList [("results",Object (fromList [("tagmatches", ...
 
 [Wiki][liblastfm/wiki] describes how to parse responses.
 
