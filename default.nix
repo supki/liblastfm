@@ -3,7 +3,7 @@
 haskellPackages.cabal.mkDerivation (self: rec {
   pname = "liblastfm";
   version = "0.5.0";
-  src = ./.;
+  src = builtins.filterSource (path: _: builtins.baseNameOf path != ".hdevtools.sock") ./.;
   buildDepends = with haskellPackages; [
     aeson cereal cryptoApi httpClient httpClientTls networkUri
     profunctors pureMD5 semigroups text xmlConduit
