@@ -41,7 +41,6 @@ library
     , bytestring
     , cereal
     , containers      >= 0.5
-    , contravariant
     , crypto-api
     , http-client     >= 0.3
     , http-client-tls >= 0.2
@@ -146,7 +145,6 @@ test-suite spec
     , bytestring
     , cereal
     , containers
-    , contravariant
     , crypto-api
     , hspec
     , hspec-expectations-lens >= 0.3.0.0

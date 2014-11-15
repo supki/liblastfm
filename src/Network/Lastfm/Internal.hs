@@ -29,7 +29,6 @@ module Network.Lastfm.Internal
 import           Control.Applicative
 import           Data.ByteString (ByteString)
 import           Data.Foldable (Foldable(..))
-import           Data.Functor.Contravariant (Contravariant(..))
 import           Data.Map.Strict (Map)
 import qualified Data.Map.Strict as M
 import           Data.Monoid
@@ -71,10 +70,6 @@ newtype Request f a = Request { unRequest :: Const (Dual (Endo (R f))) a }
 instance Functor (Request f) where
   fmap f (Request x) = Request (fmap f x)
   {-# INLINE fmap #-}
-
-instance Contravariant (Request f) where
-  contramap f (Request x) = Request (contramap f x)
-  {-# INLINE contramap #-}
 
 instance Applicative (Request f) where
   pure x = Request (pure x)

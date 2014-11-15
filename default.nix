@@ -5,8 +5,8 @@ haskellPackages.cabal.mkDerivation (self: rec {
   version = "0.5.0";
   src = ./.;
   buildDepends = with haskellPackages; [
-    aeson cereal contravariant cryptoApi httpClient httpClientTls
-    networkUri profunctors pureMD5 semigroups text xmlConduit
+    aeson cereal cryptoApi httpClient httpClientTls networkUri
+    profunctors pureMD5 semigroups text xmlConduit
   ];
   testDepends = with haskellPackages; buildDepends ++ [
     hspec hspecExpectationsLens HUnit lens lensAeson xmlHtmlConduitLens
