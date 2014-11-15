@@ -1,3 +1,10 @@
+0.5.1
+=====
+
+  * Updated documentation to reflect the changes in `0.5.0`.
+
+  * Dropped `void` and `contravariant` dependencies
+
 0.5.0
 =====
 
