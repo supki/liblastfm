@@ -50,7 +50,6 @@ library
     , pureMD5
     , semigroups
     , text
-    , void
     , xml-conduit     >= 1.1
   hs-source-dirs:
    src
@@ -159,7 +158,6 @@ test-suite spec
     , profunctors
     , pureMD5
     , text
-    , void
     , xml-conduit
     , xml-html-conduit-lens   >= 0.3
   hs-source-dirs:

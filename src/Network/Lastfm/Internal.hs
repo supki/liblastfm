@@ -38,7 +38,6 @@ import           Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import           Data.Traversable (Traversable(..))
-import           Data.Void (absurd)
 import           Network.URI (escapeURIChar, isUnreserved)
 
 
@@ -91,9 +90,8 @@ instance Traversable (Request f) where
   {-# INLINE traverse #-}
 
 
--- | Copypaste from "Control.Lens.Internal.Getter"
-coerce :: (Contravariant f, Functor f) => f a -> f b
-coerce = fmap absurd . contramap absurd
+coerce :: Request f a -> Request f b
+coerce (Request (Const x)) = Request (Const x)
 {-# INLINE coerce #-}
 
 
