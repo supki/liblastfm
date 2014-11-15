@@ -13,6 +13,8 @@ module Network.Lastfm.Response
     -- * Perform requests
   , Connection
   , withConnection
+  , newConnection
+  , closeConnection
   , lastfm
   , lastfm_
   , Supported
@@ -29,7 +31,7 @@ module Network.Lastfm.Response
   ) where
 
 import           Control.Applicative
-import           Control.Exception (SomeException(..), Exception(..), catch)
+import           Control.Exception (SomeException(..), Exception(..), bracket, catch)
 import           Crypto.Classes (hash')
 import           Data.Aeson ((.:), Value(..), decode)
 import           Data.Aeson.Types (parseMaybe)
@@ -207,7 +209,15 @@ newtype Connection = Connection Http.Manager
 -- | Creating an HTTPS connection manager is expensive; it's advised to use
 -- a single 'Connection' for all communications with last.fm
 withConnection :: (Connection -> IO a) -> IO a
-withConnection f = Http.withManager Http.tlsManagerSettings (f . Connection)
+withConnection = bracket newConnection closeConnection
+
+-- | Create a 'Connection'
+newConnection :: IO Connection
+newConnection = Connection <$> Http.newManager Http.tlsManagerSettings
+
+-- | Close a 'Connection'
+closeConnection :: Connection -> IO ()
+closeConnection (Connection man) = Http.closeManager man
 
 -- | Perform the 'Request' and parse the response
 lastfm :: Supported f r => Connection -> Request f Ready -> IO (Either LastfmError r)

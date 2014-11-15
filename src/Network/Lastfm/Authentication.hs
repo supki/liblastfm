@@ -18,12 +18,13 @@
 -- >>> import Network.Lastfm
 -- >>> import Network.Lastfm.Authentication
 -- >>> :set -XOverloadedStrings
--- >>> withConnection $ flip lastfm $ getToken <*> apiKey "__API_KEY__" <* json
+-- >>> con <- newConnection
+-- >>> lastfm con $ getToken <*> apiKey "__API_KEY__" <* json
 -- Right (Object (fromList [("token",String "__TOKEN__")]))
 -- >>> putStrLn . link $ apiKey "__API_KEY__" <* token "__TOKEN__"
 -- http://www.last.fm/api/auth/?api_key=__API_KEY__&token=__TOKEN__
 -- >>> -- Click that link ^^^
--- >>> withConnection $ flip lastfm $ sign "__SECRET__" $ getSession <*> token "__TOKEN__" <*> apiKey "__API_KEY__"  <* json
+-- >>> lastfm con $ sign "__SECRET__" $ getSession <*> token "__TOKEN__" <*> apiKey "__API_KEY__"  <* json
 -- Right (Object (fromList [("session",Object (fromList [("subscriber",String "0"),("key",String "__SESSION_KEY__"),("name",String "__USER__")]))]))
 module Network.Lastfm.Authentication
   ( -- * Helpers
