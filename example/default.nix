@@ -7,8 +7,8 @@ in
 
 haskellPackages.cabal.mkDerivation (self: {
   pname = "liblastfm-examples";
-  version = "0.5.0";
-  src = builtins.filterSource (path: type: type != "unknown") ./.;
+  version = "0.5.1";
+  src = builtins.filterSource (_: type: type != "unknown") ./.;
   isLibrary = false;
   isExecutable = true;
   buildDepends = with haskellPackages; [
