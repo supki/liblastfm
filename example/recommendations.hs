@@ -31,7 +31,7 @@ main = withConnection $ \conn -> do
   mapM_ Text.putStrLn (concat r)
 
 -- Construct signed query
-query :: Connection -> Request JSON (APIKey -> SessionKey -> Sign) -> IO (Either LastfmError Value)
+query :: Connection -> Request 'JSON (APIKey -> SessionKey -> Sign) -> IO (Either LastfmError Value)
 query conn r = lastfm conn $ sign secret (r <*> ak <*> sk <* json)
  where
   ak     = apiKey "__YOUR_API_KEY__"

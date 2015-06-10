@@ -53,17 +53,17 @@ shouldHaveResponse q l = do
     Just _  -> return ()
     Nothing -> assertFailure (printf "Query failed on %s" (show r))
 
-shouldHaveJson :: Request JSON Ready -> Fold Value a -> Expectation
+shouldHaveJson :: Request 'JSON Ready -> Fold Value a -> Expectation
 shouldHaveJson = shouldHaveResponse
 
-shouldHaveXml :: Request XML Ready -> Fold Document a -> Expectation
+shouldHaveXml :: Request 'XML Ready -> Fold Document a -> Expectation
 shouldHaveXml = shouldHaveResponse
 
 -- | Check success stuff for POST requests
-shouldHaveJson_ :: Request JSON Ready -> Expectation
+shouldHaveJson_ :: Request 'JSON Ready -> Expectation
 shouldHaveJson_ l = shouldHaveResponse l (key "status".only "ok")
 
-shouldHaveXml_ :: Request XML Ready -> Expectation
+shouldHaveXml_ :: Request 'XML Ready -> Expectation
 shouldHaveXml_ l = shouldHaveResponse l (root.attributed (ix "status".only "ok"))
 
 -- | Make a request using public API key

@@ -30,15 +30,14 @@ module Network.Lastfm.Request
   , Targeted, comparison, Scrobble, LibraryAlbum, LibraryArtist
   ) where
 
-import Control.Applicative
-import Data.Int (Int64)
-import Data.Monoid ((<>), mempty)
-
+import           Control.Applicative
+import           Data.Int (Int64)
+import           Data.Monoid ((<>), mempty)
 import qualified Data.Map.Strict as M
 import           Data.Text (Text)
 import qualified Data.Text as T
 
-import Network.Lastfm.Internal
+import           Network.Lastfm.Internal
 
 
 class Argument a where
@@ -96,7 +95,7 @@ post = wrap $ \r -> r { _method = "POST" }
 --
 -- This is a little helper. It's actually enough
 -- to specialize Format manually
-json :: Request JSON a
+json :: Request 'JSON a
 json = wrap id
 {-# INLINE json #-}
 
@@ -104,7 +103,7 @@ json = wrap id
 --
 -- This is a little helper. It's actually enough
 -- to specialize Format manually
-xml :: Request XML a
+xml :: Request 'XML a
 xml = wrap id
 {-# INLINE xml #-}
 

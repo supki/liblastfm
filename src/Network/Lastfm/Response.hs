@@ -74,7 +74,7 @@ class Supported f r | f -> r, r -> f where
   parseResponseBody :: Lazy.ByteString -> Maybe r
   parseResponseEncodedError :: r -> Maybe LastfmError
 
-instance Supported JSON Value where
+instance Supported 'JSON Value where
   prepareRequest r = r { _query = M.singleton "format" "json" `M.union` _query r }
   parseResponseBody = decode
   parseResponseEncodedError = parseMaybe $ \(Object o) -> do
@@ -82,7 +82,7 @@ instance Supported JSON Value where
     msg  <- o .: "message"
     return (LastfmEncodedError code msg)
 
-instance Supported XML Document where
+instance Supported 'XML Document where
   prepareRequest = id
   parseResponseBody = either (const Nothing) Just . parseLBS def
   parseResponseEncodedError doc = case fromDocument doc of
