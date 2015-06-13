@@ -1,7 +1,7 @@
 { nixpkgs ? import <nixpkgs> {}, compiler ? "ghc7101" }: let
   inherit (nixpkgs) pkgs;
   ghc = pkgs.haskell.packages.${compiler}.ghcWithPackages( ps: with ps; [
-    hdevtools doctest
+    hdevtools doctest hspec-discover
   ]);
   cabal-install = pkgs.haskell.packages.${compiler}.cabal-install;
   pkg = (import ./default.nix { inherit nixpkgs compiler; });
