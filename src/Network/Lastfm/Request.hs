@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -30,9 +31,14 @@ module Network.Lastfm.Request
   , Targeted, comparison, Scrobble, LibraryAlbum, LibraryArtist
   ) where
 
+#if __GLASGOW_HASKELL__ < 710
 import           Control.Applicative
+#endif
 import           Data.Int (Int64)
-import           Data.Monoid ((<>), mempty)
+#if __GLASGOW_HASKELL__ < 710
+import           Data.Monoid (mempty)
+#endif
+import           Data.Monoid ((<>))
 import qualified Data.Map.Strict as M
 import           Data.Text (Text)
 import qualified Data.Text as T

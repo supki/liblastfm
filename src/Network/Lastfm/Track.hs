@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -16,12 +17,14 @@ module Network.Lastfm.Track
   , search, share, unban, unlove, updateNowPlaying
   ) where
 
+#if __GLASGOW_HASKELL__ < 710
 import           Control.Applicative
+#endif
 import           Data.List.NonEmpty (NonEmpty)
 import qualified Data.List.NonEmpty as N
 
-import Network.Lastfm.Internal (absorbQuery, indexedWith, wrap)
-import Network.Lastfm.Request
+import           Network.Lastfm.Internal (absorbQuery, indexedWith, wrap)
+import           Network.Lastfm.Request
 
 
 -- | Unify ('Artist' -> 'Track' -> …) and ('MBID' -> …)

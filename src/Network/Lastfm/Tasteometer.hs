@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 -- | Lastfm tasteometer API
@@ -9,7 +10,9 @@
 -- @
 module Network.Lastfm.Tasteometer where
 
+#if __GLASGOW_HASKELL__ < 710
 import Control.Applicative
+#endif
 
 import Network.Lastfm.Request
 

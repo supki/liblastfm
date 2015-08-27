@@ -14,7 +14,6 @@ module Network.Lastfm.Response
   , Connection
   , withConnection
   , newConnection
-  , closeConnection
   , lastfm
   , lastfm_
   , Supported
@@ -30,8 +29,11 @@ module Network.Lastfm.Response
 #endif
   ) where
 
+#if __GLASGOW_HASKELL__ < 710
 import           Control.Applicative
-import           Control.Exception (SomeException(..), Exception(..), bracket, catch)
+#endif
+import           Control.Exception (SomeException(..), Exception(..), catch)
+import           Control.Monad.IO.Class (MonadIO(liftIO))
 import           Crypto.Classes (hash')
 import           Data.Aeson ((.:), Value(..), decode)
 import           Data.Aeson.Types (parseMaybe)
@@ -208,16 +210,14 @@ newtype Connection = Connection Http.Manager
 
 -- | Creating an HTTPS connection manager is expensive; it's advised to use
 -- a single 'Connection' for all communications with last.fm
-withConnection :: (Connection -> IO a) -> IO a
-withConnection = bracket newConnection closeConnection
+withConnection :: MonadIO m => (Connection -> m a) -> m a
+withConnection f = f =<< newConnection
 
--- | Create a 'Connection'
-newConnection :: IO Connection
-newConnection = Connection <$> Http.newManager Http.tlsManagerSettings
-
--- | Close a 'Connection'
-closeConnection :: Connection -> IO ()
-closeConnection (Connection man) = Http.closeManager man
+-- | Create a 'Connection'. Note that there's no need to close the connection manually,
+-- as it will be closed automatically when no longer in use, that is, all the requests have
+-- been processed and it's about to be garbage collected.
+newConnection :: MonadIO m => m Connection
+newConnection = liftIO (fmap Connection (Http.newManager Http.tlsManagerSettings))
 
 -- | Perform the 'Request' and parse the response
 lastfm :: Supported f r => Connection -> Request f Ready -> IO (Either LastfmError r)

@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 -- | Lastfm authentication procedure helpers
@@ -32,8 +33,10 @@ module Network.Lastfm.Authentication
   , link
   ) where
 
-import Control.Applicative ((<*))
+#if __GLASGOW_HASKELL__ < 710
+import Control.Applicative
 import Data.Monoid
+#endif
 
 import Network.Lastfm.Internal
 import Network.Lastfm.Request

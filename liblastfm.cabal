@@ -1,5 +1,5 @@
 name:          liblastfm
-version:       0.5.1
+version:       0.6.0
 synopsis:      Lastfm API interface
 license:       MIT
 license-file:  LICENSE
@@ -27,6 +27,12 @@ source-repository head
   type:     git
   location: https://github.com/supki/liblastfm
 
+source-repository this
+  type:     git
+  location: https://github.com/supki/liblastfm
+  tag:      0.6.0
+
+
 flag test-api
   description: a real API test
   default: False
@@ -42,12 +48,13 @@ library
     , cereal
     , containers      >= 0.5
     , crypto-api
-    , http-client     >= 0.3
+    , http-client     >= 0.4.19
     , http-client-tls >= 0.2
     , network-uri
     , profunctors
     , pureMD5
     , semigroups
+    , transformers
     , text
     , xml-conduit     >= 1.1
   hs-source-dirs:
@@ -74,7 +81,6 @@ library
     Network.Lastfm.Venue
   ghc-options:
     -Wall
-    -fno-warn-unused-do-bind
     -funbox-strict-fields
 
 test-suite api
@@ -132,7 +138,6 @@ test-suite api
   ghc-options:
     -Wall
     -fno-warn-orphans
-    -fno-warn-unused-do-bind
 
 test-suite spec
   default-language:
@@ -156,6 +161,7 @@ test-suite spec
     , profunctors
     , pureMD5
     , text
+    , transformers
     , xml-conduit
     , xml-html-conduit-lens   >= 0.3
   hs-source-dirs:

@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 -- | Lastfm radio API
@@ -11,7 +12,9 @@ module Network.Lastfm.Radio
   ( getPlaylist, search, tune
   ) where
 
+#if __GLASGOW_HASKELL__ < 710
 import Control.Applicative
+#endif
 
 import Network.Lastfm.Request
 

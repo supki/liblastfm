@@ -1,3 +1,10 @@
+0.6.0
+=====
+
+  * Stopped using the deprecated stuff from http-client.
+
+  * Removed `N.L.Response.closeConnection` as it's become a no-op.
+
 0.5.1
 =====
 

@@ -28,7 +28,9 @@ module Network.Lastfm.Internal
 
 import           Control.Applicative
 import           Data.ByteString (ByteString)
+#if __GLASGOW_HASKELL__ < 710
 import           Data.Foldable (Foldable(..))
+#endif
 import           Data.Map.Strict (Map)
 import qualified Data.Map.Strict as M
 import           Data.Monoid
@@ -36,7 +38,9 @@ import           Data.Serialize (Serialize(..))
 import           Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
+#if __GLASGOW_HASKELL__ < 710
 import           Data.Traversable (Traversable(..))
+#endif
 import           Network.URI (escapeURIChar, isUnreserved)
 
 

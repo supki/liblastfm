@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 -- | Lastfm library API
@@ -13,14 +14,14 @@ module Network.Lastfm.Library
   , removeAlbum, removeArtist, removeScrobble, removeTrack
   ) where
 
-import Control.Applicative
+#if __GLASGOW_HASKELL__ < 710
+import           Control.Applicative
+#endif
 import           Data.List.NonEmpty (NonEmpty)
 import qualified Data.List.NonEmpty as N
 
-import Network.Lastfm.Internal (absorbQuery, indexedWith, wrap)
-import Network.Lastfm.Request
-
-
+import           Network.Lastfm.Internal (absorbQuery, indexedWith, wrap)
+import           Network.Lastfm.Request
 
 
 -- | Add an album or collection of albums to a user's Last.fm library
