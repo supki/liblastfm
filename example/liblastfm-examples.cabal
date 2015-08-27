@@ -1,5 +1,5 @@
 name:          liblastfm-examples
-version:       0.5.0
+version:       0.6.0
 synopsis:      Liblastfm examples
 license:       MIT
 license-file:  LICENSE
@@ -25,7 +25,7 @@ executable sort-friends
     sort-friends.hs
   ghc-options:
     -Wall
-    -fno-warn-unused-do-bind
+    -Werror
     -threaded
 
 executable multitag-search
@@ -41,7 +41,7 @@ executable multitag-search
     multitag-search.hs
   ghc-options:
     -Wall
-    -fno-warn-unused-do-bind
+    -Werror
 
 executable web-authentication
   default-language:
@@ -57,7 +57,7 @@ executable web-authentication
     web-authentication.hs
   ghc-options:
     -Wall
-    -fno-warn-unused-do-bind
+    -Werror
 
 executable desktop-authentication
   default-language:
@@ -72,7 +72,7 @@ executable desktop-authentication
     desktop-authentication.hs
   ghc-options:
     -Wall
-    -fno-warn-unused-do-bind
+    -Werror
 
 executable mobile-authentication
   default-language:
@@ -87,6 +87,7 @@ executable mobile-authentication
     mobile-authentication.hs
   ghc-options:
     -Wall
+    -Werror
 
 executable playcount
   default-language:
@@ -101,7 +102,7 @@ executable playcount
     playcount.hs
   ghc-options:
     -Wall
-    -fno-warn-unused-do-bind
+    -Werror
 
 executable recommendations
   default-language:
@@ -117,4 +118,4 @@ executable recommendations
     recommendations.hs
   ghc-options:
     -Wall
-    -fno-warn-unused-do-bind
+    -Werror

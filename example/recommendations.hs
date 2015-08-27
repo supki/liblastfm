@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 {- This example shows how to use signed queries
@@ -17,7 +18,9 @@ import           Control.Lens                -- lens
 import           Data.Aeson.Lens             -- lens-aeson
 import           Data.Traversable (for)      -- base
 import           Data.Aeson (Value)          -- aeson
+#if __GLASGOW_HASKELL__ < 710
 import           Data.Foldable (Foldable)    -- base
+#endif
 import           Data.Int (Int64)            -- base
 import           Data.Text (Text)            -- text
 import qualified Data.Text.IO as Text        -- text
