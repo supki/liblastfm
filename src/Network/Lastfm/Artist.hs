@@ -38,7 +38,6 @@ instance ArtistOrMBID r Artist
 -- <http://www.last.fm/api/show/artist.addTags>
 addTags :: Request f (Artist -> [Tag] -> APIKey -> SessionKey -> Sign)
 addTags = api "artist.addTags" <* post
-{-# INLINE addTags #-}
 
 
 -- | Use the last.fm corrections data to check whether the
@@ -47,7 +46,6 @@ addTags = api "artist.addTags" <* post
 -- <http://www.last.fm/api/show/artist.getCorrection>
 getCorrection :: Request f (Artist -> APIKey -> Ready)
 getCorrection = api "artist.getCorrection"
-{-# INLINE getCorrection #-}
 
 
 -- | Get a list of upcoming events for this artist. Easily
@@ -58,7 +56,6 @@ getCorrection = api "artist.getCorrection"
 -- <http://www.last.fm/api/show/artist.getEvents>
 getEvents :: ArtistOrMBID Ready a => Request f (a -> APIKey -> Ready)
 getEvents = api "artist.getEvents"
-{-# INLINE getEvents #-}
 
 
 -- | Get the metadata for an artist. Includes biography.
@@ -68,7 +65,6 @@ getEvents = api "artist.getEvents"
 -- <http://www.last.fm/api/show/artist.getInfo>
 getInfo :: ArtistOrMBID Ready a => Request f (a -> APIKey -> Ready)
 getInfo = api "artist.getInfo"
-{-# INLINE getInfo #-}
 
 
 -- | Get a paginated list of all the events this artist has played at in the past.
@@ -78,7 +74,6 @@ getInfo = api "artist.getInfo"
 -- <http://www.last.fm/api/show/artist.getPastEvents>
 getPastEvents :: ArtistOrMBID Ready a => Request f (a -> APIKey -> Ready)
 getPastEvents = api "artist.getPastEvents"
-{-# INLINE getPastEvents #-}
 
 
 -- | Get a podcast of free mp3s based on an artist
@@ -88,7 +83,6 @@ getPastEvents = api "artist.getPastEvents"
 -- <http://www.last.fm/api/show/artist.getPodcast>
 getPodcast :: ArtistOrMBID Ready a => Request f (a -> APIKey -> Ready)
 getPodcast = api "artist.getPodcast"
-{-# INLINE getPodcast #-}
 
 
 -- | Get shouts for this artist. Also available as an rss feed.
@@ -98,7 +92,6 @@ getPodcast = api "artist.getPodcast"
 -- <http://www.last.fm/api/show/artist.getShouts>
 getShouts :: ArtistOrMBID Ready a => Request f (a -> APIKey -> Ready)
 getShouts = api "artist.getShouts"
-{-# INLINE getShouts #-}
 
 
 -- | Get all the artists similar to this artist
@@ -108,7 +101,6 @@ getShouts = api "artist.getShouts"
 -- <http://www.last.fm/api/show/artist.getSimilar>
 getSimilar :: ArtistOrMBID Ready a => Request f (a -> APIKey -> Ready)
 getSimilar = api "artist.getSimilar"
-{-# INLINE getSimilar #-}
 
 
 -- | Get the tags applied by an individual user to an artist on Last.fm.
@@ -122,7 +114,6 @@ getSimilar = api "artist.getSimilar"
 -- <http://www.last.fm/api/show/artist.getTags>
 getTags :: ArtistOrMBID r a => Request f (a -> APIKey -> r)
 getTags = api "artist.getTags"
-{-# INLINE getTags #-}
 
 
 -- | Get the top albums for an artist on Last.fm, ordered by popularity.
@@ -132,7 +123,6 @@ getTags = api "artist.getTags"
 -- <http://www.last.fm/api/show/artist.getTopAlbums>
 getTopAlbums :: ArtistOrMBID Ready a => Request f (a -> APIKey -> Ready)
 getTopAlbums = api "artist.getTopAlbums"
-{-# INLINE getTopAlbums #-}
 
 
 -- | Get the top fans for an artist on Last.fm, based on listening data.
@@ -142,7 +132,6 @@ getTopAlbums = api "artist.getTopAlbums"
 -- <http://www.last.fm/api/show/artist.getTopFans>
 getTopFans :: ArtistOrMBID Ready a => Request f (a -> APIKey -> Ready)
 getTopFans = api "artist.getTopFans"
-{-# INLINE getTopFans #-}
 
 
 -- | Get the top tags for an artist on Last.fm, ordered by popularity.
@@ -152,7 +141,6 @@ getTopFans = api "artist.getTopFans"
 -- <http://www.last.fm/api/show/artist.getTopTags>
 getTopTags :: ArtistOrMBID Ready a => Request f (a -> APIKey -> Ready)
 getTopTags = api "artist.getTopTags"
-{-# INLINE getTopTags #-}
 
 
 -- | Get the top tracks by an artist on Last.fm, ordered by popularity
@@ -162,7 +150,6 @@ getTopTags = api "artist.getTopTags"
 -- <http://www.last.fm/api/show/artist.getTopTracks>
 getTopTracks :: ArtistOrMBID Ready a => Request f (a -> APIKey -> Ready)
 getTopTracks = api "artist.getTopTracks"
-{-# INLINE getTopTracks #-}
 
 
 -- | Remove a user's tag from an artist.
@@ -170,7 +157,6 @@ getTopTracks = api "artist.getTopTracks"
 -- <http://www.last.fm/api/show/artist.removeTag>
 removeTag :: Request f (Artist -> Tag -> APIKey -> SessionKey -> Sign)
 removeTag = api "artist.removeTag" <* post
-{-# INLINE removeTag #-}
 
 
 -- | Search for an artist by name. Returns artist matches sorted by relevance.
@@ -180,7 +166,6 @@ removeTag = api "artist.removeTag" <* post
 -- <http://www.last.fm/api/show/artist.search>
 search :: Request f (Artist -> APIKey -> Ready)
 search = api "artist.search"
-{-# INLINE search #-}
 
 
 -- | Share an artist with Last.fm users or other friends.
@@ -190,7 +175,6 @@ search = api "artist.search"
 -- <http://www.last.fm/api/show/artist.share>
 share :: Request f (Artist -> Recipient -> APIKey -> SessionKey -> Sign)
 share = api "artist.share" <* post
-{-# INLINE share #-}
 
 
 -- | Shout in this artist's shoutbox
@@ -198,4 +182,3 @@ share = api "artist.share" <* post
 -- <http://www.last.fm/api/show/artist.shout>
 shout :: Request f (Artist -> Message -> APIKey -> SessionKey -> Sign)
 shout = api "artist.shout" <* post
-{-# INLINE shout #-}

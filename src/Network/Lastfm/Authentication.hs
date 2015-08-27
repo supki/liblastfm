@@ -45,19 +45,16 @@ import Network.Lastfm.Request
 -- | Get authorization token
 getToken :: Request f (APIKey -> Ready)
 getToken = api "auth.getToken"
-{-# INLINE getToken #-}
 
 
 -- | Get session key
 getMobileSession :: Request f (Username -> Password -> APIKey -> Sign)
 getMobileSession = api "auth.getMobileSession" <* post
-{-# INLINE getMobileSession #-}
 
 
 -- | Get session key
 getSession :: Request f (Token -> APIKey -> Sign)
 getSession = api "auth.getSession"
-{-# INLINE getSession #-}
 
 
 -- | Construct link user should follow to approve application
@@ -67,4 +64,3 @@ link q = render . unwrap q $ R
   , _method = mempty
   , _query = mempty
   }
-{-# INLINE link #-}

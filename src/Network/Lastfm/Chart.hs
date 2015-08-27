@@ -22,7 +22,6 @@ import Network.Lastfm.Request
 -- <http://www.last.fm/api/show/chart.getHypedArtists>
 getHypedArtists :: Request f (APIKey -> Ready)
 getHypedArtists = api "chart.getHypedArtists"
-{-# INLINE getHypedArtists #-}
 
 
 -- | Get the top artists chart
@@ -32,7 +31,6 @@ getHypedArtists = api "chart.getHypedArtists"
 -- <http://www.last.fm/api/show/chart.getHypedTracks>
 getHypedTracks :: Request f (APIKey -> Ready)
 getHypedTracks = api "chart.getHypedTracks"
-{-# INLINE getHypedTracks #-}
 
 
 -- | Get the most loved tracks chart
@@ -42,7 +40,6 @@ getHypedTracks = api "chart.getHypedTracks"
 -- <http://www.last.fm/api/show/chart.getLovedTracks>
 getLovedTracks :: Request f (APIKey -> Ready)
 getLovedTracks = api "chart.getLovedTracks"
-{-# INLINE getLovedTracks #-}
 
 
 -- | Get the top artists chart
@@ -52,7 +49,6 @@ getLovedTracks = api "chart.getLovedTracks"
 -- <http://www.last.fm/api/show/chart.getTopArtists>
 getTopArtists :: Request f (APIKey -> Ready)
 getTopArtists = api "chart.getTopArtists"
-{-# INLINE getTopArtists #-}
 
 
 -- | Get the top artists chart
@@ -62,7 +58,6 @@ getTopArtists = api "chart.getTopArtists"
 -- <http://www.last.fm/api/show/chart.getTopTags>
 getTopTags :: Request f (APIKey -> Ready)
 getTopTags = api "chart.getTopTags"
-{-# INLINE getTopTags #-}
 
 
 -- | Get the top tracks chart
@@ -72,4 +67,3 @@ getTopTags = api "chart.getTopTags"
 -- <http://www.last.fm/api/show/chart.getTopTracks>
 getTopTracks :: Request f (APIKey -> Ready)
 getTopTracks = api "chart.getTopTracks"
-{-# INLINE getTopTracks #-}

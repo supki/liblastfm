@@ -37,7 +37,6 @@ instance ArtistAlbumOrMBID r (Artist -> Album -> APIKey -> r)
 -- <http://www.last.fm/api/show/album.addTags>
 addTags :: Request f (Artist -> Album -> [Tag] -> APIKey -> SessionKey -> Sign)
 addTags = api "album.addTags" <* post
-{-# INLINE addTags #-}
 
 
 -- | Get a list of Buy Links for a particular Album. It is
@@ -48,7 +47,6 @@ addTags = api "album.addTags" <* post
 -- <http://www.last.fm/api/show/album.getBuylinks>
 getBuyLinks :: ArtistAlbumOrMBID Ready a => Request f (Country -> a)
 getBuyLinks = api "album.getBuyLinks"
-{-# INLINE getBuyLinks #-}
 
 
 -- | Get the metadata for an album on Last.fm using the album name or
@@ -59,7 +57,6 @@ getBuyLinks = api "album.getBuyLinks"
 -- <http://www.last.fm/api/show/album.getInfo>
 getInfo :: ArtistAlbumOrMBID Ready a => Request f a
 getInfo = api "album.getInfo"
-{-# INLINE getInfo #-}
 
 
 -- | Get shouts for this album.
@@ -69,7 +66,6 @@ getInfo = api "album.getInfo"
 -- <http://www.last.fm/api/show/album.getShouts>
 getShouts :: ArtistAlbumOrMBID Ready a => Request f a
 getShouts = api "album.getShouts"
-{-# INLINE getShouts #-}
 
 
 -- | Get the tags applied by an individual user to an album on Last.fm.
@@ -79,7 +75,6 @@ getShouts = api "album.getShouts"
 -- <http://www.last.fm/api/show/album.getTags>
 getTags :: ArtistAlbumOrMBID r a => Request f a
 getTags = api "album.getTags"
-{-# INLINE getTags #-}
 
 
 -- | Get the top tags for an album on Last.fm, ordered by popularity.
@@ -89,7 +84,6 @@ getTags = api "album.getTags"
 -- <http://www.last.fm/api/show/album.getTopTags>
 getTopTags :: ArtistAlbumOrMBID Ready a => Request f a
 getTopTags = api "album.getTopTags"
-{-# INLINE getTopTags #-}
 
 
 -- | Remove a user's tag from an album.
@@ -97,7 +91,6 @@ getTopTags = api "album.getTopTags"
 -- <http://www.last.fm/api/show/album.removeTag>
 removeTag :: Request f (Artist -> Album -> Tag -> APIKey -> SessionKey -> Sign)
 removeTag = api "album.removeTag" <* post
-{-# INLINE removeTag #-}
 
 
 -- | Search for an album by name. Returns album matches sorted by relevance.
@@ -107,7 +100,6 @@ removeTag = api "album.removeTag" <* post
 -- <http://www.last.fm/api/show/album.search>
 search :: Request f (Album -> APIKey -> Ready)
 search = api "album.search"
-{-# INLINE search #-}
 
 
 -- | Share an album with one or more Last.fm users or other friends.
@@ -117,4 +109,3 @@ search = api "album.search"
 -- <http://www.last.fm/api/show/album.share>
 share :: Request f (Album -> Artist -> Recipient -> APIKey -> SessionKey -> Sign)
 share = api "album.share" <* post
-{-# INLINE share #-}

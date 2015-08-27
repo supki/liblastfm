@@ -73,25 +73,20 @@ newtype Request f a = Request { unRequest :: Const (Dual (Endo (R f))) a }
 
 instance Functor (Request f) where
   fmap f (Request x) = Request (fmap f x)
-  {-# INLINE fmap #-}
 
 instance Applicative (Request f) where
   pure x = Request (pure x)
   Request f <*> Request x = Request (f <*> x)
-  {-# INLINE (<*>) #-}
 
 instance Foldable (Request f) where
   foldMap _ (Request _) = mempty -- not sure why this instance isn't in base
-  {-# INLINE foldMap #-}
 
 instance Traversable (Request f) where
   traverse _ (Request (Const x)) = pure (Request (Const x)) -- and that
-  {-# INLINE traverse #-}
 
 
 coerce :: Request f a -> Request f b
 coerce (Request (Const x)) = Request (Const x)
-{-# INLINE coerce #-}
 
 
 -- | Construct String from request for networking
@@ -107,30 +102,25 @@ render R { _host = h, _query = q } =
 -- | Wrapping to interesting 'Monoid' ('R' -> 'R') instance
 wrap :: (R f -> R f) -> Request f a
 wrap = Request . Const . Dual . Endo
-{-# INLINE wrap #-}
 
 -- | Unwrapping from interesting 'Monoid' ('R' -> 'R') instance
 unwrap :: Request f a -> R f -> R f
 unwrap = appEndo . getDual . getConst . unRequest
-{-# INLINE unwrap #-}
 
 
 -- | Absorbing a bunch of queries, useful in batch operations
 absorbQuery :: Foldable t => t (Request f b) -> Request f a
 absorbQuery rs = wrap $ \r ->
   r { _query = _query r <> foldMap (_query . ($ rempty) . unwrap) rs }
-{-# INLINE absorbQuery #-}
 
 -- | Transforming Request to the "array notation"
 indexedWith :: Int -> Request f a -> Request f a
 indexedWith n r = r <* wrap (\s ->
   s { _query = M.mapKeys (\k -> k <> "[" <> T.pack (show n) <> "]") (_query s) })
-{-# INLINE indexedWith #-}
 
 -- | Empty request
 rempty :: R f
 rempty = R mempty mempty mempty
-{-# INLINE rempty #-}
 
 
 -- Miscellaneous instances
@@ -148,7 +138,6 @@ instance Serialize (R f) where
 
 bimap :: (Ord s, Ord t) => (s -> t) -> (a -> b) -> Map s a -> Map t b
 bimap f g = M.mapKeys f . M.map g
-{-# INLINE bimap #-}
 
 
 -- | 'Request' '_host'

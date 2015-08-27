@@ -24,7 +24,6 @@ import Network.Lastfm.Request
 -- <http://www.last.fm/api/show/playlist.addTrack>
 addTrack :: Request f (Playlist -> Artist -> Track -> APIKey -> SessionKey -> Sign)
 addTrack = api "playlist.addTrack" <* post
-{-# INLINE addTrack #-}
 
 
 -- | Create a Last.fm playlist on behalf of a user
@@ -34,4 +33,3 @@ addTrack = api "playlist.addTrack" <* post
 -- <http://www.last.fm/api/show/playlist.create>
 create :: Request f (APIKey -> SessionKey -> Sign)
 create = api "playlist.create" <* post
-{-# INLINE create #-}

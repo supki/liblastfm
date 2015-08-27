@@ -39,7 +39,6 @@ instance ArtistTrackOrMBID (Artist -> Track -> APIKey -> Ready)
 -- <http://www.last.fm/api/show/track.addTags>
 addTags :: Request f (Artist -> Track -> [Tag] -> APIKey -> SessionKey -> Sign)
 addTags = api "track.addTags" <* post
-{-# INLINE addTags #-}
 
 
 -- | Ban a track for a given user profile.
@@ -47,7 +46,6 @@ addTags = api "track.addTags" <* post
 -- <http://www.last.fm/api/show/track.ban>
 ban :: Request f (Artist -> Track -> APIKey -> SessionKey -> Sign)
 ban = api "track.ban" <* post
-{-# INLINE ban #-}
 
 
 -- | Get a list of Buy Links for a particular track.
@@ -57,7 +55,6 @@ ban = api "track.ban" <* post
 -- <http://www.last.fm/api/show/track.getBuylinks>
 getBuyLinks :: ArtistTrackOrMBID t => Request f (Country -> t)
 getBuyLinks = api "track.getBuyLinks"
-{-# INLINE getBuyLinks #-}
 
 
 -- | Use the last.fm corrections data to check whether
@@ -66,7 +63,6 @@ getBuyLinks = api "track.getBuyLinks"
 -- <http://www.last.fm/api/show/track.getCorrection>
 getCorrection :: Request f (Artist -> Track -> APIKey -> Ready)
 getCorrection = api "track.getCorrection"
-{-# INLINE getCorrection #-}
 
 
 -- | Retrieve track metadata associated with a fingerprint id
@@ -76,7 +72,6 @@ getCorrection = api "track.getCorrection"
 -- <http://www.last.fm/api/show/track.getFingerprintMetadata>
 getFingerprintMetadata :: Request f (Fingerprint -> APIKey -> Ready)
 getFingerprintMetadata = api "track.getFingerprintMetadata"
-{-# INLINE getFingerprintMetadata #-}
 
 
 -- | Get the metadata for a track on Last.fm.
@@ -86,7 +81,6 @@ getFingerprintMetadata = api "track.getFingerprintMetadata"
 -- <http://www.last.fm/api/show/track.getInfo>
 getInfo :: ArtistTrackOrMBID t => Request f t
 getInfo = api "track.getInfo"
-{-# INLINE getInfo #-}
 
 
 -- | Get shouts for this track. Also available as an rss feed.
@@ -96,7 +90,6 @@ getInfo = api "track.getInfo"
 -- <http://www.last.fm/api/show/track.getShouts>
 getShouts :: ArtistTrackOrMBID t => Request f t
 getShouts = api "track.getShouts"
-{-# INLINE getShouts #-}
 
 
 -- | Get the similar tracks for this track on Last.fm, based on listening data.
@@ -106,7 +99,6 @@ getShouts = api "track.getShouts"
 -- <http://www.last.fm/api/show/track.getSimilar>
 getSimilar :: ArtistTrackOrMBID t => Request f t
 getSimilar = api "track.getSimilar"
-{-# INLINE getSimilar #-}
 
 
 -- | Get the tags applied by an individual user to a track on Last.fm.
@@ -116,7 +108,6 @@ getSimilar = api "track.getSimilar"
 -- <http://www.last.fm/api/show/track.getTags>
 getTags :: ArtistTrackOrMBID t => Request f t
 getTags = api "track.getTags"
-{-# INLINE getTags #-}
 
 
 -- | Get the top fans for this track on Last.fm, based on listening data.
@@ -126,7 +117,6 @@ getTags = api "track.getTags"
 -- <http://www.last.fm/api/show/track.getTopFans>
 getTopFans :: ArtistTrackOrMBID t => Request f t
 getTopFans = api "track.getTopFans"
-{-# INLINE getTopFans #-}
 
 
 -- | Get the top tags for this track on Last.fm, ordered by tag count.
@@ -136,7 +126,6 @@ getTopFans = api "track.getTopFans"
 -- <http://www.last.fm/api/show/track.getTopTags>
 getTopTags :: ArtistTrackOrMBID t => Request f t
 getTopTags = api "track.getTopTags"
-{-# INLINE getTopTags #-}
 
 
 -- | Love a track for a user profile.
@@ -144,7 +133,6 @@ getTopTags = api "track.getTopTags"
 -- <http://www.last.fm/api/show/track.love>
 love :: Request f (Artist -> Track -> APIKey -> SessionKey -> Sign)
 love = api "track.love" <* post
-{-# INLINE love #-}
 
 
 -- | Remove a user's tag from a track.
@@ -152,7 +140,6 @@ love = api "track.love" <* post
 -- <http://www.last.fm/api/show/track.removeTag>
 removeTag :: Request f (Artist -> Track -> Tag -> APIKey -> SessionKey -> Sign)
 removeTag = api "track.removeTag" <* post
-{-# INLINE removeTag #-}
 
 
 -- | Add played tracks to the user profile.
@@ -164,8 +151,6 @@ scrobble :: NonEmpty (Request f Scrobble) -> Request f (APIKey -> SessionKey -> 
 scrobble batch = api "track.scrobble" <* items <* post
  where
   items = absorbQuery (N.zipWith indexedWith (N.fromList [0..49]) batch)
-  {-# INLINE items #-}
-{-# INLINE scrobble #-}
 
 -- | What track to scrobble?
 --
@@ -173,7 +158,6 @@ scrobble batch = api "track.scrobble" <* items <* post
 -- 'duration', 'mbid', 'streamId', 'trackNumber'
 item :: Request f (Artist -> Track -> Timestamp -> Scrobble)
 item = wrap id
-{-# INLINE item #-}
 
 
 -- | Search for a track by track name. Returns track matches sorted by relevance.
@@ -183,7 +167,6 @@ item = wrap id
 -- <http://www.last.fm/api/show/track.search>
 search :: Request f (Track -> APIKey -> Ready)
 search = api "track.search"
-{-# INLINE search #-}
 
 
 -- | Share a track twith one or more Last.fm users or other friends.
@@ -193,7 +176,6 @@ search = api "track.search"
 -- <http://www.last.fm/api/show/track.share>
 share :: Request f (Artist -> Track -> Recipient -> APIKey -> SessionKey -> Sign)
 share = api "track.share" <* post
-{-# INLINE share #-}
 
 
 -- | Unban a track for a user profile.
@@ -201,7 +183,6 @@ share = api "track.share" <* post
 -- <http://www.last.fm/api/show/track.unban>
 unban :: Request f (Artist -> Track -> APIKey -> SessionKey -> Sign)
 unban = api "track.unban" <* post
-{-# INLINE unban #-}
 
 
 -- | Unlove a track for a user profile.
@@ -209,7 +190,6 @@ unban = api "track.unban" <* post
 -- <http://www.last.fm/api/show/track.unlove>
 unlove :: Request f (Artist -> Track -> APIKey -> SessionKey -> Sign)
 unlove = api "track.unlove" <* post
-{-# INLINE unlove #-}
 
 
 -- | Used to notify Last.fm that a user has started listening
@@ -221,4 +201,3 @@ unlove = api "track.unlove" <* post
 -- <http://www.last.fm/api/show/track.updateNowPlaying>
 updateNowPlaying :: Request f (Artist -> Track -> APIKey -> SessionKey -> Sign)
 updateNowPlaying = api "track.updateNowPlaying" <* post
-{-# INLINE updateNowPlaying #-}

@@ -25,4 +25,3 @@ import Network.Lastfm.Request
 -- <http://www.last.fm/api/show/tasteometer.compare>
 compare :: (Targeted u, Targeted v) => Request f u -> Request f v -> Request f (APIKey -> Ready)
 compare u v = api "tasteometer.compare" <* comparison 1 u <* comparison 2 v
-{-# INLINE compare #-}
