@@ -6,9 +6,9 @@
 -- This module is intended to be imported qualified:
 --
 -- @
--- import qualified Network.Lastfm.Playlist as Playlist
+-- import qualified Lastfm.Playlist as Playlist
 -- @
-module Network.Lastfm.Playlist
+module Lastfm.Playlist
   ( addTrack, create
   ) where
 
@@ -16,7 +16,7 @@ module Network.Lastfm.Playlist
 import Control.Applicative
 #endif
 
-import Network.Lastfm.Request
+import Lastfm.Request
 
 
 -- | Add a track to a Last.fm user's playlist

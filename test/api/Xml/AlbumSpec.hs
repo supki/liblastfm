@@ -3,8 +3,8 @@
 module Xml.AlbumSpec (spec) where
 
 import Data.Text (Text)
-import Network.Lastfm
-import Network.Lastfm.Album
+import Lastfm
+import Lastfm.Album
 import Test.Hspec
 import Text.Xml.Lens
 

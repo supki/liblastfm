@@ -3,8 +3,8 @@
 module Xml.ChartSpec (spec) where
 
 import Data.Text (Text)
-import Network.Lastfm
-import Network.Lastfm.Chart
+import Lastfm
+import Lastfm.Chart
 import Test.Hspec
 import Text.Xml.Lens
 

@@ -2,8 +2,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Xml.UserSpec (spec) where
 
-import Network.Lastfm
-import Network.Lastfm.User
+import Lastfm
+import Lastfm.User
 import Test.Hspec
 import Text.Xml.Lens
 

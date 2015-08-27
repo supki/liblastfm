@@ -9,9 +9,9 @@
 -- This module is intended to be imported qualified:
 --
 -- @
--- import qualified Network.Lastfm.Artist as Artist
+-- import qualified Lastfm.Artist as Artist
 -- @
-module Network.Lastfm.Artist
+module Lastfm.Artist
   ( ArtistOrMBID
   , addTags, getCorrection, getEvents, getInfo
   , getPastEvents, getPodcast, getShouts
@@ -24,7 +24,7 @@ module Network.Lastfm.Artist
 import Control.Applicative
 #endif
 
-import Network.Lastfm.Request
+import Lastfm.Request
 
 -- | Unify ('Artist' -> …) and ('MBID' -> …)
 class ArtistOrMBID r a
@@ -107,7 +107,7 @@ getSimilar = api "artist.getSimilar"
 -- If accessed as an authenticated service /and/ you don't supply a
 -- user parameter then this service will return tags for
 -- the authenticated user. To retrieve the list of top tags applied
--- to an artist by all users use 'Network.Lastfm.Artist.getTopTags'.
+-- to an artist by all users use 'Lastfm.Artist.getTopTags'.
 --
 -- Optional: 'user', 'autocorrect'
 --

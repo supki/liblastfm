@@ -3,8 +3,8 @@
 module Json.UserSpec (spec) where
 
 import Data.Aeson.Lens
-import Network.Lastfm
-import Network.Lastfm.User
+import Lastfm
+import Lastfm.User
 import Test.Hspec
 
 import SpecHelper

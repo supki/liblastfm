@@ -8,7 +8,7 @@
 -- | liblastfm internals
 --
 -- You shouldn't need to import this module unless you are doing something interesting.
-module Network.Lastfm.Internal
+module Lastfm.Internal
   ( Request(..)
   , Format(..)
   , Ready

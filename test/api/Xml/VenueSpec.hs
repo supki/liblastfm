@@ -2,8 +2,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Xml.VenueSpec (spec) where
 
-import Network.Lastfm
-import Network.Lastfm.Venue
+import Lastfm
+import Lastfm.Venue
 import Test.Hspec
 import Text.Xml.Lens
 

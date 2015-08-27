@@ -5,14 +5,14 @@
 -- This module is intended to be imported qualified:
 --
 -- @
--- import qualified Network.Lastfm.Tag as Tag
+-- import qualified Lastfm.Tag as Tag
 -- @
-module Network.Lastfm.Tag
+module Lastfm.Tag
   ( getInfo, getSimilar, getTopAlbums, getTopArtists, getTopTags, getTopTracks
   , getWeeklyArtistChart, getWeeklyChartList, search
   ) where
 
-import Network.Lastfm.Request
+import Lastfm.Request
 
 
 -- | Get the metadata for a tag

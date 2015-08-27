@@ -16,8 +16,8 @@
 --
 -- How to get session key for yourself for debug with GHCi:
 --
--- >>> import Network.Lastfm
--- >>> import Network.Lastfm.Authentication
+-- >>> import Lastfm
+-- >>> import Lastfm.Authentication
 -- >>> :set -XOverloadedStrings
 -- >>> con <- newConnection
 -- >>> lastfm con $ getToken <*> apiKey "__API_KEY__" <* json
@@ -27,7 +27,7 @@
 -- >>> -- Click that link ^^^
 -- >>> lastfm con $ sign "__SECRET__" $ getSession <*> token "__TOKEN__" <*> apiKey "__API_KEY__"  <* json
 -- Right (Object (fromList [("session",Object (fromList [("subscriber",String "0"),("key",String "__SESSION_KEY__"),("name",String "__USER__")]))]))
-module Network.Lastfm.Authentication
+module Lastfm.Authentication
   ( -- * Helpers
     getToken, getSession, getMobileSession
   , link
@@ -38,8 +38,8 @@ import Control.Applicative
 import Data.Monoid
 #endif
 
-import Network.Lastfm.Internal
-import Network.Lastfm.Request
+import Lastfm.Internal
+import Lastfm.Request
 
 
 -- | Get authorization token

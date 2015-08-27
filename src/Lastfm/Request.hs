@@ -3,7 +3,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
 -- | Request construction
-module Network.Lastfm.Request
+module Lastfm.Request
   ( -- * Request
     Request, R, Ready, Sign, Format(..)
     -- * Request major parameters
@@ -43,7 +43,7 @@ import qualified Data.Map.Strict as M
 import           Data.Text (Text)
 import qualified Data.Text as T
 
-import           Network.Lastfm.Internal
+import           Lastfm.Internal
 
 
 class Argument a where

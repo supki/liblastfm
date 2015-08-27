@@ -60,25 +60,25 @@ library
   hs-source-dirs:
    src
   exposed-modules:
-    Network.Lastfm
-    Network.Lastfm.Album
-    Network.Lastfm.Artist
-    Network.Lastfm.Authentication
-    Network.Lastfm.Chart
-    Network.Lastfm.Event
-    Network.Lastfm.Geo
-    Network.Lastfm.Group
-    Network.Lastfm.Internal
-    Network.Lastfm.Library
-    Network.Lastfm.Playlist
-    Network.Lastfm.Radio
-    Network.Lastfm.Request
-    Network.Lastfm.Response
-    Network.Lastfm.Tag
-    Network.Lastfm.Tasteometer
-    Network.Lastfm.Track
-    Network.Lastfm.User
-    Network.Lastfm.Venue
+    Lastfm
+    Lastfm.Album
+    Lastfm.Artist
+    Lastfm.Authentication
+    Lastfm.Chart
+    Lastfm.Event
+    Lastfm.Geo
+    Lastfm.Group
+    Lastfm.Internal
+    Lastfm.Library
+    Lastfm.Playlist
+    Lastfm.Radio
+    Lastfm.Request
+    Lastfm.Response
+    Lastfm.Tag
+    Lastfm.Tasteometer
+    Lastfm.Track
+    Lastfm.User
+    Lastfm.Venue
   ghc-options:
     -Wall
     -funbox-strict-fields
@@ -170,7 +170,7 @@ test-suite spec
   main-is:
     Spec.hs
   other-modules:
-    Network.Lastfm.ResponseSpec
+    Lastfm.ResponseSpec
   ghc-options:
     -Wall
   cpp-options:

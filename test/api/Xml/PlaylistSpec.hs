@@ -5,9 +5,9 @@ module Xml.PlaylistSpec (spec) where
 import Control.Lens
 import Data.Int (Int64)
 import Data.Text.Lens (unpacked)
-import Network.Lastfm hiding (to)
-import Network.Lastfm.Playlist
-import Network.Lastfm.User
+import Lastfm hiding (to)
+import Lastfm.Playlist
+import Lastfm.User
 import Test.Hspec
 import Test.HUnit (assertFailure)
 import Text.Printf
@@ -25,7 +25,7 @@ spec = do
     root.node "playlists".node "playlist".node "title".text
 
   it "addTrack" $ do
-    r <- lastfm man $ getPlaylists <*> user "liblastfm" <*> ak' <* Network.Lastfm.xml
+    r <- lastfm man $ getPlaylists <*> user "liblastfm" <*> ak' <* Lastfm.xml
     case r of
       Left e ->
         assertFailure (printf "last.fm error: %s" (show e))

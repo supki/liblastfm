@@ -5,7 +5,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 -- | Request sending and Response parsing
-module Network.Lastfm.Response
+module Lastfm.Response
   ( -- * Compute request signature
     -- $sign
     Secret(..)
@@ -55,7 +55,7 @@ import qualified Network.HTTP.Client.TLS as Http
 import           Text.XML (Document, parseLBS, def)
 import           Text.XML.Cursor
 
-import           Network.Lastfm.Internal
+import           Lastfm.Internal
 
 
 -- $sign

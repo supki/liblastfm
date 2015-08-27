@@ -5,16 +5,16 @@
 -- This module is intended to be imported qualified:
 --
 -- @
--- import qualified Network.Lastfm.Geo as Geo
+-- import qualified Lastfm.Geo as Geo
 -- @
-module Network.Lastfm.Geo
+module Lastfm.Geo
   ( getEvents, getMetroArtistChart, getMetroHypeArtistChart
   , getMetroHypeTrackChart, getMetroTrackChart, getMetroUniqueArtistChart
   , getMetroUniqueTrackChart, getMetroWeeklyChartlist, getMetros
   , getTopArtists, getTopTracks
   ) where
 
-import Network.Lastfm.Request
+import Lastfm.Request
 
 
 -- | Get all events in a specific location by country or city name.

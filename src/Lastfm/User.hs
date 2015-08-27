@@ -6,9 +6,9 @@
 -- This module is intended to be imported qualified:
 --
 -- @
--- import qualified Network.Lastfm.User as User
+-- import qualified Lastfm.User as User
 -- @
-module Network.Lastfm.User
+module Lastfm.User
   ( getArtistTracks, getBannedTracks, getEvents, getFriends
   , getInfo, getLovedTracks, getNeighbours, getNewReleases
   , getPastEvents, getPersonalTags, getPlaylists, getRecentStations
@@ -22,7 +22,7 @@ module Network.Lastfm.User
 import Control.Applicative
 #endif
 
-import Network.Lastfm.Request
+import Lastfm.Request
 
 
 -- | Get a list of tracks by a given artist scrobbled by this user

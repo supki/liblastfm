@@ -3,8 +3,8 @@
 module Json.LibrarySpec (spec) where
 
 import Data.Aeson.Lens
-import Network.Lastfm
-import Network.Lastfm.Library
+import Lastfm
+import Lastfm.Library
 import Test.Hspec
 
 import SpecHelper

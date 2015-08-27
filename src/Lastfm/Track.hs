@@ -7,9 +7,9 @@
 -- This module is intended to be imported qualified:
 --
 -- @
--- import qualified Network.Lastfm.Track as Track
+-- import qualified Lastfm.Track as Track
 -- @
-module Network.Lastfm.Track
+module Lastfm.Track
   ( ArtistTrackOrMBID
   , addTags, ban, getBuyLinks, getCorrection, getFingerprintMetadata
   , getInfo, getShouts, getSimilar, getTags, getTopFans
@@ -23,8 +23,8 @@ import           Control.Applicative
 import           Data.List.NonEmpty (NonEmpty)
 import qualified Data.List.NonEmpty as N
 
-import           Network.Lastfm.Internal (absorbQuery, indexedWith, wrap)
-import           Network.Lastfm.Request
+import           Lastfm.Internal (absorbQuery, indexedWith, wrap)
+import           Lastfm.Request
 
 
 -- | Unify ('Artist' -> 'Track' -> …) and ('MBID' -> …)

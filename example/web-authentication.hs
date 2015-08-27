@@ -9,8 +9,8 @@ import Control.Monad                   -- base
 import Control.Monad.IO.Class (liftIO) -- transformers
 import Data.IORef                      -- base
 import Happstack.Server                -- happstack-server
-import Network.Lastfm                  -- liblastfm
-import Network.Lastfm.Authentication   -- liblastfm
+import Lastfm                          -- liblastfm
+import Lastfm.Authentication           -- liblastfm
 
 
 main :: IO ()

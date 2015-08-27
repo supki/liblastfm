@@ -5,6 +5,8 @@
 
   * Removed `N.L.Response.closeConnection` as it's become a no-op.
 
+  * Removed the "Network" prefix from the modules' names.
+
 0.5.1
 =====
 

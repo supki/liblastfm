@@ -7,9 +7,9 @@ import Data.Aeson (Value)
 import Data.Aeson.Lens
 import Data.Int (Int64)
 import Data.Text.Lens (unpacked)
-import Network.Lastfm hiding (to)
-import Network.Lastfm.Playlist
-import Network.Lastfm.User
+import Lastfm hiding (to)
+import Lastfm.Playlist
+import Lastfm.User
 import Test.Hspec
 import Test.HUnit (assertFailure)
 import Text.Printf

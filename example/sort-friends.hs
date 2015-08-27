@@ -20,21 +20,21 @@
  - Notice: you may want to adjust maximum open files limit
  - if testing on users with relatively large friends count
  -}
-import           Control.Concurrent.Async                  -- async
-import           Control.Lens                              -- lens
-import           Data.Aeson.Lens                           -- lens-aeson
-import           Data.Aeson (Value)                        -- aeson
-import           Data.Function (on)                        -- base
-import           Data.List (sortBy)                        -- base
-import           Data.Maybe (fromMaybe)                    -- base
-import           Data.Monoid ((<>))                        -- base
-import           Data.Text (Text)                          -- text
-import           Data.Text.Lens (unpacked)                 -- lens
-import qualified Data.Text.IO as Text                      -- text
-import           Network.Lastfm hiding (to)                -- liblastfm
-import qualified Network.Lastfm.User as User               -- liblastfm
-import qualified Network.Lastfm.Tasteometer as Tasteometer -- liblastfm
-import           Text.Read (readMaybe)                     -- base
+import           Control.Concurrent.Async          -- async
+import           Control.Lens                      -- lens
+import           Data.Aeson.Lens                   -- lens-aeson
+import           Data.Aeson (Value)                -- aeson
+import           Data.Function (on)                -- base
+import           Data.List (sortBy)                -- base
+import           Data.Maybe (fromMaybe)            -- base
+import           Data.Monoid ((<>))                -- base
+import           Data.Text (Text)                  -- text
+import           Data.Text.Lens (unpacked)         -- lens
+import qualified Data.Text.IO as Text              -- text
+import           Lastfm hiding (to)                -- liblastfm
+import qualified Lastfm.User as User               -- liblastfm
+import qualified Lastfm.Tasteometer as Tasteometer -- liblastfm
+import           Text.Read (readMaybe)             -- base
 
 
 type Score = Text

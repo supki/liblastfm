@@ -45,8 +45,8 @@ Suppose, you need to use [`tag.search`][last.fm/api-usage] API method.
 First find it in liblastfm: `Tag` would be the name of the module and `search` would be the name of function. [Here it is][liblastfm/haddocks-usage].
 So import a couple of modules:
 
-    >>> import           Network.Lastfm            -- a bunch of useful utilities
-    >>> import qualified Network.Lastfm.Tag as Tag -- for Tag.search
+    >>> import           Lastfm            -- a bunch of useful utilities
+    >>> import qualified Lastfm.Tag as Tag -- for Tag.search
 
 Now you may you applicative `<*>` for required and `<*` or `*>` for optional parameters to construct
 desired request:

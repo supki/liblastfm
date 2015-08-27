@@ -5,8 +5,8 @@ module Json.TasteometerSpec (spec) where
 import           Data.Aeson (Value)
 import           Data.Aeson.Lens
 import           Data.Text (Text)
-import           Network.Lastfm
-import qualified Network.Lastfm.Tasteometer as Taste
+import           Lastfm
+import qualified Lastfm.Tasteometer as Taste
 import           Test.Hspec
 
 import           SpecHelper

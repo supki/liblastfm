@@ -33,7 +33,7 @@ import           Data.Text (Text, pack)
 import           Data.Typeable (Typeable)
 import qualified Network.HTTP.Client as Http
 import qualified Network.HTTP.Client.TLS as Http
-import           Network.Lastfm
+import           Lastfm
 import           System.Environment
 import           System.IO.Unsafe (unsafePerformIO)
 import           Test.Hspec

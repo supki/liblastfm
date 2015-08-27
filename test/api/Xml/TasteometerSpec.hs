@@ -3,8 +3,8 @@
 module Xml.TasteometerSpec (spec) where
 
 import           Data.Text (Text)
-import           Network.Lastfm
-import qualified Network.Lastfm.Tasteometer as Taste
+import           Lastfm
+import qualified Lastfm.Tasteometer as Taste
 import           Test.Hspec
 import           Text.Xml.Lens
 

@@ -5,8 +5,8 @@ module Json.AlbumSpec (spec) where
 import Data.Aeson (Value)
 import Data.Aeson.Lens
 import Data.Text (Text)
-import Network.Lastfm
-import Network.Lastfm.Album
+import Lastfm
+import Lastfm.Album
 import Test.Hspec
 
 import SpecHelper

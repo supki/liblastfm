@@ -5,8 +5,8 @@ module Json.ChartSpec (spec) where
 import Data.Aeson (Value)
 import Data.Aeson.Lens
 import Data.Text (Text)
-import Network.Lastfm
-import Network.Lastfm.Chart
+import Lastfm
+import Lastfm.Chart
 import Test.Hspec
 
 import SpecHelper

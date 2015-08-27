@@ -5,14 +5,14 @@
 -- This module is intended to be imported qualified:
 --
 -- @
--- import qualified Network.Lastfm.Chart as Chart
+-- import qualified Lastfm.Chart as Chart
 -- @
-module Network.Lastfm.Chart
+module Lastfm.Chart
   ( getHypedArtists, getHypedTracks, getLovedTracks
   , getTopArtists, getTopTags, getTopTracks
   ) where
 
-import Network.Lastfm.Request
+import Lastfm.Request
 
 
 -- | Get the hyped artists chart

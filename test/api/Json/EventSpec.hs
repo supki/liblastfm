@@ -3,8 +3,8 @@
 module Json.EventSpec (spec) where
 
 import Data.Aeson.Lens
-import Network.Lastfm
-import Network.Lastfm.Event
+import Lastfm
+import Lastfm.Event
 import Test.Hspec
 
 import SpecHelper

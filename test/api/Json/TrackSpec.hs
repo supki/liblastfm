@@ -5,8 +5,8 @@ module Json.TrackSpec (spec) where
 import Data.Aeson (Value)
 import Data.Aeson.Lens
 import Data.Text (Text)
-import Network.Lastfm
-import Network.Lastfm.Track
+import Lastfm
+import Lastfm.Track
 import Test.Hspec
 
 import SpecHelper

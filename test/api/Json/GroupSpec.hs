@@ -3,8 +3,8 @@
 module Json.GroupSpec (spec) where
 
 import Data.Aeson.Lens
-import Network.Lastfm
-import Network.Lastfm.Group
+import Lastfm
+import Lastfm.Group
 import Test.Hspec
 
 import SpecHelper

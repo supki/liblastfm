@@ -5,8 +5,8 @@ module Json.GeoSpec (spec) where
 import Data.Aeson (Value)
 import Data.Aeson.Lens
 import Data.Text (Text)
-import Network.Lastfm
-import Network.Lastfm.Geo
+import Lastfm
+import Lastfm.Geo
 import Test.Hspec
 
 import SpecHelper

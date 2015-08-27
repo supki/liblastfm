@@ -5,13 +5,13 @@
 -- This module is intended to be imported qualified:
 --
 -- @
--- import qualified Network.Lastfm.Group as Group
+-- import qualified Lastfm.Group as Group
 -- @
-module Network.Lastfm.Group
+module Lastfm.Group
   ( getHype, getMembers, getWeeklyAlbumChart, getWeeklyArtistChart, getWeeklyChartList, getWeeklyTrackChart
   ) where
 
-import Network.Lastfm.Request
+import Lastfm.Request
 
 
 -- | Get the hype list for a group

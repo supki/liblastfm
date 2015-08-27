@@ -2,8 +2,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Xml.TagSpec (spec) where
 
-import Network.Lastfm
-import Network.Lastfm.Tag
+import Lastfm
+import Lastfm.Tag
 import Test.Hspec
 import Text.Xml.Lens
 

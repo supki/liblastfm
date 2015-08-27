@@ -10,9 +10,9 @@
 -- This module is intended to be imported qualified:
 --
 -- @
--- import qualified Network.Lastfm.Album as Album
+-- import qualified Lastfm.Album as Album
 -- @
-module Network.Lastfm.Album
+module Lastfm.Album
   ( ArtistAlbumOrMBID
   , addTags, getBuyLinks, getInfo, getShouts
   , getTags, getTopTags, removeTag, search, share
@@ -22,7 +22,7 @@ module Network.Lastfm.Album
 import Control.Applicative
 #endif
 
-import Network.Lastfm.Request
+import Lastfm.Request
 
 
 -- | Unify ('Artist' -> 'Album' -> …) and ('MBID' -> …)

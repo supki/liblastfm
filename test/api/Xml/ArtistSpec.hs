@@ -4,8 +4,8 @@ module Xml.ArtistSpec (spec) where
 
 import Data.Text (Text)
 import Data.Traversable (traverse)
-import Network.Lastfm
-import Network.Lastfm.Artist
+import Lastfm
+import Lastfm.Artist
 import Test.Hspec
 import Text.Xml.Lens
 

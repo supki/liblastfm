@@ -2,8 +2,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Xml.LibrarySpec (spec) where
 
-import Network.Lastfm
-import Network.Lastfm.Library
+import Lastfm
+import Lastfm.Library
 import Test.Hspec
 import Text.Xml.Lens
 

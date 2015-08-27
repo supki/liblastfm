@@ -6,9 +6,9 @@
 -- This module is intended to be imported qualified:
 --
 -- @
--- import qualified Network.Lastfm.Radio as Radio
+-- import qualified Lastfm.Radio as Radio
 -- @
-module Network.Lastfm.Radio
+module Lastfm.Radio
   ( getPlaylist, search, tune
   ) where
 
@@ -16,7 +16,7 @@ module Network.Lastfm.Radio
 import Control.Applicative
 #endif
 
-import Network.Lastfm.Request
+import Lastfm.Request
 
 
 -- | Fetch new radio content periodically in an XSPF format.

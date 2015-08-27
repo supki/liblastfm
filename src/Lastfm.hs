@@ -1,14 +1,14 @@
 -- | Lastfm API interface
-module Network.Lastfm
+module Lastfm
   ( -- * Utilities for constructing requests
-    module Network.Lastfm.Request
+    module Lastfm.Request
     -- * Utilities for signing and sending requests
-  , module Network.Lastfm.Response
+  , module Lastfm.Response
     -- * Control.Applicative is re-exported for convenience
   , module Control.Applicative
   ) where
 
 import Control.Applicative
 
-import Network.Lastfm.Request
-import Network.Lastfm.Response
+import Lastfm.Request
+import Lastfm.Response

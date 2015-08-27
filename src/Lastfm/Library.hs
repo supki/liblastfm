@@ -6,9 +6,9 @@
 -- This module is intended to be imported qualified:
 --
 -- @
--- import qualified Network.Lastfm.Library as Library
+-- import qualified Lastfm.Library as Library
 -- @
-module Network.Lastfm.Library
+module Lastfm.Library
   ( addAlbum, albumItem, addArtist, artistItem, addTrack
   , getAlbums, getArtists, getTracks
   , removeAlbum, removeArtist, removeScrobble, removeTrack
@@ -20,8 +20,8 @@ import           Control.Applicative
 import           Data.List.NonEmpty (NonEmpty)
 import qualified Data.List.NonEmpty as N
 
-import           Network.Lastfm.Internal (absorbQuery, indexedWith, wrap)
-import           Network.Lastfm.Request
+import           Lastfm.Internal (absorbQuery, indexedWith, wrap)
+import           Lastfm.Request
 
 
 -- | Add an album or collection of albums to a user's Last.fm library

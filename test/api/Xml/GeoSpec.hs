@@ -3,8 +3,8 @@
 module Xml.GeoSpec (spec) where
 
 import Data.Text (Text)
-import Network.Lastfm
-import Network.Lastfm.Geo
+import Lastfm
+import Lastfm.Geo
 import Test.Hspec
 import Text.Xml.Lens
 

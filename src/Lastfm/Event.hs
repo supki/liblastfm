@@ -6,9 +6,9 @@
 -- This module is intended to be imported qualified:
 --
 -- @
--- import qualified Network.Lastfm.Event as Event
+-- import qualified Lastfm.Event as Event
 -- @
-module Network.Lastfm.Event
+module Lastfm.Event
   ( attend, getAttendees, getInfo, getShouts, share, shout
   ) where
 
@@ -16,7 +16,7 @@ module Network.Lastfm.Event
 import Control.Applicative
 #endif
 
-import Network.Lastfm.Request
+import Lastfm.Request
 
 
 -- | Set a user's attendance status for an event.

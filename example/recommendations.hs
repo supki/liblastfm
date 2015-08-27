@@ -14,18 +14,18 @@
  - Mouth of the Architect
  -}
 
-import           Control.Lens                -- lens
-import           Data.Aeson.Lens             -- lens-aeson
-import           Data.Traversable (for)      -- base
-import           Data.Aeson (Value)          -- aeson
+import           Control.Lens             -- lens
+import           Data.Aeson.Lens          -- lens-aeson
+import           Data.Traversable (for)   -- base
+import           Data.Aeson (Value)       -- aeson
 #if __GLASGOW_HASKELL__ < 710
-import           Data.Foldable (Foldable)    -- base
+import           Data.Foldable (Foldable) -- base
 #endif
-import           Data.Int (Int64)            -- base
-import           Data.Text (Text)            -- text
-import qualified Data.Text.IO as Text        -- text
-import           Network.Lastfm              -- liblastfm
-import qualified Network.Lastfm.User as User -- liblastfm
+import           Data.Int (Int64)         -- base
+import           Data.Text (Text)         -- text
+import qualified Data.Text.IO as Text     -- text
+import           Lastfm                   -- liblastfm
+import qualified Lastfm.User as User      -- liblastfm
 
 
 main :: IO ()

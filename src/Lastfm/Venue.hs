@@ -5,13 +5,13 @@
 -- This module is intended to be imported qualified:
 --
 -- @
--- import qualified Network.Lastfm.Venue as Venue
+-- import qualified Lastfm.Venue as Venue
 -- @
-module Network.Lastfm.Venue
+module Lastfm.Venue
   ( getEvents, getPastEvents, search
   ) where
 
-import Network.Lastfm.Request
+import Lastfm.Request
 
 
 -- | Get a list of upcoming events at this venue.

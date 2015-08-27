@@ -3,8 +3,8 @@
 module Json.TagSpec (spec) where
 
 import Data.Aeson.Lens
-import Network.Lastfm
-import Network.Lastfm.Tag
+import Lastfm
+import Lastfm.Tag
 import Test.Hspec
 
 import SpecHelper

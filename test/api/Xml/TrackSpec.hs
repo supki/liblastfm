@@ -4,8 +4,8 @@ module Xml.TrackSpec (spec) where
 
 import Data.Text (Text)
 import Data.Traversable (traverse)
-import Network.Lastfm
-import Network.Lastfm.Track
+import Lastfm
+import Lastfm.Track
 import Test.Hspec
 import Text.Xml.Lens
 

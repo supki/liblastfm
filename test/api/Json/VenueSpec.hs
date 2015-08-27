@@ -3,8 +3,8 @@
 module Json.VenueSpec (spec) where
 
 import Data.Aeson.Lens
-import Network.Lastfm
-import Network.Lastfm.Venue
+import Lastfm
+import Lastfm.Venue
 import Test.Hspec
 
 import SpecHelper

@@ -11,14 +11,14 @@
 -- >>> ^C
 -- $>
 --}
-import           Control.Lens                -- lens
-import           Data.Aeson.Lens             -- lens-aeson
-import           Control.Monad               -- base
-import           Data.Text (Text)            -- text
-import qualified Data.Text.IO as Text        -- text
-import           Network.Lastfm              -- liblastfm
-import qualified Network.Lastfm.User as User -- liblastfm
-import qualified System.IO as IO             -- base
+import           Control.Lens          -- lens
+import           Data.Aeson.Lens       -- lens-aeson
+import           Control.Monad         -- base
+import           Data.Text (Text)      -- text
+import qualified Data.Text.IO as Text  -- text
+import           Lastfm                -- liblastfm
+import qualified Lastfm.User as User   -- liblastfm
+import qualified System.IO as IO       -- base
 
 
 main :: IO ()

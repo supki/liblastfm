@@ -2,7 +2,7 @@
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-module Network.Lastfm.ResponseSpec (spec) where
+module Lastfm.ResponseSpec (spec) where
 
 import Control.Exception (ArithException(..), throwIO, try)
 import Control.Exception.Lens
@@ -14,7 +14,7 @@ import Test.Hspec.Lens
 import Text.Xml.Lens
 import Network.HTTP.Client (HttpException(..))
 
-import Network.Lastfm.Response
+import Lastfm.Response
 
 
 instance Eq HttpException where

@@ -2,8 +2,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Xml.GroupSpec (spec) where
 
-import Network.Lastfm
-import Network.Lastfm.Group
+import Lastfm
+import Lastfm.Group
 import Test.Hspec
 import Text.Xml.Lens
 

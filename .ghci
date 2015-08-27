@@ -1,21 +1,21 @@
 :set -XOverloadedStrings
 
-import           Network.Lastfm
+import           Lastfm
 import           Control.Lens
 import           Control.Lens.Aeson
 import           Text.Xml.Lens
-import qualified Network.Lastfm.Album          as Album
-import qualified Network.Lastfm.Artist         as Artist
-import qualified Network.Lastfm.Authentication as Authentication
-import qualified Network.Lastfm.Chart          as Chart
-import qualified Network.Lastfm.Event          as Event
-import qualified Network.Lastfm.Geo            as Geo
-import qualified Network.Lastfm.Group          as Group
-import qualified Network.Lastfm.Library        as Library
-import qualified Network.Lastfm.Playlist       as Playlist
-import qualified Network.Lastfm.Radio          as Radio
-import qualified Network.Lastfm.Tag            as Tag
-import qualified Network.Lastfm.Tasteometer    as Tasteometer
-import qualified Network.Lastfm.Track          as Track
-import qualified Network.Lastfm.User           as User
-import qualified Network.Lastfm.Venue          as Venue
+import qualified Lastfm.Album          as Album
+import qualified Lastfm.Artist         as Artist
+import qualified Lastfm.Authentication as Authentication
+import qualified Lastfm.Chart          as Chart
+import qualified Lastfm.Event          as Event
+import qualified Lastfm.Geo            as Geo
+import qualified Lastfm.Group          as Group
+import qualified Lastfm.Library        as Library
+import qualified Lastfm.Playlist       as Playlist
+import qualified Lastfm.Radio          as Radio
+import qualified Lastfm.Tag            as Tag
+import qualified Lastfm.Tasteometer    as Tasteometer
+import qualified Lastfm.Track          as Track
+import qualified Lastfm.User           as User
+import qualified Lastfm.Venue          as Venue

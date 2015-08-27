@@ -16,8 +16,8 @@ import           Data.Maybe                   -- base
 import           Data.Text (Text)             -- text
 import qualified Data.Text as Text            -- text
 import qualified Data.Text.IO as Text         -- text
-import           Network.Lastfm               -- liblastfm
-import qualified Network.Lastfm.Tag as Tag    -- liblastfm
+import           Lastfm                       -- liblastfm
+import qualified Lastfm.Tag as Tag            -- liblastfm
 import           System.Environment (getArgs) -- base
 
 {-# ANN module ("HLint: ignore Use camelCase" :: String) #-}

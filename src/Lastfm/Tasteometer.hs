@@ -6,15 +6,15 @@
 -- This module is intended to be imported qualified:
 --
 -- @
--- import qualified Network.Lastfm.Tasteometer as Tasteometer
+-- import qualified Lastfm.Tasteometer as Tasteometer
 -- @
-module Network.Lastfm.Tasteometer where
+module Lastfm.Tasteometer where
 
 #if __GLASGOW_HASKELL__ < 710
 import Control.Applicative
 #endif
 
-import Network.Lastfm.Request
+import Lastfm.Request
 
 
 -- | Get a Tasteometer score from two inputs, along with a list of shared artists.

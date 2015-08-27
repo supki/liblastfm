@@ -2,8 +2,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Xml.EventSpec (spec) where
 
-import Network.Lastfm
-import Network.Lastfm.Event
+import Lastfm
+import Lastfm.Event
 import Test.Hspec
 import Text.Xml.Lens
 
