@@ -34,12 +34,11 @@ import           Control.Applicative
 #endif
 import           Control.Exception (SomeException(..), Exception(..), catch)
 import           Control.Monad.IO.Class (MonadIO(liftIO))
-import           Crypto.Classes (hash')
+import           Crypto.Hash (Digest, MD5, hash)
 import           Data.Aeson ((.:), Value(..), decode)
 import           Data.Aeson.Types (parseMaybe)
 import qualified Data.ByteString.Lazy as Lazy
 import qualified Data.ByteString as Strict
-import           Data.Digest.Pure.MD5 (MD5Digest)
 import           Data.Map (Map)
 import qualified Data.Map as M
 import           Data.Monoid
@@ -202,7 +201,7 @@ apiSig (Secret s) q = M.insert "api_sig" (signer (foldr M.delete q ["format", "c
 
 -- | Get supplied string md5 hash hex representation
 md5 :: Text -> Text
-md5 = T.pack . show . (hash' :: Strict.ByteString -> MD5Digest) . T.encodeUtf8
+md5 = T.pack . show . (hash :: Strict.ByteString -> Digest MD5) . T.encodeUtf8
 
 
 -- | Lastfm connection manager

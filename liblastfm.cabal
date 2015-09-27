@@ -47,12 +47,11 @@ library
     , bytestring
     , cereal
     , containers      >= 0.5
-    , crypto-api
+    , cryptonite      >= 0.7
     , http-client     >= 0.4.19
     , http-client-tls >= 0.2
     , network-uri
     , profunctors
-    , pureMD5
     , semigroups
     , transformers
     , text
@@ -150,7 +149,7 @@ test-suite spec
     , bytestring
     , cereal
     , containers
-    , crypto-api
+    , cryptonite
     , hspec
     , hspec-expectations-lens >= 0.3.0.0
     , http-client
@@ -159,7 +158,6 @@ test-suite spec
     , lens-aeson              >= 1.0.0.1
     , network-uri
     , profunctors
-    , pureMD5
     , text
     , transformers
     , xml-conduit
