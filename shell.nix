@@ -4,7 +4,7 @@
 }: let
   inherit (nixpkgs) pkgs;
   ghc = pkgs.haskell.packages.${compiler}.ghcWithPackages(ps: [
-    ps.hdevtools ps.doctest ps.hspec-discover ps.hlint
+    ps.hdevtools ps.doctest ps.hspec-discover ps.hlint ps.ghc-mod
   ]);
   cabal-install = pkgs.haskell.packages.${compiler}.cabal-install;
   pkg = (import (if examples then ./example else ./.)
