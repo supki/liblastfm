@@ -48,7 +48,7 @@ So import a couple of modules:
     >>> import           Lastfm            -- a bunch of useful utilities
     >>> import qualified Lastfm.Tag as Tag -- for Tag.search
 
-Now you may you applicative `<*>` for required and `<*` or `*>` for optional parameters to construct
+Now you may use applicative `<*>` for required and `<*` or `*>` for optional parameters to construct
 desired request:
 
     Tag.search <*> tag "russian-folk" <* limit 3 <*> apiKey "29effec263316a1f8a97f753caaa83e0" <* json
@@ -114,7 +114,7 @@ export HASKELL_LIBLASTFM_SESSIONKEY="__SESSION_KEY__"
 export HASKELL_LIBLASTFM_SECRET="__SECRET__"
 ```
 
-Please, consult Lastfm API documentation and  `examples/*-authentication.hs`
+Please, consult Lastfm API documentation and  `example/*-authentication.hs`
 examples if you don't know where to get your credentials.
 
  [last.fm]: http://www.last.fm/
