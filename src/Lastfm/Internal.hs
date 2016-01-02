@@ -20,10 +20,6 @@ module Lastfm.Internal
   , coerce
   , absorbQuery
   , indexedWith
-    -- * Lenses
-  , host
-  , method
-  , query
   ) where
 
 import           Control.Applicative
@@ -138,19 +134,3 @@ instance Serialize (R f) where
 
 bimap :: (Ord s, Ord t) => (s -> t) -> (a -> b) -> Map s a -> Map t b
 bimap f g = M.mapKeys f . M.map g
-
-
--- | 'Request' '_host'
-host :: Functor f => (Text -> f Text) -> R h -> f (R h)
-host f r@R { _host = h } = (\h' -> r { _host = h' }) <$> f h
-{-# INLINE host #-}
-
--- | 'Request' HTTP '_method'
-method :: Functor f => (ByteString -> f ByteString) -> R h -> f (R h)
-method f r@R { _method = m } = (\m' -> r { _method = m' }) <$> f m
-{-# INLINE method #-}
-
--- | 'Request' '_query' string
-query :: Functor f => (Map Text Text -> f (Map Text Text)) -> R h -> f (R h)
-query f r@R { _query = q } = (\q' -> r { _query = q' }) <$> f q
-{-# INLINE query #-}
