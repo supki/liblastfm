@@ -7,6 +7,8 @@
 
   * Removed the "Network" prefix from the modules' names.
 
+  * Set default schema to 'http', since ws.audioscrobbler.com has no proper SSL support (issue #27).
+
 0.5.1
 =====
 
