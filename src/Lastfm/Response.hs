@@ -104,7 +104,7 @@ parse body = case parseResponseBody body of
 
 base :: R f
 base = R
-  { _host   = "https://ws.audioscrobbler.com/2.0/"
+  { _host   = "http://ws.audioscrobbler.com/2.0/"
   , _method = "GET"
   , _query  = mempty
   }
