@@ -235,8 +235,7 @@ lastfmWith
 lastfmWith (Connection man) p r = do
   req <- Http.parseUrlThrow (render r)
   let req' = req
-       { Http.method          = _method r
-       , Http.responseTimeout = Just 10000000
+       { Http.method = _method r
        }
   p . Http.responseBody <$> Http.httpLbs req' man
  `catch`
