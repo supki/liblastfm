@@ -48,7 +48,7 @@ library
     , cereal
     , containers      >= 0.5
     , cryptonite      >= 0.7
-    , http-client     >= 0.4.19
+    , http-client     >= 0.4.30
     , http-client-tls >= 0.2
     , network-uri
     , profunctors
