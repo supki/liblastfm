@@ -1,5 +1,5 @@
 { nixpkgs ? import <nixpkgs> {}
-, compiler ? "ghc7103"
+, compiler ? "ghc801"
 , examples ? false
 }: let
   inherit (nixpkgs) pkgs;
@@ -16,6 +16,6 @@ in
     shellHook = ''
       ${pkg.env.shellHook}
       cd ${if examples then "example" else "."}
-      cabal configure --enable-tests --package-db=$NIX_GHC_LIBDIR/package.conf.d
+      cabal configure --enable-tests -ftest-api --package-db=$NIX_GHC_LIBDIR/package.conf.d
     '';
   }
