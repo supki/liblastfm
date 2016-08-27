@@ -228,16 +228,14 @@ lastfm_ man = lastfmWith man (\_ -> Right ()) . finalize
 
 -- | Send the 'R' and parse the 'Response' with the supplied parser
 lastfmWith
-  :: Supported f r
-  => Connection
+  :: Connection
   -> (Lazy.ByteString -> Either LastfmError a)
   -> R f
   -> IO (Either LastfmError a)
 lastfmWith (Connection man) p r = do
-  req <- Http.parseUrl (render r)
+  req <- Http.parseUrlThrow (render r)
   let req' = req
-       { Http.method          = _method r
-       , Http.responseTimeout = Just 10000000
+       { Http.method = _method r
        }
   p . Http.responseBody <$> Http.httpLbs req' man
  `catch`

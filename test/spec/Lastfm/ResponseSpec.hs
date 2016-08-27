@@ -38,8 +38,9 @@ spec = do
         tryLastfmError = try
 
     it "catches 'HttpException'" $ do
-      val <- tryLastfmError (throwIO ResponseTimeout) :: IO (Either LastfmError ())
-      val `shouldHave` _Left._LastfmHttpError.only ResponseTimeout
+      let ex = InvalidUrlException "foo" "bar"
+      val <- tryLastfmError (throwIO ex) :: IO (Either LastfmError ())
+      val `shouldHave` _Left._LastfmHttpError.only ex
 
     it "does not catch other exceptions" $
       tryLastfmError (throwIO DivideByZero) `shouldThrow` _DivideByZero

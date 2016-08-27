@@ -132,5 +132,5 @@ instance Serialize (R f) where
     q <- bimap T.decodeUtf8 T.decodeUtf8 <$> get
     return R { _host = h, _method = m, _query = q }
 
-bimap :: (Ord s, Ord t) => (s -> t) -> (a -> b) -> Map s a -> Map t b
+bimap :: Ord t => (s -> t) -> (a -> b) -> Map s a -> Map t b
 bimap f g = M.mapKeys f . M.map g
