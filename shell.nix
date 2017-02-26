@@ -1,5 +1,5 @@
 { nixpkgs ? import <nixpkgs> {}
-, compiler ? "ghc801"
+, compiler ? "ghc802"
 , examples ? false
 }: let
   inherit (nixpkgs) pkgs;
