@@ -23,7 +23,7 @@ before_install:
 
 install:
   - cabal update
-  - cabal install --enable-tests --only-dependencies -ftest-api liblastfm.cabal example/liblastfm-examples.cabal
+  - cabal install --constraint="xml-conduit==1.3.5" --enable-tests --only-dependencies -ftest-api liblastfm.cabal example/liblastfm-examples.cabal
 
 script:
   - cabal install --enable-tests --only-dependencies -ftest-api liblastfm.cabal example/liblastfm-examples.cabal
