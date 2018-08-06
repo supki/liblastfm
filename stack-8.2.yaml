@@ -1,0 +1,17 @@
+resolver: lts-11.19
+packages:
+  - '.'
+  - 'example'
+allow-newer: true
+extra-deps:
+  - blaze-html-0.9.1.1
+  - blaze-markup-0.8.2.1
+  - conduit-1.2.13.1
+  - conduit-extra-1.2.3.2
+  - hspec-expectations-lens-0.4.0
+  - html-conduit-1.2.1.2
+  - resourcet-1.1.11
+  - xml-conduit-1.7.1.2
+  - xml-html-conduit-lens-0.3.2.1
+ghc-options:
+  "$locals": -fhide-source-paths

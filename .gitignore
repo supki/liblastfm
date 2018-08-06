@@ -10,3 +10,5 @@ lastfm.credentials
 result
 env.nix
 Gemfile.lock
+.stack-work
+dist-newstyle

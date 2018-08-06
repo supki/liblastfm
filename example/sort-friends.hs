@@ -61,9 +61,6 @@ scores conn xs = zip xs <$> forConcurrently xs (\x -> do
  where
   score = folded.key "comparison".key "result".key "score"._String
 
-forConcurrently :: [a] -> (a -> IO b) -> IO [b]
-forConcurrently = flip mapConcurrently
-
 pretty :: [(Text, Score)] -> IO ()
 pretty = mapM_ (\(n,s) -> Text.putStrLn $ n <> ": " <> s) . take 5 . sortBy (flip compare `on` snd)
 
