@@ -7,7 +7,7 @@ module Lastfm.Request
   ( -- * Request
     Request, R, Ready, Sign, Format(..)
     -- * Request major parameters
-  , api, https, post, get, json, xml, APIKey, apiKey, SessionKey, sessionKey
+  , api, post, get, json, xml, APIKey, apiKey, SessionKey, sessionKey
     -- * Request minor parameters
   , Token, token, Callback, callback
   , Artist, artist, artists, Album, album, MBID, mbid
@@ -76,10 +76,6 @@ data Callback
 -- Primarily used in API call wrappers, not intended for usage by library user
 api :: Text -> Request f a
 api = add "method"
-
--- | Change API scheme to https ('http' is the default one)
-https :: Request f a
-https = wrap $ \r -> r { _host = "https://ws.audioscrobbler.com/2.0/" }
 
 -- | Change html _method to GET
 --
