@@ -1,5 +1,5 @@
 name:          liblastfm
-version:       0.6.1
+version:       0.7.0
 synopsis:      Lastfm API interface
 license:       MIT
 license-file:  LICENSE
@@ -30,7 +30,7 @@ source-repository head
 source-repository this
   type:     git
   location: https://github.com/supki/liblastfm
-  tag:      0.6.1
+  tag:      0.7.0
 
 
 flag test-api

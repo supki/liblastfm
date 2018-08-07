@@ -3,7 +3,7 @@
 }:
 mkDerivation {
   pname = "liblastfm-examples";
-  version = "0.6.1";
+  version = "0.7.0";
   src = ./.;
   isLibrary = false;
   isExecutable = true;

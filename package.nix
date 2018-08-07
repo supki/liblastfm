@@ -6,7 +6,7 @@
 }:
 mkDerivation {
   pname = "liblastfm";
-  version = "0.6.1";
+  version = "0.7.0";
   src = ./.;
   libraryHaskellDepends = [
     aeson base bytestring cereal containers cryptonite http-client
