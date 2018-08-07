@@ -1,3 +1,8 @@
+0.6.1
+=====
+
+  * Set default schema to 'https' (issue #27 fixed).
+
 0.6.0
 =====
 

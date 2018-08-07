@@ -1,12 +1,12 @@
 { mkDerivation, aeson, base, bytestring, cereal, containers
 , cryptonite, hspec, hspec-expectations-lens, http-client
-, http-client-tls, HUnit, lens, lens-aeson, network-uri
-, profunctors, semigroups, stdenv, text, transformers, xml-conduit
+, http-client-tls, lens, lens-aeson, network-uri, profunctors
+, semigroups, stdenv, text, transformers, xml-conduit
 , xml-html-conduit-lens
 }:
 mkDerivation {
   pname = "liblastfm";
-  version = "0.6.0";
+  version = "0.6.1";
   src = ./.;
   libraryHaskellDepends = [
     aeson base bytestring cereal containers cryptonite http-client
@@ -15,8 +15,8 @@ mkDerivation {
   ];
   testHaskellDepends = [
     aeson base bytestring cereal containers cryptonite hspec
-    hspec-expectations-lens http-client http-client-tls HUnit lens
-    lens-aeson network-uri profunctors text transformers xml-conduit
+    hspec-expectations-lens http-client http-client-tls lens lens-aeson
+    network-uri profunctors text transformers xml-conduit
     xml-html-conduit-lens
   ];
   description = "Lastfm API interface";
