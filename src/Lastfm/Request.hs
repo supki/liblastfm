@@ -29,6 +29,7 @@ module Lastfm.Request
   , Discovery, discovery, RTP, rtp, BuyLinks, buyLinks, Multiplier(..), multiplier
   , Bitrate(..), bitrate, Name, name, Station, station
   , Targeted, comparison, Scrobble, LibraryAlbum, LibraryArtist
+  , Period, period
   ) where
 
 #if __GLASGOW_HASKELL__ < 710
@@ -177,6 +178,7 @@ data RTP
 data BuyLinks
 data LibraryAlbum
 data LibraryArtist
+data Period
 
 
 -- | Add artist parameter
@@ -410,6 +412,9 @@ rtp = add "rtp"
 buyLinks :: Bool -> Request f BuyLinks
 buyLinks = add "buyLinks"
 
+-- | Add period parameter
+period :: Text -> Request f Period
+period = add "period"
 
 class Targeted a where
   target :: Request f a -> Text
